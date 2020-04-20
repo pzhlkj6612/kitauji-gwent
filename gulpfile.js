@@ -84,7 +84,7 @@ gulp.task("index", function() {
 })
 
 gulp.task('resize sm', function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/sm/monster/arachas1.png")) {
+  if(fs.existsSync(__dirname + "/assets/cards/sm/kitauji/daikichiyama.png")) {
     console.log("skip generating sm images");
     return done();
   }
@@ -97,7 +97,7 @@ gulp.task('resize sm', function(done) {
 });
 
 gulp.task('resize md', function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/md/monster/arachas1.png")) {
+  if(fs.existsSync(__dirname + "/assets/cards/md/kitauji/daikichiyama.png")) {
     console.log("skip generating md images");
     return done();
   }
@@ -110,7 +110,7 @@ gulp.task('resize md', function(done) {
 });
 
 gulp.task('resize lg', ["resize sm", "resize md"], function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/lg/monster/arachas1.png")) {
+  if(fs.existsSync(__dirname + "/assets/cards/lg/kitauji/daikichiyama.png")) {
     console.log("skip generating lg images");
     return done();
   }
@@ -123,7 +123,7 @@ gulp.task('resize lg', ["resize sm", "resize md"], function(done) {
 });
 
 gulp.task("generate sprites", ["resize lg"], function() {
-  if(fs.existsSync(__dirname + "/public/build/cards-lg-monster.png")) {
+  if(fs.existsSync(__dirname + "/public/build/cards-lg-kitauji.png")) {
     console.log("skip sprite generation");
     return;
   }
