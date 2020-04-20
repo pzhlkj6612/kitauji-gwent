@@ -1,90 +1,91 @@
-{{#if isWaiting}}
+{{!-- {{#if isWaiting}}
   <div class="col-xs-12">
     <div class="waiting-for-opponent">
       Waiting for opponent
     </div>
   </div>
-{{/if}}
-<div class="col-xs-3 left-side">
-  <div class="col-xs-12 game-info game-info-foe foe">
-  </div>
-  <div class="col-xs-12 field field-weather">
-    field
-  </div>
-  <div class="col-xs-12 game-info game-info-player player">
-  </div>
-</div>
-<div class="col-xs-6">
-  <div class="row">
-    <div class="col-xs-12 battleside battleside-foe foe">
-      <div class="col-xs-2 field-horn field-horn-siege">
+{{/if}} --}}
+<div class="gwent-battle-background">
+  <div class="gwent-battle-inner">
+    <div class="left-side">
+      <div class="col-xs-12 game-info game-info-foe foe">
       </div>
-      <div class="col-xs-10 field">
-        <div class="col-xs-1 large-field-counter">0</div>
-        <div class="col-xs-11 field-siege"></div>
+      <div class="col-xs-12 field field-weather">
+        field
       </div>
-      <div class="col-xs-2 field-horn field-horn-range">
-      </div>
-      <div class="col-xs-10 field">
-        <div class="col-xs-1 large-field-counter">0</div>
-        <div class="col-xs-11 field-range"></div>
-      </div>
-      <div class="col-xs-2 field-horn field-horn-close">
-      </div>
-      <div class="col-xs-10 field">
-        <div class="col-xs-1 large-field-counter">0</div>
-        <div class="col-xs-11 field-close"></div>
+      <div class="col-xs-12 game-info game-info-player player">
       </div>
     </div>
-    <!--<div class="col-xs-12 mid-line"></div>-->
-    <div class="col-xs-12 battleside battleside-player player">
-      <div class="col-xs-2 field-horn field-horn-close">
-      </div>
-      <div class="col-xs-10 field{{#if active.close}} active{{/if}}">
-        <div class="col-xs-1 large-field-counter">0</div>
-        <div class="col-xs-11 field-close"></div>
-      </div>
-      <div class="col-xs-2 field-horn field-horn-range">
-      </div>
-      <div class="col-xs-10 field{{#if active.range}} active{{/if}}">
-        <div class="col-xs-1 large-field-counter">0</div>
-        <div class="col-xs-11 field-range"></div>
-      </div>
-      <div class="col-xs-2 field-horn field-horn-siege">
-      </div>
-      <div class="col-xs-10 field{{#if active.siege}} active{{/if}}">
-        <div class="col-xs-1 large-field-counter">0</div>
-        <div class="col-xs-11 field-siege"></div>
+    <div class="middle-side">
+      <div class="board">
+        <div class="col-xs-12 battleside battleside-foe foe">
+          <div class="field">
+            <div class="large-field-counter">0</div>
+            <div class="field-horn field-horn-siege"></div>
+            <div class="col-xs-12 field-siege"></div>
+          </div>
+          <div class="field">
+            <div class="large-field-counter">0</div>
+            <div class="field-horn field-horn-range"></div>
+            <div class="col-xs-12 field-range"></div>
+          </div>
+          <div class="field">
+            <div class="large-field-counter">0</div>
+            <div class="field-horn field-horn-close"></div>
+            <div class="col-xs-12 field-close"></div>
+          </div>
+        </div>
+        <div class="col-xs-12 mid-line"></div>
+        <div class="col-xs-12 battleside battleside-player player">
+          <div class="field">
+            <div class="large-field-counter">0</div>
+            <div class="field-horn field-horn-close">
+            </div>
+            <div class="col-xs-12 field-close{{#if active.close}} active-field{{/if}}"></div>
+          </div>
+          <div class="field">
+            <div class="large-field-counter">0</div>
+            <div class="field-horn field-horn-range"></div>
+            <div class="col-xs-12 field-range{{#if active.range}} active-field{{/if}}"></div>
+          </div>
+          <div class="field">
+            <div class="large-field-counter">0</div>
+            <div class="field-horn field-horn-siege"></div>
+            <div class="col-xs-12 field-siege{{#if active.siege}} active-field{{/if}}"></div>
+          </div>
+        </div>
+        <div class="col-xs-12 field field-hand {{#if isWaiting}}{{else}}active{{/if}}">
+          <div class="handcard-wrap">
+            {{#each cards as |val key|}}
+              {{>card val}}
+            {{/each}}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12 field field-hand {{#if isWaiting}}{{else}}active{{/if}}">
-      <div class="handcard-wrap">
-        {{#each cards as |val key|}}
-          {{>card val}}
-        {{/each}}
+    <div class="right-side">
+      <div class="col-xs-12 card-preview">
+      </div>
+      <div class="col-xs-12 right-side-inner right-side-foe foe">
+        <div>
+          <div class="col-xs-4 field-discard field-single">
+            <i class="discard-skull"></i>
+          </div>
+          <div class="col-xs-4 field-deck field-single">
+            <i class="icon-deck"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 right-side-inner right-side-player player">
+        <div>
+          <div class="col-xs-4 field-discard field-single">
+            <i class="discard-skull"></i>
+          </div>
+          <div class="col-xs-4 field-deck field-single">
+            <i class="icon-deck"></i>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="col-xs-3">
-  <div class="col-xs-12 card-preview">
-  </div>
-  <div class="col-xs-12 right-side right-side-foe foe">
-    <!--<div class="col-xs-4 field-discard field-single">
-      <i class="discard-skull"></i>
-    </div>
-    <div class="col-xs-4 field-deck field-single">
-      <i class="icon-deck"></i>
-    </div>-->
-  </div>
-  <div class="col-xs-12 right-side right-side-player player">
-    <!--<div class="col-xs-4 field-discard field-single">
-      <i class="discard-skull"></i>
-    </div>
-    <div class="col-xs-4 field-deck field-single">
-      <i class="icon-deck"></i>
-    </div>-->
   </div>
 </div>

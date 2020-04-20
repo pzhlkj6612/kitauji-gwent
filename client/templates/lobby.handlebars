@@ -1,6 +1,6 @@
 <style>
   body {
-    background: url(http://80.240.132.120/test/landing-bg.jpg) #162232 center top no-repeat;
+    background: url(/assets/landing-bg.jpg) #ffffff center top no-repeat;
     background-size: cover;
   }
 
@@ -11,6 +11,8 @@
   .container-form-landing {
     opacity: 1;
     margin: 60px 0 0 0;
+    display: flex;
+    justify-content: center;
   }
 
   .field-session {
@@ -22,7 +24,7 @@
   }
 
   .icon-action-load {
-    background: url(http://80.240.132.120/test/action-load.gif) no-repeat;
+    background: url(/assets/action-load.gif) no-repeat;
     display: none;
 
     width: 16px;
@@ -39,10 +41,6 @@
 
   .wrap-landing {
     max-width: 800px;
-  }
-
-  .container-landing {
-    margin: 20% 0 0 0;
   }
 
   .teaser-landing {
@@ -63,38 +61,34 @@
 
 <section class="container-landing">
   <div class="wrap-landing">
-    <img src="http://80.240.132.120/test/logo-big.png" width="243" height="85" alt="Gwent" class="logo-big">
+    <img src="/assets/logo-big.jpg" height="400" alt="Gwent" class="logo-big">
 
     <div class="container-form-landing">
 
-      <input type="text" placeholder="Username" class="field-session field-username name-input" autofocus value="{{name}}">
+      <input type="text" placeholder="用户名" class="field-session field-username name-input" autofocus value="{{name}}">
 
       <select id="deckChoice" class="field-session">
-        <option value="random">Deck: Random</option>
-        <option value="northern">Deck: Northern Realms</option>
-        <option value="scoiatael">Deck: Scoia'tael</option>
-        <option value="monster">Deck: Monster</option>
-        <option value="nilfgaardian">Deck: Nilfgaardian</option>
+        <option value="random">牌组: 随机</option>
+        <option value="kitauji">牌组: 北宇治</option>
+        <option value="kitauji2">牌组: 北宇治名人堂</option>
       </select>
 
       <div class="wrap-btn-action btn-register-action startMatchmaking">
-        <input type="submit" value="Search Opponent" class="btn-action">
+        <input type="submit" value="匹配对手" class="btn-action">
         <i class="icon-action-load image-gif-loader"></i>
       </div>
-
-      <p class="teaser-landing">
-        {{#if serverOffline}}
-          <span>Server Status: <span class="status-offline">Offline</span></span>
-        {{else}}
-          <span>Player online: <span class="nr-player-online">0</span></span><br>
-          <span>Server Status: <span class="status-online">Online</span></span>
-        {{/if}}
-      </p>
-
     </div>
+    <p class="teaser-landing">
+      {{#if serverOffline}}
+        <span>服务器状态: <span class="status-offline">离线</span></span>
+      {{else}}
+        <span>在线人数: <span class="nr-player-online">0</span></span><br>
+        <span>服务器状态: <span class="status-online">在线</span></span>
+      {{/if}}
+    </p>
   </div>
 </section>
 
 <footer class="rights">
-  <p>This is a fan game and all rights are reserved by CD Projekt</p>
+  <p>This is a fan game and all rights are reserved by CD Projekt(and Kyoto Animation)</p>
 </footer>

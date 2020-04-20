@@ -1,9 +1,11 @@
 <div class="bbm-modal__topbar">
-  <h3 class="bbm-modal__title">Choose up to 2 cards you wish to redraw!</h3>
-  <span class="btn-sub bbm-close">DONE</span>
+  <h3 class="bbm-modal__title">选择2张牌重新抽牌。</h3>
 </div>
 <div class="bbm-modal__section preview-b small-cards-modal">
   {{#each handCards as |val key|}}
     {{>card val}}
   {{/each}}
+</div>
+<div class="bbm-modal__topbar">
+  <span class="btn-sub bbm-close">完成</span>
 </div>
