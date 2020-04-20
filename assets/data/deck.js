@@ -1,5 +1,115 @@
 module.exports = {
 
+  "kitauji": {
+    faction: "kitauji",
+    data: [
+      "kenzaki_ririka",
+      "kabutodani_eru",
+      "koteyama_suruga",
+      "maki_chikai",
+      "suzuki_mirei",
+      "yoroizuka_mizore",
+      "kamaya_tsubame",
+      "inoue_junna",
+      "sakai_masako",
+      "tsukinaga_motomu",
+      "tsukamoto_shuichi",
+      "kishibe_miru",
+      "katou_hazuki",
+      "iwata_keina",
+      "higashiura_motoko",
+      "nagase_riko",
+      "gotou_takuya",
+      "kabe_tomoe",
+      "hisaishi_kanade",
+      "kasaki_nozomi",
+      "kousaka_reina",
+      "kawashima_sapphire",
+      "tanaka_asuka",
+      "suzuki_satsuki",
+      "oda_meiko",
+      "takahashi_sari",
+      "nakano_tsubomi",
+      "yoshikawa_yuko",
+      "nakagawa_natsuki",
+      "kohinata_yume",
+      "etou_kana",
+      "hiraishi_narumi",
+      "yamane_tsumiki",
+      "oumae_kumiko",
+      "nakaseko_kaori",
+      "maeda_aota",
+      "maeda_sosuke",
+      "hakase_michiru",
+      "takigawa_chikao",
+      "takahisa_chieri",
+      "kitayama_tairu",
+      "hirao_sumiko",
+      "ono_miyoko",
+      "ogasawara_haruka",
+      "inoue_shirabe",
+      "hitomi_lala",
+
+      "taki_noboru",
+
+      "sunfes",
+      "wasure",
+      "daisangakushou",
+      "daikichiyama",
+      "pool",
+      "niiyama",
+      "hashimoto",
+      "tubakun",
+      "tubakun",
+      "taibu",
+      "taibu"
+    ]
+  },
+  "kitauji2": {
+    faction: "kitauji",
+    data: [
+      "kenzaki_ririka",
+      "kabutodani_eru",
+      "koteyama_suruga",
+      "yoroizuka_mizore",
+      "inoue_junna",
+      "sakai_masako",
+      "iwata_keina",
+      "higashiura_motoko",
+      "kabe_tomoe",
+      "hisaishi_kanade",
+      "kasaki_nozomi",
+      "kousaka_reina",
+      "kawashima_sapphire",
+      "tanaka_asuka",
+      "oda_meiko",
+      "takahashi_sari",
+      "nakano_tsubomi",
+      "yoshikawa_yuko",
+      "nakagawa_natsuki",
+      "oumae_kumiko",
+      "nakaseko_kaori",
+      "hakase_michiru",
+      "hirao_sumiko",
+      "ono_miyoko",
+      "ogasawara_haruka",
+      "inoue_shirabe",
+      "hitomi_lala",
+
+      "taki_noboru",
+
+      "sunfes",
+      "wasure",
+      "daisangakushou",
+      "daikichiyama",
+      "niiyama",
+      "tubakun",
+      "tubakun",
+      "tubakun",
+      "taibu"
+    ]
+  }
+  /*,
   "northern": {
     faction: "northern",
     data: [
@@ -190,5 +300,5 @@ module.exports = {
       "fiend",
       "earth_elemental"
     ]
-  }
+  }*/
 }
