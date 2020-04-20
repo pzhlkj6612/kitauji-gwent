@@ -19,7 +19,7 @@ module.exports = {
   },
   "medic": {
     name: "medic",
-    description: "Medic: Choose one card from your discard pile (excluding heroes / special cards) to play instantly.",
+    description: "复活: 令一名退部/毕业的部员（天王除外）回归吹奏部，并立即加入演奏。",
     waitResponse: true,
     onAfterPlace: function(card){
       var discard = this.getDiscard();
@@ -38,7 +38,7 @@ module.exports = {
   },
   "morale_boost": {
     name: "morale_boost",
-    description: "Morale Boost: Adds +1 strength to all units in the row, excluding itself.",
+    description: "士气: 高喊“北宇治Fight！”，使同一行内除自己以外的部员吹奏能力+1。",
     onEachCardPlace: function(card){
       var field = this.field[card.getType()];
       var id = card.getID();
@@ -63,7 +63,7 @@ module.exports = {
   },
   "muster": {
     name: "muster",
-    description: "Muster: Find any cards with the same name in your deck and play them instantly.",
+    description: "抱团: 和自己的闺蜜一起上场比赛。",
     onAfterPlace: function(card){
       var musterType = card.getMusterType();
       var self = this;
@@ -89,12 +89,12 @@ module.exports = {
   },
   "tight_bond": {
     name: "tight_bond",
-    description: "Tight Bond: Place next to a card with the name same to double the strength of both cards.",
+    description: "同袍之情: 当CP（或组合）同时登场时，吹奏能力翻倍。",
     tightBond: true
   },
   "spy": {
     name: "spy",
-    description: "Spy: Place on your opponents battlefield (counts towards their total strength) then draw two new cards from your deck.",
+    description: "间谍: 加入对面吹奏部，让己方新增两名部员。",
     changeSide: true,
     onAfterPlace: function(){
       this.draw(2);
@@ -103,7 +103,7 @@ module.exports = {
   },
   "weather_fog": {
     name: "weather_fog",
-    description: "Sets the strength of all Ranged Combat cards to 1 for both players.",
+    description: "演奏《利兹与青鸟》第三乐章，令双方所有铜管乐器吹奏能力降为1。",
     weather: 1/*,
     onEachTurn: function(card){
       var targetRow = card.constructor.TYPE.RANGED;
@@ -134,7 +134,7 @@ module.exports = {
   },
   "weather_rain": {
     name: "weather_rain",
-    description: "Sets the strength of all Siege Combat cards to 1 for both players.",
+    description: "失去鼓槌，令双方所有打击乐器吹奏能力降为1。",
     weather: 2
     /*onEachTurn: function(card){
       var targetRow = card.constructor.TYPE.SIEGE;
@@ -165,7 +165,7 @@ module.exports = {
   },
   "weather_frost": {
     name: "weather_frost",
-    description: "Sets the strength of all Close Combat cards to 1 for both players.",
+    description: "参加SunFes，令双方所有木管乐器吹奏能力降为1。",
     weather: 0
     /*
       onEachTurn: function(card){
@@ -197,7 +197,7 @@ module.exports = {
   },
   "weather_clear": {
     name: "weather_clear",
-    description: "Removes all Weather Card (Biting Frost, Impenetrable Fog and Torrential Rain) effects.",
+    description: "消除所有不良影响。",
     weather: 5
     /*onAfterPlace: function(card){
       var targetRow = card.constructor.TYPE.WEATHER;
@@ -220,29 +220,29 @@ module.exports = {
   },
   "decoy": {
     name: "decoy",
-    description: "Decoy: Swap with a card on the battlefield to return it to your hand.",
+    description: "大号君: 换下场上一名部员，使其可以继续参加后面的比赛。",
     replaceWith: true
   },
   "scorch_card": {
     name: "scorch",
-    description: "Scorch: Discard after playing. Kills the strongest card(s) in the battlefield.",
+    description: "退部申请书: 令场上双方部员中实力最强的部员直接退部。",
     scorch: true,
     removeImmediately: true,
     nextTurn: true
   },
   "scorch": {
     name: "scorch",
-    description: "Scorch: Destroy your enemy's strongest close combat unit(s) if the combined strength of all of his or her combat unit(s) is 10 or more.",
+    description: "退部: 令对方实力最强的木管成员退部（仅当对方总吹奏实力大于10）。",
     scorchMelee: true
   },
   "commanders_horn": {
     name: "commanders_horn",
-    description: "Commander's Horn: Doubles the strength of all unit cards in a row. Except this card.",
+    description: "支援: 使同一行内除自己之外的部员吹奏实力翻倍。",
     commandersHorn: true
   },
   "commanders_horn_card": {
     name: "commanders_horn",
-    description: "Commander's Horn: Doubles the strength of all unit cards in a row. Limited to 1 per row.",
+    description: "指导老师: 使同一行内所有部员吹奏实力翻倍。",
     cancelPlacement: true,
     commandersHorn: true,
     isCommandersHornCard: true
@@ -352,6 +352,6 @@ module.exports = {
   },
   "hero": {
     name: "hero",
-    description: "Hero: Not affected by special cards, weather cards or abilities."
+    description: "天王: 吹奏实力不受其他因素影响。"
   }
 }
