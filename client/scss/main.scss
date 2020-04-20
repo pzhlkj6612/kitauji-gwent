@@ -9,28 +9,35 @@ $height: 600px;
 $game-height: 800px;
 
 .container {
+  width: 100%;
+  height: 100%;
   min-width: 970px;
-  width: 970px important;
   background: rgba(5,5,5,0.25);
-  padding: 20px;
   margin-bottom: 150px;
   //margin-top: 65px;
 }
 .board {
   height: $game-height;
+  padding-top: 2px;
   //border: 1px solid black;
 }
 
 .battleside {
   width: 100%;
   height: $height/2;
+  padding-left: 0;
+  padding-right: 0;
   //border: 1px solid black;
 }
 
 .large-field-counter {
+  background-color: #2d1300;
+  margin-right: 10px;
+  margin-left: -10px;
   line-height: 20px;
   //border: 1px solid black;
   border-radius: 30px;
+  width: 45px;
   height: 40px;
   padding: 10px;
   margin-top: 33px;
@@ -40,34 +47,38 @@ $game-height: 800px;
 }
 
 .field {
+  display: flex;
+  width: 100%;
+  padding-left: 50px;
   //width: 100%;
   height: 100px;
-  border-bottom: 1px solid black;
+  padding-top: 3px;
+  // border-bottom: 1px solid black;
 
   .card:first-child {
     margin-left: 0 !important;
   }
+}
 
-  &.active {
-    //box-shadow: 0px 0px 15px #ffbb0b !important;
-    cursor: pointer;
+.active-field {
+  //box-shadow: 0px 0px 15px #ffbb0b !important;
+  cursor: pointer;
 
-    -webkit-animation: WoobWoob linear 2s;
-    -webkit-animation-iteration-count: infinite;
+  -webkit-animation: WoobWoob linear 2s;
+  -webkit-animation-iteration-count: infinite;
 
-    -o-animation: WoobWoob linear 2s;
-    -o-animation-iteration-count: infinite;
-    
-    -ms-animation: WoobWoob linear 2s;
-    -ms-animation-iteration-count: infinite;
+  -o-animation: WoobWoob linear 2s;
+  -o-animation-iteration-count: infinite;
+  
+  -ms-animation: WoobWoob linear 2s;
+  -ms-animation-iteration-count: infinite;
 
-    animation: WoobWoob linear 2s;
-    animation-iteration-count: infinite;
+  animation: WoobWoob linear 2s;
+  animation-iteration-count: infinite;
 
-    /*&:hover {
-      box-shadow: 0px 0px 30px #ffd135 !important;
-    }*/
-  }
+  /*&:hover {
+    box-shadow: 0px 0px 30px #ffd135 !important;
+  }*/
 }
 
 @-webkit-keyframes WoobWoob {
@@ -121,8 +132,9 @@ $game-height: 800px;
     border: 1px solid green;*/
   /*clear: both;*/
   margin: 0px;
-  padding: 0px;
-  background: url("../../assets/hunting-horn.png") no-repeat;
+  padding: 0 10px;
+  width: 100px;
+  // background: url("../../assets/hunting-horn.png") no-repeat;
   height: 100px;
   //width: 64px;
   background-position: 7px 20px;
@@ -134,21 +146,23 @@ $game-height: 800px;
 }
 
 .handcard-wrap {
-  margin: 0 auto;
-  width: 550px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .field-hand {
   //margin-top: 20px;
+  padding: 0;
   border: none;
   transition: all .2s ease-in-out 0s;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
   background: rgba(6, 13, 22, .8);
   height: 110px;
+  /* margin-right: 80px; */
+  width: 710px;
   z-index: 20;
+  margin-top: 6px;
+  margin-left: 90px;
 
   .card {
     margin-left: -31px;
@@ -165,7 +179,8 @@ $game-height: 800px;
 
 .passing {
   color: #3f4c5b;
-  margin: 10px 0 0;
+  margin: 15px 0 0;
+  text-align: right;
   text-transform: uppercase;
   /*
     display: none;*/
@@ -181,7 +196,23 @@ $game-height: 800px;
 }
 
 .left-side {
-  //height: $game-height;
+  height: 768px;
+  width: 338px;
+  display: flex;
+  flex-direction: column;
+}
+
+.middle-side {
+  height: 100%;
+  width: 800px;
+}
+
+.right-side {
+  height: 768px;
+  max-width: 300px;
+}
+
+.board {
 }
 
 .field-deck-number {
@@ -192,18 +223,35 @@ $game-height: 800px;
   color: #3f4c5b;
 }
 
+.score {
+  float: right;
+  width: 40px;
+  font-weight: bold;
+  transform: translate(50px, 0);
+  background: url("/assets/texture/player_power_indicator.png") center no-repeat;
+  background-size: contain;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 .score,
 .hand-card {
-  color: #8798ac;
+  color: white;
   text-align: center;
+  line-height: 40px;
 }
 
 .field-weather {
   border: none;
+  padding-left: 100px;
+  height: 110px;
 }
 
 .info-title {
-  color: #3f4c5b;
+  background: url("/assets/texture/board_cards.png") no-repeat;
+  background-size: contain;
+  width: 40px;
+  height: 40px;
 }
 
 .info-name {
@@ -213,24 +261,23 @@ $game-height: 800px;
 }
 
 .button-pass-wrap {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  margin: 0 !important;
+  padding: 0;
+  margin-right: 50px;
+  float: right;
+  height: 100%;
 }
 
   .button-pass {
-    width: 100%;
+    top: 50%;
+    transform: translate(0, -50%);
     border: 0;
-    background: #3f4c5b; 
-    padding: 5px 0;
+    background: #3f4c5b;
+    padding: 5px 10px;
     color: #fff;
     text-transform: uppercase;
-    fon-size: 15px;
-    position: absolute;
+    font-size: 15px;
+    position: relative;
     z-index: 21;
-    margin-top: -33px;
 
     &:hover {
       background: lighten(#3f4c5b, 10%);
@@ -242,17 +289,23 @@ $game-height: 800px;
   }
 
 .game-info {
-  height: $game-height/2 - 140px;
-  width: 100%;
+  padding: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   //border: 1px solid black;
   //background: rgba(252, 219, 125, 0.1);
-  background: rgba(0,0,0, .4);
   position: relative;
 
   div {
     margin-bottom: 5px;
-    padding: 0;
     font-size: 17px;
+  }
+
+  .info-inner {
+    background: rgba(0,0,0,0.4);
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 
   .icon-hand-card {
@@ -265,6 +318,21 @@ $game-height: 800px;
   }
 }
 
+.game-info-foe {
+  .field-leader {
+    padding-top: 50px;
+    padding-left: 100px;
+  }
+}
+
+.game-info-player {
+  flex-direction: column-reverse;
+  .field-leader {
+    margin-bottom: 35px;
+    padding-left: 100px;
+  }
+}
+
 .removeBackground {
   background: rgba(0,0,0, .4);
 }
@@ -273,16 +341,99 @@ $game-height: 800px;
   width: 100%;
   height: 1px;
   //border: 1px solid black;
-  margin: 5px;
+  margin: 6px;
 }
 
-.right-side {
+.right-side-inner {
   &:nth-child(2) {
     border-bottom: 1px solid black;
   }
-  height: $height/2;
+  height: 50%;
+  padding-left: 30px;
 }
 
+.right-side-player {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.play-card-animation {
+  position: fixed;
+  transform: translate(1200px,300px);
+  left: 0;
+  top: 0;
+  height: 93px;
+  width: 69px;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.play-card-animation i {
+  border-radius: 10px;
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transform: scale(0.43) translate(-68%, -67%);
+  z-index: 10;
+}
+
+.sunray-animation {
+  background: url("/assets/texture/board_weather_sunrays.png");
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 11;
+  transform-origin: top left;
+  -webkit-animation: rotation 1s infinite linear;
+}
+
+@-webkit-keyframes rotation {
+  from {
+      -webkit-transform: rotate(-90deg);
+  }
+  to {
+      -webkit-transform: rotate(0deg);
+  }
+}
+
+.move-to-player-siege {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(800px,520px);
+}
+
+.move-to-player-range {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(800px,420px);
+}
+
+.move-to-player-close {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(800px,320px);
+}
+
+.move-to-foe-siege {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(800px,5px);
+}
+
+.move-to-foe-range {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(800px,105px);
+}
+
+.move-to-foe-close {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(800px,205px);
+}
 
 .card {
   /*border: 2px solid black;
@@ -362,7 +513,7 @@ $game-height: 800px;
   width: 65px;
   height: 90px;
   cursor: pointer;
-  margin: 20px 0;
+  margin: 60px 0 40px 0;
   transition: all .2s ease-in-out 0s;
 
   &:hover {
@@ -377,7 +528,7 @@ $game-height: 800px;
 }
 
 .field-deck {
-  margin: 20px 0 0 10px;
+  margin: 60px 20px 40px 20px;
 }
 
 .discard-skull {
@@ -391,21 +542,22 @@ $game-height: 800px;
 }
 
 .card-preview {
-  div {
+  z-index: 300;
+  > div {
     position: fixed;
     //left:0;
     z-index: 310;
     //height: 100px !important;
+    margin-top: 40px;
+    margin-left: 5px;
     i {
       display: block;
-      margin-left: -15px;
     }
     .preview-description {
       width: 238px;
       min-height: 200px;
       background: rgba(16, 16, 16, 0.57);
       color: #ffffff;
-      margin-left: -15px;
 
       p {
         padding: 10px;
@@ -416,7 +568,7 @@ $game-height: 800px;
 }
 
 .gwent-lives {
-  margin: 10px 0;
+  padding: 0;
 
   i {
     display: block;
@@ -426,50 +578,91 @@ $game-height: 800px;
     margin: 0 10px 0 0;
     background: url("../../assets/ruby-grey.png");
     &.ruby {
-      background: url("../../assets/ruby.png");
+      background: url("/assets/texture/player_life_gem_large.png") no-repeat;
+      background-size: contain;
     }
   }
 }
 
 .field {
-  &.field-frost {
+  &.field-frost:before {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+60,709bff+100&amp;0+60,1+100 */
-    background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(112,155,255,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(112,155,255,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#709bff',GradientType=0 ); /* IE6-9 */
-
+    // background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(112,155,255,1) 100%); /* FF3.6+ */
+    // background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(112,155,255,1))); /* Chrome,Safari4+ */
+    // background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* Chrome10+,Safari5.1+ */
+    // background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* Opera 11.10+ */
+    // background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* IE10+ */
+    // background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* W3C */
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#709bff',GradientType=0 ); /* IE6-9 */
+    position: absolute;
+    content: '';
+    background: url("/assets/texture/board_weather_frost.png"); /*partially transparent image*/
+    transform: translate(140px, -3px);
+    transition: 0.3s;
+    width: 610px;
+    height: 100px;
+    z-index: 11;
+    pointer-events: none;
 
   }
-  &.field-fog {
+  &.field-fog:before {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+60,9b9b9b+100&amp;0+60,1+100 */
-    background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(155,155,155,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(155,155,155,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#9b9b9b',GradientType=0 ); /* IE6-9 */
+    // background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(155,155,155,1) 100%); /* FF3.6+ */
+    // background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(155,155,155,1))); /* Chrome,Safari4+ */
+    // background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* Chrome10+,Safari5.1+ */
+    // background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* Opera 11.10+ */
+    // background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* IE10+ */
+    // background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* W3C */
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#9b9b9b',GradientType=0 ); /* IE6-9 */
+    position: absolute;
+    content: '';
+    background: url("/assets/texture/board_weather_fog.png");
+    transform: translate(140px, -3px);
+    transition: 0.3s;
+    width: 610px;
+    height: 100px;
+    z-index: 11;
+    pointer-events: none;
 
 
   }
-  &.field-rain {
 
+  &.field-rain:before {
     /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+60,133511+100&amp;0+60,1+100 */
-    background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(19,53,17,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(19,53,17,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#133511',GradientType=0 ); /* IE6-9 */
-
+    // background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(19,53,17,1) 100%); /* FF3.6+ */
+    // background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(19,53,17,1))); /* Chrome,Safari4+ */
+    // background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* Chrome10+,Safari5.1+ */
+    // background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* Opera 11.10+ */
+    // background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* IE10+ */
+    // background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* W3C */
+    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#133511',GradientType=0 ); /* IE6-9 */
+    position: absolute;
+    content: '';
+    background: url("/assets/texture/board_weather_rain.png");
+    transform: translate(140px, -3px);
+    transition: 0.3s;
+    width: 610px;
+    height: 100px;
+    z-index: 11;
+    pointer-events: none;
 
 
   }
+}
+
+.field-close {
+  display: flex;
+  justify-content: center;
+}
+
+.field-range {
+  display: flex;
+  justify-content: center;
+}
+
+.field-siege {
+  display: flex;
+  justify-content: center;
 }
 
 .playcard-banner {
@@ -502,15 +695,15 @@ $game-height: 800px;
   //left: calc(50% - 400px) ;
   left: 0;
   //top: calc(50% - 60px);
-  top: calc(100% - 155px);
-  //top: 0;
+  // top: calc(100% - 155px);
+  bottom: 0;
   //border: 1px solid black;
   //border-radius: 10px;
   /*
   padding: 0px 200px;*/
   font-size: 19px;
   line-height: 15px;
-  padding: 15px;
+  padding: 10px;
   z-index: 300;
   color: #dfe1fd;
   //text-shadow: 0px 0px 1px #000;
@@ -579,6 +772,23 @@ $game-height: 800px;
     display: none;
     //padding: 0;
   }
+}
+
+.gwent-battle {
+  height: 100%;
+}
+
+.gwent-battle-background {
+  background: url(/assets/texture/board.png) left top no-repeat #000000;
+  background-size: 1440px auto;
+  height: 100%;
+}
+
+.gwent-battle-inner {
+  height: 800px;
+  max-height: 100%;
+  width: 100%;
+  display: flex;
 }
 
 .startMatchmaking {

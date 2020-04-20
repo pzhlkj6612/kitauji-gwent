@@ -574,8 +574,8 @@ ul {
     margin: 0 10px 0 0;
     height: 48px;
     width: 220px;
-    background: #243141;
-    background: linear-gradient(to right, #243141 0%, #334152 100%);
+    background: #e1eaf7;
+    background: linear-gradient(to right, #e1eaf7 0%, #e1eaf7 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#243141', endColorstr='#334152', GradientType=1);
 }
 
@@ -884,7 +884,7 @@ nav a.active {
 .card,
 .card-small-small {
     float: left;
-    border-radius: 12px;
+    border-radius: 8px;
     position: relative;
     z-index: 10;
     top: 3px;
