@@ -145,6 +145,7 @@ let SideView = Backbone.View.extend({
     })
 
     this.$info = this.$el.find(".game-info" + this.side).html(html);
+    let $infoInner = this.$info.find(".info-inner");
 
     /*let $deck = $(this.side + " .field-deck");
     $deck*/
@@ -155,11 +156,14 @@ let SideView = Backbone.View.extend({
     }));
 
 
+    $infoInner.addClass("active-field");
     if(this.app.user.get("waiting") && this.side === ".player"){
       this.$info.addClass("removeBackground");
+      $infoInner.removeClass("active-field");
     }
     if(!this.app.user.get("waiting") && this.side === ".foe"){
       this.$info.addClass("removeBackground");
+      $infoInner.removeClass("active-field");
     }
   },
   renderCloseField: function(){
@@ -182,7 +186,7 @@ let SideView = Backbone.View.extend({
     let isInfluencedByWeather;
     this.field.weather.cards.forEach((card) =>{
       let key = card._key;
-      if(key === "biting_frost") isInfluencedByWeather = true;
+      if(key === "biting_frost" || key === "sunfes") isInfluencedByWeather = true;
     })
 
     if(isInfluencedByWeather){
@@ -190,7 +194,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-close"), 5);
+    this.battleView.calculateMargin($field.find(".field-close"), 8);
   },
   renderRangeField: function(){
     if(!this.field.ranged) return;
@@ -211,7 +215,7 @@ let SideView = Backbone.View.extend({
     let isInfluencedByWeather;
     this.field.weather.cards.forEach((card) =>{
       let key = card._key;
-      if(key === "impenetrable_fog") isInfluencedByWeather = true;
+      if(key === "impenetrable_fog" || key === "daisangakushou") isInfluencedByWeather = true;
     })
 
     if(isInfluencedByWeather){
@@ -219,7 +223,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-range"), 5);
+    this.battleView.calculateMargin($field.find(".field-range"), 8);
   },
   renderSiegeField: function(){
     if(!this.field.siege) return;
@@ -240,7 +244,7 @@ let SideView = Backbone.View.extend({
     let isInfluencedByWeather;
     this.field.weather.cards.forEach((card) =>{
       let key = card._key;
-      if(key === "torrential_rain") isInfluencedByWeather = true;
+      if(key === "torrential_rain" || key === "wasure") isInfluencedByWeather = true;
     })
 
     if(isInfluencedByWeather){
@@ -248,7 +252,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-siege"), 5);
+    this.battleView.calculateMargin($field.find(".field-siege"), 8);
   },
   renderWeatherField: function(){
     if(!this.field.weather) return;
@@ -281,6 +285,7 @@ let BattleView = Backbone.View.extend({
     let user = this.user = options.user;
     let app = this.app = options.app;
     let yourSide, otherSide;
+    let waitForAnimation = false;
 
     $(this.el).prependTo('gwent-battle');
 
@@ -364,11 +369,38 @@ let BattleView = Backbone.View.extend({
     this.app.send("play:cardFromHand", {
       id: id
     });
+    let playCard = $(".play-card-animation");
+    playCard.html($card.html());
+    let type = $card.data("type");
+    let isSpy = $card.data("ability").includes("spy");
+    let animationClass;
+    switch (type) {
+      case 0:
+        animationClass = isSpy ? "move-to-foe-close" : "move-to-player-close";
+        break;
+      case 1:
+        animationClass = isSpy ? "move-to-foe-range" : "move-to-player-range";
+        break;
+      case 2:
+        animationClass = isSpy ? "move-to-foe-siege" : "move-to-player-siege";
+        break;
+    }
+    playCard.addClass(animationClass);
+    setTimeout(() => {
+      playCard.removeClass(animationClass);
+    }, 200);
 
-    if(key === "decoy"){
+
+    if(key === "decoy" || key === "tubakun"){
       //console.log("its decoy!!!");
       this.user.set("waitForDecoy", id);
       this.render();
+    }
+    if(key === "pool" || key === "daikichiyama") {
+      $('.sunray-animation').removeClass("invisible");
+      setTimeout(() => {
+        $('.sunray-animation').addClass("invisible");
+      }, 500);
     }
   },
   onClickFieldCard: function(e){
@@ -385,7 +417,7 @@ let BattleView = Backbone.View.extend({
       this.user.set("waitForDecoy", false);
     }
     if(this.user.get("setAgile")){
-      let $field = $(e.target).closest(".field.active").find(".field-close, .field-range");
+      let $field = $(e.target).closest(".active-field");
 
       //console.log($field);
       let target = $field.hasClass("field-close") ? 0 : 1;
@@ -395,7 +427,7 @@ let BattleView = Backbone.View.extend({
       this.user.set("setAgile", false);
     }
     if(this.user.get("setHorn")){
-      let $field = $(e.target).closest(".field.active").find(".field-close, .field-range, .field-siege");
+      let $field = $(e.target).closest(".active-field");
 
       //console.log($field);
       let target = $field.hasClass("field-close") ? 0 : ($field.hasClass("field-range") ? 1 : 2);
@@ -432,6 +464,9 @@ let BattleView = Backbone.View.extend({
   },
   render: function(){
     let self = this;
+    if (self.waitForAnimation) {
+      return;
+    }
     this.$el.html(this.template({
       cards: self.handCards,
       active: {
@@ -447,7 +482,7 @@ let BattleView = Backbone.View.extend({
 
 
     if(this.handCards){
-      this.calculateMargin(this.$el.find(".handcard-wrap"));
+      this.calculateMargin(this.$el.find(".handcard-wrap"), 10);
     }
 
     if(this.user.get("isReDrawing")){
@@ -518,6 +553,11 @@ let BattleView = Backbone.View.extend({
         self.handCards = JSON.parse(data.cards);
         self.user.set("handCards", app.handCards);
         self.render();
+
+        // if this is the last card, pass automatically
+        if (self.$el.find(".field-hand").find('.card').length === 0) {
+          self.onPassing();
+        }
       }
     })
     app.on("update:info", function(data){
@@ -533,8 +573,27 @@ let BattleView = Backbone.View.extend({
       side.leader = leader;
 
       side.infoData.discard = JSON.parse(side.infoData.discard);
+      let scorched = JSON.parse(side.infoData.scorched) || [];
+      if (scorched.length === 0) {
+        self.render();
+        return;
+      }
+      self.waitForAnimation = true;
+      let scorchedCards = [];
+      for (let i=0; i<scorched.length; i++) {
+        let id = scorched[i]._id;
+        let card = $(`.card[data-id='${id}']`);
+        card.addClass("scorch-card");
+        scorchedCards.push(card);
+      }
+      setTimeout(() => {
+        for (let i=0; i<scorchedCards.length; i++) {
+          scorchedCards[i].removeClass("scorch-card");
+        }
+        self.waitForAnimation = false;
+        self.render();
+      }, 1000);
 
-      side.render();
     })
 
     app.on("update:fields", function(data){
@@ -548,7 +607,9 @@ let BattleView = Backbone.View.extend({
       side.field.ranged = data.ranged;
       side.field.siege = data.siege;
       side.field.weather = data.weather;
-      side.render();
+      if (!self.waitForAnimation) {
+        side.render();
+      }
     })
 
     /*this.battleChannel.watch(function(d){
@@ -716,7 +777,7 @@ let User = Backbone.Model.extend({
 
     self.set("chooseSide", false);
 
-    this.listenTo(this.attributes, "change:room", this.subscribeRoom);
+    // this.listenTo(this.attributes, "change:room", this.subscribeRoom);
 
     app.receive("response:name", function(data){
       self.set("name", data.name);
