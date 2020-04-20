@@ -174,6 +174,9 @@ Battleside = (function() {
    */
   r._name = null;
   r._discard = null;
+  r._scorched = null;
+  r._isNewRound = false;
+
 
   r._rubies = 2;
   r._score = 0;
@@ -295,6 +298,8 @@ Battleside = (function() {
   }
 
   r.getInfo = function() {
+    let isNewRound = this._isNewRound;
+    this._isNewRound = false;
     return {
       name: this.getName(),
       lives: this._rubies,
@@ -302,6 +307,8 @@ Battleside = (function() {
       hand: this.hand.length(),
       deck: this.deck.length(),
       discard: this.getDiscard(true),
+      scorched: this.getScorched(true),
+      isNewRound: isNewRound,
       passing: this._passing
     }
   }
@@ -381,6 +388,7 @@ Battleside = (function() {
       card = this.createCard(card);
     }
 
+    this._scorched = [];
     this.checkAbilities(card, obj);
     if(obj._cancelPlacement && !obj.forceField) {
 
@@ -502,7 +510,7 @@ Battleside = (function() {
 
     cards.forEach(function(c) {
       if(c.getID() === card.getID()) return;
-      if(c.getName() !== card.getName()) return;
+      if(c.getBondType() !== card.getBondType()) return;
       card.setBoost(card.getID() + "|tight_bond|" + c.getID(), "tight_bond");
     });
 
@@ -714,15 +722,15 @@ Battleside = (function() {
     var removeCards = field.removeCard(cards);
 
 
-    var txt = "Scorch destroyed:";
-    for(var i = 0; i < removeCards.length; i++) {
-      var c = removeCards[i];
-      txt += "\n" + c.getName();
-    }
+    // var txt = "Scorch destroyed:";
+    // for(var i = 0; i < removeCards.length; i++) {
+    //   var c = removeCards[i];
+    //   txt += "\n" + c.getName();
+    // }
 
-    this.battle.sendNotification(txt);
+    // this.battle.sendNotification(txt);
 
-    side.addToDiscard(removeCards);
+    side.addToDiscard(removeCards, true);
   }
 
   r.scorch = function(card) {/*
@@ -755,16 +763,16 @@ Battleside = (function() {
         side = self.foe;
       }
       var removed = side.field[card.getType()].removeCard(card);
-      side.addToDiscard(removed);
+      side.addToDiscard(removed, true);
     })
 
-    var txt = "Scorch destroyed:";
-    for(var i = 0; i < res.length; i++) {
-      var c = res[i];
-      txt += "\n" + c.getName();
-    }
+    // var txt = "Scorch destroyed:";
+    // for(var i = 0; i < res.length; i++) {
+    //   var c = res[i];
+    //   txt += "\n" + c.getName();
+    // }
 
-    this.battle.sendNotification(txt);
+    // this.battle.sendNotification(txt);
   }
 
   r.clearMainFields = function() {
@@ -788,7 +796,7 @@ Battleside = (function() {
     this.addToDiscard(cards);
   }
 
-  r.addToDiscard = function(cards) {
+  r.addToDiscard = function(cards, isScorched) {
     var self = this;
     if(!Array.isArray(cards)) {
       cards = [cards];
@@ -799,6 +807,9 @@ Battleside = (function() {
         return;
       }
       self._discard.push(_card);
+      if (isScorched) {
+        self._scorched.push(_card);
+      }
     });
   }
 
@@ -820,12 +831,20 @@ Battleside = (function() {
     return this._discard;
   }
 
+  r.getScorched = function(json) {
+    if(json) {
+      return JSON.stringify(this._scorched);
+    }
+    return this._scorched;
+  }
+
   r.resetNewRound = function() {
     this.clearMainFields();
     this.setWeather(5, {
       onTurnEnd: true
     }); //clear weather
     this.setPassing(false);
+    this._isNewRound = true;
   }
 
   r.filter = function(arrCards, opt) {

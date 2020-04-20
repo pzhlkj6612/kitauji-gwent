@@ -16,6 +16,7 @@ var Card = (function(){
     this.setDisabled(false);
     this._data = CardData[key] ? CardData[key] : CardData["none"];
     if(!(this._data = CardData[key])){
+      console.warn("Card not found: " + key);
       this._data = CardData["none"];
       key = "none";
     }
@@ -119,6 +120,9 @@ var Card = (function(){
   }
   r.getFaction = function(){
     return this._data.faction;
+  }
+  r.getBondType = function(){
+    return this._data.bondType || null;
   }
   r.getMusterType = function(){
     return this._data.musterType || null;

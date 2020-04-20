@@ -155,7 +155,7 @@ var Battle = (function(){
     if(this.checkIfIsOver()){
       //console.log("its over!");
       var winner = this.getWinner();
-      winner = winner ? winner.getName() : "nobody";
+      winner = winner ? winner.getName() : "无人";
       this.gameOver(winner);
       this.update();
       return;
@@ -229,16 +229,18 @@ var Battle = (function(){
     p.send("update:info", {
       info: p.getInfo(),
       leader: p.field[Card.TYPE.LEADER].get()[0]
-    }, isPrivate)
-    p.send("update:hand", {
-      cards: JSON.stringify(p.hand.getCards())
     }, isPrivate);
-    p.send("update:fields", {
-      close: p.field[Card.TYPE.CLOSE_COMBAT].getInfo(),
-      ranged: p.field[Card.TYPE.RANGED].getInfo(),
-      siege: p.field[Card.TYPE.SIEGE].getInfo(),
-      weather: p.field[Card.TYPE.WEATHER].getInfo()
-    }, isPrivate);
+    setTimeout(() => {
+      p.send("update:hand", {
+        cards: JSON.stringify(p.hand.getCards())
+      }, isPrivate);
+      p.send("update:fields", {
+        close: p.field[Card.TYPE.CLOSE_COMBAT].getInfo(),
+        ranged: p.field[Card.TYPE.RANGED].getInfo(),
+        siege: p.field[Card.TYPE.SIEGE].getInfo(),
+        weather: p.field[Card.TYPE.WEATHER].getInfo()
+      }, isPrivate);
+    }, 0);
   }
 
   r.send = function(event, data){
