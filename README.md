@@ -13,7 +13,7 @@ Kitauji Gwent is a Gwent card game adaptation which features a new set of cards 
 
 ```sh
 cd ~/myWebserverRoot
-git clone https://github.com/kitauji-gwent/kitauji-gwent
+git clone https://github.com/kitauji-gwent/kitauji-gwent.git
 cd kitauji-gwent
 npm install
 npm run build
@@ -26,7 +26,7 @@ npm run build
 
 ## - Start Server
 ```sh
-cd ~/myProjectDirectory/not-gwent-online
+cd ~/myProjectDirectory/kitauji-gwent
 node server/server.js
 ```
 
