@@ -13,8 +13,8 @@ Kitauji Gwent is a Gwent card game adaptation which features a new set of cards 
 
 ```sh
 cd ~/myWebserverRoot
-git clone https://github.com/exane/not-gwent-online
-cd not-gwent-online
+git clone https://github.com/kitauji-gwent/kitauji-gwent
+cd kitauji-gwent
 npm install
 npm run build
 ```
