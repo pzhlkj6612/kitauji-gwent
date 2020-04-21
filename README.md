@@ -1,7 +1,8 @@
-# Gwent-Online
+# Kitauji Gwent
 
 # Introduction
-Not-Gwent-Online is a standalone multiplayer version of Gwent, a card game from The Witcher 3. 
+
+Kitauji Gwent is a Gwent card game adaptation which features a new set of cards for the characters from the TV animation *Hibike Euphonium*
 
 # Install
 ## - Requirements
