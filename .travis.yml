@@ -3,7 +3,7 @@ node_js:
   - "7.5.0"
 install:
   - curl -o GraphicsMagick-1.3.35.tar.gz ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/1.3/GraphicsMagick-1.3.35.tar.gz
-  - gzip -d GraphicsMagick-1.3.35.tar.gz | tar -xvf -
+  - tar -xvf GraphicsMagick-1.3.35.tar.gz
   - cd GraphicsMagick-1.3.35
   - ./configure
   - make
