@@ -4,7 +4,7 @@
 
 # Introduction
 
-Kitauji Gwent is a Gwent card game adaptation which features a new set of cards for the characters from the TV animation *Hibike Euphonium*
+Kitauji Gwent is a Gwent card game adaptation which features a new set of cards for the characters from the TV animation *Hibike! Euphonium*
 
 # Install
 ## - Requirements
