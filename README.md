@@ -1,5 +1,7 @@
 # Kitauji Gwent
 
+[![Build Status](https://travis-ci.org/kitauji-gwent/kitauji-gwent.svg?branch=master)](https://travis-ci.org/kitauji-gwent/kitauji-gwent)
+
 # Introduction
 
 Kitauji Gwent is a Gwent card game adaptation which features a new set of cards for the characters from the TV animation *Hibike Euphonium*
