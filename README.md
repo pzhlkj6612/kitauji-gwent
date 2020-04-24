@@ -24,7 +24,6 @@ npm run build
 
 ## - Config
 - go to /public and open Config.js
-- change hostname to your address. (e.g., "192.168.123.1") <br>Make sure you don't have a trailing slash after your IP or address. (e.g., "192.168.123.1/")
 
 ## - Start Server
 ```sh

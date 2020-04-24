@@ -16,9 +16,9 @@ var server = http.createServer(app);
 global.io = require("socket.io").listen(server);
 server.listen(Config.Server.port);
 
-app.use(express.static('public'));
-app.use('/public', express.static('public'));
-app.use('/assets', express.static('assets'));
+app.use(express.static(__dirname + '/../public'));
+app.use('/public', express.static(__dirname + '/../public'));
+app.use('/assets', express.static(__dirname + '/../assets'));
 
 app.listen(Config.WebServer.port);
 

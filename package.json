@@ -1,8 +1,9 @@
 {
-  "name": "Gwent-online",
+  "name": "kitauji-gwent",
   "version": "1.0.0",
   "description": "A standalone multiplayer version of Gwent (The Witcher 3)",
   "main": "gulpfile.js",
+  "bin": "server/server.js",
   "dependencies": {
     "connect": "3.0.1",
     "express": "^4.13.4",
@@ -51,5 +52,19 @@
       "email": "devfakeplus@googlemail.com"
     }
   ],
+  "pkg": {
+    "assets": [
+      "assets/*",
+      "assets/cards/**/*",
+      "assets/data/**/*",
+      "assets/texture/**/*",
+      "public/**/*"
+    ],
+    "targets": [
+      "node8-macos",
+      "node8-win",
+      "node8-linux"
+    ]
+  },
   "license": "MIT"
 }

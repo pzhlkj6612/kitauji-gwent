@@ -13,3 +13,7 @@ client/scss/_cards.scss
 /site/public/assets/js/bundle.js
 /site/public/assets/css/app.css
 site/server/composer.lock
+
+kitauji-gwent-linux
+kitauji-gwent-macos
+kitauji-gwent-win.exe
