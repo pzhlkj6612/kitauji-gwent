@@ -1,6 +1,7 @@
 # Kitauji Gwent
 
 [![Build Status](https://travis-ci.org/kitauji-gwent/kitauji-gwent.svg?branch=master)](https://travis-ci.org/kitauji-gwent/kitauji-gwent)
+[![Github All Releases](https://img.shields.io/github/downloads/kitauji-gwent/kitauji-gwent/total.svg)]()
 
 # Introduction
 
