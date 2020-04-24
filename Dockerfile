@@ -11,7 +11,7 @@ RUN tar -xvf GraphicsMagick-1.3.35.tar.gz && \
     cd ..
 
 COPY package*.json ./
-RUN npm install --silent --progress=false --production
+RUN npm install
 
 COPY . .
 
