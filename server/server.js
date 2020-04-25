@@ -13,8 +13,24 @@ global.Room = require("./Room");
 global.User = require("./User");
 
 var server = http.createServer(app);
-global.io = require("socket.io").listen(server);
+global.io = require("socket.io")(server, {
+  handlePreflightRequest: (req, res) => {
+      const headers = {
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+          "Access-Control-Allow-Credentials": true
+      };
+      res.writeHead(200, headers);
+      res.end();
+  }
+});
+io.set('origins', '*:*');
 server.listen(Config.Server.port);
+
+app.use(function(req, res, next) {
+  res.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'");
+  return next();
+});
 
 app.use(express.static(__dirname + '/../public'));
 app.use('/public', express.static(__dirname + '/../public'));
