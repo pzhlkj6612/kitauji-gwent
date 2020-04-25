@@ -48,7 +48,11 @@ let App = Backbone.Router.extend({
     this.lobbyRoute();
   },
   connect: function(){
-    this.socket = socket(location.hostname + ":" + Config.Server.port);
+    let hostname = Config.Server.hostname;
+    if (!hostname) {
+      hostname = location.hostname;
+    }
+    this.socket = socket("http://" + hostname + ":" + Config.Server.port);
     var self = this;
     console.log(this.socket.connected);
     this.socket.on("connect", function(socket){

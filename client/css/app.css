@@ -669,7 +669,7 @@ ul {
 }
 
 body.landing {
-    background: url(../img/landing-bg.jpg) #162232 center top no-repeat;
+    background: #162232 center top no-repeat;
     background-size: cover;
 }
 
