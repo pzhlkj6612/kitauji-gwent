@@ -69,6 +69,9 @@ Battleside = (function() {
       if(self.isPassing()) return;
       var cardID = data.id;
       var card = self.hand.getCard(cardID);
+      if (card === null || card === -1) {
+        console.warn("No such card at hand: ", cardID);
+      }
 
       self.playCard(card);
     })
@@ -77,7 +80,7 @@ Battleside = (function() {
       var card = self.findCardOnFieldByID(data.cardID);
       /*if(card === -1) throw new Error("decoy:replace | unknown card");*/
       if(card === -1) {
-        console.log("decoy:replace | unknown card: ", card);
+        console.log("decoy:replace | unknown card: ", data);
         self.sendNotificationTo(self, "Possible bug occured: unknown card was chosen by playing decoy ability.");
         //self.endTurn();
         return;
@@ -306,8 +309,8 @@ Battleside = (function() {
       score: this.calcScore(),
       hand: this.hand.length(),
       deck: this.deck.length(),
-      discard: this.getDiscard(true),
-      scorched: this.getScorched(true),
+      discard: this.getDiscard(false),
+      scorched: this.getScorched(false),
       isNewRound: isNewRound,
       passing: this._passing
     }

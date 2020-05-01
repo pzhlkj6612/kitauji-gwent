@@ -554,7 +554,7 @@ let BattleView = Backbone.View.extend({
 
     app.on("update:hand", function(data){
       if(user.get("roomSide") == data._roomSide){
-        self.handCards = JSON.parse(data.cards);
+        self.handCards = data.cards;
         self.user.set("handCards", app.handCards);
         self.render();
 
@@ -576,8 +576,8 @@ let BattleView = Backbone.View.extend({
       side.infoData = infoData;
       side.leader = leader;
 
-      side.infoData.discard = JSON.parse(side.infoData.discard);
-      let scorched = JSON.parse(side.infoData.scorched) || [];
+      side.infoData.discard = side.infoData.discard;
+      let scorched = side.infoData.scorched || [];
       if (scorched.length === 0) {
         self.render();
         return;
@@ -616,46 +616,6 @@ let BattleView = Backbone.View.extend({
       }
     })
 
-    /*this.battleChannel.watch(function(d){
-      let event = d.event, data = d.data;
-
-      if(event === "update:hand"){
-        if(user.get("roomSide") == data._roomSide){
-          self.handCards = JSON.parse(data.cards);
-          self.user.set("handCards", self.handCards);
-          self.render();
-        }
-      }
-      else if(event === "update:info"){
-        let _side = data._roomSide;
-        let infoData = data.info;
-        let leader = data.leader;
-
-        let side = self.yourSide;
-        if(user.get("roomSide") != _side){
-          side = self.otherSide;
-        }
-        side.infoData = infoData;
-        side.leader = leader;
-
-        side.infoData.discard = JSON.parse(side.infoData.discard);
-
-        side.render();
-      }
-      else if(event === "update:fields"){
-        let _side = data._roomSide;
-
-        let side = self.yourSide;
-        if(user.get("roomSide") != _side){
-          side = self.otherSide;
-        }
-        side.field.close = data.close;
-        side.field.ranged = data.ranged;
-        side.field.siege = data.siege;
-        side.field.weather = data.weather;
-        side.render();
-      }
-    })*/
   },
   calculateMargin: function($container, minSize){
     minSize = typeof minSize === "number" && minSize >= 0 ? minSize : 6;
@@ -818,14 +778,14 @@ let User = Backbone.Model.extend({
     })
 
     app.receive("played:medic", function(data){
-      let cards = JSON.parse(data.cards);
+      let cards = data.cards;
       self.set("medicDiscard", {
         cards: cards
       });
     })
 
     app.receive("played:emreis_leader4", function(data){
-      let cards = JSON.parse(data.cards);
+      let cards = data.cards;
       self.set("emreis_leader4", {
         cards: cards
       });
@@ -849,14 +809,26 @@ let User = Backbone.Model.extend({
       self.set("isReDrawing", false);
     })
 
-    app.receive("update:hand", function(data){
-      app.trigger("update:hand", data);
-    })
-    app.receive("update:fields", function(data){
-      app.trigger("update:fields", data);
-    })
     app.receive("update:info", function(data){
-      app.trigger("update:info", data);
+      let info = {
+        _roomSide: data._roomSide,
+        info: data.info,
+        leader: data.leader,
+      };
+      app.trigger("update:info", info);
+      let hand = {
+        _roomSide: data._roomSide,
+        cards: data.cards,
+      };
+      app.trigger("update:hand", hand);
+      let fields = {
+        _roomSide: data._roomSide,
+        close: data.close,
+        ranged: data.ranged,
+        siege: data.siege,
+        weather: data.weather
+      };
+      app.trigger("update:fields", fields);
     })
 
     app.receive("gameover", function(data){
