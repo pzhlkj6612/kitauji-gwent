@@ -1,3 +1,4 @@
+var HandWrittenBot = require("./HandWrittenBot");
 
 var Matchmaker = (function(){
   var Matchmaker = function(){
@@ -30,6 +31,17 @@ var Matchmaker = (function(){
         return this._queue.splice(i, 1);
       }
     }
+  }
+
+  r.findBotOpponent = function(user) {
+    var c = connections;
+    var room = Room();
+    c.roomCollection[room.getID()] = room;
+    room.join(user);
+    var bot = HandWrittenBot(); // TODO
+    room.join(bot);
+    user._inQueue = false;
+    return room;
   }
 
   r.findOpponent = function(user){

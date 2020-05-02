@@ -245,7 +245,9 @@ var Battle = (function(){
       event: event,
       data: data
     });*/
-    io.sockets.in(this._id).emit(event, data);
+    this.p1.socket.emit(event, data);
+    this.p2.socket.emit(event, data);
+    // io.sockets.in(this._id).emit(event, data);
   }
 
   r.runEvent = function(eventid, ctx, args, uid){

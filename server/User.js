@@ -116,6 +116,11 @@ var User = (function(){
       socket.emit("response:name", {name: self.getName()});
     })
 
+    socket.on("request:matchmaking:bot", function() {
+      if(self._inQueue) return;
+      matchmaking.findBotOpponent(self);
+    });
+
     socket.on("request:matchmaking", function() {
       if(self._inQueue) return;
       matchmaking.findOpponent(self);
