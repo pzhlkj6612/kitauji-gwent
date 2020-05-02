@@ -39,6 +39,14 @@
     line-height: 29px;
   }
 
+  .startMatchmakingWithBot {
+    height: auto !important;
+    width: auto !important;
+    line-height: 29px;
+    margin-right: 10px;
+    background: linear-gradient(to right, rgb(32, 200, 218) 0%, rgb(32, 200, 218) 100%);
+  }
+
   .wrap-landing {
     max-width: 800px;
   }
@@ -73,6 +81,10 @@
         <option value="kitauji2">牌组: 北宇治名人堂</option>
       </select>
 
+      <div class="wrap-btn-action btn-register-action startMatchmakingWithBot">
+        <input type="submit" value="人机对战" class="btn-action">
+        <i class="icon-action-load image-gif-loader"></i>
+      </div>
       <div class="wrap-btn-action btn-register-action startMatchmaking">
         <input type="submit" value="匹配对手" class="btn-action">
         <i class="icon-action-load image-gif-loader"></i>

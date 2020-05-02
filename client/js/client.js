@@ -328,7 +328,7 @@ let BattleView = Backbone.View.extend({
     "click .battleside.player": "onClickFieldCard",
     "click .button-pass": "onPassing",
     "click .field-discard": "openDiscard",
-    "click .field-leader": "clickLeader"
+    "click .field-leader.card-wrap": "clickLeader"
   },
   onPassing: function(){
     if(this.user.get("passing")) return;
@@ -844,6 +844,7 @@ let User = Backbone.Model.extend({
       self.set("chooseSide", true);
     })
 
+    app.on("startMatchmakingWithBot", this.startMatchmakingWithBot, this);
     app.on("startMatchmaking", this.startMatchmaking, this);
     app.on("joinRoom", this.joinRoom, this);
     app.on("setName", this.setName, this);
@@ -856,6 +857,10 @@ let User = Backbone.Model.extend({
 
     app.send("request:name", this.get("name") === null ? null : {name: this.get("name")});
     app.send("set:deck", this.get("deck") === null ? null : {deck: this.get("deck")});
+  },
+  startMatchmakingWithBot: function(){
+    this.set("inMatchmakerQueue", true);
+    this.get("app").send("request:matchmaking:bot");
   },
   startMatchmaking: function(){
     this.set("inMatchmakerQueue", true);
@@ -925,6 +930,7 @@ let Lobby = Backbone.View.extend({
   },
   events: {
     "click .startMatchmaking": "startMatchmaking",
+    "click .startMatchmakingWithBot": "startMatchmakingWithBot",
     /*"click .join-room": "joinRoom",*/
     "blur .name-input": "changeName",
     "change #deckChoice": "setDeck",
@@ -941,6 +947,9 @@ let Lobby = Backbone.View.extend({
   startMatchmaking: function(){
     this.$el.find(".image-gif-loader").show();
     this.app.trigger("startMatchmaking");
+  },
+  startMatchmakingWithBot: function(){
+    this.app.trigger("startMatchmakingWithBot");
   },
   joinRoom: function(){
     this.app.trigger("joinRoom");
