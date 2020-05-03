@@ -373,6 +373,12 @@ let BattleView = Backbone.View.extend({
     this.app.send("play:cardFromHand", {
       id: id
     });
+    // if this is the last card, pass automatically
+    if (self.$el.find(".field-hand").find('.card').length === 1 && !$card.data("ability").includes("medic")) {
+      setTimeout(function() {
+        self.onPassing();
+      }, 0);
+    }
     let playCard = $(".play-card-animation");
     playCard.html($card.html());
     let type = $card.data("type");
@@ -557,11 +563,6 @@ let BattleView = Backbone.View.extend({
         self.handCards = data.cards;
         self.user.set("handCards", app.handCards);
         self.render();
-
-        // if this is the last card, pass automatically
-        if (self.$el.find(".field-hand").find('.card').length === 0) {
-          self.onPassing();
-        }
       }
     })
     app.on("update:info", function(data){
