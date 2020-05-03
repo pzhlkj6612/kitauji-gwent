@@ -1,3 +1,5 @@
+var BotStrategy = require("./BotStrategy");
+
 var HandWrittenBot = (function(){
     var SocketStub = function(bot){
       this.bot = bot;
@@ -29,7 +31,8 @@ var HandWrittenBot = (function(){
       this._rooms = [];
       this._id = this.generateID();
       this.generateName();
-      this.setDeck("kitauji2");  
+      this.setDeck("kitauji2");
+      this.strategy = new BotStrategy(this);
     };
     var r = HandWrittenBot.prototype;
     /**
@@ -70,7 +73,7 @@ var HandWrittenBot = (function(){
           break;
         case "set:waiting":
           if (!data.waiting) {
-            setTimeout(() => this.play(), 1000);
+            setTimeout(() => this.play(), this.state.foeSide.passing ? 2000 : 1000);
           }
           break;
         case "set:passing":
@@ -112,16 +115,13 @@ var HandWrittenBot = (function(){
     }
 
     r.play = function() {
-      let state = this.state;
-      let card = this.selectCard();
-      let commands = this.generateCommands(card);
-      console.warn("score: ", state.ownSide.score, " vs ", state.foeSide.score, 
-        "foe passing: ", state.foeSide.passing);
-      if ((state.ownSide.score > state.foeSide.score && state.foeSide.passing) || commands.length == 0) {
+      let card = this.strategy.selectCard();
+      let commands = this.strategy.generateCommands(card);
+      if (commands.length == 0) {
         commands = [this.playPassCommand()];
       }
       for (let i=0; i<commands.length; i++) {
-        this.socket.trigger(commands[i].event, commands[i]);
+        setTimeout(() => this.socket.trigger(commands[i].event, commands[i]), 500 * i); 
       }
     }
     r.playPassCommand = function() {
@@ -152,103 +152,6 @@ var HandWrittenBot = (function(){
         event: "medic:chooseCardFromDiscard",
         cardID: id,
       };
-    }
-    r.generateCommands = function(card) {
-      let state = this.state;
-      if (state.ownHand.every(function(c) {
-        return c._id !== card._id;
-      })) {
-        console.warn("bot: no card at hand: ", card._id)
-        return [];
-      }
-      if (card._data.ability === "decoy") {
-        let fieldCards = state.ownFields.siege.cards
-          .concat(state.ownFields.ranged.cards)
-          .concat(state.ownFields.close.cards);
-        let spies = this.spiesOf(fieldCards);
-        if (spies.length > 0) {
-          return [this.playCardCommand(card._id), 
-            this.decoyReplaceWithCommand(this.getMin(spies)._id)];
-        }
-        let normal = this.regularsOf(fieldCards);
-        if (normal.length > 0) {
-          return [this.playCardCommand(card._id), 
-            this.decoyReplaceWithCommand(this.getMax(normal)._id)];
-        }
-        return [];
-      } else if (card._data.ability == "commanders_horn_card") {
-        let fields = [state.ownFields.close, state.ownFields.ranged, state.ownFields.siege];
-        let maxFieldType = 0, maxScore = 0;
-        for (let i=0; i<fields.length; i++) {
-          if (fields[i].score > maxScore) {
-            maxScore = fields[i].score;
-            maxFieldType = i;
-          }
-        }
-        return [this.playCardCommand(card._id), this.selectHornCommand(maxFieldType)];
-      } else if (String(card._data.ability).includes("medic")) {
-        let selectMedic = (currentDiscards) => {
-          let medics = this.medicsOf(currentDiscards);
-          let spies = this.spiesOf(currentDiscards);
-          let normals = this.regularsOf(currentDiscards);
-          if (medics.length > 0) {
-            let selected = this.getMax(medics);
-            let remained = currentDiscards.filter(c => c._id !== selected._id);
-            return [this.medicChooseCardCommand(selected._id)].concat(selectMedic(remained));
-          } else if (spies.length > 0) {
-            return [this.medicChooseCardCommand(this.getMin(spies)._id)];
-          } else if (normals.length > 0) {
-            return [this.medicChooseCardCommand(this.getMax(normals)._id)];
-          }
-          return [this.medicChooseCardCommand(null)];
-        }
-        let discard = state.ownSide.discard.filter(c => c._id !== card._id);
-        return [this.playCardCommand(card._id)].concat(selectMedic(discard));
-      } else {
-        return [this.playCardCommand(card._id)];
-      }
-    }
-    r.selectCard = function() {
-      let spies = this.spiesOf(this.state.ownHand);
-      if (spies.length > 0) {
-        return this.getMin(spies);
-      }
-      return this.getMax(this.state.ownHand);
-    }
-    r.getMin = function(cards) {
-      let minCard = cards[0];
-      for (let i=0; i<cards.length; i++) {
-        if (cards[i]._data.power < minCard._data.power) {
-          minCard = cards[i];
-        }
-      }
-      return minCard;
-    }
-    r.getMax = function(cards) {
-      let maxCard = cards[0];
-      for (let i=0; i<cards.length; i++) {
-        if (cards[i]._data.power > maxCard._data.power) {
-          maxCard = cards[i];
-        }
-      }
-      return maxCard;
-    }
-    r.canReplace = function(card) {
-      return !(String(card._data.ability).includes("hero") || card._data.ability === "decoy");
-    }
-    r.spiesOf = function(cards) {
-      return cards.filter(function(card) {
-        return String(card._data.ability).includes("spy");
-      });
-    }
-    r.medicsOf = function(cards, includeHero) {
-      return cards.filter(function(card) {
-        return card._data.ability === "medic" ||
-          (includeHero && String(card._data.ability).includes("medic"));
-      });
-    }
-    r.regularsOf = function(cards) {
-      return cards.filter(this.canReplace);
     }
 
     r.generateID = function() {
