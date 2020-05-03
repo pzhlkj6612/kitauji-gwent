@@ -37,6 +37,7 @@ Battleside = (function() {
     this.deck = Deck(deck, this);
     this._discard = [];
     this.isBot = user.isBot();
+    this._scores = [];
 
     this.runEvent = this.battle.runEvent.bind(this.battle);
     this.on = this.battle.on.bind(this.battle);
@@ -184,6 +185,7 @@ Battleside = (function() {
 
   r._rubies = 2;
   r._score = 0;
+  r._scores = null;
   r._isWaiting = null;
   r._passing = null;
 
@@ -327,6 +329,14 @@ Battleside = (function() {
 
   r.getScore = function() {
     return +this.calcScore();
+  }
+
+  r.getScores = function() {
+    return this._scores;
+  }
+
+  r.recordScore = function(score) {
+    this._scores.push(score);
   }
 
   r.removeRuby = function() {

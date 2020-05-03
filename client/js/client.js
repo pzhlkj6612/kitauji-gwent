@@ -834,11 +834,28 @@ let User = Backbone.Model.extend({
 
     app.receive("gameover", function(data){
       let winner = data.winner;
-
       //console.log("gameover");
+      let p1Scores = data.p1Scores;
+      let p2Scores = data.p2Scores;
+      p1Scores[2] = p1Scores[2] || 0;
+      p2Scores[2] = p2Scores[2] || 0;
 
       let model = Backbone.Model.extend({});
-      let modal = new WinnerModal({model: new model({winner: winner})});
+      let modal = new WinnerModal({model: new model({
+        winner: winner,
+        p1_1: p1Scores[0],
+        p2_1: p2Scores[0],
+        p1_win_1: p1Scores[0] >= p2Scores[0],
+        p2_win_1: p1Scores[0] <= p2Scores[0],
+        p1_2: p1Scores[1],
+        p2_2: p2Scores[1],
+        p1_win_2: p1Scores[1] >= p2Scores[1],
+        p2_win_2: p1Scores[1] <= p2Scores[1],
+        p1_3: p1Scores[2],
+        p2_3: p2Scores[2],
+        p1_win_3: p1Scores[2] > 0 && p1Scores[2] >= p2Scores[2],
+        p2_win_3: p2Scores[2] > 0 && p1Scores[2] <= p2Scores[2],
+      })});
       $("body").prepend(modal.render().el);
     })
     app.receive("request:chooseWhichSideBegins", function(){

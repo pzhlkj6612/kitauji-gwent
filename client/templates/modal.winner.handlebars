@@ -3,6 +3,17 @@
 </div>
 <div class="bbm-modal__section">
   <h1>{{winner}} 赢得比赛!</h1>
+  <div class="score-board">
+    <div class="col-xs-12 score-row">
+      <div class="col-xs-4 {{#if p1_win_1}}win-game{{/if}}">{{p1_1}}</div>
+      <div class="col-xs-4 {{#if p1_win_2}}win-game{{/if}}">{{p1_2}}</div>
+      <div class="col-xs-4 {{#if p1_win_3}}win-game{{/if}}">{{p1_3}}</div>
+    </div>
+    <div class="col-xs-12 score-row">
+      <div class="col-xs-4 {{#if p2_win_1}}win-game{{/if}}">{{p2_1}}</div>
+      <div class="col-xs-4 {{#if p2_win_2}}win-game{{/if}}">{{p2_2}}</div>
+      <div class="col-xs-4 {{#if p2_win_3}}win-game{{/if}}">{{p2_3}}</div>
+    </div>
   <p>本程序基于开源昆特牌项目实现，详情请见 <a href="https://github.com/exane/not-gwent-online" target="_blank">Github Gwent-Online</a>.</p>
   <p>刷新页面可以重新开始比赛。</p>
 
@@ -17,5 +28,13 @@
     line-height: 30px;
     width: auto;
     margin: 30px 0;
+  }
+  .score-row {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .win-game {
+    color: white;
+    font-weight: bold;
   }
 </style>

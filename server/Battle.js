@@ -155,7 +155,6 @@ var Battle = (function(){
     if(this.checkIfIsOver()){
       //console.log("its over!");
       var winner = this.getWinner();
-      winner = winner ? winner.getName() : "无人";
       this.gameOver(winner);
       this.update();
       return;
@@ -208,9 +207,11 @@ var Battle = (function(){
     })
   }
 
-  r.gameOver = function(winnerName){
+  r.gameOver = function(winner){
     this.send("gameover", {
-      winner: winnerName
+      winner: winner ? winner.getName() : "无人",
+      p1Scores: this.p1.getScores(),
+      p2Scores: this.p2.getScores(),
     })
   }
 
@@ -327,6 +328,8 @@ var Battle = (function(){
     var scoreP1 = this.p1.getScore();
     var scoreP2 = this.p2.getScore();
 
+    this.p1.recordScore(scoreP1);
+    this.p2.recordScore(scoreP2);
     if(scoreP1 > scoreP2){
       this.p2.removeRuby();
       return {
