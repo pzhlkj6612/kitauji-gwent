@@ -11,6 +11,7 @@ var Matchmaker = (function(){
 
     this._connections = connections;
     this._queue = [];
+    this._queueByRoom = {};
 
   };
   var r = Matchmaker.prototype;
@@ -21,14 +22,19 @@ var Matchmaker = (function(){
    */
 
   r._queue = null;
+  r._queueByRoom = null;
   r._connections = null;
 
-  r.removeFromQueue = function(user){
-    for(var i = 0; i < this._queue.length; i++) {
-      var u = this._queue[i];
+  r.removeFromQueue = function(user, opt_roomName){
+    let queue = this._queue;
+    if (opt_roomName) {
+      queue = this._queueByRoom[opt_roomName];
+    }
+    for(var i = 0; i < queue.length; i++) {
+      var u = queue[i];
       if(u.getID() === user.getID()) {
         user._inQueue = false;
-        return this._queue.splice(i, 1);
+        return queue.splice(i, 1);
       }
     }
   }
@@ -44,10 +50,10 @@ var Matchmaker = (function(){
     return room;
   }
 
-  r.findOpponent = function(user){
+  r.findOpponent = function(user, opt_roomName){
     var c = connections;
 
-    var found = this._checkForOpponent();
+    var found = this._checkForOpponent(opt_roomName);
 
     if(found){
 
@@ -60,19 +66,29 @@ var Matchmaker = (function(){
       return room;
     }
 
-    this._getInQueue(user);
+    this._getInQueue(user, opt_roomName);
   }
 
-  r._getInQueue = function(user){
+  r._getInQueue = function(user, opt_roomName){
+    if (opt_roomName) {
+      this._queueByRoom[opt_roomName] = this._queueByRoom[opt_roomName] || [];
+      this._queueByRoom[opt_roomName].push(user);
+      user._inQueue = true;
+      return;
+    }
     //console.log(user.getName() + " joined in queue");
     this._queue.push(user);
     user._inQueue = true;
   }
 
 
-  r._checkForOpponent = function(){
-    if(!this._queue.length) return null;
-    var foe = this._queue.splice(0, 1)[0];
+  r._checkForOpponent = function(opt_roomName){
+    let queue = this._queue;
+    if (opt_roomName) {
+      queue = this._queueByRoom[opt_roomName];
+    }
+    if(!queue || !queue.length) return null;
+    var foe = queue.splice(0, 1)[0];
     foe._inQueue = false;
     return foe;
   }

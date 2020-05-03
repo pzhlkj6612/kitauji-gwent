@@ -461,7 +461,7 @@ let BattleView = Backbone.View.extend({
     let $discard = $(e.target).closest(".field-discard");
     //console.log("opened discard");
     let side;
-    if($discard.parent().hasClass("player")){
+    if($discard.parent().parent().hasClass("player")){
       side = this.yourSide;
     }
     else {
@@ -863,9 +863,9 @@ let User = Backbone.Model.extend({
     this.set("inMatchmakerQueue", true);
     this.get("app").send("request:matchmaking:bot");
   },
-  startMatchmaking: function(){
+  startMatchmaking: function(roomName){
     this.set("inMatchmakerQueue", true);
-    this.get("app").send("request:matchmaking");
+    this.get("app").send("request:matchmaking", {roomName: roomName});
   },
   joinRoom: function(){
     this.get("app").send("request:joinRoom");
@@ -934,6 +934,7 @@ let Lobby = Backbone.View.extend({
     "click .startMatchmakingWithBot": "startMatchmakingWithBot",
     /*"click .join-room": "joinRoom",*/
     "blur .name-input": "changeName",
+    "blur .room-name-input": "changeRoomName",
     "change #deckChoice": "setDeck",
     "click .note": "debugNote"
   },
@@ -947,7 +948,8 @@ let Lobby = Backbone.View.extend({
   },
   startMatchmaking: function(){
     this.$el.find(".image-gif-loader").show();
-    this.app.trigger("startMatchmaking");
+    let roomName = this.$el.find(".room-name-input").val();
+    this.app.trigger("startMatchmaking", roomName);
   },
   startMatchmakingWithBot: function(){
     this.app.trigger("startMatchmakingWithBot");

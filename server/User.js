@@ -25,6 +25,7 @@ var User = (function(){
   r._id = null;
   r._name = null;
   r._rooms = null;
+  r._roomName = null;
   r._inQueue = false;
   r.socket = null;
   r.disconnected = false;
@@ -96,7 +97,7 @@ var User = (function(){
     var self = this;
     this.disconnected = true;
 
-    matchmaking.removeFromQueue(this);
+    matchmaking.removeFromQueue(this, this._roomName);
 
     this._rooms.forEach(function(room) {
       room.leave(self);
@@ -125,9 +126,10 @@ var User = (function(){
       matchmaking.findBotOpponent(self);
     });
 
-    socket.on("request:matchmaking", function() {
+    socket.on("request:matchmaking", function(data) {
       if(self._inQueue) return;
-      matchmaking.findOpponent(self);
+      self._roomName = data.roomName;
+      matchmaking.findOpponent(self, data.roomName);
     });
 
     socket.on("request:gameLoaded", function(data){

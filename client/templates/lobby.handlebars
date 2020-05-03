@@ -69,9 +69,11 @@
 
 <section class="container-landing">
   <div class="wrap-landing">
-    <img src="/assets/logo-big.jpg" height="400" alt="Gwent" class="logo-big">
+    <img src="/assets/logo-big.jpg" height="300" alt="Gwent" class="logo-big">
 
     <div class="container-form-landing">
+
+      <input type="text" placeholder="房间名（可不填）" class="field-session field-username room-name-input">
 
       <input type="text" placeholder="用户名" class="field-session field-username name-input" autofocus value="{{name}}">
 
@@ -80,7 +82,8 @@
         <option value="kitauji">牌组: 北宇治</option>
         <option value="kitauji2">牌组: 北宇治名人堂</option>
       </select>
-
+    </div>
+    <div class="container-form-landing" style="margin-top:10px">
       <div class="wrap-btn-action btn-register-action startMatchmakingWithBot">
         <input type="submit" value="人机对战" class="btn-action">
         <i class="icon-action-load image-gif-loader"></i>
