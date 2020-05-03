@@ -29,6 +29,10 @@ var User = (function(){
   r.socket = null;
   r.disconnected = false;
 
+  r.isBot = function() {
+    return false;
+  }
+
   r.getID = function(){
     return this._id;
   }

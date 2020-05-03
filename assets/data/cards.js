@@ -485,6 +485,14 @@ module.exports = {
     faction: "kitauji",
     type: 3
   },
+  "taki_chihiro": {
+    name: "泷千寻",
+    power: -1,
+    ability: "foltest_leader4",
+    img: "taki_chihiro",
+    faction: "kitauji",
+    type: 3
+  },
   "redanian_foot_soldier": {
     name: "Redanian Foot Soldier",
     power: 1,

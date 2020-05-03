@@ -300,11 +300,11 @@ var BotStrategy = (function(){
       if (state.ownSide.score <= state.foeSide.score && state.foeSide.passing) {
         console.warn("foe passing and lead, should play the smallest card which make us lead");
         let diff = state.foeSide.score - state.ownSide.score;
-        let index = 0;
+        let index = -1;
         realPowers.forEach((p,i)=>{
           if (p>diff && p<realPowers[index]) index = i;
         });
-        return cards[index];
+        if (index >= 0) return cards[index];
       }
       if (maxReward < 0) {
         console.warn("pass due to reward too small");

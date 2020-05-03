@@ -49,6 +49,10 @@ var HandWrittenBot = (function(){
     r.disconnected = false;
     r.state = {};
   
+    r.isBot = function() {
+      return true;
+    }
+
     r.getID = function(){
       return this._id;
     }

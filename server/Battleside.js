@@ -36,6 +36,7 @@ Battleside = (function() {
     this.hand = Hand();
     this.deck = Deck(deck, this);
     this._discard = [];
+    this.isBot = user.isBot();
 
     this.runEvent = this.battle.runEvent.bind(this.battle);
     this.on = this.battle.on.bind(this.battle);
@@ -270,6 +271,10 @@ Battleside = (function() {
   }
 
   r.setLeadercard = function() {
+    if (this.isBot) {
+      let leaderCard = this.createCard("taki_chihiro");
+      this.field[Card.TYPE.LEADER].add(leaderCard);
+    }
     var leaderCard = this.deck.find("type", Card.TYPE.LEADER);
     this.deck.removeFromDeck(leaderCard[0]);
     /*
