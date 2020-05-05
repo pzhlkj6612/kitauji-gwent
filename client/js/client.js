@@ -374,7 +374,10 @@ let BattleView = Backbone.View.extend({
       id: id
     });
     // if this is the last card, pass automatically
-    if (self.$el.find(".field-hand").find('.card').length === 1 && !$card.data("ability").includes("medic")) {
+    if (self.$el.find(".field-hand").find('.card').length === 1 &&
+      !$card.data("ability").includes("medic") &&
+      !$card.data("ability").includes("commanders_horn_card") &&
+      !$card.data("ability").includes("decoy")) {
       setTimeout(function() {
         self.onPassing();
       }, 0);
