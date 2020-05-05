@@ -394,7 +394,7 @@ var Battle = (function(){
     var side = this[sideName];
 
 
-    if(side.foe){
+    if(side && side.foe){
       side.foe.send("foe:left", null, true);
       return;
     }
