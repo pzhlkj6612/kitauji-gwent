@@ -148,7 +148,7 @@ var BotStrategy = (function(){
       return hand;
     }
     r.getMaxPossibility = function(cards) {
-      console.warn("start calculating rewards");
+      // console.warn("start calculating rewards");
       let state = this.bot.state;
       let realPowers = [];
       let maxReward = -100, maxCardIdx = 0;
@@ -245,7 +245,7 @@ var BotStrategy = (function(){
         } else {
           reward = Math.max(realPower - card._data.power * 0.5, 0);
         }
-        console.warn("reward of ", card._data.name, " is ", reward);
+        // console.warn("reward of ", card._data.name, " is ", reward);
         if (reward > maxReward) {
           maxReward = reward;
           maxCardIdx = i;
@@ -266,8 +266,8 @@ var BotStrategy = (function(){
         if (state.foeSide.score - state.ownSide.score > handPower * 1.0 / state.foeSide.lives) {
           if (state.foeSide.lives === 1 &&
               state.ownHand.some(c=>c._data.ability === "decoy") &&
-              getFieldCards(true).some(c=>this.canReplace(c)) &&
-              getFieldCards(false).every(c=>!this.isSpy(c))) {
+              this.getFieldCards(true).some(c=>this.canReplace(c)) &&
+              this.getFieldCards(false).every(c=>!this.isSpy(c))) {
               return state.ownHand.find(c=>c._data.ability === "decoy");
           }
           console.warn("pass due to foe leading too large");
@@ -287,7 +287,7 @@ var BotStrategy = (function(){
         if (state.ownSide.score > state.foeSide.score) {
           if (state.foeSide.passing) {
             if (state.ownHand.some(c=>c._data.ability === "decoy") &&
-              getFieldCards(true).some(c=>this.canReplace(c))) {
+              this.getFieldCards(true).some(c=>this.canReplace(c))) {
               return state.ownHand.find(c=>c._data.ability === "decoy");
             }
           }
