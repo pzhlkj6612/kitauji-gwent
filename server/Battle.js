@@ -398,7 +398,7 @@ var Battle = (function(){
       side.foe.send("foe:left", null, true);
       return;
     }
-    console.log("side foe not defined!", side.foe);
+    console.log("side foe not defined!");
   }
 
   r.shutDown = function(){

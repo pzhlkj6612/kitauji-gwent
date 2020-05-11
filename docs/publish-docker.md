@@ -11,7 +11,7 @@ On remote machine:
 ```bash
 sudo docker pull registry.cn-hangzhou.aliyuncs.com/kitauji/kitauji-gwent:<version>
 
-docker run -p 80:3000 -p 16918:16918 -d registry.cn-hangzhou.aliyuncs.com/kitauji/kitauji-gwent:<version>
+sudo docker run -p 80:3000 -p 16918:16918 -d --restart unless-stopped  registry.cn-hangzhou.aliyuncs.com/kitauji/kitauji-gwent:<version>
 ```
 
 ```

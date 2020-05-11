@@ -113,7 +113,7 @@ module.exports = {
   },
   "kishibe_miru": {
     name: "岸部海松",
-    power: 6,
+    power: 5,
     ability: null,
     img: "kishibe_miru",
     faction: "kitauji",

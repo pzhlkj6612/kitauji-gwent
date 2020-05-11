@@ -41,7 +41,7 @@ var Deck = (function(){
   }
 
   r.setDeck = function(deckKey){
-    var deck = DeckData[deckKey] ? DeckData[deckKey] : DeckData["northern"];
+    var deck = DeckData[deckKey] ? DeckData[deckKey] : DeckData["kitauji"];
 
     if(deckKey === "random"){
       var decks = _.allKeys(DeckData);

@@ -26,7 +26,7 @@ var HandWrittenBot = (function(){
        * constructor here
        */
   
-  
+      this.state = {};
       this.socket = new SocketStub(this);
       this._rooms = [];
       this._id = this.generateID();
@@ -119,8 +119,14 @@ var HandWrittenBot = (function(){
     }
 
     r.play = function() {
-      let card = this.strategy.selectCard();
-      let commands = this.strategy.generateCommands(card);
+      let commands = [];
+      try {
+        let card = this.strategy.selectCard();
+        commands = this.strategy.generateCommands(card);
+      } catch (e) {
+        // catch error from strategy instead of crashing the server!
+        console.warn(e);
+      }
       if (commands.length == 0) {
         commands = [this.playPassCommand()];
       }
@@ -133,16 +139,18 @@ var HandWrittenBot = (function(){
         event: "set:passing"
       };
     }
-    r.playCardCommand = function(id) {
+    r.playCardCommand = function(card) {
       return {
         event: "play:cardFromHand",
-        id: id,
+        id: card._id,
+        name: card._data.name
       };
     }
-    r.decoyReplaceWithCommand = function(id) {
+    r.decoyReplaceWithCommand = function(card) {
       return {
         event: "decoy:replaceWith",
-        cardID: id,
+        cardID: card._id,
+        name: card._data.name
       };
     }
     r.selectHornCommand = function(fieldType) {
@@ -151,10 +159,16 @@ var HandWrittenBot = (function(){
         field: fieldType,
       };
     }
-    r.medicChooseCardCommand = function(id) {
+    r.medicChooseCardCommand = function(card) {
+      if (!card) {
+        return {
+          event: "medic:chooseCardFromDiscard"
+        };
+      }
       return {
         event: "medic:chooseCardFromDiscard",
-        cardID: id,
+        cardID: card._id,
+        name: card._data.name
       };
     }
 

@@ -15,13 +15,13 @@ var BotStrategy = (function(){
       if (fieldCards.length === 0) return [];
       let spies = fieldCards.filter(c=>this.isSpy(c));
       if (spies.length > 0) {
-        return [this.bot.playCardCommand(card._id), 
-          this.bot.decoyReplaceWithCommand(this.getMin(spies)._id)];
+        return [this.bot.playCardCommand(card), 
+          this.bot.decoyReplaceWithCommand(this.getMin(spies))];
       }
       let medics = fieldCards.filter(c=>this.isMedic(c));
       if (medics.length > 0) {
-        return [this.bot.playCardCommand(card._id), 
-          this.bot.decoyReplaceWithCommand(this.getMax(medics)._id)];
+        return [this.bot.playCardCommand(card), 
+          this.bot.decoyReplaceWithCommand(this.getMax(medics))];
       }
       // if foe passing and we lead, keep leading after replace
       let lead = state.ownSide.score - state.foeSide.score;
@@ -33,14 +33,14 @@ var BotStrategy = (function(){
           if (!toReplace || c.power > toReplace.power) toReplace = c;
         });
         if (toReplace) {
-          return [this.bot.playCardCommand(card._id), 
-            this.bot.decoyReplaceWithCommand(toReplace._id)];
+          return [this.bot.playCardCommand(card), 
+            this.bot.decoyReplaceWithCommand(toReplace)];
         }
       }
       let normal = fieldCards.filter(c=>this.canReplace(c));
       if (normal.length > 0) {
-        return [this.bot.playCardCommand(card._id), 
-          this.bot.decoyReplaceWithCommand(this.getMax(normal)._id)];
+        return [this.bot.playCardCommand(card), 
+          this.bot.decoyReplaceWithCommand(this.getMax(normal))];
       }
       return [];
     }
@@ -55,7 +55,7 @@ var BotStrategy = (function(){
           maxFieldType = i;
         }
       }
-      return [this.bot.playCardCommand(card._id), this.bot.selectHornCommand(maxFieldType)];
+      return [this.bot.playCardCommand(card), this.bot.selectHornCommand(maxFieldType)];
     }
     r.generateForMedic = function(card) {
       let state = this.bot.state;
@@ -66,16 +66,16 @@ var BotStrategy = (function(){
         if (medics.length > 0) {
           let selected = this.getMax(medics);
           let remained = currentDiscards.filter(c => c._id !== selected._id);
-          return [this.bot.medicChooseCardCommand(selected._id)].concat(selectMedic(remained));
+          return [this.bot.medicChooseCardCommand(selected)].concat(selectMedic(remained));
         } else if (spies.length > 0) {
-          return [this.bot.medicChooseCardCommand(this.getMin(spies)._id)];
+          return [this.bot.medicChooseCardCommand(this.getMin(spies))];
         } else if (normals.length > 0) {
-          return [this.bot.medicChooseCardCommand(this.getMax(normals)._id)];
+          return [this.bot.medicChooseCardCommand(this.getMax(normals))];
         }
         return [this.bot.medicChooseCardCommand(null)];
       }
       let discard = state.ownSide.discard.filter(c => c._id !== card._id);
-      return [this.bot.playCardCommand(card._id)].concat(selectMedic(discard));
+      return [this.bot.playCardCommand(card)].concat(selectMedic(discard));
     }
     r.generateCommands = function(card) {
       let state = this.bot.state;
@@ -89,7 +89,7 @@ var BotStrategy = (function(){
       } else if (String(card._data.ability).includes("medic")) {
         return this.generateForMedic(card);
       } else {
-        return [this.bot.playCardCommand(card._id)];
+        return [this.bot.playCardCommand(card)];
       }
     }
     r.selectCard = function() {
@@ -245,7 +245,7 @@ var BotStrategy = (function(){
         } else {
           reward = Math.max(realPower - card._data.power * 0.5, 0);
         }
-        // console.warn("reward of ", card._data.name, " is ", reward);
+        console.warn("reward of ", card._data.name, " is ", reward);
         if (reward > maxReward) {
           maxReward = reward;
           maxCardIdx = i;
@@ -260,8 +260,12 @@ var BotStrategy = (function(){
       if (state.ownSide.lives > 1) {
         // 2:2 or 2:1
         if (maxReward <= 0) {
-          console.warn("pass due to reward too small");
-          return null;
+          if (state.foeSide.passing && state.foeSide.score - state.ownSide.score < 2) {
+            // foe pass and score is close, try with low reward to win this round
+          } else {
+            console.warn("pass due to reward too small");
+            return null;
+          }
         }
         if (state.foeSide.score - state.ownSide.score > handPower * 1.0 / state.foeSide.lives) {
           if (state.foeSide.lives === 1 &&
@@ -314,6 +318,7 @@ var BotStrategy = (function(){
         console.warn("pass due to foe passing and we lead");
         return null;
       }
+      console.warn("selected ", cards[maxCardIdx]);
       return cards[maxCardIdx];
     }
     r.getRealPower = function(card, isFoe) {
@@ -339,7 +344,7 @@ var BotStrategy = (function(){
       return (rawPower + add) * (2 ** double);
     }
     r.canReplace = function(card) {
-      return !(this.isHero(card) || card._data.ability === "decoy");
+      return !(this.isHero(card) || card._data.ability === "decoy" || card._data.ability === "scorch_card");
     }
     r.isSpy = function(card, includeHero) {
       return card._data.ability === "spy" ||
@@ -397,7 +402,7 @@ var BotStrategy = (function(){
       cards.forEach((card) => {
         highest = card.power > highest ? card.power : highest;
       });
-      return cards.filter((card) => card.getPower() === highest);
+      return cards.filter((card) => card.power === highest);
     }
     return BotStrategy;
   })();

@@ -72,7 +72,9 @@ Battleside = (function() {
       var cardID = data.id;
       var card = self.hand.getCard(cardID);
       if (card === null || card === -1) {
-        console.warn("No such card at hand: ", cardID);
+        console.warn("No such card at hand: ", data);
+        self.update();
+        self.turn();
       }
 
       self.playCard(card);
@@ -108,9 +110,12 @@ Battleside = (function() {
         return;
       }
       var cardID = data.cardID;
+      if (!cardID) {
+        return;
+      }
       var card = self.getCardFromDiscard(cardID);
       if(card === -1) {
-        console.log("medic:chooseCardFromDiscard | unknown card: ", card);
+        console.log("medic:chooseCardFromDiscard | unknown card: ", data);
         self.sendNotificationTo(self, "Possible bug occured: unknown card was chosen by playing medic ability.");
         self.endTurn();
         return;
