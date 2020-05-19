@@ -176,6 +176,10 @@ var BotStrategy = (function(){
             this.getFieldCards(true).some(c=>this.isMedic(c))) {
               reward = 100;
             }
+          // if no replacable card, don't play it
+          if (!this.getFieldCards(true).some(c=>this.canReplace(c))) {
+            reward = -1;
+          }
         } else if (this.isScorch(card)) {
           let foeClose = state.foeFields.close;
           if (foeClose.score > 10) {

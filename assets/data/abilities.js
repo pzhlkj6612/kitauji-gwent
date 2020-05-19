@@ -17,6 +17,52 @@ module.exports = {
       })
     }
   },
+  "taibu": {
+    name: "taibu",
+    description: "退部: 指定对方一名三年级部员以备战高考为由直接退部。",
+    waitResponse: true,
+    onAfterPlace: function(card) {
+      //TODO: send choose card from foe fields
+    }
+  },
+  "attack": {
+    name: "attack",
+    description: "投掷: 投掷号嘴（或洗手液等），使指定对方一名部员吹奏能力降低。",
+    waitResponse: true,
+    onAfterPlace: function(card) {
+      //TODO: send choose card from foe fields
+    }
+  },
+  "lips": {
+    name: "lips",
+    description: "迷唇: 使对方所有男性部员吹奏能力降为1。",
+    onAfterPlace: function(card) {
+      //TODO
+    }
+  },
+  "guard": {
+    name: "guard",
+    description: "亲卫队: 当本方香织在场时，打出后可使对方一名铜管成员吹奏能力-4。",
+    waitResponse: true,
+    onAfterPlace: function(card) {
+      //TODO
+    }
+  },
+  "tunning": {
+    name: "tunning",
+    description: "调音: 消除己方除天气外的所有不良影响。",
+    onAfterPlace: function(card) {
+      //TODO
+    }
+  },
+  "monaka": {
+    name: "monaka",
+    description: "Team Monaka: 给己方一名部员赠送护身符，使其吹奏能力+2。",
+    waitResponse: true,
+    onAfterPlace: function(card) {
+      //TODO
+    }
+  },
   "medic": {
     name: "medic",
     description: "复活: 令一名退部/毕业的部员（天王除外）回归吹奏部，并立即加入演奏。",
@@ -40,6 +86,7 @@ module.exports = {
     name: "morale_boost",
     description: "士气: 高喊“北宇治Fight！”，使同一行内除自己以外的部员吹奏能力+1。",
     onEachCardPlace: function(card){
+      // card is the morale_boost card, not the affected card
       var field = this.field[card.getType()];
       var id = card.getID();
       if(!field.isOnField(card)){
