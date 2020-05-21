@@ -472,7 +472,9 @@ let BattleView = Backbone.View.extend({
       if($card.parent().hasClass("field-horn")) return;
       this.app.send("attack:chooseAttack", {
         cardID: _id,
-        attackPower: Number(this.user.get("chooseAttack").attackPower)
+        attackPower: Number(this.user.get("chooseAttack").attackPower),
+        grade: this.user.get("chooseAttack").grade,
+        field: this.user.get("chooseAttack").field,
       });
       this.user.set("chooseAttack", false);
     }

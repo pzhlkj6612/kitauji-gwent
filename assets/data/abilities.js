@@ -115,11 +115,12 @@ module.exports = {
         return !card.hasAbility("hero") && !card.hasAbility("decoy");
       });
     },
-    onAfterPlace: function() {
+    onAfterPlace: function(card) {
+      var id = card.getID();
       this.send("played:heal", {
         healPower: 2,
         highlight: this.getFieldCards()
-          .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy"))
+          .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy") && c.getID()!==id)
           .map(c=>c.getID()),
       }, true);
       this.sendNotificationTo(this.foe, this.getName() + " chooses a card to heal.")

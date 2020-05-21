@@ -87,7 +87,9 @@ var BotStrategy = (function(){
       } else if (this.isHorn(card, true)) {
         return this.generateForHornCard(card);
       } else if (String(card._data.ability).includes("medic")) {
-        return this.generateForMedic(card);
+        let cards = this.generateForMedic(card);
+        console.warn("generate for medic: ", cards);
+        return cards;
       } else {
         return [this.bot.playCardCommand(card)];
       }

@@ -203,6 +203,14 @@ Battleside = (function() {
       if (card.hasAbility("hero") || card.hasAbility("decoy")) {
         return;
       }
+      if (data.grade != null && card.getGrade() !== Number(data.grade)) {
+        console.warn("wrong grade");
+        return;
+      }
+      if (data.field != null && card.getType() !== Number(data.field)) {
+        console.warn("wrong field");
+        return;
+      }
       self.battle.sendNotification(self.getName() + " attack " + card.getName());
       card.setBoost("attack", card.getBoostByKey("attack") - Number(data.attackPower));
       if (card.getPower() <= 0) {
