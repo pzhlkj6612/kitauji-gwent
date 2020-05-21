@@ -101,6 +101,7 @@ module.exports = {
     ability: null,
     img: "tsukinaga_motomu",
     faction: "kitauji",
+    male: true,
     type: 2
   },
   "tsukamoto_shuichi": {
@@ -117,6 +118,7 @@ module.exports = {
     ability: null,
     img: "kishibe_miru",
     faction: "kitauji",
+    grade: 3,
     type: 1
   },
   "katou_hazuki": {
@@ -133,6 +135,7 @@ module.exports = {
     ability: "medic",
     img: "iwata_keina",
     faction: "kitauji",
+    grade: 3,
     type: 1
   },
   "higashiura_motoko": {
@@ -150,6 +153,7 @@ module.exports = {
     bondType: "tuba",
     img: "nagase_riko",
     faction: "kitauji",
+    grade: 3,
     type: 1
   },
   "gotou_takuya": {
@@ -159,6 +163,8 @@ module.exports = {
     bondType: "tuba",
     img: "gotou_takuya",
     faction: "kitauji",
+    grade: 3,
+    male: true,
     type: 1
   },
   "tubakun": {
@@ -239,6 +245,7 @@ module.exports = {
     ability: "commanders_horn",
     img: "kabe_tomoe",
     faction: "kitauji",
+    grade: 3,
     type: 1
   },
   "hisaishi_kanade": {
@@ -259,8 +266,9 @@ module.exports = {
   },
   "kousaka_reina": {
     name: "高坂丽奈",
-    power: 15,
-    ability: "hero",
+    power: 10,
+    ability: ["hero", "attack"],
+    attackPower: 4,
     img: "kousaka_reina",
     faction: "kitauji",
     type: 1
@@ -311,19 +319,21 @@ module.exports = {
   "yoshikawa_yuko": {
     name: "吉川优子",
     power: 5,
-    ability: "tight_bond",
+    ability: "morale_boost",
     bondType: "nakayoshi",
     img: "yoshikawa_yuko",
     faction: "kitauji",
+    grade: 3,
     type: 1
   },
   "nakagawa_natsuki": {
     name: "中川夏纪",
     power: 5,
-    ability: "tight_bond",
+    ability: null,
     bondType: "nakayoshi",
     img: "nakagawa_natsuki",
     faction: "kitauji",
+    grade: 3,
     type: 1
   },
   "kohinata_yume": {
@@ -363,7 +373,7 @@ module.exports = {
   },
   "oumae_kumiko": {
     name: "黄前久美子",
-    power: 7,
+    power: 9,
     ability: ["hero", "medic"],
     img: "oumae_kumiko",
     faction: "kitauji",
@@ -376,6 +386,7 @@ module.exports = {
     bondType: "perc2",
     img: "maeda_aota",
     faction: "kitauji",
+    male: true,
     type: 2
   },
   "maeda_sosuke": {
@@ -385,6 +396,7 @@ module.exports = {
     bondType: "perc2",
     img: "maeda_sosuke",
     faction: "kitauji",
+    male: true,
     type: 2
   },
   "hakase_michiru": {
@@ -402,6 +414,7 @@ module.exports = {
     bondType: "bg",
     img: "takigawa_chikao",
     faction: "kitauji",
+    male: true,
     type: 0
   },
   "takahisa_chieri": {
@@ -427,6 +440,7 @@ module.exports = {
     ability: null,
     img: "hirao_sumiko",
     faction: "kitauji",
+    grade: 3,
     type: 0
   },
   "ono_miyoko": {
@@ -435,6 +449,7 @@ module.exports = {
     ability: null,
     img: "ono_miyoko",
     faction: "kitauji",
+    grade: 3,
     type: 2
   },
   "inoue_shirabe": {
@@ -443,6 +458,7 @@ module.exports = {
     ability: null,
     img: "inoue_shirabe",
     faction: "kitauji",
+    grade: 3,
     type: 0
   },
   "hitomi_lala": {
@@ -815,12 +831,13 @@ module.exports = {
     bondType: "tuba",
     img: "gotou_takuya",
     faction: "kumiko1",
+    male: true,
     type: 1
   },
   "yoshikawa_yuko_1": {
     name: "吉川优子",
     power: 4,
-    ability: null,
+    ability: "guard",
     img: "yoshikawa_yuko",
     faction: "kumiko1",
     type: 1
@@ -1226,6 +1243,7 @@ module.exports = {
     bondType: "tuba",
     img: "gotou_takuya",
     faction: "kumiko1S2",
+    male: true,
     type: 1
   },
   "yoshikawa_yuko_2": {
