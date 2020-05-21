@@ -1,5 +1,5 @@
 {{#each this}}
-  <div class="card{{#if _disabled}} disabled{{/if}}" data-key="{{_key}}" data-id="{{_id}}">
+  <div class="card{{#if _disabled}} disabled{{/if}} {{#if _highlight}} active-field{{/if}}" data-key="{{_key}}" data-id="{{_id}}">
     {{#if diff}}
       <span class="card-attr-power {{#if diffPos}}card-attr-positive{{/if}}">
         <span>{{power}}</span>

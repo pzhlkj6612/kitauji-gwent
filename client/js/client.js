@@ -178,6 +178,19 @@ let SideView = Backbone.View.extend({
     let score = this.field.close.score;
     let horn = this.field.close.horn;
 
+    if (this.side === ".foe") {
+      let attackData = this.app.user.get("chooseAttack");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      }
+    } else {
+      let attackData = this.app.user.get("chooseHeal");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      }
+    }
 
     let html = this.templateCards(cards);
 
@@ -208,6 +221,20 @@ let SideView = Backbone.View.extend({
     let score = this.field.ranged.score;
     let horn = this.field.ranged.horn;
 
+    if (this.side === ".foe") {
+      let attackData = this.app.user.get("chooseAttack");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      }
+    } else {
+      let attackData = this.app.user.get("chooseHeal");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      }
+    }
+
     let html = this.templateCards(cards);
 
     $field.find(".field-range").html(html)
@@ -236,6 +263,20 @@ let SideView = Backbone.View.extend({
     let cards = this.field.siege.cards;
     let score = this.field.siege.score;
     let horn = this.field.siege.horn;
+
+    if (this.side === ".foe") {
+      let attackData = this.app.user.get("chooseAttack");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      }
+    } else {
+      let attackData = this.app.user.get("chooseHeal");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      }
+    }
 
     let html = this.templateCards(cards);
 
@@ -380,6 +421,10 @@ let BattleView = Backbone.View.extend({
     if (self.$el.find(".field-hand").find('.card').length === 1 &&
       !$card.data("ability").includes("medic") &&
       !$card.data("ability").includes("commanders_horn_card") &&
+      !$card.data("ability").includes("attack") &&
+      !$card.data("ability").includes("monaka") &&
+      !$card.data("ability").includes("taibu") &&
+      !$card.data("ability").includes("guard") &&
       !$card.data("ability").includes("decoy")) {
       setTimeout(function() {
         self.onPassing();

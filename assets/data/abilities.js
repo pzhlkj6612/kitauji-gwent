@@ -24,7 +24,6 @@ module.exports = {
       let cards = this.foe.getFieldCards();
       return cards.some(card => {
         return !card.hasAbility("hero") &&
-          !card.hasAbility("decoy") &&
           card.getGrade() === 3;
       });
     },
@@ -32,6 +31,9 @@ module.exports = {
       this.send("played:attack", {
         attackPower: 100,
         grade: 3,
+        highlight: this.foe.getFieldCards()
+          .filter(c=>!c.hasAbility("hero") && c.getGrade()===3)
+          .map(c=>c.getID()),
       }, true);
       this.sendNotificationTo(this.foe, this.getName() + " chooses a card to destroy.")
     }
@@ -47,7 +49,10 @@ module.exports = {
     },
     onAfterPlace: function(card) {
       this.send("played:attack", {
-        attackPower: card.getAttackPower()
+        attackPower: card.getAttackPower(),
+        highlight: this.foe.getFieldCards()
+          .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy"))
+          .map(c=>c.getID()),
       }, true);
       this.sendNotificationTo(this.foe, this.getName() + " chooses a card to attack.")
     }
@@ -58,7 +63,7 @@ module.exports = {
     onAfterPlace: function(card) {
       let cards = this.foe.getFieldCards();
       cards.forEach(function(_card){
-        if(_card.hasAbility("hero") || _card.hasAbility("decoy")) return;
+        // no male are hero, so
         if (_card.isMale()) {
           _card.setBoost("lips", - (_card.getBasePower() - 1));
         }
@@ -83,6 +88,9 @@ module.exports = {
       this.send("played:attack", {
         attackPower: 4,
         field: 1,
+        highlight: this.foe.field[1].get()
+          .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy"))
+          .map(c=>c.getID()),
       }, true);
       this.sendNotificationTo(this.foe, this.getName() + " chooses a card to attack.")
     }
@@ -109,7 +117,10 @@ module.exports = {
     },
     onAfterPlace: function() {
       this.send("played:heal", {
-        healPower: 2
+        healPower: 2,
+        highlight: this.getFieldCards()
+          .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy"))
+          .map(c=>c.getID()),
       }, true);
       this.sendNotificationTo(this.foe, this.getName() + " chooses a card to heal.")
     }
