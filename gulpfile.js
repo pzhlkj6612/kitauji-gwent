@@ -87,7 +87,7 @@ gulp.task("index", function() {
 })
 
 gulp.task('resize sm', function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/sm/kitauji/daikichiyama.png")) {
+  if(fs.existsSync(__dirname + "/assets/cards/sm/kitauji/oumae_kumiko.png")) {
     console.log("skip generating sm images");
     return done();
   }
@@ -100,7 +100,7 @@ gulp.task('resize sm', function(done) {
 });
 
 gulp.task('resize md', function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/md/kitauji/daikichiyama.png")) {
+  if(fs.existsSync(__dirname + "/assets/cards/md/kitauji/oumae_kumiko.png")) {
     console.log("skip generating md images");
     return done();
   }
@@ -113,7 +113,7 @@ gulp.task('resize md', function(done) {
 });
 
 gulp.task('resize lg', ["resize sm", "resize md"], function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/lg/kitauji/daikichiyama.png")) {
+  if(fs.existsSync(__dirname + "/assets/cards/lg/kitauji/oumae_kumiko.png")) {
     console.log("skip generating lg images");
     return done();
   }

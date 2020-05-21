@@ -127,6 +127,15 @@ var Card = (function(){
   r.getMusterType = function(){
     return this._data.musterType || null;
   }
+  r.isMale = function() {
+    return this._data.male || false;
+  }
+  r.getAttackPower = function() {
+    return this._data.attackPower || 0;
+  }
+  r.getGrade = function() {
+    return this._data.grade || 0;
+  }
   r.getType = function(){
     return this._changedType == null ? this._data.type : this._changedType;
   }
@@ -146,6 +155,19 @@ var Card = (function(){
       if(this._boost[key] !== "tight_bond") continue;
       delete this._boost[key];
     }
+  }
+
+  r.getBoostByKey = function(key) {
+    return this._boost[key] || 0;
+  }
+
+  r.resetNegBoost = function() {
+    for (var key in this._boost) {
+      if (this._boost[key] < 0) {
+        this._boost[key] = 0;
+      }
+    }
+    this.getBoost();
   }
 
   r.getBoost = function(){

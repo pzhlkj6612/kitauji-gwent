@@ -20,47 +20,98 @@ module.exports = {
   "taibu": {
     name: "taibu",
     description: "退部: 指定对方一名三年级部员以备战高考为由直接退部。",
-    waitResponse: true,
+    shouldWaitResponse: function() {
+      let cards = this.foe.getFieldCards();
+      return cards.some(card => {
+        return !card.hasAbility("hero") &&
+          !card.hasAbility("decoy") &&
+          card.getGrade() === 3;
+      });
+    },
     onAfterPlace: function(card) {
-      //TODO: send choose card from foe fields
+      this.send("played:attack", {
+        attackPower: 100,
+        grade: 3,
+      }, true);
+      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to destroy.")
     }
   },
   "attack": {
     name: "attack",
     description: "投掷: 投掷号嘴（或洗手液等），使指定对方一名部员吹奏能力降低。",
-    waitResponse: true,
+    shouldWaitResponse: function() {
+      let cards = this.foe.getFieldCards();
+      return cards.some(card => {
+        return !card.hasAbility("hero") && !card.hasAbility("decoy");
+      });
+    },
     onAfterPlace: function(card) {
-      //TODO: send choose card from foe fields
+      this.send("played:attack", {
+        attackPower: card.getAttackPower()
+      }, true);
+      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to attack.")
     }
   },
   "lips": {
     name: "lips",
     description: "迷唇: 使对方所有男性部员吹奏能力降为1。",
     onAfterPlace: function(card) {
-      //TODO
+      let cards = this.foe.getFieldCards();
+      cards.forEach(function(_card){
+        if(_card.hasAbility("hero") || _card.hasAbility("decoy")) return;
+        if (_card.isMale()) {
+          _card.setBoost("lips", - (_card.getBasePower() - 1));
+        }
+      });
     }
   },
   "guard": {
     name: "guard",
     description: "亲卫队: 当本方香织在场时，打出后可使对方一名铜管成员吹奏能力-4。",
-    waitResponse: true,
+    shouldWaitResponse: function() {
+      if (this.field[1].get().every(card => card.getName() !== "中世古香织")) {
+        // Kaori not found
+        return false;
+      }
+      // get brass field
+      let cards = this.foe.field[1].get();
+      return cards.some(card => {
+        return !card.hasAbility("hero") && !card.hasAbility("decoy");
+      });
+    },
     onAfterPlace: function(card) {
-      //TODO
+      this.send("played:attack", {
+        attackPower: 4,
+        field: 1,
+      }, true);
+      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to attack.")
     }
   },
   "tunning": {
     name: "tunning",
     description: "调音: 消除己方除天气外的所有不良影响。",
     onAfterPlace: function(card) {
-      //TODO
+      let cards = this.getFieldCards();
+      cards.forEach(function(_card){
+        if(_card.hasAbility("hero") || _card.hasAbility("decoy")) return;
+        _card.resetNegBoost();
+      });
     }
   },
   "monaka": {
     name: "monaka",
     description: "Team Monaka: 给己方一名部员赠送护身符，使其吹奏能力+2。",
-    waitResponse: true,
-    onAfterPlace: function(card) {
-      //TODO
+    shouldWaitResponse: function() {
+      let cards = this.getFieldCards();
+      return cards.some(card => {
+        return !card.hasAbility("hero") && !card.hasAbility("decoy");
+      });
+    },
+    onAfterPlace: function() {
+      this.send("played:heal", {
+        healPower: 2
+      }, true);
+      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to heal.")
     }
   },
   "medic": {

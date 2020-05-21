@@ -172,6 +172,46 @@ Battleside = (function() {
     this.receive("cancel:horn", function() {
       self.off("horn:setField");
     })
+    this.receive("heal:chooseHeal", function(data) {
+      if (!data.cardID) {
+        return;
+      }
+      var card = self.findCardOnFieldByID(data.cardID);
+      if(card === -1) {
+        console.log("heal:chooseHeal | unknown card: ", data);
+        self.sendNotificationTo(self, "Possible bug occured: unknown card was chosen by playing heal ability.");
+        return;
+      }
+      if (card.hasAbility("hero") || card.hasAbility("decoy")) {
+        return;
+      }
+      self.battle.sendNotification(self.getName() + " heal " + card.getName());
+      card.setBoost("heal", card.getBoostByKey("heal") + Number(data.healPower));
+      self.update();
+      self.endTurn();
+    })
+    this.receive("attack:chooseAttack", function(data) {
+      if (!data.cardID) {
+        return;
+      }
+      var card = self.foe.findCardOnFieldByID(data.cardID);
+      if(card === -1) {
+        console.log("attack:chooseAttack | unknown card: ", data);
+        self.sendNotificationTo(self, "Possible bug occured: unknown card was chosen by playing attack ability.");
+        return;
+      }
+      if (card.hasAbility("hero") || card.hasAbility("decoy")) {
+        return;
+      }
+      self.battle.sendNotification(self.getName() + " attack " + card.getName());
+      card.setBoost("attack", card.getBoostByKey("attack") - Number(data.attackPower));
+      if (card.getPower() <= 0) {
+        var removed = self.foe.field[card.getType()].removeCard(card);
+        self.foe.addToDiscard(removed, true);
+      }
+      self.update();
+      self.endTurn();
+    })
 
 
     this.on("Turn" + this.getID(), this.onTurnStart, this);
@@ -605,6 +645,9 @@ Battleside = (function() {
         this.addToDiscard(card);
       }
       if(ability.waitResponse && !obj.forcePlace) {
+        obj._waitResponse = true;
+      }
+      if (ability.shouldWaitResponse && ability.shouldWaitResponse.call(this)) {
         obj._waitResponse = true;
       }
       if(ability.changeSide) {

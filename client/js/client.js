@@ -299,6 +299,8 @@ let BattleView = Backbone.View.extend({
     this.listenTo(user, "change:openDiscard", this.render);
     this.listenTo(user, "change:setAgile", this.render);
     this.listenTo(user, "change:setHorn", this.render);
+    this.listenTo(user, "change:chooseAttack", this.render);
+    this.listenTo(user, "change:chooseHeal", this.render);
     this.listenTo(user, "change:isReDrawing", this.render);
     this.listenTo(user, "change:chooseSide", this.render);
 
@@ -326,6 +328,7 @@ let BattleView = Backbone.View.extend({
     "mouseleave .card": "onMouseleave",
     "click .field-hand": "onClick",
     "click .battleside.player": "onClickFieldCard",
+    "click .battleside.foe": "onClickFoeFieldCard",
     "click .button-pass": "onPassing",
     "click .field-discard": "openDiscard",
     "click .field-leader.card-wrap": "clickLeader"
@@ -416,7 +419,31 @@ let BattleView = Backbone.View.extend({
       }, 500);
     }
   },
+  onClickFoeFieldCard: function(e) {
+    if (!!this.user.get("chooseAttack")) {
+      let $card = $(e.target).closest(".card");
+      if(!$card.length) return;
+      let _id = $card.data("id");
+      if($card.parent().hasClass("field-horn")) return;
+      this.app.send("attack:chooseAttack", {
+        cardID: _id,
+        attackPower: Number(this.user.get("chooseAttack").attackPower)
+      });
+      this.user.set("chooseAttack", false);
+    }
+  },
   onClickFieldCard: function(e){
+    if (!!this.user.get("chooseHeal")) {
+      let $card = $(e.target).closest(".card");
+      if(!$card.length) return;
+      let _id = $card.data("id");
+      if($card.parent().hasClass("field-horn")) return;
+      this.app.send("heal:chooseHeal", {
+        cardID: _id,
+        healPower: Number(this.user.get("chooseHeal").healPower)
+      });
+      this.user.set("chooseHeal", false);
+    }
     if(this.user.get("waitForDecoy")){
       let $card = $(e.target).closest(".card");
       if(!$card.length) return;
@@ -803,6 +830,14 @@ let User = Backbone.Model.extend({
     app.receive("played:horn", function(data){
       //console.log("played horn");
       self.set("setHorn", data.cardID);
+    })
+
+    app.receive("played:attack", function(data){
+      self.set("chooseAttack", data);
+    })
+
+    app.receive("played:heal", function(data){
+      self.set("chooseHeal", data);
     })
 
     app.receive("redraw:cards", function(){
