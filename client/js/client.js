@@ -136,6 +136,7 @@ let SideView = Backbone.View.extend({
     this.renderRangeField();
     this.renderSiegeField();
     this.renderWeatherField();
+    this.renderPlayCardAnimation();
 
     return this;
   },
@@ -298,6 +299,67 @@ let SideView = Backbone.View.extend({
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
     this.battleView.calculateMargin($field.find(".field-siege"), 8);
+  },
+  renderPlayCardAnimation: function() {
+    let placedCard = this.infoData.placedCard;
+    if (!placedCard) {
+      return;
+    }
+    let id = placedCard._id;
+    let card = $(`.battleside .card[data-id='${id}']`);
+    if (!card || card.length === 0) {
+      return;
+    }
+    let sub, subAnimClass;
+    let animClass = null;
+    if (card.data("ability").includes("spy")) {
+      animClass = "spy-card";
+    } else if (card.data("ability").includes("morale")) {
+      animClass = "morale-card";
+    } else if (card.data("ability").includes("commanders_horn")) {
+      animClass = "horn-card";
+    } else if (card.data("ability").includes("tight_bond")) {
+      animClass = "bond-card";
+      card = $(`${this.side} .card[data-bondType='${card.data("bondtype")}']`);
+      if (card.length < 2) {
+        return;
+      }
+    } else if (card.data("ability").includes("muster")) {
+      animClass = "muster-card";
+      card = $(`${this.side} .card[data-musterType='${card.data("mustertype")}']`);
+      if (card.length < 2) {
+        return;
+      }
+    } else if (card.data("ability").includes("tunning")) {
+      animClass = "medic-card";
+      sub = $(`${this.side} .card`);
+      subAnimClass = "heal-card";
+    } else if (card.data("ability").includes("lips")) {
+      animClass = "medic-card";
+      sub = $(`${this.side === ".foe" ? ".player" : ".foe"} .card`);
+      subAnimClass = "attack-card";
+    }
+    if (card.data("ability").includes("hero")) {
+      animClass = animClass ? animClass+" hero-card" : "hero-card";
+    }
+    if (!animClass) {
+      return;
+    }
+    this.battleView.waitForAnimation = true;
+    card.addClass(animClass);
+    card.addClass("ability-card");
+    if (sub) {
+      sub.addClass(subAnimClass);
+    }
+    setTimeout(() => {
+      card.removeClass(animClass);
+      card.removeClass("ability-card");
+      if (sub) {
+        sub.removeClass(subAnimClass);
+      }
+      this.battleView.waitForAnimation = false;
+      this.battleView.render();
+    }, 500);
   },
   renderWeatherField: function(){
     if(!this.field.weather) return;

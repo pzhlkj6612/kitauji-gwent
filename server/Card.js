@@ -76,13 +76,18 @@ var Card = (function(){
     return base;
   }
 
-  r.getPower = function(){
+  r.getPower = function(negPower){
     this.power = null;
     this.diff = null;
     this.diffPos = null;
     if(this._data.power === -1) return 0;
-    this.diff = (this.power = (this.getBasePower() + this.getBoost())) - this.getRawPower();
+    this.power = (this.getBasePower() + this.getBoost());
+    if (!negPower && this.power < 0) {
+      this.power = 0;
+    }
+    this.diff = this.power - this.getRawPower();
     if(this.diff > 0) this.diffPos = true;
+    else this.diffPos = false;
     return this.power;
   }
   r.getRawPower = function(){

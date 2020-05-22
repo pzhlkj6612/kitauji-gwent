@@ -174,50 +174,56 @@ Battleside = (function() {
     })
     this.receive("heal:chooseHeal", function(data) {
       if (!data.cardID) {
+        self.endTurn();
         return;
       }
       var card = self.findCardOnFieldByID(data.cardID);
       if(card === -1) {
         console.log("heal:chooseHeal | unknown card: ", data);
         self.sendNotificationTo(self, "Possible bug occured: unknown card was chosen by playing heal ability.");
+        self.endTurn();
         return;
       }
       if (card.hasAbility("hero") || card.hasAbility("decoy")) {
+        self.endTurn();
         return;
       }
       self.battle.sendNotification(self.getName() + " heal " + card.getName());
       card.setBoost("heal", card.getBoostByKey("heal") + Number(data.healPower));
-      self.update();
       self.endTurn();
     })
     this.receive("attack:chooseAttack", function(data) {
       if (!data.cardID) {
+        self.endTurn();
         return;
       }
       var card = self.foe.findCardOnFieldByID(data.cardID);
       if(card === -1) {
         console.log("attack:chooseAttack | unknown card: ", data);
         self.sendNotificationTo(self, "Possible bug occured: unknown card was chosen by playing attack ability.");
+        self.endTurn();
         return;
       }
       if (card.hasAbility("hero") || card.hasAbility("decoy")) {
+        self.endTurn();
         return;
       }
       if (data.grade != null && card.getGrade() !== Number(data.grade)) {
         console.warn("wrong grade");
+        self.endTurn();
         return;
       }
       if (data.field != null && card.getType() !== Number(data.field)) {
         console.warn("wrong field");
+        self.endTurn();
         return;
       }
       self.battle.sendNotification(self.getName() + " attack " + card.getName());
       card.setBoost("attack", card.getBoostByKey("attack") - Number(data.attackPower));
-      if (card.getPower() <= 0) {
+      if (card.getPower(true) <= 0) {
         var removed = self.foe.field[card.getType()].removeCard(card);
         self.foe.addToDiscard(removed, true);
       }
-      self.update();
       self.endTurn();
     })
 
@@ -233,6 +239,7 @@ Battleside = (function() {
   r._name = null;
   r._discard = null;
   r._scorched = null;
+  r._placedCard = null;
   r._isNewRound = false;
 
 
@@ -371,6 +378,7 @@ Battleside = (function() {
       deck: this.deck.length(),
       discard: this.getDiscard(false),
       scorched: this.getScorched(false),
+      placedCard: this.getPlacedCard(false),
       isNewRound: isNewRound,
       passing: this._passing
     }
@@ -446,6 +454,7 @@ Battleside = (function() {
   }
 
   r.endTurn = function() {
+    this._placedCard = null;
     this.update();
 
     this.runEvent("NextTurn", null, [this.foe]);
@@ -460,6 +469,7 @@ Battleside = (function() {
     }
 
     this._scorched = [];
+    this._placedCard = card;
     this.checkAbilities(card, obj);
     if(obj._cancelPlacement && !obj.forceField) {
 
@@ -910,6 +920,13 @@ Battleside = (function() {
       return JSON.stringify(this._scorched);
     }
     return this._scorched;
+  }
+
+  r.getPlacedCard = function(json) {
+    if(json) {
+      return JSON.stringify(this._placedCard);
+    }
+    return this._placedCard;
   }
 
   r.resetNewRound = function() {
