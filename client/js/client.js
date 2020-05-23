@@ -179,19 +179,7 @@ let SideView = Backbone.View.extend({
     let score = this.field.close.score;
     let horn = this.field.close.horn;
 
-    if (this.side === ".foe") {
-      let attackData = this.app.user.get("chooseAttack");
-      if (attackData) {
-        cards.filter(c => attackData.highlight.includes(c._id))
-          .forEach(c => c._highlight = true);
-      }
-    } else {
-      let attackData = this.app.user.get("chooseHeal");
-      if (attackData) {
-        cards.filter(c => attackData.highlight.includes(c._id))
-          .forEach(c => c._highlight = true);
-      }
-    }
+    this.highlightCards_(cards);
 
     let html = this.templateCards(cards);
 
@@ -214,6 +202,25 @@ let SideView = Backbone.View.extend({
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
     this.battleView.calculateMargin($field.find(".field-close"), 8);
   },
+  highlightCards_: function(cards) {
+    if (this.side === ".foe") {
+      let attackData = this.app.user.get("chooseAttack");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      } else {
+        cards.forEach(c => c._highlight = false);
+      }
+    } else {
+      let attackData = this.app.user.get("chooseHeal");
+      if (attackData) {
+        cards.filter(c => attackData.highlight.includes(c._id))
+          .forEach(c => c._highlight = true);
+      } else {
+        cards.forEach(c => c._highlight = false);
+      }
+    }
+  },
   renderRangeField: function(){
     if(!this.field.ranged) return;
     this.$fields = this.$el.find(".battleside" + this.side);
@@ -222,19 +229,7 @@ let SideView = Backbone.View.extend({
     let score = this.field.ranged.score;
     let horn = this.field.ranged.horn;
 
-    if (this.side === ".foe") {
-      let attackData = this.app.user.get("chooseAttack");
-      if (attackData) {
-        cards.filter(c => attackData.highlight.includes(c._id))
-          .forEach(c => c._highlight = true);
-      }
-    } else {
-      let attackData = this.app.user.get("chooseHeal");
-      if (attackData) {
-        cards.filter(c => attackData.highlight.includes(c._id))
-          .forEach(c => c._highlight = true);
-      }
-    }
+    this.highlightCards_(cards);
 
     let html = this.templateCards(cards);
 
@@ -265,19 +260,7 @@ let SideView = Backbone.View.extend({
     let score = this.field.siege.score;
     let horn = this.field.siege.horn;
 
-    if (this.side === ".foe") {
-      let attackData = this.app.user.get("chooseAttack");
-      if (attackData) {
-        cards.filter(c => attackData.highlight.includes(c._id))
-          .forEach(c => c._highlight = true);
-      }
-    } else {
-      let attackData = this.app.user.get("chooseHeal");
-      if (attackData) {
-        cards.filter(c => attackData.highlight.includes(c._id))
-          .forEach(c => c._highlight = true);
-      }
-    }
+    this.highlightCards_(cards);
 
     let html = this.templateCards(cards);
 
@@ -718,25 +701,35 @@ let BattleView = Backbone.View.extend({
 
       side.infoData.discard = side.infoData.discard;
       let scorched = side.infoData.scorched || [];
-      if (scorched.length === 0) {
+      let attacked = side.infoData.attacked || [];
+      let healed = side.infoData.healed || [];
+      if (!scorched.length && !attacked.length && !healed.length) {
         self.render();
         return;
       }
       self.waitForAnimation = true;
-      let scorchedCards = [];
-      for (let i=0; i<scorched.length; i++) {
-        let id = scorched[i]._id;
-        let card = $(`.card[data-id='${id}']`);
+      let scorchedCards = scorched.map(c=>{
+        let card = $(`.card[data-id='${c._id}']`);
         card.addClass("scorch-card");
-        scorchedCards.push(card);
-      }
+        return card;
+      });
+      let attackedCards = attacked.map(c=>{
+        let card = $(`.card[data-id='${c._id}']`);
+        card.addClass("attack-card");
+        return card;
+      });
+      let healedCards = healed.map(c=>{
+        let card = $(`.card[data-id='${c._id}']`);
+        card.addClass("heal-card");
+        return card;
+      });
       setTimeout(() => {
-        for (let i=0; i<scorchedCards.length; i++) {
-          scorchedCards[i].removeClass("scorch-card");
-        }
+        scorchedCards.forEach(c=>c.removeClass("scorch-card"));
+        attackedCards.forEach(c=>c.removeClass("attack-card"));
+        healedCards.forEach(c=>c.removeClass("heal-card"));
         self.waitForAnimation = false;
         self.render();
-      }, 1000);
+      }, 500);
 
     })
 

@@ -38,6 +38,7 @@ Battleside = (function() {
     this._discard = [];
     this.isBot = user.isBot();
     this._scores = [];
+    this._isWaitForCardAction = false;
 
     this.runEvent = this.battle.runEvent.bind(this.battle);
     this.on = this.battle.on.bind(this.battle);
@@ -173,6 +174,7 @@ Battleside = (function() {
       self.off("horn:setField");
     })
     this.receive("heal:chooseHeal", function(data) {
+      if (!self._isWaitForCardAction) return;
       if (!data.cardID) {
         self.endTurn();
         return;
@@ -190,9 +192,12 @@ Battleside = (function() {
       }
       self.battle.sendNotification(self.getName() + " heal " + card.getName());
       card.setBoost("heal", card.getBoostByKey("heal") + Number(data.healPower));
+      self._healed.push(card);
+      self.update();
       self.endTurn();
     })
     this.receive("attack:chooseAttack", function(data) {
+      if (!self._isWaitForCardAction) return;
       if (!data.cardID) {
         self.endTurn();
         return;
@@ -223,6 +228,9 @@ Battleside = (function() {
       if (card.getPower(true) <= 0) {
         var removed = self.foe.field[card.getType()].removeCard(card);
         self.foe.addToDiscard(removed, true);
+      } else {
+        self._attacked.push(card);
+        self.update();
       }
       self.endTurn();
     })
@@ -239,6 +247,8 @@ Battleside = (function() {
   r._name = null;
   r._discard = null;
   r._scorched = null;
+  r._attacked = null;
+  r._healed = null;
   r._placedCard = null;
   r._isNewRound = false;
 
@@ -379,6 +389,8 @@ Battleside = (function() {
       discard: this.getDiscard(false),
       scorched: this.getScorched(false),
       placedCard: this.getPlacedCard(false),
+      healed: this._healed,
+      attacked: this._attacked,
       isNewRound: isNewRound,
       passing: this._passing
     }
@@ -454,6 +466,8 @@ Battleside = (function() {
   }
 
   r.endTurn = function() {
+    this._attacked = null;
+    this._healed = null;
     this._placedCard = null;
     this.update();
 
@@ -469,6 +483,8 @@ Battleside = (function() {
     }
 
     this._scorched = [];
+    this._attacked = [];
+    this._healed = [];
     this._placedCard = card;
     this.checkAbilities(card, obj);
     if(obj._cancelPlacement && !obj.forceField) {
@@ -505,6 +521,7 @@ Battleside = (function() {
     this.checkAbilityOnAfterPlace(card, obj);
 
 
+    this._isWaitForCardAction = obj._waitResponse;
     if(obj._waitResponse) {
       this.hand.remove(card);
       this.update();

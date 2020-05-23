@@ -61,11 +61,17 @@ module.exports = {
     name: "lips",
     description: "迷唇: 使对方所有男性部员吹奏能力降为1。",
     onAfterPlace: function(card) {
+      let self = this;
       let cards = this.foe.getFieldCards();
       cards.forEach(function(_card){
         // no male are hero, so
         if (_card.isMale()) {
           _card.setBoost("lips", - (_card.getBasePower() - 1));
+          self._attacked.push(_card);
+          if (_card.getPower(true) <= 0) {
+            var removed = self.foe.field[_card.getType()].removeCard(_card);
+            self.foe.addToDiscard(removed, true);
+          }
         }
       });
     }
@@ -85,6 +91,10 @@ module.exports = {
       });
     },
     onAfterPlace: function(card) {
+      if (this.field[1].get().every(card => card.getName() !== "中世古香织")) {
+        // Kaori not found
+        return;
+      }
       this.send("played:attack", {
         attackPower: 4,
         field: 1,
