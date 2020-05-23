@@ -112,7 +112,7 @@ gulp.task('resize md', function(done) {
   .pipe(gulp.dest('./assets/cards/md/'));
 });
 
-gulp.task('resize lg', ["resize sm", "resize md"], function(done) {
+gulp.task('resize lg', ["resize md"], function(done) {
   if(fs.existsSync(__dirname + "/assets/cards/lg/kitauji/oumae_kumiko.png")) {
     console.log("skip generating lg images");
     return done();
@@ -156,4 +156,4 @@ gulp.task("generate sprites", ["resize lg"], function() {
 })
 
 
-gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize sm", "resize md", "generate sprites"]);
+gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate sprites"]);

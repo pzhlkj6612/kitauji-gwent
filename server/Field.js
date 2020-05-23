@@ -74,6 +74,17 @@ var Field = (function() {
     var index = this.getPosition(oldCard);
     this._cards[index] = newCard;
     oldCard.reset();
+    let abilities = oldCard.getAbility();
+    if (abilities) {
+      if(!Array.isArray(abilities)) {
+        abilities = [abilities];
+      }
+      abilities.forEach(ab => {
+        if(ab && ab.onRemovedOrReplaced) {
+          ab.onRemovedOrReplaced.call(this.side, oldCard);
+        }
+      });
+    }
     for(var event in oldCard._uidEvents) {
       if(this.side && this.side.off) {
         this.side.off(event, oldCard.getUidEvents(event));
@@ -141,9 +152,20 @@ var Field = (function() {
     cards.forEach(function(card) {
       card.reset();
       for(var event in card._uidEvents) {
-        if(this.side && this.side.off) {
-          this.side.off(event, card.getUidEvents(event));
+        if(self.side && self.side.off) {
+          self.side.off(event, card.getUidEvents(event));
         }
+      }
+      let abilities = card.getAbility();
+      if (abilities) {
+        if(!Array.isArray(abilities)) {
+          abilities = [abilities];
+        }
+        abilities.forEach(ab => {
+          if(ab && ab.onRemovedOrReplaced) {
+            ab.onRemovedOrReplaced.call(self.side, card);
+          }
+        });
       }
       res.push(_cards.splice(self.getPosition(card), 1)[0]);
     })

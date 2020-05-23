@@ -707,7 +707,6 @@ Battleside = (function() {
 
 
           field.replaceWith(replaceCard, card);
-          self.runEvent("EachCardPlace");
 
           self.hand.add(replaceCard);
           self.hand.remove(card);

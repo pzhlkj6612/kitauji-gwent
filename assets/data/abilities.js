@@ -158,6 +158,16 @@ module.exports = {
   "morale_boost": {
     name: "morale_boost",
     description: "士气: 高喊“北宇治Fight！”，使同一行内除自己以外的部员吹奏能力+1。",
+    onRemovedOrReplaced: function(card) {
+      var field = this.field[card.getType()];
+      var id = card.getID();
+      field.get().forEach(function(_card){
+        if(_card.getID() == id) return;
+        if(_card.hasAbility("hero")) return;
+        if(_card.getType() != card.getType()) return;
+        _card.setBoost(id, 0);
+      })
+    },
     onEachCardPlace: function(card){
       // card is the morale_boost card, not the affected card
       var field = this.field[card.getType()];
@@ -358,6 +368,21 @@ module.exports = {
   "commanders_horn": {
     name: "commanders_horn",
     description: "支援: 使同一行内除自己之外的部员吹奏实力翻倍。",
+    onRemovedOrReplaced: function(card) {
+      var field = this.field[card.getType()];
+      var id = "commanders_horn";
+      if (field.get().some(c=>c.hasAbility("commanders_horn"))) {
+        // there are still commanders horn on the field
+        return;
+      }
+      field.get().forEach(function(_card) {
+        if(_card.getID() === id) return;
+        if(_card.getID() === card.getID()) return;
+        if(_card.getType() !== card.getType()) return;
+        if(_card.hasAbility("hero")) return;
+        _card.setBoost(id, 0);
+      });
+    },
     commandersHorn: true
   },
   "commanders_horn_card": {
