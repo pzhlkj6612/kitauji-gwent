@@ -31,7 +31,7 @@ var HandWrittenBot = (function(){
       this._rooms = [];
       this._id = this.generateID();
       this.generateName();
-      this.setDeck("kitauji2");
+      this.setDeck("test");
       this.strategy = new BotStrategy(this);
     };
     var r = HandWrittenBot.prototype;
@@ -169,6 +169,22 @@ var HandWrittenBot = (function(){
         event: "medic:chooseCardFromDiscard",
         cardID: card._id,
         name: card._data.name
+      };
+    }
+    r.chooseHealCommand = function(card, healPower) {
+      return {
+        event: "heal:chooseHeal",
+        cardID: card._id,
+        healPower: healPower,
+      };
+    }
+    r.chooseAttackCommand = function(card, attackPower, grade, field) {
+      return {
+        event: "attack:chooseAttack",
+        cardID: card._id,
+        attackPower: attackPower,
+        grade: grade,
+        field: field,
       };
     }
 

@@ -9,6 +9,59 @@ var BotStrategy = (function(){
   
     r.bot = null;
 
+    r.generateForChooseAttack = function(attackPower, opt_grade, opt_field) {
+      let state = this.bot.state;
+      state.foeFields;
+      let chooseFrom;
+      if (opt_field != null) {
+        chooseFrom = this.getFieldCards(false, opt_field);
+      } else if (opt_grade != null) {
+        chooseFrom = this.getFieldCards(false).filter(c=>c._data.grade===3);
+      } else {
+        chooseFrom = this.getFieldCards(false);
+      }
+      chooseFrom = chooseFrom.filter(c=>this.canReplace(c));
+      if (chooseFrom.length > 0) {
+        let choice = chooseFrom[0];
+        let maxReward = 0;
+        for (let i=0;i<chooseFrom.length;i++) {
+          let c = chooseFrom[i];
+          let reward = this.getAttackRewardForCard(c, attackPower);
+          if (reward > maxReward) {
+            maxReward = reward;
+            choice = c;
+          }
+        }
+        return [this.bot.chooseAttackCommand(choice, attackPower, opt_grade, opt_field)];
+      }
+      return [];
+    }
+    r.generateForChooseHeal = function() {
+      let state = this.bot.state;
+      let chooseFrom = [];
+      let weatherFields = state.ownFields.weather.cards
+        .map(w=>this.getFieldByWeather(w));
+      let hornFields = [0,1,2]
+        .filter(i=>this.getField(state.ownFields, i).horn);
+      [0,1,2].filter(i=>{
+        if (hornFields.length>0) {
+          return hornFields.includes(i) && !weatherFields.includes(i);
+        } else {
+          return !weatherFields.includes(i);
+        }
+      }).forEach(i=>{
+        chooseFrom = chooseFrom.concat(this.getFieldCards(true, i));
+      })
+      if (chooseFrom.length === 0) {
+        chooseFrom = this.getFieldCards(true);
+      }
+      // default: choose randomly
+      chooseFrom = chooseFrom.filter(c=>this.canReplace(c));
+      if (chooseFrom.length > 0) {
+        return [this.bot.chooseHealCommand(this.getRandom(chooseFrom), 2)];
+      }
+      return [];
+    }
     r.generateForDecoy = function(card) {
       let state = this.bot.state;
       let fieldCards = this.getFieldCards(true);
@@ -70,7 +123,18 @@ var BotStrategy = (function(){
         } else if (spies.length > 0) {
           return [this.bot.medicChooseCardCommand(this.getMin(spies))];
         } else if (normals.length > 0) {
-          return [this.bot.medicChooseCardCommand(this.getMax(normals))];
+          let card = this.getMax(normals);
+          let commands = [this.bot.medicChooseCardCommand(card)];
+          if (this.isAttack(card)) {
+            commands = commands.concat(this.generateForChooseAttack(card._data.attackPower));
+          } else if (this.isGuard(card)) {
+            commands = commands.concat(this.generateForChooseAttack(4, null, 1));
+          } else if (this.isTaibu(card)) {
+            commands = commands.concat(this.generateForChooseAttack(100, 3));
+          } else if (this.isMonaka(card)) {
+            commands = commands.concat(this.generateForChooseHeal());
+          }
+          return commands;
         }
         return [this.bot.medicChooseCardCommand(null)];
       }
@@ -86,6 +150,14 @@ var BotStrategy = (function(){
         return this.generateForDecoy(card);
       } else if (this.isHorn(card, true)) {
         return this.generateForHornCard(card);
+      } else if (this.isAttack(card)) {
+        return [this.bot.playCardCommand(card)].concat(this.generateForChooseAttack(card._data.attackPower));
+      } else if (this.isGuard(card)) {
+        return [this.bot.playCardCommand(card)].concat(this.generateForChooseAttack(4, null, 1));
+      } else if (this.isTaibu(card)) {
+        return [this.bot.playCardCommand(card)].concat(this.generateForChooseAttack(100, 3));
+      } else if (this.isMonaka(card)) {
+        return [this.bot.playCardCommand(card)].concat(this.generateForChooseHeal());
       } else if (String(card._data.ability).includes("medic")) {
         let cards = this.generateForMedic(card);
         console.warn("generate for medic: ", cards);
@@ -112,14 +184,19 @@ var BotStrategy = (function(){
       }
       return minCard;
     }
-    r.getMax = function(cards) {
+    r.getMax = function(cards, opt_comp) {
       let maxCard = cards[0];
       for (let i=0; i<cards.length; i++) {
-        if (cards[i]._data.power > maxCard._data.power) {
+        if (opt_comp && opt_comp(cards[i]) > opt_comp(maxCard)) {
+          maxCard = cards[i];
+        } else if (cards[i]._data.power > maxCard._data.power) {
           maxCard = cards[i];
         }
       }
       return maxCard;
+    }
+    r.getRandom = function(cards) {
+      return cards[(Math.random() * cards.length) | 0];
     }
     r.getField = function(fields, field) {
       switch (field) {
@@ -204,11 +281,11 @@ var BotStrategy = (function(){
         } else if (this.isWeather(card)) {
           // clear weather?
           if (card._data.ability === "weather_clear") {
-            let weathers = state.ownFields.weather.cards.map(c=>c._data.ability);
+            let weathers = state.ownFields.weather.cards;
             let foeDebuff = 0, ownDebuff = 0;
-            weathers.forEach(w=>{
-              foeDebuff += this.getScoreSum(this.getFieldCards(false).filter(c=>this.canReplace(c)), c=>c.diff);
-              ownDebuff += this.getScoreSum(this.getFieldCards(true).filter(c=>this.canReplace(c)), c=>c.diff);
+            weathers.map(w=>this.getFieldByWeather(w)).forEach(f=>{
+              foeDebuff += this.getScoreSum(this.getFieldCards(false, f).filter(c=>this.canReplace(c) && c.diff < 0), c=>c.diff);
+              ownDebuff += this.getScoreSum(this.getFieldCards(true, f).filter(c=>this.canReplace(c) && c.diff < 0), c=>c.diff);
             });
             realPower = Math.max(foeDebuff - ownDebuff, 0);
             reward = foeDebuff - ownDebuff;
@@ -242,6 +319,38 @@ var BotStrategy = (function(){
         } else if (this.isHorn(card)) {
           realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, card._data.type));
           reward = realPower * 0.5;
+        } else if (this.isAttack(card)) {
+          reward = this.getAttackReward(this.getFieldCards(false), card._data.attackPower);
+          reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
+        } else if (this.isGuard(card)) {
+          if (this.getFieldCards(true, 1).every(c=>c._data.name!=="中世古香织")) {
+            reward = -4;
+          } else {
+            reward = this.getAttackReward(this.getFieldCards(false, 1), 4);
+          }
+          reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
+        } else if (this.isTaibu(card)) {
+          reward = this.getAttackReward(
+            this.getFieldCards(false).filter(c=>c._data.grade===3), 100);
+          reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
+        } else if (this.isLips(card)) {
+          let cards = this.getFieldCards(false).filter(c=>this.canReplace(c) && c._data.male);
+          reward = Math.max(realPower + cards.length * 2 - card._data.power * 0.5, 0);
+        } else if (this.isTunning(card)) {
+          let weathers = state.ownFields.weather.cards.map(c=>this.getFieldByWeather(c));
+          let negBoosts = this.getFieldCards(true).filter(c=>{
+            return !weathers.includes(c._data.type) && c.diff < 0;
+          }).reduce((sum,c)=>sum+c.diff,0);
+          if (negBoosts === 0) {
+            reward = 1;
+          } else {
+            reward = Math.max(realPower - negBoosts - card._data.power * 0.5, 0);
+          }
+        } else if (this.isMonaka(card)) {
+          let cards = this.getFieldCards(false).filter(c=>this.canReplace(c));
+          reward = Math.max(realPower - card._data.power * 0.5, 0);
+          if (cards.length > 0) reward += 2;
+          else reward -= 2;
         } else if (this.isHero(card)) {
           // play hero in later rounds
           reward = realPower * 0.5 * (2 - state.ownSide.lives);
@@ -327,6 +436,23 @@ var BotStrategy = (function(){
       console.warn("selected ", cards[maxCardIdx]);
       return cards[maxCardIdx];
     }
+    r.getAttackReward = function(cards, attackPower) {
+      cards = cards.filter(c=>this.canReplace(c));
+      if (cards.length === 0) {
+        return -attackPower;
+      }
+      let maxCard = this.getMax(cards, c=>this.getAttackRewardForCard(c, attackPower));
+      return this.getAttackRewardForCard(maxCard, attackPower);
+    }
+    r.getAttackRewardForCard = function(c, attackPower) {
+      let reward = Math.min(attackPower, c.power);
+      if (this.isHorn(c)) reward += 5;
+      if (this.isMoraleBoost(c)) reward += 2;
+      if (this.isBond(c)) reward++;
+      if (this.isSpy(c)) reward = 0;
+      if (c.diff < 0) reward++;
+      return reward;
+    }
     r.getRealPower = function(card, isFoe) {
       let state = this.bot.state;
       if (String(card._data.ability).includes("hero")) {
@@ -381,6 +507,24 @@ var BotStrategy = (function(){
     r.isBond = function(card, opt_bondType) {
       return card._data.ability === "tight_bond" &&
         (opt_bondType ? card._data.bondType === opt_bondType : true);
+    }
+    r.isMonaka = function(card) {
+      return card._data.ability === "monaka";
+    }
+    r.isAttack = function(card) {
+      return String(card._data.ability).includes("attack");
+    }
+    r.isTaibu = function(card) {
+      return card._data.ability === "taibu";
+    }
+    r.isGuard = function(card) {
+      return card._data.ability === "guard";
+    }
+    r.isLips = function(card) {
+      return card._data.ability === "lips";
+    }
+    r.isTunning = function(card) {
+      return card._data.ability === "tunning";
     }
     r.isWeather = function(card) {
       return card._data.type === 5;
