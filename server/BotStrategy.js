@@ -160,7 +160,6 @@ var BotStrategy = (function(){
         return [this.bot.playCardCommand(card)].concat(this.generateForChooseHeal());
       } else if (String(card._data.ability).includes("medic")) {
         let cards = this.generateForMedic(card);
-        console.warn("generate for medic: ", cards);
         return cards;
       } else {
         return [this.bot.playCardCommand(card)];

@@ -111,7 +111,8 @@ Battleside = (function() {
         return;
       }
       var cardID = data.cardID;
-      if (!cardID) {
+      if (cardID == null) {
+        self.endTurn();
         return;
       }
       var card = self.getCardFromDiscard(cardID);
@@ -175,7 +176,7 @@ Battleside = (function() {
     })
     this.receive("heal:chooseHeal", function(data) {
       if (!self._isWaitForCardAction) return;
-      if (!data.cardID) {
+      if (data.cardID == null) {
         self.endTurn();
         return;
       }
@@ -198,7 +199,7 @@ Battleside = (function() {
     })
     this.receive("attack:chooseAttack", function(data) {
       if (!self._isWaitForCardAction) return;
-      if (!data.cardID) {
+      if (data.cardID == null) {
         self.endTurn();
         return;
       }
