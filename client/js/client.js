@@ -295,7 +295,10 @@ let SideView = Backbone.View.extend({
     }
     let sub, subAnimClass;
     let animClass = null;
-    if (card.data("ability").includes("spy")) {
+    if (card.data("ability").includes("medic")) {
+      // skip animation for medic, otherwise flash screen
+      return;
+    } else if (card.data("ability").includes("spy")) {
       animClass = "spy-card";
     } else if (card.data("ability").includes("morale")) {
       animClass = "morale-card";
