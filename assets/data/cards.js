@@ -1328,4 +1328,12 @@ module.exports = {
     faction: "kumiko1S2",
     type: 0
   },
+  "kasaki_nozomi": {
+    name: "伞木希美",
+    power: 7,
+    ability: "kasa",
+    img: "kasaki_nozomi",
+    faction: "kumiko1S2",
+    type: 0
+  },
 }
