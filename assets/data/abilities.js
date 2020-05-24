@@ -136,6 +136,29 @@ module.exports = {
       this.sendNotificationTo(this.foe, this.getName() + " chooses a card to heal.")
     }
   },
+  "kasa": {
+    name: "kasa",
+    description: "伞: 消除本方铠冢霙的不良影响，并使其吹奏能力+5。",
+    onRemovedOrReplaced: function(card) {
+      var field = this.field[card.getType()];
+      var id = card.getID();
+      field.get().forEach(function(_card){
+        if(_card.getName() === "铠冢霙") {
+          _card.setBoost(id, 0);
+        }
+      })
+    },
+    onEachCardPlace: function(card){
+      var field = this.field[card.getType()];
+      var id = card.getID();
+      field.get().forEach(function(_card){
+        if(_card.getName() === "铠冢霙") {
+          _card.resetNegBoost();
+          _card.setBoost(id, 5);
+        }
+      });
+    }
+  },
   "medic": {
     name: "medic",
     description: "复活: 令一名退部/毕业的部员（天王除外）回归吹奏部，并立即加入演奏。",
@@ -362,7 +385,7 @@ module.exports = {
   },
   "scorch": {
     name: "scorch",
-    description: "退部: 令对方实力最强的木管成员退部（仅当对方总吹奏实力大于10）。",
+    description: "伞击: 令对方实力最强的木管成员退部（仅当对方木管总吹奏实力大于10）。",
     scorchMelee: true
   },
   "commanders_horn": {

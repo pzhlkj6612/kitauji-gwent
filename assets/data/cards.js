@@ -106,7 +106,7 @@ module.exports = {
   },
   "tsukamoto_shuichi": {
     name: "冢本秀一",
-    power: 6,
+    power: 5,
     ability: null,
     img: "tsukamoto_shuichi",
     faction: "kitauji",
@@ -1328,7 +1328,7 @@ module.exports = {
     faction: "kumiko1S2",
     type: 0
   },
-  "kasaki_nozomi": {
+  "kasaki_nozomi_2": {
     name: "伞木希美",
     power: 7,
     ability: "kasa",

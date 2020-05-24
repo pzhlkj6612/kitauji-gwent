@@ -293,43 +293,54 @@ let SideView = Backbone.View.extend({
     if (!card || card.length === 0) {
       return;
     }
+    let ability = card.data("ability");
     let sub, subAnimClass;
     let animClass = null;
-    if (card.data("ability").includes("medic")) {
-      // skip animation for medic, otherwise flash screen
+    if (ability.includes("attack") ||
+      ability.includes("guard") ||
+      ability.includes("taibu") ||
+      ability.includes("monaka")) {
       return;
-    } else if (card.data("ability").includes("spy")) {
-      animClass = "spy-card";
-    } else if (card.data("ability").includes("morale")) {
-      animClass = "morale-card";
-    } else if (card.data("ability").includes("commanders_horn")) {
-      animClass = "horn-card";
-    } else if (card.data("ability").includes("tight_bond")) {
-      animClass = "bond-card";
-      card = $(`${this.side} .card[data-bondType='${card.data("bondtype")}']`);
-      if (card.length < 2) {
-        return;
-      }
-    } else if (card.data("ability").includes("muster")) {
-      animClass = "muster-card";
-      card = $(`${this.side} .card[data-musterType='${card.data("mustertype")}']`);
-      if (card.length < 2) {
-        return;
-      }
-    } else if (card.data("ability").includes("tunning")) {
+    }
+    if (ability.includes("medic")) {
       animClass = "medic-card";
+      if (this.side === ".player") {
+        // skip animation for player side, otherwise flash screen
+        return;
+      }
+    } else if (ability.includes("spy")) {
+      animClass = "spy-card";
+    } else if (ability.includes("morale")) {
+      animClass = "morale-card";
+    } else if (ability.includes("commanders_horn")) {
+      animClass = "horn-card";
+    } else if (ability.includes("decoy")) {
+      animClass = "decoy-card";
+    } else if (ability.includes("kasa")) {
+      animClass = "kasa-card";
+    } else if (ability.includes("tight_bond")) {
+      card = $(`${this.side} .card[data-bondType='${card.data("bondtype")}']`);
+      if (card.length >= 2) {
+        animClass = "bond-card";
+      }
+    } else if (ability.includes("muster")) {
+      card = $(`${this.side} .card[data-musterType='${card.data("mustertype")}']`);
+      if (card.length >= 2) {
+        animClass = "muster-card";
+      }
+    } else if (ability.includes("tunning")) {
+      animClass = "tunning-card";
       sub = $(`${this.side} .card`);
       subAnimClass = "heal-card";
-    } else if (card.data("ability").includes("lips")) {
-      animClass = "medic-card";
+    } else if (ability.includes("lips")) {
+      animClass = "lips-card";
       sub = $(`${this.side === ".foe" ? ".player" : ".foe"} .card`);
       subAnimClass = "attack-card";
     }
-    if (card.data("ability").includes("hero")) {
+    if (ability.includes("hero")) {
       animClass = animClass ? animClass+" hero-card" : "hero-card";
-    }
-    if (!animClass) {
-      return;
+    } else {
+      animClass = animClass ? animClass+" normal-card" : "normal-card";
     }
     this.battleView.waitForAnimation = true;
     card.addClass(animClass);
@@ -338,8 +349,8 @@ let SideView = Backbone.View.extend({
       sub.addClass(subAnimClass);
     }
     setTimeout(() => {
-      card.removeClass(animClass);
-      card.removeClass("ability-card");
+      // card.removeClass(animClass);
+      // card.removeClass("ability-card");
       if (sub) {
         sub.removeClass(subAnimClass);
       }

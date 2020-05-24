@@ -117,6 +117,29 @@
   background: url(/assets/texture/card_effect_warhorn.png) center no-repeat;
 }
 
+.tunning-card:before {
+  background: url(/assets/texture/tunning.png) center no-repeat;
+}
+
+.lips-card:before {
+  background: url(/assets/texture/lips.png) center no-repeat;
+}
+
+.kasa-card:before {
+  background: url(/assets/texture/kasa.png) center no-repeat;
+}
+
+.decoy-card:before {
+  background: url(/assets/texture/card_effect_dummy.png) center no-repeat;
+}
+
+.normal-card {
+  -webkit-animation: WoobWoobGrey linear 0.5s;
+  -o-animation: WoobWoobGrey linear 0.5s;
+  -ms-animation: WoobWoobGrey linear 0.5s;
+  animation: WoobWoobGrey linear 0.5s;
+}
+
 .hero-card {
   -webkit-animation: WoobWoob linear 0.5s;
   -o-animation: WoobWoob linear 0.5s;
@@ -340,12 +363,32 @@
 }
 
 
+@-webkit-keyframes WoobWoobGrey {
+  0% {box-shadow: 0 0 15px #c3c3c3;}
+  50% {box-shadow: 0 0 40px #b4b4b4;}
+  100% {box-shadow: 0 0 15px #c3c3c3;}
+}
+@-o-keyframes WoobWoobGrey {
+  0% {box-shadow: 0 0 15px #c3c3c3;}
+  50% {box-shadow: 0 0 40px #b4b4b4;}
+  100% {box-shadow: 0 0 15px #c3c3c3;}
+}
+@-ms-keyframes WoobWoobGrey {
+  0% {box-shadow: 0 0 15px #c3c3c3;}
+  50% {box-shadow: 0 0 40px #b4b4b4;}
+  100% {box-shadow: 0 0 15px #c3c3c3;}
+}
+@keyframes WoobWoobGrey {
+  0% {box-shadow: 0 0 15px #c3c3c3;}
+  50% {box-shadow: 0 0 40px #b4b4b4;}
+  100% {box-shadow: 0 0 15px #c3c3c3;}
+}
+
 @-webkit-keyframes WoobWoobGreen {
   0% {box-shadow: 0 0 15px #09c237;}
   50% {box-shadow: 0 0 40px #26b439;}
   100% {box-shadow: 0 0 15px #09c237;}
 }
-
 @-o-keyframes WoobWoobGreen {
   0% {box-shadow: 0 0 15px #09c237;}
   50% {box-shadow: 0 0 40px #26b439;}
