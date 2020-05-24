@@ -106,7 +106,7 @@ module.exports = {
   },
   "tsukamoto_shuichi": {
     name: "冢本秀一",
-    power: 5,
+    power: 6,
     ability: null,
     img: "tsukamoto_shuichi",
     faction: "kitauji",
@@ -318,9 +318,8 @@ module.exports = {
   },
   "yoshikawa_yuko": {
     name: "吉川优子",
-    power: 5,
-    ability: "morale_boost",
-    bondType: "nakayoshi",
+    power: 7,
+    ability: ["hero", "morale_boost"],
     img: "yoshikawa_yuko",
     faction: "kitauji",
     grade: 3,
@@ -330,7 +329,6 @@ module.exports = {
     name: "中川夏纪",
     power: 5,
     ability: null,
-    bondType: "nakayoshi",
     img: "nakagawa_natsuki",
     faction: "kitauji",
     grade: 3,
@@ -468,6 +466,23 @@ module.exports = {
     img: "hitomi_lala",
     faction: "kitauji",
     type: 1
+  },
+  "morimoto_michio": {
+    name: "森本美千代",
+    power: 6,
+    ability: null,
+    img: "morimoto_michio",
+    faction: "kitauji",
+    type: 1
+  },
+  "shima_rie": {
+    name: "岛理惠",
+    power: 7,
+    ability: "tunning",
+    img: "shima_rie",
+    faction: "kumiko1",
+    grade: "3",
+    type: 0
   },
   "taki_noboru": {
     name: "泷升",
@@ -671,7 +686,7 @@ module.exports = {
   "ogasawara_haruka": {
     name: "小笠原晴香",
     power: 7,
-    ability: "morale_boost",
+    ability: ["hero", "morale_boost"],
     img: "ogasawara_haruka",
     faction: "kumiko1",
     grade: 3,
@@ -680,7 +695,7 @@ module.exports = {
   "nakaseko_kaori": {
     name: "中世古香织",
     power: 7,
-    ability: "medic",
+    ability: ["hero", "medic"],
     img: "nakaseko_kaori",
     faction: "kumiko1",
     grade: 3,
@@ -1083,7 +1098,7 @@ module.exports = {
   "ogasawara_haruka_2": {
     name: "小笠原晴香",
     power: 7,
-    ability: "morale_boost",
+    ability: ["hero", "morale_boost"],
     img: "ogasawara_haruka",
     faction: "kumiko1S2",
     grade: 3,
@@ -1092,7 +1107,7 @@ module.exports = {
   "nakaseko_kaori_2": {
     name: "中世古香织",
     power: 7,
-    ability: "medic",
+    ability: ["hero", "medic"],
     img: "nakaseko_kaori",
     faction: "kumiko1S2",
     grade: 3,
@@ -1308,7 +1323,7 @@ module.exports = {
   "yoroizuka_mizore_2": {
     name: "铠冢霙",
     power: 10,
-    ability: "hero",
+    ability: null,
     img: "yoroizuka_mizore",
     faction: "kumiko1S2",
     type: 0
