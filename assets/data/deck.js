@@ -46,6 +46,8 @@ module.exports = {
       "ono_miyoko",
       "inoue_shirabe",
       "hitomi_lala",
+      "morimoto_michio",
+      "shima_rie",
 
       "taki_noboru",
 
@@ -217,6 +219,7 @@ module.exports = {
       "hirao_sumiko_2",
       "kishibe_miru_2",
       "yoroizuka_mizore_2",
+      "kasaki_nozomi_2",
 
       "taki_noboru",
 
