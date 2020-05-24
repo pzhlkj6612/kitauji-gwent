@@ -366,6 +366,7 @@ Battleside = (function() {
   r.draw = function(times) {
     while(times--) {
       var card = this.deck.draw();
+      if (!card) return;
       this.hand.add(card);
     }
   }
