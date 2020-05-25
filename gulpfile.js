@@ -155,5 +155,32 @@ gulp.task("generate sprites", ["resize lg"], function() {
   .pipe(gulp.dest("./public/build/"));
 })
 
+gulp.task("effect sprites", function() {
+  if(fs.existsSync(__dirname + "/public/build/abilities-md.PNG")) {
+    console.log("skip effect sprite generation");
+    return;
+  }
 
-gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate sprites"]);
+  return sprity.src({
+    src: "./assets/texture/ability/**/*.png",
+    style: "ability.css",
+    processor: "css",
+    engine: "gm",
+    orientation: "binary-tree",
+    split: true,
+    cssPath: "../../public/build/",
+    prefix: "ability",
+    name: "abilities",
+    margin: 0
+  })
+  .pipe(imagemin())
+  .pipe(gulpif(function (file) {
+    return file.path.match(".*\\.png$") != null;
+  }, rename({
+    extname: ".PNG"
+  })))
+  .pipe(gulp.dest("./public/build/"));
+})
+
+
+gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate sprites", "effect sprites"]);

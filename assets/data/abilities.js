@@ -67,7 +67,6 @@ module.exports = {
         // no male are hero, so
         if (_card.isMale()) {
           _card.setBoost("lips", - (_card.getBasePower() - 1));
-          self._attacked.push(_card);
           if (_card.getPower(true) <= 0) {
             var removed = self.foe.field[_card.getType()].removeCard(_card);
             self.foe.addToDiscard(removed, true);
@@ -78,9 +77,10 @@ module.exports = {
   },
   "guard": {
     name: "guard",
-    description: "亲卫队: 当本方香织在场时，打出后可使对方一名铜管成员吹奏能力-4。",
+    description: "香织亲卫队: 当某一方香织在场时，打出后可使对方一名铜管成员吹奏能力-4。",
     shouldWaitResponse: function() {
-      if (this.field[1].get().every(card => card.getName() !== "中世古香织")) {
+      if (this.field[1].get().every(card => card.getName() !== "中世古香织") &&
+        this.foe.field[1].get().every(card => card.getName() !== "中世古香织")) {
         // Kaori not found
         return false;
       }
@@ -91,7 +91,8 @@ module.exports = {
       });
     },
     onAfterPlace: function(card) {
-      if (this.field[1].get().every(card => card.getName() !== "中世古香织")) {
+      if (this.field[1].get().every(card => card.getName() !== "中世古香织") &&
+        this.foe.field[1].get().every(card => card.getName() !== "中世古香织")) {
         // Kaori not found
         return;
       }

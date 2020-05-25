@@ -93,44 +93,129 @@
   pointer-events: none;
 }
 
+.ability-md {
+  background-image: url('../../public/build/abilities-md.PNG');
+}
+
+.ability-md-bond {
+  background-position: -98px -0px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-decoy {
+  background-position: -294px -100px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-guard {
+  background-position: -196px -0px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-horn {
+  background-position: -0px -100px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-kasa {
+  background-position: -98px -100px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-lips {
+  background-position: -196px -100px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-medic {
+  background-position: -294px -0px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-monaka {
+  background-position: -0px -0px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-morale {
+  background-position: -0px -200px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-muster {
+  background-position: -98px -200px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-scorch {
+  background-position: -196px -200px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-spy {
+  background-position: -294px -200px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-tunning {
+  background-position: -392px -0px;
+  width: 98px;
+  height: 100px;
+}
+.ability-md-umbrella {
+  background-position: -392px -100px;
+  width: 98px;
+  height: 100px;
+}
+
 .spy-card:before {
-  background: url(/assets/texture/card_effect_spy.png) center no-repeat;
+  @extend .ability-md-spy;
+  @extend .ability-md;
 }
 
 .morale-card:before {
-  background: url(/assets/texture/card_effect_improve_neighbours.png) center no-repeat;
+  @extend .ability-md-morale;
+  @extend .ability-md;
 }
 
 .muster-card:before {
-  background: url(/assets/texture/card_effect_muster.png) center no-repeat;
+  @extend .ability-md-muster;
+  @extend .ability-md;
 }
 
 .medic-card:before {
-  background: url(/assets/texture/card_effect_nurse.png) center no-repeat;
+  @extend .ability-md-medic;
+  @extend .ability-md;
 }
 
 .bond-card:before {
-  background: url(/assets/texture/card_effect_same_type_morale.png) center no-repeat;
+  @extend .ability-md-bond;
+  @extend .ability-md;
 }
 
 .horn-card:before {
-  background: url(/assets/texture/card_effect_warhorn.png) center no-repeat;
+  @extend .ability-md-horn;
+  @extend .ability-md;
 }
 
 .tunning-card:before {
-  background: url(/assets/texture/tunning.png) center no-repeat;
+  @extend .ability-md-tunning;
+  @extend .ability-md;
 }
 
 .lips-card:before {
-  background: url(/assets/texture/lips.png) center no-repeat;
+  @extend .ability-md-lips;
+  @extend .ability-md;
 }
 
 .kasa-card:before {
-  background: url(/assets/texture/kasa.png) center no-repeat;
+  @extend .ability-md-kasa;
+  @extend .ability-md;
 }
 
 .decoy-card:before {
-  background: url(/assets/texture/card_effect_dummy.png) center no-repeat;
+  @extend .ability-md-decoy;
+  @extend .ability-md;
 }
 
 .normal-card {
@@ -162,11 +247,11 @@
 }
 
 .ability-card:before {
-  background-size: contain;
+  // background-position: center;
+  // background-repeat: no-repeat;
+  // background-size: contain;
   position: absolute;
   content: '';
-  height: 93px;
-  width: 69px;
   z-index: 11;
   pointer-events: none;
   // box-shadow: 0 0 15px 14px #fff;
@@ -176,18 +261,18 @@
 }
 
 @-webkit-keyframes Ability {
-  0% { transform: scale(.75); }
-  100% { transform: scale(0); }
+  0% { transform: translate(-15%, -5%) scale(0.75); }
+  100% { transform: translate(-15%, -5%) scale(0); }
 }
 
 @-webkit-keyframes Ability {
-  0% { transform: scale(.75); }
-  100% { transform: scale(0); }
+  0% { transform: translate(-15%, -5%) scale(0.75); }
+  100% { transform: translate(-15%, -5%) scale(0); }
 }
 
 @keyframes Ability {
-  0% { transform: scale(.75); }
-  100% { transform: scale(0); }
+  0% { transform: translate(-15%, -5%) scale(0.75); }
+  100% { transform: translate(-15%, -5%) scale(0); }
 }
 
 .activeCard {
