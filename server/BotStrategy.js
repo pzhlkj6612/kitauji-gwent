@@ -322,7 +322,8 @@ var BotStrategy = (function(){
           reward = this.getAttackReward(this.getFieldCards(false), card._data.attackPower);
           reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
         } else if (this.isGuard(card)) {
-          if (this.getFieldCards(true, 1).every(c=>c._data.name!=="中世古香织")) {
+          if (this.getFieldCards(true, 1).every(c=>c._data.name!=="中世古香织") &&
+          this.getFieldCards(false, 1).every(c=>c._data.name!=="中世古香织")) {
             reward = -4;
           } else {
             reward = this.getAttackReward(this.getFieldCards(false, 1), 4);
