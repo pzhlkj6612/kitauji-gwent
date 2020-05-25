@@ -160,6 +160,7 @@ var Battle = (function(){
       return;
     }
 
+    this.send("new:round");
     this.p1.resetNewRound();
     this.p2.resetNewRound();
 

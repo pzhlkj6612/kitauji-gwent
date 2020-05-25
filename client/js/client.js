@@ -329,6 +329,7 @@ let SideView = Backbone.View.extend({
         animClass = "muster-card";
       }
     } else if (ability.includes("tunning")) {
+      playSound("heal");
       animClass = "tunning-card";
       sub = $(`${this.side} .card`);
       subAnimClass = "heal-card";
@@ -343,6 +344,7 @@ let SideView = Backbone.View.extend({
       animClass = animClass ? animClass+" normal-card" : "normal-card";
     }
     this.battleView.waitForAnimation = true;
+    playSound("card1");
     card.addClass(animClass);
     card.addClass("ability-card");
     if (sub) {
@@ -722,6 +724,15 @@ let BattleView = Backbone.View.extend({
         return;
       }
       self.waitForAnimation = true;
+      if (scorched.length) {
+        playSound("fire");
+      }
+      if (attacked.length) {
+        playSound("hit");
+      }
+      if (healed.length) {
+        playSound("heal1");
+      }
       let scorchedCards = scorched.map(c=>{
         let card = $(`.card[data-id='${c._id}']`);
         card.addClass("scorch-card");
@@ -986,8 +997,15 @@ let User = Backbone.Model.extend({
       app.trigger("update:fields", fields);
     })
 
+    app.receive("new:round", function() {
+      playSound("smash");
+    });
+
     app.receive("gameover", function(data){
       let winner = data.winner;
+      if (winner === self.get("name")) {
+        playSound("win");
+      }
       //console.log("gameover");
       let p1Scores = data.p1Scores;
       let p2Scores = data.p2Scores;

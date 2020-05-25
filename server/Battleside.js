@@ -97,6 +97,9 @@ Battleside = (function() {
     })
     this.receive("set:passing", function() {
       self.setPassing(true);
+      self._scorched = null;
+      self._attacked = null;
+      self._healed = null;
       self.update();
 
       self.battle.sendNotification(self.getName() + " passed!");

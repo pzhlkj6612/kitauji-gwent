@@ -31,7 +31,7 @@ var HandWrittenBot = (function(){
       this._rooms = [];
       this._id = this.generateID();
       this.generateName();
-      this.setDeck("test");
+      this.setDeck("random");
       this.strategy = new BotStrategy(this);
     };
     var r = HandWrittenBot.prototype;

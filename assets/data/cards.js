@@ -480,7 +480,7 @@ module.exports = {
     power: 7,
     ability: "tunning",
     img: "shima_rie",
-    faction: "kumiko1",
+    faction: "kitauji",
     grade: "3",
     type: 0
   },
