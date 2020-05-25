@@ -106,7 +106,7 @@ module.exports = {
   },
   "tsukamoto_shuichi": {
     name: "冢本秀一",
-    power: 5,
+    power: 6,
     ability: null,
     img: "tsukamoto_shuichi",
     faction: "kitauji",
