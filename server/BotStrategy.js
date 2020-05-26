@@ -241,6 +241,7 @@ var BotStrategy = (function(){
           if (discard.length === 0) {
           } else if (discard.some(c=>this.isSpy(c))) {
             reward = 100;
+            if (this.isHero(card)) reward--;
           } else {
             reward = 1;
           }
