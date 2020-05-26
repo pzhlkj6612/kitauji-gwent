@@ -130,12 +130,11 @@ body {
 
 .music-options {
   float: right;
-  background: rgba(#000, .5);
-  padding: 10px 20px;
-  color: #8798ac;
+  background: #404d5b86;
+  padding: 0 5px;
+  color: #ffffff;
   clear: both;
   margin: 15px 0 0 0;
-  width: 180px;
   display: none;
 
   label {
@@ -146,7 +145,7 @@ body {
 
 .volume {
   width: 40px;
-  background: #404d5b;
+  background: none;
   border: 0;
   padding: 5px;
   float: left;

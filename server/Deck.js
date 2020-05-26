@@ -33,6 +33,18 @@ var Deck = (function(){
 
   r.side = null;
 
+  Deck.NORMAL_FACTION = [
+    "kitauji",
+    "kumiko1",
+    "kumiko1S2"
+  ];
+
+  Deck.ADVANCED_FACTION = [
+    "kitauji2",
+    "kumiko1_2",
+    "kumiko1S2_2"
+  ];
+
   Deck.FACTION = {
     NORTHERN_REALM: "northern",
     SCOIATAEL: "scoiatael",
@@ -45,6 +57,12 @@ var Deck = (function(){
 
     if(deckKey === "random"){
       var decks = _.allKeys(DeckData);
+      deck = DeckData[decks[(Math.random() * decks.length) | 0]];
+    } else if(deckKey === "random_normal"){
+      var decks = Deck.NORMAL_FACTION;
+      deck = DeckData[decks[(Math.random() * decks.length) | 0]];
+    } else if(deckKey === "random_advanced"){
+      var decks = Deck.ADVANCED_FACTION;
       deck = DeckData[decks[(Math.random() * decks.length) | 0]];
     }
 

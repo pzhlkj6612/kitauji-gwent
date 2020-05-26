@@ -1,4 +1,5 @@
 var BotStrategy = require("./BotStrategy");
+var Deck = require("./Deck");
 
 var HandWrittenBot = (function(){
     var SocketStub = function(bot){
@@ -18,20 +19,26 @@ var HandWrittenBot = (function(){
     SocketStub.prototype.emit = function(event, msg) {
       this.bot.send(event, msg);
     };
-    var HandWrittenBot = function(){
+    var HandWrittenBot = function(user){
       if(!(this instanceof HandWrittenBot)){
-        return (new HandWrittenBot());
+        return (new HandWrittenBot(user));
       }
       /**
        * constructor here
        */
-  
+      this.user = user;
       this.state = {};
       this.socket = new SocketStub(this);
       this._rooms = [];
       this._id = this.generateID();
       this.generateName();
-      this.setDeck("random");
+      if (Deck.NORMAL_FACTION.includes(user.getDeck())) {
+        this.setDeck("random_normal");
+      } else if (Deck.ADVANCED_FACTION.includes(user.getDeck())) {
+        this.setDeck("random_advanced");
+      } else {
+        this.setDeck("random");
+      }
       this.strategy = new BotStrategy(this);
     };
     var r = HandWrittenBot.prototype;

@@ -587,15 +587,10 @@ $game-height: 800px;
 }
 
 .field {
+  &.field-weather-anim:before {
+    -webkit-animation: fade-in 0.5s;
+  }
   &.field-frost:before {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+60,709bff+100&amp;0+60,1+100 */
-    // background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(112,155,255,1) 100%); /* FF3.6+ */
-    // background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(112,155,255,1))); /* Chrome,Safari4+ */
-    // background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* Chrome10+,Safari5.1+ */
-    // background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* Opera 11.10+ */
-    // background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* IE10+ */
-    // background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(112,155,255,1) 100%); /* W3C */
-    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#709bff',GradientType=0 ); /* IE6-9 */
     position: absolute;
     content: '';
     background: url("/assets/texture/board_weather_frost.png"); /*partially transparent image*/
@@ -605,17 +600,8 @@ $game-height: 800px;
     height: 100px;
     z-index: 11;
     pointer-events: none;
-
   }
   &.field-fog:before {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+60,9b9b9b+100&amp;0+60,1+100 */
-    // background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(155,155,155,1) 100%); /* FF3.6+ */
-    // background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(155,155,155,1))); /* Chrome,Safari4+ */
-    // background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* Chrome10+,Safari5.1+ */
-    // background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* Opera 11.10+ */
-    // background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* IE10+ */
-    // background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(155,155,155,1) 100%); /* W3C */
-    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#9b9b9b',GradientType=0 ); /* IE6-9 */
     position: absolute;
     content: '';
     background: url("/assets/texture/board_weather_fog.png");
@@ -625,19 +611,9 @@ $game-height: 800px;
     height: 100px;
     z-index: 11;
     pointer-events: none;
-
-
   }
 
   &.field-rain:before {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+60,133511+100&amp;0+60,1+100 */
-    // background: -moz-linear-gradient(top,  rgba(255,255,255,0) 60%, rgba(19,53,17,1) 100%); /* FF3.6+ */
-    // background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,rgba(255,255,255,0)), color-stop(100%,rgba(19,53,17,1))); /* Chrome,Safari4+ */
-    // background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* Chrome10+,Safari5.1+ */
-    // background: -o-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* Opera 11.10+ */
-    // background: -ms-linear-gradient(top,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* IE10+ */
-    // background: linear-gradient(to bottom,  rgba(255,255,255,0) 60%,rgba(19,53,17,1) 100%); /* W3C */
-    // filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#133511',GradientType=0 ); /* IE6-9 */
     position: absolute;
     content: '';
     background: url("/assets/texture/board_weather_rain.png");
@@ -647,9 +623,12 @@ $game-height: 800px;
     height: 100px;
     z-index: 11;
     pointer-events: none;
-
-
   }
+}
+
+@keyframes fade-in {
+  0% {opacity:0;}
+  100% {opacity:1;}
 }
 
 .field-close {

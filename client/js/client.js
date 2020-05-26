@@ -196,7 +196,7 @@ let SideView = Backbone.View.extend({
     })
 
     if(isInfluencedByWeather){
-      $field.addClass("field-frost");
+      this.$el.find(".field-close").parent().addClass("field-frost");
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
@@ -246,7 +246,7 @@ let SideView = Backbone.View.extend({
     })
 
     if(isInfluencedByWeather){
-      $field.addClass("field-fog");
+      this.$el.find(".field-range").parent().addClass("field-fog");
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
@@ -277,7 +277,7 @@ let SideView = Backbone.View.extend({
     })
 
     if(isInfluencedByWeather){
-      $field.addClass("field-rain");
+      this.$el.find(".field-siege").parent().addClass("field-rain");
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
@@ -289,7 +289,7 @@ let SideView = Backbone.View.extend({
       return;
     }
     let id = placedCard._id;
-    let card = $(`.battleside .card[data-id='${id}']`);
+    let card = $(`.battleside .card[data-id='${id}'],.field-weather .card[data-id='${id}']`);
     if (!card || card.length === 0) {
       return;
     }
@@ -342,6 +342,17 @@ let SideView = Backbone.View.extend({
       animClass = animClass ? animClass+" hero-card" : "hero-card";
     } else {
       animClass = animClass ? animClass+" normal-card" : "normal-card";
+    }
+    // weather animation
+    if (ability.includes("frost")) {
+      sub = this.$el.find(".field-close").parent();
+      subAnimClass = "field-weather-anim";
+    } else if (ability.includes("fog")) {
+      sub = this.$el.find(".field-range").parent();
+      subAnimClass = "field-weather-anim";
+    } else if (ability.includes("rain")) {
+      sub = this.$el.find(".field-siege").parent();
+      subAnimClass = "field-weather-anim";
     }
     this.battleView.waitForAnimation = true;
     playSound("card1");
@@ -859,7 +870,14 @@ let ReDrawModal = Modal.extend({
 });
 
 let WinnerModal = Modal.extend({
-  template: require("../templates/modal.winner.handlebars")
+  template: require("../templates/modal.winner.handlebars"),
+  // events: {
+  //   "click .startMatchmaking": "onBtnClick"
+  // },
+  // onBtnClick: function(e) {
+  //   this.model.get("app").initialize();
+  //   this.remove();
+  // }
 });
 
 let ChooseSideModal = Modal.extend({
@@ -912,6 +930,7 @@ let User = Backbone.Model.extend({
       /*
             self.set("channel:battle", app.socket.subscribe(self.get("room")));*/
       //app.navigate("battle", {trigger: true});
+      bgm.play();
       app.battleRoute();
     })
 
@@ -1014,6 +1033,7 @@ let User = Backbone.Model.extend({
 
       let model = Backbone.Model.extend({});
       let modal = new WinnerModal({model: new model({
+        app: app,
         winner: winner,
         p1_1: p1Scores[0],
         p2_1: p2Scores[0],

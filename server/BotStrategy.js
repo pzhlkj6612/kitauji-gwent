@@ -36,7 +36,7 @@ var BotStrategy = (function(){
       }
       return [];
     }
-    r.generateForChooseHeal = function() {
+    r.generateForChooseHeal = function(card) {
       let state = this.bot.state;
       let chooseFrom = [];
       let weatherFields = state.ownFields.weather.cards
@@ -50,13 +50,13 @@ var BotStrategy = (function(){
           return !weatherFields.includes(i);
         }
       }).forEach(i=>{
-        chooseFrom = chooseFrom.concat(this.getFieldCards(true, i));
+        chooseFrom = chooseFrom.concat(
+          this.getFieldCards(true, i).filter(c=>this.canReplace(c) && c._id !== card._id));
       })
-      if (chooseFrom.length === 0) {
-        chooseFrom = this.getFieldCards(true);
-      }
       // default: choose randomly
-      chooseFrom = chooseFrom.filter(c=>this.canReplace(c));
+      if (chooseFrom.length === 0) {
+        chooseFrom = this.getFieldCards(true).filter(c=>this.canReplace(c) && c._id !== card._id);
+      }
       if (chooseFrom.length > 0) {
         return [this.bot.chooseHealCommand(this.getRandom(chooseFrom), 2)];
       }
@@ -132,7 +132,7 @@ var BotStrategy = (function(){
           } else if (this.isTaibu(card)) {
             commands = commands.concat(this.generateForChooseAttack(100, 3));
           } else if (this.isMonaka(card)) {
-            commands = commands.concat(this.generateForChooseHeal());
+            commands = commands.concat(this.generateForChooseHeal(card));
           }
           return commands;
         }
@@ -157,7 +157,7 @@ var BotStrategy = (function(){
       } else if (this.isTaibu(card)) {
         return [this.bot.playCardCommand(card)].concat(this.generateForChooseAttack(100, 3));
       } else if (this.isMonaka(card)) {
-        return [this.bot.playCardCommand(card)].concat(this.generateForChooseHeal());
+        return [this.bot.playCardCommand(card)].concat(this.generateForChooseHeal(card));
       } else if (String(card._data.ability).includes("medic")) {
         let cards = this.generateForMedic(card);
         return cards;
@@ -351,6 +351,12 @@ var BotStrategy = (function(){
           reward = Math.max(realPower - card._data.power * 0.5, 0);
           if (cards.length > 0) reward += 2;
           else reward -= 2;
+        } else if (this.isKasa(card)) {
+          if (this.getFieldCards(true, 0).some(c=>c._data.name==="铠冢霙")) {
+            reward = Math.max(realPower + 5 - card._data.power * 0.5, 0);
+          } else {
+            reward = 1;
+          }
         } else if (this.isHero(card)) {
           // play hero in later rounds
           reward = realPower * 0.5 * (2 - state.ownSide.lives);
@@ -469,6 +475,9 @@ var BotStrategy = (function(){
       if (field.horn || field.cards.some(c=>c._data.ability === "commanders_horn_card")) {
         double++;
       }
+      if (card._data.name === "铠冢霙" && field.cards.some(c=>this.isKasa(c))) {
+        add += 5;
+      }
       add += field.cards.filter(c=>String(c._data.ability).includes("morale_boost")).length;
       if (this.isBond(card)) {
         double += field.cards.filter(c=>this.isBond(c, card._data.bondType)).length;
@@ -525,6 +534,9 @@ var BotStrategy = (function(){
     }
     r.isTunning = function(card) {
       return card._data.ability === "tunning";
+    }
+    r.isKasa = function(card) {
+      return card._data.ability === "kasa";
     }
     r.isWeather = function(card) {
       return card._data.type === 5;

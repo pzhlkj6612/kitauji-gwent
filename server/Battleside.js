@@ -97,9 +97,9 @@ Battleside = (function() {
     })
     this.receive("set:passing", function() {
       self.setPassing(true);
-      self._scorched = null;
-      self._attacked = null;
-      self._healed = null;
+      self._scorched = [];
+      self._attacked = [];
+      self._healed = [];
       self.update();
 
       self.battle.sendNotification(self.getName() + " passed!");
@@ -471,8 +471,8 @@ Battleside = (function() {
   }
 
   r.endTurn = function() {
-    this._attacked = null;
-    this._healed = null;
+    this._attacked = [];
+    this._healed = [];
     this._placedCard = null;
     this.update();
 

@@ -7,7 +7,7 @@ var sounds = {
     },
     "fire": {
       url: "assets/se/fire.mp3",
-      volume : .4,
+      volume : .3,
     },
     "hit": {
       url: "assets/se/hit.mp3",

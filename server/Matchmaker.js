@@ -44,7 +44,7 @@ var Matchmaker = (function(){
     var room = Room();
     c.roomCollection[room.getID()] = room;
     room.join(user);
-    var bot = HandWrittenBot(); // TODO
+    var bot = HandWrittenBot(user); // TODO
     room.join(bot);
     user._inQueue = false;
     return room;
