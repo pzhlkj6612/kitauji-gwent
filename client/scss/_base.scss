@@ -111,7 +111,7 @@ body {
 }
 
 .music-icon {
-  background: url(../../assets/music-mute.png) no-repeat;
+  background: url(../../assets/texture/music-mute.png) no-repeat;
   float: right;
   width: 35px;
   height: 33px;
@@ -124,7 +124,7 @@ body {
   }
 
   &.active {
-    background: url(../../assets/music.png) no-repeat;
+    background: url(../../assets/texture/music.png) no-repeat;
   }
 }
 

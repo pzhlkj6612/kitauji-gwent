@@ -519,7 +519,7 @@ ul {
 }
 
 .icon-content-load {
-    background: url(../img/content-load.gif) no-repeat;
+    background: url(../assets/texture/content-load.gif) no-repeat;
     width: 32px;
     height: 32px;
     opacity: .9;
@@ -553,7 +553,7 @@ ul {
 }
 
 .icon-action-load {
-    background: url(../img/action-load.gif) no-repeat;
+    background: url(../assets/texture/action-load.gif) no-repeat;
     width: 16px;
     height: 16px;
     float: right;

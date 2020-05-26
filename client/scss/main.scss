@@ -134,7 +134,6 @@ $game-height: 800px;
   margin: 0px;
   padding: 0 10px;
   width: 100px;
-  // background: url("../../assets/hunting-horn.png") no-repeat;
   height: 100px;
   //width: 64px;
   background-position: 7px 20px;
@@ -309,7 +308,7 @@ $game-height: 800px;
   }
 
   .icon-hand-card {
-    background: url("../../assets/card_icon.png") no-repeat;
+    background: url("../../assets/texture/card_icon.png") no-repeat;
     height: 50px;
     width: 50px;
     display: block;
@@ -478,7 +477,7 @@ $game-height: 800px;
     //padding-left: -4px;
     height: 20px;
     width: 20px;
-    background: url("../../assets/card_strength_border.png") no-repeat;
+    background: url("../../assets/texture/card_strength_border.png") no-repeat;
     background-size: contain;
     z-index: 11;
     transition: all .2s ease-in-out 0s;
@@ -534,12 +533,12 @@ $game-height: 800px;
 }
 
 .discard-skull {
-  background: url("../../assets/discard.png") no-repeat;
+  background: url("../../assets/texture/discard.png") no-repeat;
   margin: 23px auto 0 auto;
 }
 
 .icon-deck {
-  background: url("../../assets/card_icon.png") no-repeat;
+  background: url("../../assets/texture/card_icon.png") no-repeat;
   margin: 13px auto 0 auto;
 }
 
@@ -578,7 +577,7 @@ $game-height: 800px;
     height: 40px;
     width: 40px;
     margin: 0 10px 0 0;
-    background: url("../../assets/ruby-grey.png");
+    background: url("../../assets/texture/ruby-grey.png");
     &.ruby {
       background: url("/assets/texture/player_life_gem_large.png") no-repeat;
       background-size: contain;
@@ -780,7 +779,7 @@ $game-height: 800px;
 }
 
 .image-gif-loader {
-  background: url("../../assets/content-load.gif");
+  background: url("../../assets/texture/content-load.gif");
   display: block;
   height: 32px;
   width: 32px;

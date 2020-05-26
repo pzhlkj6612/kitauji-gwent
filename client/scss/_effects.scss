@@ -83,7 +83,7 @@
 }
 
 .scorch-card:before {
-  background: url(/assets/explode.gif) center;
+  background: url(/assets/texture/explode.gif) center;
   opacity: .8;
   position: absolute;
   content: '';
@@ -440,7 +440,7 @@
 }
 
 .deck-back {
-  background: url(../back.png) no-repeat;
+  background: url(../assets/texture/back.png) no-repeat;
   float: left;
   width: 63px;
   height: 87px;
