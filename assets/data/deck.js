@@ -94,6 +94,9 @@ module.exports = {
       "shima_rie",
       "gotou_takuya",
       "nagase_riko",
+      "tsukamoto_shuichi",
+      "kishibe_miru",
+      "katou_hazuki",
 
       "taki_noboru",
 
@@ -215,12 +218,11 @@ module.exports = {
       "wasure",
       "daisangakushou",
       "daikichiyama",
-      "pool",
       "niiyama",
       "hashimoto",
       "tubakun",
       "tubakun",
-      "taibu",
+      "tubakun",
       "taibu"
     ]
   },
@@ -318,7 +320,6 @@ module.exports = {
       "gotou_takuya_2",
       "yoshikawa_yuko_2",
       "nakagawa_natsuki_2",
-      "kabe_tomoe_2",
       "ono_miyoko_2",
       "yoroizuka_mizore_2",
       "kasaki_nozomi_2",
@@ -329,12 +330,11 @@ module.exports = {
       "wasure",
       "daisangakushou",
       "daikichiyama",
-      "pool",
       "niiyama",
       "hashimoto",
       "tubakun",
       "tubakun",
-      "taibu",
+      "tubakun",
       "taibu"
     ]
   },
