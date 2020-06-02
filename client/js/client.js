@@ -41,13 +41,20 @@ let App = Backbone.Router.extend({
   },
   initialize: function(){
     let self = this;
+    this.off();
     this.connect();
+    if (this.user) {
+      this.user.stopListening();
+    }
     this.user = new User({app: this});
 
     /*Backbone.history.start();*/
     this.lobbyRoute();
   },
   connect: function(){
+    if (this.socket) {
+      this.socket.close();
+    }
     let hostname = Config.Server.hostname;
     if (!hostname) {
       hostname = location.hostname;
@@ -79,10 +86,14 @@ let App = Backbone.Router.extend({
       socket.emit(event, data);
     }
   },
-
+x
   lobbyRoute: function(){
     if(this.currentView){
       this.currentView.remove();
+      if (!$(".gwent-battle").length) {
+        $(".notifications").after('<div class="gwent-battle"></div>');
+      }
+      $(".notification-left").remove();
     }
     this.currentView = new Lobby({
       app: this,
@@ -92,6 +103,9 @@ let App = Backbone.Router.extend({
   battleRoute: function(){
     if(this.currentView){
       this.currentView.remove();
+      if (!$(".gwent-battle").length) {
+        $(".notifications").after('<div class="gwent-battle"></div>');
+      }
     }
     this.currentView = new BattleView({
       app: this,
@@ -293,6 +307,11 @@ let SideView = Backbone.View.extend({
     if (!card || card.length === 0) {
       return;
     }
+    if (this.battleView.animatedCards[id]) {
+      console.info("already animated");
+      return;
+    }
+    this.battleView.animatedCards[id] = true;
     let ability = card.data("ability");
     let sub, subAnimClass;
     let animClass = null;
@@ -395,16 +414,16 @@ let SideView = Backbone.View.extend({
 });
 
 let BattleView = Backbone.View.extend({
-  el: ".gwent-battle",
   template: require("../templates/battle.handlebars"),
   initialize: function(options){
     let self = this;
     let user = this.user = options.user;
     let app = this.app = options.app;
     let yourSide, otherSide;
-    let waitForAnimation = false;
+    this.waitForAnimation = false;
+    this.animatedCards = {};
 
-    $(this.el).prependTo('gwent-battle');
+    $(this.el).prependTo('.gwent-battle');
 
     this.listenTo(user, "change:showPreview", this.renderPreview);
     this.listenTo(user, "change:waiting", this.render);
@@ -714,6 +733,9 @@ let BattleView = Backbone.View.extend({
         self.render();
       }
     })
+    app.on("new:round", function() {
+      self.animatedCards = {};
+    })
     app.on("update:info", function(data){
       let _side = data._roomSide;
       let infoData = data.info;
@@ -735,15 +757,6 @@ let BattleView = Backbone.View.extend({
         return;
       }
       self.waitForAnimation = true;
-      if (scorched.length) {
-        playSound("fire");
-      }
-      if (attacked.length) {
-        playSound("hit");
-      }
-      if (healed.length) {
-        playSound("heal1");
-      }
       let scorchedCards = scorched.map(c=>{
         let card = $(`.card[data-id='${c._id}']`);
         card.addClass("scorch-card");
@@ -759,6 +772,15 @@ let BattleView = Backbone.View.extend({
         card.addClass("heal-card");
         return card;
       });
+      if (scorchedCards.length) {
+        playSound("fire");
+      }
+      if (attackedCards.length) {
+        playSound("hit");
+      }
+      if (healedCards.length) {
+        playSound("heal1");
+      }
       setTimeout(() => {
         scorchedCards.forEach(c=>c.removeClass("scorch-card"));
         attackedCards.forEach(c=>c.removeClass("attack-card"));
@@ -871,13 +893,13 @@ let ReDrawModal = Modal.extend({
 
 let WinnerModal = Modal.extend({
   template: require("../templates/modal.winner.handlebars"),
-  // events: {
-  //   "click .startMatchmaking": "onBtnClick"
-  // },
-  // onBtnClick: function(e) {
-  //   this.model.get("app").initialize();
-  //   this.remove();
-  // }
+  events: {
+    "click .startMatchmaking": "onBtnClick"
+  },
+  onBtnClick: function(e) {
+    this.remove();
+    this.model.get("app").initialize();
+  }
 });
 
 let ChooseSideModal = Modal.extend({
@@ -950,8 +972,7 @@ let User = Backbone.Model.extend({
     })
 
     app.receive("foe:left", function(){
-      //console.log("your foe left the room");
-      $(".container").prepend('<div class="notification-left">Your foe left the battle!</div>')
+      $(".container").prepend('<div class="notification-left">对方已离线!</div>')
     })
 
     app.receive("played:medic", function(data){
@@ -1017,6 +1038,7 @@ let User = Backbone.Model.extend({
     })
 
     app.receive("new:round", function() {
+      app.trigger("new:round");
       playSound("smash");
     });
 
