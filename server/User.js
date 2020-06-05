@@ -117,8 +117,8 @@ var User = (function(){
   r.waitForReconnect = function(connections) {
     this.disconnected = true;
     this.connecting();
-    if (this._rooms.length === 0) {
-      // not in game, disconnect immediately
+    if (this._rooms.length === 0 || this.getRoom().hasUser() === 1) {
+      // not in game, or foe has left, disconnect immediately
       this.disconnect(connections);
       return;
     }
