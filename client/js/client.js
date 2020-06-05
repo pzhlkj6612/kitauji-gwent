@@ -147,8 +147,30 @@ let SideView = Backbone.View.extend({
     this.infoData = this.infoData || {};
     this.leader = this.leader || {};
     this.field = this.field || {};
+    this.countDownTimer = null;
+    this.timeLeft = 30; // 30 seconds by default
 
-
+    this.app.on("timer:start", function() {
+      if (self.side === ".foe") return;
+      if (self.countDownTimer != null) {
+        // already started
+        return;
+      }
+      self.timeLeft = 30;
+      self.countDownTimer = setInterval(function() {
+        self.timeLeft--;
+        if (self.timeLeft === 0) {
+          self.battleView.onPassing();
+          clearInterval(self.countDownTimer);
+          self.countDownTimer = null;
+        }
+        self.renderInfo();
+      }, 1000);
+    });
+    this.app.on("timer:cancel", function() {
+      clearInterval(self.countDownTimer);
+      self.countDownTimer = null;
+    });
   },
   render: function(){
     this.renderInfo();
@@ -166,7 +188,9 @@ let SideView = Backbone.View.extend({
     let html = this.templateInfo({
       data: d,
       leader: l,
-      passBtn: this.side === ".player"
+      passBtn: this.side === ".player" && !this.app.user.get("waiting"),
+      timeLeft: this.timeLeft,
+      danger: this.timeLeft < 10,
     })
 
     this.$info = this.$el.find(".game-info" + this.side).html(html);
@@ -486,6 +510,7 @@ let BattleView = Backbone.View.extend({
     let id = $card.data("id");
     let key = $card.data("key");
 
+    this.app.trigger("timer:cancel"); // cancel timer
     if(!!this.user.get("setAgile")){
       if(id === this.user.get("setAgile")){
         this.user.set("setAgile", false);
@@ -980,6 +1005,9 @@ let User = Backbone.Model.extend({
 
     app.receive("set:waiting", function(data){
       let waiting = data.waiting;
+      if (!waiting) {
+        app.trigger("timer:start");
+      }
       self.set("waiting", waiting);
     })
 

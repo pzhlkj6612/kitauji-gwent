@@ -96,7 +96,7 @@ var User = (function(){
     this.socket = socket;
     this._events();
     this._battleSide && this._battleSide.rejoin(socket);
-    this.getRoom().rejoin(this);
+    this.getRoom() && this.getRoom().rejoin(this);
   }
 
   r.leaveRoom = function() {
@@ -114,12 +114,12 @@ var User = (function(){
     }
   }
 
-  r.waitForReconnect = function(connections) {
+  r.waitForReconnect = function() {
     this.disconnected = true;
     this.connecting();
     if (this._rooms.length === 0 || this.getRoom().hasUser() === 1) {
       // not in game, or foe has left, disconnect immediately
-      this.disconnect(connections);
+      this.disconnect();
       return;
     }
     this._waitingSeq++;
@@ -128,12 +128,12 @@ var User = (function(){
     setTimeout(() => {
       if (waitingSeq !== this._waitingSeq) return;
       if (this.disconnected) {
-        this.disconnect(connections);
+        this.disconnect();
       }
     }, 30000);
   }
 
-  r.disconnect = function(connections) {
+  r.disconnect = function() {
     connections.remove(this);
     matchmaking.removeFromQueue(this, this._roomName);
 

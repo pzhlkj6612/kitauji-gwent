@@ -45,9 +45,14 @@ io.on("connection", function(socket) { //global connection
     let user = null;
     if (data && data.id != null) {
       user = connections.findById(data.id);
-      if (user) {
+      if (user && user.getRoom()) {
         console.log("user ", user.getName(), " reconnect");
-        user.reconnect(socket);
+        try {
+          user.reconnect(socket);
+        } catch (e) {
+          console.warn(e);
+          user = null;
+        }
       }
     }
     if (!user) {
@@ -56,7 +61,7 @@ io.on("connection", function(socket) { //global connection
     }
 
     socket.on("disconnect", function() {
-      user.waitForReconnect(connections);
+      user.waitForReconnect();
     })
 
 
