@@ -989,7 +989,17 @@ let User = Backbone.Model.extend({
     })
 
     app.receive("foe:left", function(){
+      $(".notification-left").remove();
       $(".container").prepend('<div class="notification-left">对方已离线!</div>')
+    })
+
+    app.receive("foe:connecting", function(){
+      $(".notification-left").remove();
+      $(".container").prepend('<div class="notification-left notification-connecting">对方连接中...</div>')
+    })
+
+    app.receive("foe:reconnect", function(){
+      $(".notification-left").remove();
     })
 
     app.receive("played:medic", function(data){

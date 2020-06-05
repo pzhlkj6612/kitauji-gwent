@@ -70,6 +70,7 @@ var Room = (function(){
       foeSide: foeSide,
       roomId: this.getID(),
     });
+    this._battle && this._battle.userReconnect(side);
   }
 
   r.initBattle = function(){
@@ -94,6 +95,16 @@ var Room = (function(){
 
   r.bothReady = function(){
     return !!this._ready[this._users[0].getID()] && !!this._ready[this._users[1].getID()];
+  }
+
+  r.connecting = function(user) {
+    var p = "p2";
+    if (user.getID() === this._users[0].getID()) {
+      p = "p1";
+    }
+    if (this._battle) {
+      this._battle.userConnecting(p);
+    }
   }
 
   r.leave = function(user){

@@ -107,8 +107,16 @@ var User = (function(){
     this._rooms = [];
   }
 
+  r.connecting = function() {
+    let room = this.getRoom();
+    if (room) {
+      room.connecting(this);
+    }
+  }
+
   r.waitForReconnect = function(connections) {
     this.disconnected = true;
+    this.connecting();
     if (this._rooms.length === 0) {
       // not in game, disconnect immediately
       this.disconnect(connections);

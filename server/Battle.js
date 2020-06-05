@@ -400,6 +400,20 @@ var Battle = (function(){
     }
   }
 
+  r.userConnecting = function(sideName) {
+    var side = this[sideName];
+    if (side && side.foe) {
+      side.foe.send("foe:connecting", null, true);
+    }
+  }
+
+  r.userReconnect = function(sideName) {
+    var side = this[sideName];
+    if (side && side.foe) {
+      side.foe.send("foe:reconnect", null, true);
+    }
+  }
+
   r.userLeft = function(sideName){
     var side = this[sideName];
 
