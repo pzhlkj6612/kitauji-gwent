@@ -56,6 +56,22 @@ var Room = (function(){
     return this._users;
   }
 
+  r.rejoin = function(user) {
+    var side = "p2";
+    var foeSide = "p1";
+    var i = 1;
+    if(user.getID() === this._users[0].getID()){
+      side = "p1";
+      foeSide = "p2";
+      i = 0;
+    }
+    this._users[i].send("room:rejoin", {
+      side: side,
+      foeSide: foeSide,
+      roomId: this.getID(),
+    });
+  }
+
   r.initBattle = function(){
     this._battle = Battle(this._id, this._users[0], this._users[1], io);
     this._users[0].send("init:battle", {side: "p1", foeSide: "p2"});
@@ -63,6 +79,11 @@ var Room = (function(){
   }
 
   r.setReady = function(user, b){
+    if (this._battle.isStarted()) {
+      console.warn("game already started, user rejoin");
+      this._battle.update();
+      return;
+    }
     b = typeof b == "undefined" ? true : b;
     this._ready[user.getID()] = b;
     if(this.bothReady()){
@@ -91,6 +112,11 @@ var Room = (function(){
 
     if(!this.hasUser()) {
       connections.roomCollection[this.getID()] = null;
+    } else {
+      let foe = this._users[0];
+      if (foe.isBot()) {
+        foe.disconnect();
+      }
     }
   }
 

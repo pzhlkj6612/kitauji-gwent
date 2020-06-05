@@ -63,9 +63,15 @@ let App = Backbone.Router.extend({
     var self = this;
     console.log(this.socket.connected);
     this.socket.on("connect", function(socket){
+      self.send("user:init", {
+        id: localStorage["userId"],
+      });
       self.user.set("serverOffline", false);
     })
     this.socket.on("disconnect", function(socket){
+      setTimeout(() => {
+        this.connect();
+      }, 1000);
       self.user.set("serverOffline", true);
     })
   },
@@ -86,7 +92,7 @@ let App = Backbone.Router.extend({
       socket.emit(event, data);
     }
   },
-x
+
   lobbyRoute: function(){
     if(this.currentView){
       this.currentView.remove();
@@ -940,6 +946,9 @@ let User = Backbone.Model.extend({
     self.set("chooseSide", false);
 
     // this.listenTo(this.attributes, "change:room", this.subscribeRoom);
+    app.receive("user:init", function(data) {
+      localStorage["userId"] = data.id;
+    });
 
     app.receive("response:name", function(data){
       self.set("name", data.name);
@@ -959,6 +968,14 @@ let User = Backbone.Model.extend({
     app.receive("response:joinRoom", function(roomID){
       self.set("room", roomID);
       //console.log("room id", self.get("room"));
+    })
+
+    app.receive("room:rejoin", function(data) {
+      self.set("roomSide", data.side);
+      self.set("roomFoeSide", data.foeSide);
+      self.set("room", data.roomId);
+      bgm.play();
+      app.battleRoute();
     })
 
     app.receive("set:waiting", function(data){

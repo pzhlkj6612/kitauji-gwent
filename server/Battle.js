@@ -19,6 +19,7 @@ var Battle = (function(){
     this._id = id;
     this._user1 = p1;
     this._user2 = p2;
+    this._started = false;
     this.socket = socket;
   };
   var r = Battle.prototype;
@@ -32,6 +33,7 @@ var Battle = (function(){
   r.p2 = null;
   r._user1 = null;
   r._user2 = null;
+  r._started = false;
   r.turn = 0;
 
   r.cm = null;
@@ -55,7 +57,12 @@ var Battle = (function(){
     this.start();
   }
 
+  r.isStarted = function() {
+    return this._started;
+  }
+
   r.start = function(){
+    this._started = true;
     this.p1.setLeadercard();
     this.p2.setLeadercard();
     this.p1.draw(10);
@@ -214,6 +221,8 @@ var Battle = (function(){
       p1Scores: this.p1.getScores(),
       p2Scores: this.p2.getScores(),
     })
+    this._user1.leaveRoom();
+    this._user2.leaveRoom();
   }
 
   r.update = function(){

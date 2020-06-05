@@ -18,9 +18,9 @@ Battleside = (function() {
      */
 
     var deck = user.getDeck();
-    var self = this;
     this._isWaiting = true;
     this.socket = user.socket;
+    user.setBattleSide(this);
 
     this.cm = battle.cm;
 
@@ -44,7 +44,45 @@ Battleside = (function() {
     this.on = this.battle.on.bind(this.battle);
     this.off = this.battle.off.bind(this.battle);
 
+    this._events();
 
+    this.on("Turn" + this.getID(), this.onTurnStart, this);
+  };
+  var r = Battleside.prototype;
+  /**
+   * methods && properties here
+   * r.property = null;
+   * r.getProperty = function() {...}
+   */
+  r._name = null;
+  r._discard = null;
+  r._scorched = null;
+  r._attacked = null;
+  r._healed = null;
+  r._placedCard = null;
+  r._isNewRound = false;
+
+
+  r._rubies = 2;
+  r._score = 0;
+  r._scores = null;
+  r._isWaiting = null;
+  r._passing = null;
+
+  r.field = null;
+
+  r.socket = null;
+  r.n = null;
+
+  r.cm = null;
+
+  r.foe = null;
+  r.hand = null;
+  r.battle = null;
+  r.deck = null;
+
+  r._events = function() {
+    var self = this;
     this.receive("activate:leader", function() {
       if(self._isWaiting) return;
       if(self.isPassing()) return;
@@ -239,41 +277,12 @@ Battleside = (function() {
       self.endTurn();
     })
 
+  }
 
-    this.on("Turn" + this.getID(), this.onTurnStart, this);
-  };
-  var r = Battleside.prototype;
-  /**
-   * methods && properties here
-   * r.property = null;
-   * r.getProperty = function() {...}
-   */
-  r._name = null;
-  r._discard = null;
-  r._scorched = null;
-  r._attacked = null;
-  r._healed = null;
-  r._placedCard = null;
-  r._isNewRound = false;
-
-
-  r._rubies = 2;
-  r._score = 0;
-  r._scores = null;
-  r._isWaiting = null;
-  r._passing = null;
-
-  r.field = null;
-
-  r.socket = null;
-  r.n = null;
-
-  r.cm = null;
-
-  r.foe = null;
-  r.hand = null;
-  r.battle = null;
-  r.deck = null;
+  r.rejoin = function(socket) {
+    this.socket = socket;
+    this._events();
+  }
 
   r.createCard = function(key) {
     return this.cm.create(key, this.n);

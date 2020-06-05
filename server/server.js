@@ -41,20 +41,28 @@ app.listen(Config.WebServer.port);
 var admin = io.of("/admin");
 
 io.on("connection", function(socket) { //global connection
-  var user;
-  connections.add(user = User(socket));
-  console.log("new user ", user.getName());
+  socket.on("user:init", function(data) {
+    let user = null;
+    if (data && data.id != null) {
+      user = connections.findById(data.id);
+      if (user) {
+        console.log("user ", user.getName(), " reconnect");
+        user.reconnect(socket);
+      }
+    }
+    if (!user) {
+      connections.add(user = User(socket));
+      console.log("new user ", user.getName());
+    }
 
-  socket.on("disconnect", function() {
-    connections.remove(user);
-    user.disconnect();
-    console.log("user ", user.getName(), " disconnected");
-    user = null;
-    //io.emit("update:playerOnline", connections.length());
-  })
+    socket.on("disconnect", function() {
+      user.waitForReconnect(connections);
+    })
 
 
-  io.emit("update:playerOnline", connections.length());
+    io.emit("update:playerOnline", connections.length());
+  });
+
 })
 
 admin.on("connection", function(socket) {

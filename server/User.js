@@ -12,6 +12,7 @@ var User = (function(){
     this._rooms = [];
     this._id = socket.id;
     this.generateName();
+    this.sendInit();
 
     this._events();
   };
@@ -29,6 +30,8 @@ var User = (function(){
   r._inQueue = false;
   r.socket = null;
   r.disconnected = false;
+  r._battleSide = null;
+  r._waitingSeq = 0;
 
   r.isBot = function() {
     return false;
@@ -36,6 +39,12 @@ var User = (function(){
 
   r.getID = function(){
     return this._id;
+  }
+
+  r.sendInit = function() {
+    this.send("user:init", {
+      id: this._id
+    });
   }
 
   r.send = function(event, data, room){
@@ -82,32 +91,50 @@ var User = (function(){
     this._rooms.push(room);
   }
 
-  r.cleanUp = function() {
-    for(var i=0; i<this._rooms.length; i++) {
-      var room = this._rooms[i];
-      if(room[i] === null) {
-        this._rooms.splice(i, 1);
-
-        return this.cleanUp();
-      }
-    }
+  r.reconnect = function(socket) {
+    this.disconnected = false;
+    this.socket = socket;
+    this._events();
+    this._battleSide && this._battleSide.rejoin(socket);
+    this.getRoom().rejoin(this);
   }
 
-  r.disconnect = function() {
+  r.leaveRoom = function() {
     var self = this;
-    this.disconnected = true;
-
-    matchmaking.removeFromQueue(this, this._roomName);
-
     this._rooms.forEach(function(room) {
       room.leave(self);
-      if(!room.hasUser()) {
-        //console.log("Remove room: ", room.getID());
-        room = null;
-      }
-    })
+    });
+    this._rooms = [];
+  }
 
-    this.cleanUp();
+  r.waitForReconnect = function(connections) {
+    this.disconnected = true;
+    if (this._rooms.length === 0) {
+      // not in game, disconnect immediately
+      this.disconnect(connections);
+      return;
+    }
+    this._waitingSeq++;
+    let waitingSeq = this._waitingSeq;
+    // wait for 30s
+    setTimeout(() => {
+      if (waitingSeq !== this._waitingSeq) return;
+      if (this.disconnected) {
+        this.disconnect(connections);
+      }
+    }, 30000);
+  }
+
+  r.disconnect = function(connections) {
+    connections.remove(this);
+    matchmaking.removeFromQueue(this, this._roomName);
+
+    this.leaveRoom();
+    console.log("user ", this.getName(), " disconnected");
+  }
+
+  r.setBattleSide = function(battleSide) {
+    this._battleSide = battleSide;
   }
 
   r._events = function() {

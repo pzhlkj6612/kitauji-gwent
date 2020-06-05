@@ -39,6 +39,10 @@ var Connections = (function(){
     return !!this._connections[user.getID()];
   }
 
+  r.findById = function(id) {
+    return this._connections[id];
+  }
+
   r.length = function() {
     return this._length;
   }
