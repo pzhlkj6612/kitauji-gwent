@@ -18,3 +18,4 @@ site/server/composer.lock
 kitauji-gwent-linux
 kitauji-gwent-macos
 kitauji-gwent-win.exe
+*.pem
