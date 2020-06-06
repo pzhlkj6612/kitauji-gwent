@@ -54,10 +54,11 @@
   ],
   "pkg": {
     "assets": [
-      "assets/*",
-      "assets/cards/**/*",
       "assets/data/**/*",
       "assets/texture/**/*",
+      "assets/bgm/**/*",
+      "assets/se/**/*",
+      "assets/js/**/*",
       "public/**/*"
     ],
     "targets": [

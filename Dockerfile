@@ -6,7 +6,9 @@ COPY for-docker/package.json ./
 RUN npm install
 
 COPY for-docker/gulpfile.js ./
-COPY assets ./assets
+COPY assets/js ./assets/js
+COPY assets/texture ./assets/texture
+COPY assets/data ./assets/data
 COPY public ./public
 COPY server ./server
 

@@ -4,6 +4,7 @@ node_modules
 public
 test/spec
 assets/cards/*
+assets/bgm/*
 client/scss/_cards.scss
 
 /site/.idea

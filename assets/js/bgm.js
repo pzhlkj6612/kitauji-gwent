@@ -23,15 +23,23 @@
 //   }
 // });
 
-function Bgm(src) {
+var bgmList = [
+  "第一楽章.mp3",
+  "海兵队.mp3",
+  "DREAM SOLISTER.mp3",
+  "プロヴァンスの風.mp3",
+  "Samba de Loves You.mp3",
+]
+
+function Bgm(index) {
   this.sound = document.createElement("audio");
-  this.sound.src = src;
+  this.sound.src = "/assets/bgm/" + bgmList[index];
   this.sound.setAttribute("preload", "auto");
   this.sound.setAttribute("controls", "none");
-  this.sound.setAttribute("loop", "true");
   this.sound.style.display = "none";
   document.body.appendChild(this.sound);
   this.play = function(){
+    var self = this;
     if(localStorage.getItem('volume') == 'off') {
       $('.music-icon').removeClass('active');
       return;
@@ -44,6 +52,13 @@ function Bgm(src) {
       $('.volume').val('75');
     }
     this.sound.play();
+    this.sound.addEventListener('ended',function(){
+      //play next song
+      index = (index + 1) % bgmList.length;
+      self.sound.src = "/assets/bgm/" + bgmList[index];
+      self.sound.load();
+      self.sound.play();
+    });
   }
   this.stop = function(){
     this.sound.pause();
@@ -53,17 +68,7 @@ function Bgm(src) {
   }
 }
 
-var bgmList = [
-  "第一楽章.mp3",
-  "海兵队.mp3",
-  "DREAM SOLISTER.mp3",
-  "これが私の生きる道.mp3",
-  "マーチ・スカイブルー・ドリーム.mp3",
-  "プロヴァンスの風.mp3",
-  "Samba de Loves You.mp3",
-]
-
-var bgm = new Bgm("/assets/bgm/" + bgmList[(Math.random() * bgmList.length) | 0]);
+var bgm = new Bgm((Math.random() * bgmList.length) | 0);
 
 // Set volume.
 $('.volume').on('blur', function() {
