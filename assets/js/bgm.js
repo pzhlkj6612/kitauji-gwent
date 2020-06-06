@@ -92,7 +92,7 @@ $('.music-icon, .music-options').hover(function() {
 }, function() {
   musicHover = setTimeout(function() {
     $('.music-options').fadeOut();
-  }, 500);
+  }, 1000);
 });
 
 // Music options.

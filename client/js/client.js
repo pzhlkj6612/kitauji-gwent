@@ -4,10 +4,12 @@ require("./backbone.modal-min");
 let Handlebars = require('handlebars/runtime').default;
 let $ = require("jquery");
 
+let I18n = require("./i18n");
 let cardData = require("../../assets/data/cards");
 let abilityData = require("../../assets/data/abilities");
 
 window.$ = $;
+window.i18n = new I18n("zh");
 
 Handlebars.registerPartial("card", require("../templates/cards.handlebars"));
 Handlebars.registerHelper("health", function(lives){
@@ -93,6 +95,9 @@ let App = Backbone.Router.extend({
     if(data){
       socket.emit(event, data);
     }
+  },
+  getCurrentView: function() {
+    return this.currentView;
   },
 
   lobbyRoute: function(){
@@ -964,6 +969,7 @@ let User = Backbone.Model.extend({
   defaults: {
     name: typeof localStorage["userName"] === "string" ? localStorage["userName"].slice(0, 20) : null,
     deck: localStorage["userDeck"] || "random",
+    locale: localStorage["locale"] || "zh",
     serverOffline: true
   },
   initialize: function(){
@@ -1141,7 +1147,8 @@ let User = Backbone.Model.extend({
     app.on("joinRoom", this.joinRoom, this);
     app.on("setName", this.setName, this);
     app.on("setDeck", this.setDeck, this);
-
+    $("#locale").change(this.setLocale.bind(this));
+    i18n.loadDict(this.get("locale"));
 
     app.receive("notification", function(data){
       new Notification(data).render();
@@ -1177,6 +1184,14 @@ let User = Backbone.Model.extend({
     this.set("deckKey", deckKey);
     localStorage["userDeck"] = deckKey;
     this.get("app").send("set:deck", {deck: deckKey});
+  },
+  setLocale: function(e) {
+    let locale = $(e.target).val();
+    this.set("locale", locale);
+    localStorage["locale"] = locale;
+    i18n.loadDict(locale, () => {
+      this.get("app").getCurrentView().render();
+    });
   },
   chooseSide: function(roomSide){
     this.get("app").send("response:chooseWhichSideBegins", {
@@ -1235,6 +1250,7 @@ let Lobby = Backbone.View.extend({
   render: function(){
     this.$el.html(this.template(this.user.attributes));
     this.$el.find("#deckChoice").val(this.user.get("deck")).attr("selected", true);
+    $("#locale").val(this.user.get("locale")).attr("selected", true);
     return this;
   },
   startMatchmaking: function(){
