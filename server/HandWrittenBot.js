@@ -126,6 +126,7 @@ var HandWrittenBot = (function(){
     }
 
     r.play = function() {
+      if (this.disconnected) return;
       let commands = [];
       try {
         let card = this.strategy.selectCard();

@@ -43,8 +43,8 @@ var admin = io.of("/admin");
 io.on("connection", function(socket) { //global connection
   socket.on("user:init", function(data) {
     let user = null;
-    if (data && data.id != null) {
-      user = connections.findById(data.id);
+    if (data && data.connId != null) {
+      user = connections.findById(data.connId);
       if (user && user.getRoom()) {
         console.log("user ", user.getName(), " reconnect");
         try {

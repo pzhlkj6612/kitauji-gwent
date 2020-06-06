@@ -53,6 +53,8 @@ let App = Backbone.Router.extend({
   },
   connect: function(){
     if (this.socket) {
+      // call off before close, otherwise will trigger reconnect callback
+      this.socket.off();
       this.socket.close();
     }
     let hostname = Config.Server.hostname;
@@ -64,13 +66,13 @@ let App = Backbone.Router.extend({
     console.log(this.socket.connected);
     this.socket.on("connect", function(socket){
       self.send("user:init", {
-        id: localStorage["userId"],
+        connId: localStorage["connectionId"],
       });
       self.user.set("serverOffline", false);
     })
     this.socket.on("disconnect", function(socket){
       setTimeout(() => {
-        this.connect();
+        this.initialize();
       }, 1000);
       self.user.set("serverOffline", true);
     })
@@ -478,6 +480,7 @@ let BattleView = Backbone.View.extend({
       clearInterval(interval);
     }.bind(this), 10);
 
+    bgm.play();
     this.render();
 
 
@@ -972,7 +975,7 @@ let User = Backbone.Model.extend({
 
     // this.listenTo(this.attributes, "change:room", this.subscribeRoom);
     app.receive("user:init", function(data) {
-      localStorage["userId"] = data.id;
+      localStorage["connectionId"] = data.connId;
     });
 
     app.receive("response:name", function(data){
@@ -986,7 +989,6 @@ let User = Backbone.Model.extend({
       /*
             self.set("channel:battle", app.socket.subscribe(self.get("room")));*/
       //app.navigate("battle", {trigger: true});
-      bgm.play();
       app.battleRoute();
     })
 
@@ -999,7 +1001,6 @@ let User = Backbone.Model.extend({
       self.set("roomSide", data.side);
       self.set("roomFoeSide", data.foeSide);
       self.set("room", data.roomId);
-      bgm.play();
       app.battleRoute();
     })
 
@@ -1101,7 +1102,11 @@ let User = Backbone.Model.extend({
       let winner = data.winner;
       if (winner === self.get("name")) {
         playSound("win");
+      } else {
+        playSound("smash");
       }
+      localStorage.removeItem("connectionId");
+      app.trigger("timer:cancel"); // cancel existing timer
       //console.log("gameover");
       let p1Scores = data.p1Scores;
       let p2Scores = data.p2Scores;

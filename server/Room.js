@@ -70,7 +70,13 @@ var Room = (function(){
       foeSide: foeSide,
       roomId: this.getID(),
     });
-    this._battle && this._battle.userReconnect(side);
+    if (this._battle) {
+      var battleSide = this._battle.getBattleSide(side);
+      if (battleSide.isReDrawing()) {
+        battleSide.finishReDraw();
+      }
+      this._battle.userReconnect(side);
+    }
   }
 
   r.initBattle = function(){
@@ -126,7 +132,7 @@ var Room = (function(){
     } else {
       let foe = this._users[0];
       if (foe.isBot()) {
-        foe.disconnect();
+        foe.leaveRoom();
       }
     }
   }

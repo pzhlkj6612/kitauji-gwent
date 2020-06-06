@@ -39,6 +39,8 @@ Battleside = (function() {
     this.isBot = user.isBot();
     this._scores = [];
     this._isWaitForCardAction = false;
+    this._isReDrawing = false;
+    this._reDrawPromise = null;
 
     this.runEvent = this.battle.runEvent.bind(this.battle);
     this.on = this.battle.on.bind(this.battle);
@@ -1016,8 +1018,9 @@ Battleside = (function() {
     //var hand = this.hand.getCards();
     var self = this;
     var left = n;
-    var deferred = Promise.Deferred();
+    this._reDrawPromise = Promise.Deferred();
 
+    this._isReDrawing = true;
     this.send("redraw:cards", null, true);
 
     this.receive("redraw:reDrawCard", function(data) {
@@ -1032,25 +1035,29 @@ Battleside = (function() {
 
       if(!left) {
         self.send("redraw:close", null, true);
-
-        self.wait();
-        deferred.resolve("done");
-        self.sendNotificationTo(self.foe, self.getName() + " finished redraw phase.")
-
+        self.finishReDraw();
       }
 
       self.battle.updateSelf(self);
     })
 
     this.receive("redraw:close_client", function() {
-
-      self.wait();
-      deferred.resolve("done");
-      self.sendNotificationTo(self.foe, self.getName() + " finished redraw phase.")
+      self.finishReDraw();
     })
 
-    return deferred;
+    return this._reDrawPromise;
 
+  }
+
+  r.finishReDraw = function() {
+    this.wait();
+    this._reDrawPromise.resolve("done");
+    this.sendNotificationTo(this.foe, this.getName() + " finished redraw phase.")
+    this._isReDrawing = false;
+  }
+
+  r.isReDrawing = function() {
+    return this._isReDrawing;
   }
 
   r.sendNotificationTo = function(side, msg) {

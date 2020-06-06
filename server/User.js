@@ -43,7 +43,7 @@ var User = (function(){
 
   r.sendInit = function() {
     this.send("user:init", {
-      id: this._id
+      connId: this._id
     });
   }
 

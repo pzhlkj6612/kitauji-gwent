@@ -367,7 +367,7 @@ var BotStrategy = (function(){
         } else {
           reward = Math.max(realPower - card._data.power * 0.5, 0);
         }
-        console.warn("reward of ", card._data.name, " is ", reward);
+        // console.warn("reward of ", card._data.name, " is ", reward);
         if (reward > maxReward) {
           maxReward = reward;
           maxCardIdx = i;
@@ -440,7 +440,7 @@ var BotStrategy = (function(){
         console.warn("pass due to foe passing and we lead");
         return null;
       }
-      console.warn("selected ", cards[maxCardIdx]);
+      // console.warn("selected ", cards[maxCardIdx]);
       return cards[maxCardIdx];
     }
     r.getAttackReward = function(cards, attackPower) {

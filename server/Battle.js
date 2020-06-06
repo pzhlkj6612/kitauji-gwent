@@ -221,8 +221,8 @@ var Battle = (function(){
       p1Scores: this.p1.getScores(),
       p2Scores: this.p2.getScores(),
     })
-    this._user1.leaveRoom();
-    this._user2.leaveRoom();
+    this._user1.disconnect();
+    this._user2.disconnect();
   }
 
   r.update = function(){
@@ -398,6 +398,10 @@ var Battle = (function(){
       loser: Math.random() > 0.5 ? this.p1 : this.p2,
       isTie: true
     }
+  }
+
+  r.getBattleSide = function(sideName) {
+    return this[sideName];
   }
 
   r.userConnecting = function(sideName) {
