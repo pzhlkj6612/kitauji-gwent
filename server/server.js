@@ -1,6 +1,8 @@
 var argv = require('minimist')(process.argv.slice(2));
 var http = require("http");
 var express = require('express');
+var favicon = require('serve-favicon');
+var path = require('path');
 var app = express();
 var Config = require("../public/Config")
 
@@ -35,6 +37,7 @@ app.use(function(req, res, next) {
 app.use(express.static(__dirname + '/../public'));
 app.use('/public', express.static(__dirname + '/../public'));
 app.use('/assets', express.static(__dirname + '/../assets'));
+app.use(favicon(path.join(__dirname, '/../assets', 'favicon.ico')))
 
 app.listen(Config.WebServer.port);
 
