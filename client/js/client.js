@@ -1266,8 +1266,9 @@ let Lobby = Backbone.View.extend({
     let name = $(e.target).val();
     this.app.trigger("setName", name);
   },
-  renderStatus: function(n){
-    this.$el.find(".nr-player-online").html(n);
+  renderStatus: function(data){
+    this.$el.find(".nr-player-online").html(data.online);
+    this.$el.find(".nr-player-idle").html(data.idle);
   }
 });
 

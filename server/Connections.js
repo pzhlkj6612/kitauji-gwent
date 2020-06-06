@@ -27,8 +27,10 @@ var Connections = (function(){
   }
 
   r.remove = function(user) {
-    delete this._connections[user.getID()];
-    this._length--;
+    if (this._connections[user.getID()]) {
+      delete this._connections[user.getID()];
+      this._length--;
+    }
   }
 
   r.get = function() {
@@ -47,6 +49,9 @@ var Connections = (function(){
     return this._length;
   }
 
+  r.getIdleUserCount = function() {
+    return Object.values(this._connections).filter(user => user.isIdle()).length;
+  }
 
   return Connections;
 })();

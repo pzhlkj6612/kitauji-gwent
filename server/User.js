@@ -91,6 +91,10 @@ var User = (function(){
     this._rooms.push(room);
   }
 
+  r.isIdle = function() {
+    return this._rooms.length === 0;
+  }
+
   r.reconnect = function(socket) {
     this.disconnected = false;
     this.socket = socket;

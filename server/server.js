@@ -65,7 +65,10 @@ io.on("connection", function(socket) { //global connection
     })
 
 
-    io.emit("update:playerOnline", connections.length());
+    io.emit("update:playerOnline", {
+      online: connections.length(),
+      idle: connections.getIdleUserCount(),
+    });
   });
 
 })
