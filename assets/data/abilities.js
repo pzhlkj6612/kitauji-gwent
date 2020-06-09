@@ -19,7 +19,7 @@ module.exports = {
   },
   "taibu": {
     name: "taibu",
-    description: "退部: 指定对方一名三年级部员以备战高考为由直接退部。",
+    description: "ability_desc_taibu",
     shouldWaitResponse: function() {
       let cards = this.foe.getFieldCards();
       return cards.some(card => {
@@ -40,7 +40,7 @@ module.exports = {
   },
   "attack": {
     name: "attack",
-    description: "投掷: 投掷号嘴（或洗手液等），使指定对方一名部员吹奏能力降低。",
+    description: "ability_desc_attack",
     shouldWaitResponse: function() {
       let cards = this.foe.getFieldCards();
       return cards.some(card => {
@@ -59,7 +59,7 @@ module.exports = {
   },
   "lips": {
     name: "lips",
-    description: "迷唇: 使对方所有男性部员吹奏能力降为1。",
+    description: "ability_desc_lips",
     onAfterPlace: function(card) {
       let self = this;
       let cards = this.foe.getFieldCards();
@@ -77,7 +77,7 @@ module.exports = {
   },
   "guard": {
     name: "guard",
-    description: "香织亲卫队: 当某一方香织在场时，打出后可使对方一名铜管成员吹奏能力-4。",
+    description: "ability_desc_guard",
     shouldWaitResponse: function() {
       if (this.field[1].get().every(card => card.getName() !== "中世古香织") &&
         this.foe.field[1].get().every(card => card.getName() !== "中世古香织")) {
@@ -108,7 +108,7 @@ module.exports = {
   },
   "tunning": {
     name: "tunning",
-    description: "调音: 消除己方除天气外的所有不良影响。",
+    description: "ability_desc_tunning",
     onAfterPlace: function(card) {
       let cards = this.getFieldCards();
       cards.forEach(function(_card){
@@ -119,7 +119,7 @@ module.exports = {
   },
   "monaka": {
     name: "monaka",
-    description: "Team Monaka: 给己方一名部员赠送护身符，使其吹奏能力+2。",
+    description: "ability_desc_monaka",
     shouldWaitResponse: function() {
       let cards = this.getFieldCards();
       return cards.some(card => {
@@ -139,7 +139,7 @@ module.exports = {
   },
   "kasa": {
     name: "kasa",
-    description: "伞: 消除本方铠冢霙的不良影响，并使其吹奏能力+5。",
+    description: "ability_desc_kasa",
     onRemovedOrReplaced: function(card) {
       var field = this.field[card.getType()];
       var id = card.getID();
@@ -162,7 +162,7 @@ module.exports = {
   },
   "medic": {
     name: "medic",
-    description: "复活: 令一名退部/毕业的部员（天王除外）回归吹奏部，并立即加入演奏。",
+    description: "ability_desc_medic",
     waitResponse: true,
     onAfterPlace: function(card){
       var discard = this.getDiscard();
@@ -181,7 +181,7 @@ module.exports = {
   },
   "morale_boost": {
     name: "morale_boost",
-    description: "士气: 高喊“北宇治Fight！”，使同一行内除自己以外的部员吹奏能力+1。",
+    description: "ability_desc_morale",
     onRemovedOrReplaced: function(card) {
       var field = this.field[card.getType()];
       var id = card.getID();
@@ -217,7 +217,7 @@ module.exports = {
   },
   "muster": {
     name: "muster",
-    description: "抱团: 和自己的闺蜜一起上场比赛。",
+    description: "ability_desc_muster",
     onAfterPlace: function(card){
       var musterType = card.getMusterType();
       var self = this;
@@ -243,12 +243,12 @@ module.exports = {
   },
   "tight_bond": {
     name: "tight_bond",
-    description: "同袍之情: 当CP（或组合）同时登场时，吹奏能力翻倍。",
+    description: "ability_desc_bond",
     tightBond: true
   },
   "spy": {
     name: "spy",
-    description: "间谍: 加入对面吹奏部，让己方新增两名部员。",
+    description: "ability_desc_spy",
     changeSide: true,
     onAfterPlace: function(){
       this.draw(2);
@@ -257,7 +257,7 @@ module.exports = {
   },
   "weather_fog": {
     name: "weather_fog",
-    description: "演奏《利兹与青鸟》第三乐章，令双方所有铜管乐器吹奏能力降为1。",
+    description: "ability_desc_fog",
     weather: 1/*,
     onEachTurn: function(card){
       var targetRow = card.constructor.TYPE.RANGED;
@@ -288,7 +288,7 @@ module.exports = {
   },
   "weather_rain": {
     name: "weather_rain",
-    description: "失去鼓槌，令双方所有打击乐器吹奏能力降为1。",
+    description: "ability_desc_rain",
     weather: 2
     /*onEachTurn: function(card){
       var targetRow = card.constructor.TYPE.SIEGE;
@@ -319,7 +319,7 @@ module.exports = {
   },
   "weather_frost": {
     name: "weather_frost",
-    description: "参加SunFes，令双方所有木管乐器吹奏能力降为1。",
+    description: "ability_desc_frost",
     weather: 0
     /*
       onEachTurn: function(card){
@@ -351,7 +351,7 @@ module.exports = {
   },
   "weather_clear": {
     name: "weather_clear",
-    description: "消除所有不良影响。",
+    description: "ability_desc_clear",
     weather: 5
     /*onAfterPlace: function(card){
       var targetRow = card.constructor.TYPE.WEATHER;
@@ -374,24 +374,24 @@ module.exports = {
   },
   "decoy": {
     name: "decoy",
-    description: "大号君: 换下场上一名部员，使其可以继续参加后面的比赛。",
+    description: "ability_desc_decoy",
     replaceWith: true
   },
   "scorch_card": {
     name: "scorch",
-    description: "退部申请书: 令场上双方部员中实力最强的部员直接退部。",
+    description: "ability_desc_scorch_card",
     scorch: true,
     removeImmediately: true,
     nextTurn: true
   },
   "scorch": {
     name: "scorch",
-    description: "伞击: 令对方实力最强的木管成员退部（仅当对方木管总吹奏实力大于10）。",
+    description: "ability_desc_scorch",
     scorchMelee: true
   },
   "commanders_horn": {
     name: "commanders_horn",
-    description: "支援: 使同一行内除自己之外的部员吹奏实力翻倍。",
+    description: "ability_desc_horn",
     onRemovedOrReplaced: function(card) {
       var field = this.field[card.getType()];
       var id = "commanders_horn";
@@ -411,7 +411,7 @@ module.exports = {
   },
   "commanders_horn_card": {
     name: "commanders_horn",
-    description: "指导老师: 使同一行内所有部员吹奏实力翻倍。",
+    description: "ability_desc_horn_card",
     cancelPlacement: true,
     commandersHorn: true,
     isCommandersHornCard: true
@@ -521,6 +521,6 @@ module.exports = {
   },
   "hero": {
     name: "hero",
-    description: "天王: 吹奏实力不受其他因素影响。"
+    description: "ability_desc_hero"
   }
 }

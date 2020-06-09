@@ -1211,7 +1211,7 @@ let User = Backbone.Model.extend({
     }
 
     abilities = abilities.map((ability) =>{
-      return abilityData[ability].description;
+      return i18n.getText(abilityData[ability].description);
     })
 
     return abilities;
@@ -1308,8 +1308,12 @@ let Preview = Backbone.View.extend({
     }
 
     this.abilities = this.abilities.map((ability) =>{
-      return abilityData[ability].description;
+      return i18n.getText(abilityData[ability].description);
     })
+    // name is zh by default.
+    if (i18n.getText(opt.key)) {
+      this.card.name = i18n.getText(opt.key);
+    }
 
     "lol";
   },
