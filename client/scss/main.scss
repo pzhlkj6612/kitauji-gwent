@@ -3,6 +3,7 @@
 @import "backbone.modal.theme";
 @import "effects";
 @import "base";
+@import "collections";
 
 
 $height: 600px;
@@ -773,6 +774,9 @@ $game-height: 800px;
 
 .gwent-battle {
   height: 100%;
+  > div {
+    height: 100%;
+  }
 }
 
 .gwent-battle-background {

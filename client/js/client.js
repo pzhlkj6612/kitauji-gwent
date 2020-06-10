@@ -4,6 +4,7 @@ require("./backbone.modal-min");
 let Handlebars = require('handlebars/runtime').default;
 let $ = require("jquery");
 
+let CollectionsView = require("./view/collections");
 let I18n = require("./i18n");
 let cardData = require("../../assets/data/cards");
 let abilityData = require("../../assets/data/abilities");
@@ -12,6 +13,7 @@ window.$ = $;
 window.i18n = new I18n("zh");
 
 Handlebars.registerPartial("card", require("../templates/cards.handlebars"));
+Handlebars.registerPartial("cardLg", require("../templates/cards-lg.handlebars"));
 Handlebars.registerHelper("health", function(lives){
   let out = "";
 
@@ -121,6 +123,18 @@ let App = Backbone.Router.extend({
       }
     }
     this.currentView = new BattleView({
+      app: this,
+      user: this.user
+    });
+  },
+  collectionsRoute: function() {
+    if(this.currentView){
+      this.currentView.remove();
+      if (!$(".gwent-battle").length) {
+        $(".notifications").after('<div class="gwent-battle"></div>');
+      }
+    }
+    this.currentView = new CollectionsView({
       app: this,
       user: this.user
     });
@@ -661,8 +675,8 @@ let BattleView = Backbone.View.extend({
     this.user.set("showPreview", new Preview({key: target.data().key, previewB: hasPreviewB}));
   },
   onMouseleave: function(e){
-    this.user.get("showPreview").remove();
-    this.user.set("showPreview", null);
+    // this.user.get("showPreview").remove();
+    // this.user.set("showPreview", null);
   },
   openDiscard: function(e){
     let $discard = $(e.target).closest(".field-discard");
@@ -1266,16 +1280,14 @@ let Lobby = Backbone.View.extend({
   },
   setDeck: function(e){
     let val = $(e.target).val();
+    if (val === "custom") {
+      this.app.collectionsRoute();
+    }
     this.app.trigger("setDeck", val);
     this.$el.find("#deckChoice option[value='" + val + "']").attr("selected", "selected")
   },
   setName: function(){
-    /*let val = $(e.target).val();
-    this.app.trigger("setDeck", val);
-    this.$el.find("#deckChoice option[value='" + val + "']").attr("selected", "selected")*/
-
     localStorage["userName"] = this.app.user.get("name");
-    /*this.render();*/
     this.$el.find(".name-input").val(this.app.user.get("name"));
   },
   changeName: function(e){

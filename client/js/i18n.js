@@ -37,7 +37,7 @@ let i18n = Backbone.Model.extend({
     if (!this.isNull(varSubstitution) && varSubstitution.length) {
       return t.replaceWord(varSubstitution, t.dict[key]);
     } else {
-      return t.dict[key];
+      return t.dict[key] || key;
     }
   },
   isNull: function(data) {

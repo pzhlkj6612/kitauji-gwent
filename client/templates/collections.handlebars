@@ -1,0 +1,60 @@
+<div class="gwent-collections">
+  <div class="collections-side card-collections">
+    <div class="card-filters">
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+    </div>
+    <div class="card-table">
+      {{#each cardCollection as |val key|}}
+        {{>cardLg val}}
+      {{/each}}
+    </div>
+  </div>
+  <div class="collections-middle">
+    <h4>Leader</h4>
+    {{>cardLg leader}}
+    <div class="deck-stats">
+      <div>
+        <h4>Total Cards in Deck</h4>
+        <span>{{total}}</span>
+      </div>
+      <div>
+        <h4>Number of Unit Cards</h4>
+        <span class="">{{unitCardCnt}}</span>
+      </div>
+      <div>
+        <h4>Special Cards</h4>
+        <span class="SpecialLimit">{{specialLimit}}</span>
+      </div>
+      <div>
+        <h4>Total Unit Strength</h4>
+        <span>{{totalStrength}}</span>
+      </div>
+      <div>
+        <h4>Hero Cards</h4>
+        <span>{{heroCardCnt}}</span>
+      </div>
+    </div>
+    <div class="wrap-btn-action btn-register-action deck-confirm">
+      <input type="submit" value="{{i18n "Confirm"}}" class="btn-action">
+      <i class="icon-action-load image-gif-loader"></i>
+    </div>
+  </div>
+  <div class="collections-side card-in-deck">
+    <div class="card-filters">
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+    </div>
+    <div class="card-table">
+      {{#each cardInDeck as |val key|}}
+        {{>cardLg val}}
+      {{/each}}
+    </div>
+  </div>
+</div>
