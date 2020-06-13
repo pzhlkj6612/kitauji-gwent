@@ -82,9 +82,6 @@ gulp.task("index", function() {
   gulp.src("./client/json/**")
   .pipe(gulp.dest("./public/json/"));
 
-  gulp.src("./client/css/bootstrap.css")
-  .pipe(gulp.dest("./public/build"));
-
   gulp.src("./client/css/app.css")
   .pipe(gulp.dest("./public/build"));
 })
