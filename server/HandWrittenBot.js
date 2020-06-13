@@ -1,5 +1,6 @@
 var BotStrategy = require("./BotStrategy");
 var Deck = require("./Deck");
+var SchoolData = require("../assets/data/schools");
 
 var HandWrittenBot = (function(){
     var SocketStub = function(bot){
@@ -31,16 +32,19 @@ var HandWrittenBot = (function(){
       this.socket = new SocketStub(this);
       this._rooms = [];
       this._id = this.generateID();
-      this.generateName();
       if (typeof user.getDeck() === "object") {
         // custom deck, use advanced deck
         this.setDeck("random_advanced");
+        this.generateName(["kansai", "zenkoku"]);
       } else if (Deck.NORMAL_FACTION.includes(user.getDeck())) {
         this.setDeck("random_normal");
+        this.generateName("kyoto");
       } else if (Deck.ADVANCED_FACTION.includes(user.getDeck())) {
         this.setDeck("random_advanced");
+        this.generateName(["kansai", "zenkoku"]);
       } else {
         this.setDeck("random");
+        this.generateName();
       }
       this.strategy = new BotStrategy(this);
     };
@@ -203,18 +207,23 @@ var HandWrittenBot = (function(){
       return (((Math.random() * 8999) + 1000) | 0);
     }
 
-    r.generateName = function(){
-      var name = "Bot" + (((Math.random() * 8999) + 1000) | 0);
+    r.generateName = function(categories) {
+      let schools = [];
+      if (!categories) {
+        schools = schools.concat(
+          SchoolData["kyoto"],
+          SchoolData["kansai"],
+          SchoolData["zenkoku"]);
+      } else {
+        categories.forEach(cat => {
+          schools = schools.concat(SchoolData[cat]);
+        });
+      }
+      var name = schools[((Math.random() * schools.length) | 0)];
       this._name = name;
       return name;
     }
-  
-    r.setName = function(name) {
-      name = name.slice(0, 20);
-      console.log("user name changed from %s to %s", this._name, name);
-      this._name = name;
-    }
-  
+
     r.getName = function() {
       return this._name;
     }
