@@ -929,6 +929,7 @@ nav a.active {
     opacity: 0;
 }
 
+.card-cell:hover .shadow,
 .card-wrap:hover .shadow,
 .card-wrap-small:hover .shadow {
     -webkit-animation: Shadow 4s ease-in-out infinite;
@@ -1016,6 +1017,7 @@ nav a.active {
     cursor: pointer;
 }
 
+.card-cell:hover .overlay-card,
 .card-wrap:hover .overlay-card,
 .card-wrap-small:hover .overlay-card {
     opacity: 1;

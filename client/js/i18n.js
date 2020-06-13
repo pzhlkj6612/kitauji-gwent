@@ -28,6 +28,9 @@ let i18n = Backbone.Model.extend({
       opt_callback && opt_callback();
     });
   },
+  hasText: function(key) {
+    return this.dict && this.dict[key];
+  },
   getText: function(key, varSubstitution) {
     var t = this;
     if (!t.dict) {

@@ -32,7 +32,10 @@ var HandWrittenBot = (function(){
       this._rooms = [];
       this._id = this.generateID();
       this.generateName();
-      if (Deck.NORMAL_FACTION.includes(user.getDeck())) {
+      if (typeof user.getDeck() === "object") {
+        // custom deck, use advanced deck
+        this.setDeck("random_advanced");
+      } else if (Deck.NORMAL_FACTION.includes(user.getDeck())) {
         this.setDeck("random_normal");
       } else if (Deck.ADVANCED_FACTION.includes(user.getDeck())) {
         this.setDeck("random_advanced");

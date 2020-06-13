@@ -183,6 +183,12 @@ var User = (function(){
       }
     })
 
+    socket.on("set:customDeck", function(data) {
+      if(data){
+        self.setDeck(JSON.parse(data));
+      }
+    })
+
   }
 
   return User;

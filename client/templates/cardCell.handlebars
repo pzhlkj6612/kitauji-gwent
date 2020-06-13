@@ -1,0 +1,13 @@
+<div class="card-cell{{#if _disabled}} disabled{{/if}}" data-key="{{_key}}"
+    data-type="{{_data.type}}" data-ability="{{_data.ability}}">
+    {{#if _showCount}}
+    <div class="card-count">
+      <i class="card-icon"/>
+      <span class="count-text">x{{_count}}</span>
+    </div>
+    {{/if}}
+  <div class="card-animation"></div>
+  <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}-{{_data.img}}"></i>
+  <div class="shadow"></div>
+  <div class="overlay-card"></div>
+</div>

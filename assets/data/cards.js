@@ -110,6 +110,7 @@ module.exports = {
     ability: null,
     img: "tsukamoto_shuichi",
     faction: "kitauji",
+    male: true,
     type: 1
   },
   "kishibe_miru": {
@@ -430,6 +431,7 @@ module.exports = {
     ability: null,
     img: "kitayama_tairu",
     faction: "kitauji",
+    male: true,
     type: 0
   },
   "hirao_sumiko": {

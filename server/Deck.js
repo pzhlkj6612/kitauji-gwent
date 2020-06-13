@@ -18,7 +18,11 @@ var Deck = (function(){
     //if(typeof deck !== "object") throw new Error("Deck is not an object!");
 
     this._originalDeck = [];
-    this.setDeck(deck);
+    if (typeof deck === "object") {
+      this.setCustomDeck(deck);
+    } else {
+      this.setDeck(deck);
+    }
   };
   var r = Deck.prototype;
   /**
@@ -50,6 +54,22 @@ var Deck = (function(){
     SCOIATAEL: "scoiatael",
     NILFGAARDIAN_EMPIRE: "nilfgaardian",
     MONSTERS: "monster"
+  }
+
+  r.setCustomDeck = function(customDeck) {
+    let deck = [];
+    let cardInDeck = customDeck.cardInDeck;
+    for (let key of Object.keys(cardInDeck)) {
+      for (let i=0; i<cardInDeck[key]._count; i++) deck.push(key);
+    }
+    deck.push(customDeck.leader);
+
+    this._deck = deck;
+    this._faction = customDeck.deck;
+    this._originalDeck = DeckData[this._faction];
+
+    this._loadCards();
+    this.shuffle();
   }
 
   r.setDeck = function(deckKey){

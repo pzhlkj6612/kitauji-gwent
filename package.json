@@ -28,7 +28,7 @@
     "gulp-imagemin": "^2.3.0",
     "gulp-livereload": "^3.8.0",
     "gulp-sass": "^3.0.0",
-    "handlebars": "^3.0.3",
+    "handlebars": "^4.7.6",
     "jquery": "^2.1.4",
     "sprity": "^1.0.6",
     "sprity-gm": "^1.0.2",

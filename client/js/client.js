@@ -13,7 +13,7 @@ window.$ = $;
 window.i18n = new I18n("zh");
 
 Handlebars.registerPartial("card", require("../templates/cards.handlebars"));
-Handlebars.registerPartial("cardLg", require("../templates/cards-lg.handlebars"));
+Handlebars.registerPartial("cardCell", require("../templates/cardCell.handlebars"));
 Handlebars.registerHelper("health", function(lives){
   let out = "";
 
@@ -76,7 +76,7 @@ let App = Backbone.Router.extend({
     })
     this.socket.on("disconnect", function(socket){
       setTimeout(() => {
-        this.initialize();
+        self.initialize();
       }, 1000);
       self.user.set("serverOffline", true);
     })
@@ -529,6 +529,7 @@ let BattleView = Backbone.View.extend({
 
     let self = this;
     let $card = $(e.target).closest(".card");
+    if (!$card.length) return;
     let id = $card.data("id");
     let key = $card.data("key");
 
@@ -675,8 +676,8 @@ let BattleView = Backbone.View.extend({
     this.user.set("showPreview", new Preview({key: target.data().key, previewB: hasPreviewB}));
   },
   onMouseleave: function(e){
-    // this.user.get("showPreview").remove();
-    // this.user.set("showPreview", null);
+    this.user.get("showPreview").remove();
+    this.user.set("showPreview", null);
   },
   openDiscard: function(e){
     let $discard = $(e.target).closest(".field-discard");
@@ -982,8 +983,8 @@ let ChooseSideModal = Modal.extend({
 let User = Backbone.Model.extend({
   defaults: {
     name: typeof localStorage["userName"] === "string" ? localStorage["userName"].slice(0, 20) : null,
-    deck: localStorage["userDeck"] || "random",
-    locale: localStorage["locale"] || "zh",
+    deck: "random",
+    locale: "zh",
     serverOffline: true
   },
   initialize: function(){
@@ -1162,14 +1163,15 @@ let User = Backbone.Model.extend({
     app.on("setName", this.setName, this);
     app.on("setDeck", this.setDeck, this);
     $("#locale").change(this.setLocale.bind(this));
-    i18n.loadDict(this.get("locale"));
 
     app.receive("notification", function(data){
       new Notification(data).render();
     })
 
     app.send("request:name", this.get("name") === null ? null : {name: this.get("name")});
-    app.send("set:deck", this.get("deck") === null ? null : {deck: this.get("deck")});
+    this.setDeck(localStorage["userDeck"] || "random");
+    this.set("locale", localStorage["locale"] || "zh");
+    i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(){
     this.set("inMatchmakerQueue", true);
@@ -1195,8 +1197,13 @@ let User = Backbone.Model.extend({
   },
   setDeck: function(deckKey){
     //console.log("deck: ", deckKey);
-    this.set("deckKey", deckKey);
+    this.set("deck", deckKey);
     localStorage["userDeck"] = deckKey;
+    if (deckKey === "custom") {
+      deckKey = localStorage["customDeck"];
+      this.get("app").send("set:customDeck", localStorage[`customDeck${deckKey}`]);
+      return;
+    }
     this.get("app").send("set:deck", {deck: deckKey});
   },
   setLocale: function(e) {
@@ -1280,11 +1287,12 @@ let Lobby = Backbone.View.extend({
   },
   setDeck: function(e){
     let val = $(e.target).val();
+    this.$el.find("#deckChoice option[value='" + val + "']").attr("selected", "selected")
     if (val === "custom") {
       this.app.collectionsRoute();
+      return;
     }
     this.app.trigger("setDeck", val);
-    this.$el.find("#deckChoice option[value='" + val + "']").attr("selected", "selected")
   },
   setName: function(){
     localStorage["userName"] = this.app.user.get("name");
@@ -1323,7 +1331,7 @@ let Preview = Backbone.View.extend({
       return i18n.getText(abilityData[ability].description);
     })
     // name is zh by default.
-    if (i18n.getText(opt.key)) {
+    if (i18n.hasText(opt.key)) {
       this.card.name = i18n.getText(opt.key);
     }
 

@@ -1,59 +1,81 @@
 <div class="gwent-collections">
-  <div class="collections-side card-collections">
-    <div class="card-filters">
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+  <div class="collections-side">
+    <div class="side-title">
+        <h4>{{i18n "card_collection"}}</h4>
+        <h5>{{collectionTab}}</h5>
     </div>
-    <div class="card-table">
-      {{#each cardCollection as |val key|}}
-        {{>cardLg val}}
+    <div class="card-filters card-collections">
+      <div class="filter-icon" data-type="all_cards"><i class="icon-all-card"/></div>
+      <div class="filter-icon" data-type="woodwind"><i class="icon-wood"/></div>
+      <div class="filter-icon" data-type="brasswind"><i class="icon-brass"/></div>
+      <div class="filter-icon" data-type="percussion"><i class="icon-perc"/></div>
+      <div class="filter-icon" data-type="special"><i class="icon-special"/></div>
+    </div>
+    <div class="card-table card-collections">
+      {{#each cardCollection}}
+        {{>cardCell this}}
       {{/each}}
     </div>
   </div>
   <div class="collections-middle">
-    <h4>Leader</h4>
-    {{>cardLg leader}}
+    <div  class="deck-choice">
+      <select id="deckChoice" selected="selected">
+        <option value="kumiko1">{{i18n "deck_ku1"}}</option>
+        <option value="kumiko1S2">{{i18n "deck_ku1S2"}}</option>
+        <option value="kitauji">{{i18n "deck_ku2"}}</option>
+      </select>
+    </div>
+    <h4>{{i18n "conductor"}}</h4>
+    <div class="leader-field">
+      {{>cardCell leader}}
+    </div>
     <div class="deck-stats">
       <div>
-        <h4>Total Cards in Deck</h4>
-        <span>{{total}}</span>
+        <h4>{{i18n "total_cards"}}</h4>
+        <span>{{stats.total}}</span>
       </div>
       <div>
-        <h4>Number of Unit Cards</h4>
-        <span class="">{{unitCardCnt}}</span>
+        <h4>{{i18n "num_unit"}}</h4>
+        <span>{{stats.unitCardCnt}}</span>
       </div>
       <div>
-        <h4>Special Cards</h4>
-        <span class="SpecialLimit">{{specialLimit}}</span>
+        <h4>{{i18n "special_cards"}}</h4>
+        <span class="special-limit{{#if specialExceed}} special-limit-exceed{{/if}}">{{stats.specialCardCnt}}/10</span>
       </div>
       <div>
-        <h4>Total Unit Strength</h4>
-        <span>{{totalStrength}}</span>
+        <h4>{{i18n "total_strength"}}</h4>
+        <span>{{stats.totalStrength}}</span>
       </div>
       <div>
-        <h4>Hero Cards</h4>
-        <span>{{heroCardCnt}}</span>
+        <h4>{{i18n "hero_cards"}}</h4>
+        <span>{{stats.heroCardCnt}}</span>
       </div>
     </div>
-    <div class="wrap-btn-action btn-register-action deck-confirm">
-      <input type="submit" value="{{i18n "Confirm"}}" class="btn-action">
-      <i class="icon-action-load image-gif-loader"></i>
+    <div class="bottom">
+      <div class="wrap-btn-action btn-register-action deck-confirm{{#if disabled}} disabled{{/if}}">
+        <input type="submit" value="{{i18n "confirm"}}" class="btn-action">
+      </div>
     </div>
   </div>
-  <div class="collections-side card-in-deck">
-    <div class="card-filters">
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
-      <img class="filter-icon" src="/assets/texture/card_icon.png"/>
+  <div class="collections-side">
+    <div class="side-title">
+        <h4>{{i18n "card_in_deck"}}</h4>
+        <h5>{{deckTab}}</h5>
     </div>
-    <div class="card-table">
-      {{#each cardInDeck as |val key|}}
-        {{>cardLg val}}
+    <div class="card-filters card-in-deck">
+      <div class="filter-icon" data-type="all_cards"><i class="icon-all-card"/></div>
+      <div class="filter-icon" data-type="woodwind"><i class="icon-wood"/></div>
+      <div class="filter-icon" data-type="brasswind"><i class="icon-brass"/></div>
+      <div class="filter-icon" data-type="percussion"><i class="icon-perc"/></div>
+      <div class="filter-icon" data-type="special"><i class="icon-special"/></div>
+    </div>
+    <div class="card-table card-in-deck">
+      {{#each cardInDeck}}
+        {{>cardCell this}}
+        {{else}}
+        <div class="placeholder">
+          <p>{{i18n "empty_hint"}}</p>
+        </div>
       {{/each}}
     </div>
   </div>
