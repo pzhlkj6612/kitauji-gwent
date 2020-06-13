@@ -396,7 +396,7 @@ Battleside = (function() {
   r.getInfo = function() {
     let isNewRound = this._isNewRound;
     this._isNewRound = false;
-    return {
+    let result = {
       name: this.getName(),
       lives: this._rubies,
       score: this.calcScore(),
@@ -410,6 +410,10 @@ Battleside = (function() {
       isNewRound: isNewRound,
       passing: this._passing
     }
+    this._scorched = [];
+    this._healed = [];
+    this._attacked = [];
+    return result;
   }
 
   r.getRubies = function() {

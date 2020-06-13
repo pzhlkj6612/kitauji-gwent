@@ -119,8 +119,8 @@ body {
 }
 
 .music-icon {
-  background-size: contain;
   background: url(../../assets/texture/music-mute.png) no-repeat;
+  background-size: contain;
   float: right;
   width: 32px;
   height: 32px;
@@ -133,8 +133,8 @@ body {
   }
 
   &.active {
-    background-size: contain;
     background: url(../../assets/texture/music.png) no-repeat;
+    background-size: contain;
   }
 }
 
