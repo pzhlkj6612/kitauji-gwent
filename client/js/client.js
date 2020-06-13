@@ -262,6 +262,8 @@ let SideView = Backbone.View.extend({
 
     if(isInfluencedByWeather){
       this.$el.find(".field-close").parent().addClass("field-frost");
+    } else {
+      this.$el.find(".field-close").parent().removeClass("field-frost");
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
@@ -312,6 +314,8 @@ let SideView = Backbone.View.extend({
 
     if(isInfluencedByWeather){
       this.$el.find(".field-range").parent().addClass("field-fog");
+    } else {
+      this.$el.find(".field-range").parent().removeClass("field-fog");
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
@@ -343,6 +347,8 @@ let SideView = Backbone.View.extend({
 
     if(isInfluencedByWeather){
       this.$el.find(".field-siege").parent().addClass("field-rain");
+    } else {
+      this.$el.find(".field-siege").parent().removeClass("field-rain");
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
@@ -527,6 +533,7 @@ let BattleView = Backbone.View.extend({
   },
   onQuit: function() {
     this.user.get("app").send("request:quitGame");
+    this.user.get("app").trigger("timer:cancel");
     this.user.get("app").initialize();
   },
   onClick: function(e){

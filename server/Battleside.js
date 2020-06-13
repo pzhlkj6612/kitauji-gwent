@@ -140,7 +140,7 @@ Battleside = (function() {
       self._scorched = [];
       self._attacked = [];
       self._healed = [];
-      self.update();
+      // self.update();
 
       self.battle.sendNotification(self.getName() + " passed!");
       //self.runEvent("NextTurn", null, [self.foe]);
@@ -478,7 +478,7 @@ Battleside = (function() {
 
     this.hand.remove(card);
 
-    this.update();
+    // this.update();
 
 
     //this.runEvent("NextTurn", null, [this.foe]);
@@ -486,10 +486,10 @@ Battleside = (function() {
   }
 
   r.endTurn = function() {
+    this.update();
     this._attacked = [];
     this._healed = [];
     this._placedCard = null;
-    this.update();
 
     this.runEvent("NextTurn", null, [this.foe]);
   }
@@ -513,7 +513,7 @@ Battleside = (function() {
       return 0;
     }
     if(obj._nextTurn && !obj.forceField) {
-      this.update();
+      // this.update();
       //this.runEvent("NextTurn", null, [this.foe]);
       this.endTurn();
       return 0;
