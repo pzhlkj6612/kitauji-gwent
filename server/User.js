@@ -189,6 +189,9 @@ var User = (function(){
       }
     })
 
+    socket.on("request:quitGame", function() {
+      self.disconnect();
+    })
   }
 
   return User;

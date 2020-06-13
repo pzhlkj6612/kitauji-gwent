@@ -514,6 +514,7 @@ let BattleView = Backbone.View.extend({
     "click .battleside.player": "onClickFieldCard",
     "click .battleside.foe": "onClickFoeFieldCard",
     "click .button-pass": "onPassing",
+    "click .button-quit": "onQuit",
     "click .field-discard": "openDiscard",
     "click .field-leader.card-wrap": "clickLeader"
   },
@@ -522,6 +523,11 @@ let BattleView = Backbone.View.extend({
     if(this.user.get("waiting")) return;
     this.user.set("passing", true);
     this.user.get("app").send("set:passing");
+    this.user.get("app").trigger("timer:cancel");
+  },
+  onQuit: function() {
+    this.user.get("app").send("request:quitGame");
+    this.user.get("app").initialize();
   },
   onClick: function(e){
     if(!!this.user.get("waiting")) return;
