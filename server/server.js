@@ -37,7 +37,7 @@ app.use(function(req, res, next) {
 app.use(express.static(__dirname + '/../public'));
 app.use('/public', express.static(__dirname + '/../public'));
 app.use('/assets', express.static(__dirname + '/../assets'));
-app.use(favicon(path.join(__dirname, '/../assets', 'favicon.ico')))
+app.use(favicon(path.join(__dirname, '/../assets/texture', 'favicon.ico')))
 
 app.listen(Config.WebServer.port);
 
