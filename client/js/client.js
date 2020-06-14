@@ -1172,7 +1172,6 @@ let User = Backbone.Model.extend({
 
     app.on("startMatchmakingWithBot", this.startMatchmakingWithBot, this);
     app.on("startMatchmaking", this.startMatchmaking, this);
-    app.on("joinRoom", this.joinRoom, this);
     app.on("setName", this.setName, this);
     app.on("setDeck", this.setDeck, this);
     $("#locale").change(this.setLocale.bind(this));
@@ -1187,16 +1186,10 @@ let User = Backbone.Model.extend({
     i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(){
-    this.set("inMatchmakerQueue", true);
     this.get("app").send("request:matchmaking:bot");
   },
   startMatchmaking: function(roomName){
-    this.set("inMatchmakerQueue", true);
     this.get("app").send("request:matchmaking", {roomName: roomName});
-  },
-  joinRoom: function(){
-    this.get("app").send("request:joinRoom");
-    this.set("inMatchmakerQueue", false);
   },
   subscribeRoom: function(){
     let room = this.get("room");
@@ -1272,7 +1265,6 @@ let Lobby = Backbone.View.extend({
   events: {
     "click .startMatchmaking": "startMatchmaking",
     "click .startMatchmakingWithBot": "startMatchmakingWithBot",
-    /*"click .join-room": "joinRoom",*/
     "blur .name-input": "changeName",
     "blur .room-name-input": "changeRoomName",
     "change #deckChoice": "setDeck",
@@ -1294,9 +1286,6 @@ let Lobby = Backbone.View.extend({
   },
   startMatchmakingWithBot: function(){
     this.app.trigger("startMatchmakingWithBot");
-  },
-  joinRoom: function(){
-    this.app.trigger("joinRoom");
   },
   setDeck: function(e){
     let val = $(e.target).val();
