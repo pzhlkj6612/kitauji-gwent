@@ -35,13 +35,16 @@ const SCENARIOS = {
   }
 }
 
+let instance_;
+
 class LuckyDraw {
   constructor() {
   }
 
-  static instance_ = new LuckyDraw();
-
-  getInstance() {
+  static getInstance() {
+    if (!instance_) {
+      instance_ = new LuckyDraw();
+    }
     return instance_;
   }
 
@@ -65,7 +68,7 @@ class LuckyDraw {
    * Generate a list of how many draw is needed for each rarity
    */
   generateSteps_(weights) {
-    weightSum = weights.reduce((s,w)=>s+w, 0);
+    let weightSum = weights.reduce((s,w)=>s+w, 0);
     return weights.map(w => {
       return this.generateStep_(w, weightSum);
     });
@@ -91,7 +94,7 @@ class LuckyDraw {
     for (let i = 0; i < steps.length; i++) {
       steps[i] -= minStep;
     }
-    weightSum = weights.reduce((s,w)=>s+w, 0);
+    let weightSum = weights.reduce((s,w)=>s+w, 0);
     steps[minStepIdx] = this.generateStep_(weights[minStepIdx], weightSum);
     return result;
   }
@@ -110,6 +113,7 @@ class LuckyDraw {
   }
 
   async draw(times, scenario, username, deckKey) {
+    scenario = SCENARIOS[scenario];
     let steps = await db.loadDrawStats(username, scenario.name);
     if (!steps) {
       steps = this.generateSteps_(scenario.weights);
@@ -128,7 +132,7 @@ class LuckyDraw {
 
   drawByRarity_(rarity, deckKey, userDeck) {
     let deck = DeckData[deckKey];
-    let cards = deck.filter(c => {
+    let cards = deck.data.filter(c => {
       return CardData[c].type !== 3 && CardData[c].rarity === rarity;
     });
     let card = cards[(Math.random() * cards.length) | 0];

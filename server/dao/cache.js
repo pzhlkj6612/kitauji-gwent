@@ -1,12 +1,13 @@
+let instance_;
+
 class Cache {
   constructor() {
     this.cache = {};
     this.conditions = {};
   }
 
-  static instance_ = new Cache();
-
-  getInstance() {
+  static getInstance() {
+    if (!instance_) instance_ = new Cache();
     return instance_;
   }
 
