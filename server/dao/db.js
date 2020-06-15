@@ -6,6 +6,7 @@ const DB_NAME = "mydb";
 
 const TABLE_USER = "user";
 const TABLE_CARD = "card";
+const TABLE_DRAW_STATS = "draw_stats";
 const TABLE_PROGRESS = "progress";
 
 class DB {
@@ -22,6 +23,10 @@ class DB {
       this.db.createCollection(TABLE_CARD, function(err) {
         if (err) throw err;
         console.log("card table created!");
+      });
+      this.db.createCollection(TABLE_DRAW_STATS, function(err) {
+        if (err) throw err;
+        console.log("draw stats table created!");
       });
       this.db.createCollection(TABLE_PROGRESS, function(err) {
         if (err) throw err;
@@ -58,10 +63,14 @@ class DB {
   async findCardsByUser(username, deck) {
     await this.connectPromise;
     const table = this.db.collection(TABLE_CARD);
-    return await table.findOne({
+    let result = await table.findOne({
       username,
       deck,
     });
+    if (result) {
+      return result.cards;
+    }
+    return null;
   };
   
   async addCards(username, deck, cardList) {
@@ -92,7 +101,31 @@ class DB {
       cardMap,
     });
   };
-  
+
+  async loadDrawStats(username, scenario) {
+    await this.connectPromise;
+    let result = await this.db.collection(TABLE_DRAW_STATS).findOne({
+      username,
+      scenario,
+    });
+    if (result) {
+      return result.stats;
+    }
+    return null;
+  }
+
+  async storeDrawStats(username, scenario, stats) {
+    await this.connectPromise;
+    return this.db.collection(TABLE_DRAW_STATS).updateOne({
+      username,
+      scenario,
+    }, {
+      $set: stats,
+    }, {
+      upsert: true,
+    });
+  }
+
   // progress
   
   async findProgressByUser(username) {

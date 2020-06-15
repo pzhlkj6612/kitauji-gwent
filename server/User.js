@@ -1,4 +1,5 @@
 var Deck = require("./Deck");
+var LuckyDraw = require("./LuckyDraw");
 
 var User = (function(){
   var User = function(socket, token){
@@ -216,7 +217,7 @@ var User = (function(){
 
       // give initial 10 cards
       let deck = data.initialDeck || "kitauji";
-      let cards = new Deck(deck).drawMany(10).map(c=>c.getKey());
+      let cards = await LuckyDraw.getInstance().drawKyoto(10, data.username, deck);
       await db.addCards(data.username, deck, cards);
 
       socket.emit("response:signin", {
