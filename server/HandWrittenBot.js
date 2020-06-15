@@ -1,5 +1,7 @@
 var BotStrategy = require("./BotStrategy");
 var Deck = require("./Deck");
+var Const = require("./Const");
+var Util = require("./CardUtil");
 var SchoolData = require("../assets/data/schools");
 
 var HandWrittenBot = (function(){
@@ -32,19 +34,22 @@ var HandWrittenBot = (function(){
       this.socket = new SocketStub(this);
       this._rooms = [];
       this._id = this.generateID();
-      if (typeof user.getDeck() === "object") {
-        // custom deck, use advanced deck
-        this.setDeck("random_advanced");
-        this.generateName(["kansai", "zenkoku"]);
-      } else if (Deck.NORMAL_FACTION.includes(user.getDeck())) {
-        this.setDeck("random_normal");
-        this.generateName("kyoto");
-      } else if (Deck.ADVANCED_FACTION.includes(user.getDeck())) {
-        this.setDeck("random_advanced");
-        this.generateName(["kansai", "zenkoku"]);
-      } else {
-        this.setDeck("random");
-        this.generateName();
+      switch (user.getScenario()) {
+        case Const.SCENARIO_KYOTO:
+          this.setDeck("random_normal");
+          this.generateName(["kyoto"]);
+          break;
+        case Const.SCENARIO_KANSAI:
+          this.setDeck("random_advanced");
+          this.generateName(["kansai"]);
+          break;
+        case Const.SCENARIO_ZENKOKU:
+          this.setDeck("random_advanced");
+          this.generateName(["zenkoku"]);
+          break;
+        default:
+          this.setDeck("random");
+          this.generateName();
       }
       this.strategy = new BotStrategy(this);
     };
@@ -82,9 +87,10 @@ var HandWrittenBot = (function(){
           connections.roomCollection[this.getRoom().getID()].setReady(self);
           break;
         case "redraw:cards":
-          setTimeout(function() {
-            self.socket.trigger("redraw:close_client");
-          }, 0);
+          this.redraw();
+          break;
+        case "redraw:close":
+          this.socket.trigger("redraw:close_client");
           break;
         case "update:info":
           this.updateInfo(data);
@@ -129,6 +135,48 @@ var HandWrittenBot = (function(){
           siege: data.siege,
           weather: data.weather,
         };
+      }
+    }
+
+    r.redraw = function() {
+      let cards = this.state.ownHand;
+      cards.sort((a, b) => {
+        let priorityA = getPriority(a);
+        let priorityB = getPriority(b);
+        if (priorityA > priorityB) {
+          return 1;
+        } else if (priorityA < priorityB) {
+          return -1;
+        }
+        return 0;
+      });
+      console.warn("bot redraw ", cards[0]._data.name);
+      this.socket.trigger("redraw:reDrawCard", {
+        cardID: cards[0]._id,
+      });
+
+      function getPriority(card) {
+        let priority = card._data.power;
+        if (Util.isHero(card)) {
+          priority += 100;
+        } else if (Util.isSpy(card)) {
+          priority += 100;
+        } else if (Util.isBond(card)) {
+          if (cards.filter(c=>Util.isBond(c, card._data.bondType)).length > 1) {
+            priority += card._data.power;
+          }
+        } else if (Util.isMuster(card)) {
+          if (cards.filter(c=>Util.isMuster(c, card._data.musterType)).length > 1) {
+            priority -= card._data.power;
+          }
+        } else if (card._data.ability) {
+          priority += 2;
+        } else if (Util.isWeather(card)) {
+          priority = 5 - cards.filter(c=>Util.isWeather(c)).length;
+        } else if (card.type === 4) {
+          priority = 8 - cards.filter(c=>Util.isWeather(c)).length;
+        }
+        return priority;
       }
     }
 

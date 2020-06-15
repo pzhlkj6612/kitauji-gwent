@@ -1043,6 +1043,7 @@ Battleside = (function() {
       }
 
       self.battle.updateSelf(self);
+      this.send("redraw:cards", null, true);
     })
 
     this.receive("redraw:close_client", function() {

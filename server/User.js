@@ -124,6 +124,10 @@ var User = (function(){
     return this._deck;
   }
 
+  r.getScenario = function() {
+    return this._scenario;
+  }
+
   r.addRoom = function(room) {
     this._rooms.push(room);
   }

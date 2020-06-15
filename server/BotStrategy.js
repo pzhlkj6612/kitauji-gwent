@@ -1,3 +1,5 @@
+var Util = require("./CardUtil");
+
 var BotStrategy = (function(){
     var BotStrategy = function(bot){
       if(!(this instanceof BotStrategy)){
@@ -20,7 +22,7 @@ var BotStrategy = (function(){
       } else {
         chooseFrom = this.getFieldCards(false);
       }
-      chooseFrom = chooseFrom.filter(c=>this.canReplace(c));
+      chooseFrom = chooseFrom.filter(c=>Util.canReplace(c));
       if (chooseFrom.length > 0) {
         let choice = chooseFrom[0];
         let maxReward = 0;
@@ -51,11 +53,11 @@ var BotStrategy = (function(){
         }
       }).forEach(i=>{
         chooseFrom = chooseFrom.concat(
-          this.getFieldCards(true, i).filter(c=>this.canReplace(c) && c._id !== card._id));
+          this.getFieldCards(true, i).filter(c=>Util.canReplace(c) && c._id !== card._id));
       })
       // default: choose randomly
       if (chooseFrom.length === 0) {
-        chooseFrom = this.getFieldCards(true).filter(c=>this.canReplace(c) && c._id !== card._id);
+        chooseFrom = this.getFieldCards(true).filter(c=>Util.canReplace(c) && c._id !== card._id);
       }
       if (chooseFrom.length > 0) {
         return [this.bot.chooseHealCommand(this.getRandom(chooseFrom), 2)];
@@ -66,12 +68,12 @@ var BotStrategy = (function(){
       let state = this.bot.state;
       let fieldCards = this.getFieldCards(true);
       if (fieldCards.length === 0) return [];
-      let spies = fieldCards.filter(c=>this.isSpy(c));
+      let spies = fieldCards.filter(c=>Util.isSpy(c));
       if (spies.length > 0) {
         return [this.bot.playCardCommand(card), 
           this.bot.decoyReplaceWithCommand(this.getMin(spies))];
       }
-      let medics = fieldCards.filter(c=>this.isMedic(c));
+      let medics = fieldCards.filter(c=>Util.isMedic(c));
       if (medics.length > 0) {
         return [this.bot.playCardCommand(card), 
           this.bot.decoyReplaceWithCommand(this.getMax(medics))];
@@ -80,8 +82,8 @@ var BotStrategy = (function(){
       let lead = state.ownSide.score - state.foeSide.score;
       if (lead > 0 && state.foeSide.passing) {
         let toReplace = null;
-        fieldCards.filter(c=>this.canReplace(c)).forEach(c=>{
-          if (this.isBond(c)||this.isHorn(c)) return;
+        fieldCards.filter(c=>Util.canReplace(c)).forEach(c=>{
+          if (Util.isBond(c)||Util.isHorn(c)) return;
           if (c.power >= lead) return;
           if (!toReplace || c.power > toReplace.power) toReplace = c;
         });
@@ -90,7 +92,7 @@ var BotStrategy = (function(){
             this.bot.decoyReplaceWithCommand(toReplace)];
         }
       }
-      let normal = fieldCards.filter(c=>this.canReplace(c));
+      let normal = fieldCards.filter(c=>Util.canReplace(c));
       if (normal.length > 0) {
         return [this.bot.playCardCommand(card), 
           this.bot.decoyReplaceWithCommand(this.getMax(normal))];
@@ -113,9 +115,9 @@ var BotStrategy = (function(){
     r.generateForMedic = function(card) {
       let state = this.bot.state;
       let selectMedic = (currentDiscards) => {
-        let medics = currentDiscards.filter(c=>this.isMedic(c));
-        let spies = currentDiscards.filter(c=>this.isSpy(c));
-        let normals = currentDiscards.filter(c=>this.canReplace(c));
+        let medics = currentDiscards.filter(c=>Util.isMedic(c));
+        let spies = currentDiscards.filter(c=>Util.isSpy(c));
+        let normals = currentDiscards.filter(c=>Util.canReplace(c));
         if (medics.length > 0) {
           let selected = this.getMax(medics);
           let remained = currentDiscards.filter(c => c._id !== selected._id);
@@ -125,13 +127,13 @@ var BotStrategy = (function(){
         } else if (normals.length > 0) {
           let card = this.getMax(normals);
           let commands = [this.bot.medicChooseCardCommand(card)];
-          if (this.isAttack(card)) {
+          if (Util.isAttack(card)) {
             commands = commands.concat(this.generateForChooseAttack(card._data.attackPower));
-          } else if (this.isGuard(card)) {
+          } else if (Util.isGuard(card)) {
             commands = commands.concat(this.generateForChooseAttack(4, null, 1));
-          } else if (this.isTaibu(card)) {
+          } else if (Util.isTaibu(card)) {
             commands = commands.concat(this.generateForChooseAttack(100, 3));
-          } else if (this.isMonaka(card)) {
+          } else if (Util.isMonaka(card)) {
             commands = commands.concat(this.generateForChooseHeal(card));
           }
           return commands;
@@ -148,15 +150,15 @@ var BotStrategy = (function(){
       }
       if (card._data.ability === "decoy") {
         return this.generateForDecoy(card);
-      } else if (this.isHorn(card, true)) {
+      } else if (Util.isHorn(card, true)) {
         return this.generateForHornCard(card);
-      } else if (this.isAttack(card)) {
+      } else if (Util.isAttack(card)) {
         return [this.bot.playCardCommand(card)].concat(this.generateForChooseAttack(card._data.attackPower));
-      } else if (this.isGuard(card)) {
+      } else if (Util.isGuard(card)) {
         return [this.bot.playCardCommand(card)].concat(this.generateForChooseAttack(4, null, 1));
-      } else if (this.isTaibu(card)) {
+      } else if (Util.isTaibu(card)) {
         return [this.bot.playCardCommand(card)].concat(this.generateForChooseAttack(100, 3));
-      } else if (this.isMonaka(card)) {
+      } else if (Util.isMonaka(card)) {
         return [this.bot.playCardCommand(card)].concat(this.generateForChooseHeal(card));
       } else if (String(card._data.ability).includes("medic")) {
         let cards = this.generateForMedic(card);
@@ -168,7 +170,7 @@ var BotStrategy = (function(){
     r.selectCard = function() {
       let state = this.bot.state;
       // play spies if exist
-      let spies = state.ownHand.filter(c => this.isSpy(c, true));
+      let spies = state.ownHand.filter(c => Util.isSpy(c, true));
       if (spies.length > 0) {
         return this.getMin(spies);
       }
@@ -235,31 +237,31 @@ var BotStrategy = (function(){
         let realPower = this.getRealPower(card);
         realPowers[i] = realPower;
         let reward = 0;
-        if (this.isMedic(card, true)) {
+        if (Util.isMedic(card, true)) {
           // play medic if spies in discard
           let discard = state.ownSide.discard;
           if (discard.length === 0) {
-          } else if (discard.some(c=>this.isSpy(c))) {
+          } else if (discard.some(c=>Util.isSpy(c))) {
             reward = 100;
-            if (this.isHero(card)) reward--;
+            if (Util.isHero(card)) reward--;
           } else {
             reward = 1;
           }
         } else if (card._data.ability === "decoy") {
           // play decoy if spies or medic on own field
-          if (this.getFieldCards(true).some(c=>this.isSpy(c))) {
+          if (this.getFieldCards(true).some(c=>Util.isSpy(c))) {
             reward = 100;
           }
           // cheat!
-          if (this.getHandCards(false).every(c=>!this.isSpy(c)) &&
-            this.getFieldCards(true).some(c=>this.isMedic(c))) {
+          if (this.getHandCards(false).every(c=>!Util.isSpy(c)) &&
+            this.getFieldCards(true).some(c=>Util.isMedic(c))) {
               reward = 100;
             }
           // if no replacable card, don't play it
-          if (!this.getFieldCards(true).some(c=>this.canReplace(c))) {
+          if (!this.getFieldCards(true).some(c=>Util.canReplace(c))) {
             reward = -1;
           }
-        } else if (this.isScorch(card)) {
+        } else if (Util.isScorch(card)) {
           let foeClose = state.foeFields.close;
           if (foeClose.score > 10) {
             let scorchPower = this.getScoreSum(this.getHighestCards(foeClose.cards), c=>c.power);
@@ -267,7 +269,7 @@ var BotStrategy = (function(){
             if (scorchPower >= 8) reward = 100;
             else reward = scorchPower + 1;
           }
-        } else if (this.isScorch(card, true)) {
+        } else if (Util.isScorch(card, true)) {
           let foeHighestCards = this.getHighestCards(this.getFieldCards(false));
           let ownHighestCards = this.getHighestCards(this.getFieldCards(true));
           if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
@@ -276,36 +278,36 @@ var BotStrategy = (function(){
             if (scorchPower >= 10) reward = 100;
             else reward = scorchPower * 0.2;
           }
-        } else if (this.isBond(card)) {
+        } else if (Util.isBond(card)) {
           reward = Math.max(realPower - card._data.power * 0.4, 0);
-        } else if (this.isWeather(card)) {
+        } else if (Util.isWeather(card)) {
           // clear weather?
           if (card._data.ability === "weather_clear") {
             let weathers = state.ownFields.weather.cards;
             let foeDebuff = 0, ownDebuff = 0;
             weathers.map(w=>this.getFieldByWeather(w)).forEach(f=>{
-              foeDebuff += this.getScoreSum(this.getFieldCards(false, f).filter(c=>this.canReplace(c) && c.diff < 0), c=>c.diff);
-              ownDebuff += this.getScoreSum(this.getFieldCards(true, f).filter(c=>this.canReplace(c) && c.diff < 0), c=>c.diff);
+              foeDebuff += this.getScoreSum(this.getFieldCards(false, f).filter(c=>Util.canReplace(c) && c.diff < 0), c=>c.diff);
+              ownDebuff += this.getScoreSum(this.getFieldCards(true, f).filter(c=>Util.canReplace(c) && c.diff < 0), c=>c.diff);
             });
             realPower = Math.max(foeDebuff - ownDebuff, 0);
             reward = foeDebuff - ownDebuff;
           } else {
             let field = this.getFieldByWeather(card);
-            let foeScore = this.getScoreSum(this.getFieldCards(false, field).filter(c=>this.canReplace(c)), c=>c.power);
-            let ownScore = this.getScoreSum(this.getFieldCards(true, field).filter(c=>this.canReplace(c)), c=>c.power);
-            let handScore = this.getScoreSum(this.getHandCards(true, field).filter(c=>this.canReplace(c)), c=>c._data.power);
+            let foeScore = this.getScoreSum(this.getFieldCards(false, field).filter(c=>Util.canReplace(c)), c=>c.power);
+            let ownScore = this.getScoreSum(this.getFieldCards(true, field).filter(c=>Util.canReplace(c)), c=>c.power);
+            let handScore = this.getScoreSum(this.getHandCards(true, field).filter(c=>Util.canReplace(c)), c=>c._data.power);
             // cheat!
-            let foeHandScore = this.getScoreSum(this.getHandCards(false, field).filter(c=>this.canReplace(c)), c=>c._data.power);
+            let foeHandScore = this.getScoreSum(this.getHandCards(false, field).filter(c=>Util.canReplace(c)), c=>c._data.power);
             realPower = Math.max(foeScore - ownScore, 0);
             reward = foeScore - ownScore;
             if (foeScore > ownScore) reward += (foeHandScore - handScore) * 0.2;
           }
-        } else if (this.isMoraleBoost(card)) {
+        } else if (Util.isMoraleBoost(card)) {
           let field = this.getField(state.ownFields, card._data.type);
-          let canBoost = field.cards.filter(c=>this.canReplace(c)).length;
+          let canBoost = field.cards.filter(c=>Util.canReplace(c)).length;
           reward = Math.max(realPower - card._data.power * 0.5 + (canBoost - 1), 0);
           realPower += canBoost;
-        } else if (this.isHorn(card, true)) {
+        } else if (Util.isHorn(card, true)) {
           let fields = [state.ownFields.close, state.ownFields.ranged, state.ownFields.siege];
           let maxBoost = 0;
           for (let i=0; i<fields.length; i++) {
@@ -316,13 +318,13 @@ var BotStrategy = (function(){
           }
           realPower = maxBoost;
           reward = maxBoost * 0.5;
-        } else if (this.isHorn(card)) {
+        } else if (Util.isHorn(card)) {
           realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, card._data.type));
           reward = realPower * 0.5;
-        } else if (this.isAttack(card)) {
+        } else if (Util.isAttack(card)) {
           reward = this.getAttackReward(this.getFieldCards(false), card._data.attackPower);
           reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
-        } else if (this.isGuard(card)) {
+        } else if (Util.isGuard(card)) {
           if (this.getFieldCards(true, 1).every(c=>c._data.name!=="中世古香织") &&
           this.getFieldCards(false, 1).every(c=>c._data.name!=="中世古香织")) {
             reward = -4;
@@ -330,14 +332,14 @@ var BotStrategy = (function(){
             reward = this.getAttackReward(this.getFieldCards(false, 1), 4);
           }
           reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
-        } else if (this.isTaibu(card)) {
+        } else if (Util.isTaibu(card)) {
           reward = this.getAttackReward(
             this.getFieldCards(false).filter(c=>c._data.grade===3), 100);
           reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
-        } else if (this.isLips(card)) {
-          let cards = this.getFieldCards(false).filter(c=>this.canReplace(c) && c._data.male);
+        } else if (Util.isLips(card)) {
+          let cards = this.getFieldCards(false).filter(c=>Util.canReplace(c) && c._data.male);
           reward = Math.max(realPower + cards.length * 2 - card._data.power * 0.5, 0);
-        } else if (this.isTunning(card)) {
+        } else if (Util.isTunning(card)) {
           let weathers = state.ownFields.weather.cards.map(c=>this.getFieldByWeather(c));
           let negBoosts = this.getFieldCards(true).filter(c=>{
             return !weathers.includes(c._data.type) && c.diff < 0;
@@ -347,21 +349,21 @@ var BotStrategy = (function(){
           } else {
             reward = Math.max(realPower - negBoosts - card._data.power * 0.5, 0);
           }
-        } else if (this.isMonaka(card)) {
-          let cards = this.getFieldCards(false).filter(c=>this.canReplace(c));
+        } else if (Util.isMonaka(card)) {
+          let cards = this.getFieldCards(false).filter(c=>Util.canReplace(c));
           reward = Math.max(realPower - card._data.power * 0.5, 0);
           if (cards.length > 0) reward += 2;
           else reward -= 2;
-        } else if (this.isKasa(card)) {
+        } else if (Util.isKasa(card)) {
           if (this.getFieldCards(true, 0).some(c=>c._data.name==="铠冢霙")) {
             reward = Math.max(realPower + 5 - card._data.power * 0.5, 0);
           } else {
             reward = 1;
           }
-        } else if (this.isHero(card)) {
+        } else if (Util.isHero(card)) {
           // play hero in later rounds
           reward = realPower * 0.5 * (2 - state.ownSide.lives);
-        } else if (this.isMuster(card)) {
+        } else if (Util.isMuster(card)) {
           realPower *= 3;
           reward = Math.max(realPower - card._data.power * 1.5, 0);
         } else {
@@ -392,8 +394,8 @@ var BotStrategy = (function(){
         if (state.foeSide.score - state.ownSide.score > handPower * 1.0 / state.foeSide.lives) {
           if (state.foeSide.lives === 1 &&
               state.ownHand.some(c=>c._data.ability === "decoy") &&
-              this.getFieldCards(true).some(c=>this.canReplace(c)) &&
-              this.getFieldCards(false).every(c=>!this.isSpy(c))) {
+              this.getFieldCards(true).some(c=>Util.canReplace(c)) &&
+              this.getFieldCards(false).every(c=>!Util.isSpy(c))) {
               return state.ownHand.find(c=>c._data.ability === "decoy");
           }
           console.warn("pass due to foe leading too large");
@@ -413,7 +415,7 @@ var BotStrategy = (function(){
         if (state.ownSide.score > state.foeSide.score) {
           if (state.foeSide.passing) {
             if (state.ownHand.some(c=>c._data.ability === "decoy") &&
-              this.getFieldCards(true).some(c=>this.canReplace(c))) {
+              this.getFieldCards(true).some(c=>Util.canReplace(c))) {
               return state.ownHand.find(c=>c._data.ability === "decoy");
             }
           }
@@ -444,7 +446,7 @@ var BotStrategy = (function(){
       return cards[maxCardIdx];
     }
     r.getAttackReward = function(cards, attackPower) {
-      cards = cards.filter(c=>this.canReplace(c));
+      cards = cards.filter(c=>Util.canReplace(c));
       if (cards.length === 0) {
         return -attackPower;
       }
@@ -453,10 +455,10 @@ var BotStrategy = (function(){
     }
     r.getAttackRewardForCard = function(c, attackPower) {
       let reward = Math.min(attackPower, c.power);
-      if (this.isHorn(c)) reward += 5;
-      if (this.isMoraleBoost(c)) reward += 2;
-      if (this.isBond(c)) reward++;
-      if (this.isSpy(c)) reward = 0;
+      if (Util.isHorn(c)) reward += 5;
+      if (Util.isMoraleBoost(c)) reward += 2;
+      if (Util.isBond(c)) reward++;
+      if (Util.isSpy(c)) reward = 0;
       if (c.diff < 0) reward++;
       return reward;
     }
@@ -476,71 +478,14 @@ var BotStrategy = (function(){
       if (field.horn || field.cards.some(c=>c._data.ability === "commanders_horn_card")) {
         double++;
       }
-      if (card._data.name === "铠冢霙" && field.cards.some(c=>this.isKasa(c))) {
+      if (card._data.name === "铠冢霙" && field.cards.some(c=>Util.isKasa(c))) {
         add += 5;
       }
       add += field.cards.filter(c=>String(c._data.ability).includes("morale_boost")).length;
-      if (this.isBond(card)) {
-        double += field.cards.filter(c=>this.isBond(c, card._data.bondType)).length;
+      if (Util.isBond(card)) {
+        double += field.cards.filter(c=>Util.isBond(c, card._data.bondType)).length;
       }
       return (rawPower + add) * (2 ** double);
-    }
-    r.canReplace = function(card) {
-      return !(this.isHero(card) || card._data.ability === "decoy" || card._data.ability === "scorch_card");
-    }
-    r.isSpy = function(card, includeHero) {
-      return card._data.ability === "spy" ||
-        (includeHero && String(card._data.ability).includes("spy"));
-    }
-    r.isHero = function(card) {
-      return String(card._data.ability).includes("hero");
-    }
-    r.isScorch = function(card, isScorchCard) {
-      if (isScorchCard) return card._data.ability === "scorch_card";
-      return card._data.ability !== "scorch_card" && String(card._data.ability).includes("scorch");
-    }
-    r.isMedic = function(card, includeHero) {
-      return card._data.ability === "medic" ||
-        (includeHero && String(card._data.ability).includes("medic"));
-    }
-    r.isMuster = function(card) {
-      return String(card._data.ability).includes("muster");
-    }
-    r.isMoraleBoost = function(card, includeHero) {
-      return card._data.ability === "morale_boost" ||
-        (includeHero && String(card._data.ability).includes("morale_boost"));
-    }
-    r.isHorn = function(card, isHornCard) {
-      if (isHornCard) return card._data.ability === "commanders_horn_card";
-      return card._data.ability !== "commanders_horn_card" && String(card._data.ability).includes("commanders_horn");
-    }
-    r.isBond = function(card, opt_bondType) {
-      return card._data.ability === "tight_bond" &&
-        (opt_bondType ? card._data.bondType === opt_bondType : true);
-    }
-    r.isMonaka = function(card) {
-      return card._data.ability === "monaka";
-    }
-    r.isAttack = function(card) {
-      return String(card._data.ability).includes("attack");
-    }
-    r.isTaibu = function(card) {
-      return card._data.ability === "taibu";
-    }
-    r.isGuard = function(card) {
-      return card._data.ability === "guard";
-    }
-    r.isLips = function(card) {
-      return card._data.ability === "lips";
-    }
-    r.isTunning = function(card) {
-      return card._data.ability === "tunning";
-    }
-    r.isKasa = function(card) {
-      return card._data.ability === "kasa";
-    }
-    r.isWeather = function(card) {
-      return card._data.type === 5;
     }
     r.getFieldByWeather = function(card) {
       switch (card._data.ability) {
@@ -553,15 +498,15 @@ var BotStrategy = (function(){
       }
     }
     r.getFieldBoostForHorn = function(field) {
-      if (field.cards.some(c=>this.isHorn(c)) || field.horn) return 0;
-      return this.getScoreSum(field.cards.filter(c=>this.canReplace(c)), c=>c.power);
+      if (field.cards.some(c=>Util.isHorn(c)) || field.horn) return 0;
+      return this.getScoreSum(field.cards.filter(c=>Util.canReplace(c)), c=>c.power);
     }
     r.getScoreSum = function(cards, getScore) {
       return cards.reduce((sum, c)=> sum + getScore(c), 0);
     }
     r.getHighestCards = function(cards) {
       let highest = 0;
-      cards = cards.filter(c=>this.canReplace(c));
+      cards = cards.filter(c=>Util.canReplace(c));
       cards.forEach((card) => {
         highest = card.power > highest ? card.power : highest;
       });
