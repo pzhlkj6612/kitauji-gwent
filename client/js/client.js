@@ -5,6 +5,7 @@ let Handlebars = require('handlebars/runtime').default;
 let $ = require("jquery");
 
 let CollectionsView = require("./view/collections");
+let LoginView = require("./view/login");
 let I18n = require("./i18n");
 let cardData = require("../../assets/data/cards");
 let abilityData = require("../../assets/data/abilities");
@@ -70,6 +71,7 @@ let App = Backbone.Router.extend({
     console.log(this.socket.connected);
     this.socket.on("connect", function(socket){
       self.send("user:init", {
+        token: localStorage["token"],
         connId: localStorage["connectionId"],
       });
       self.user.set("serverOffline", false);
@@ -101,7 +103,19 @@ let App = Backbone.Router.extend({
   getCurrentView: function() {
     return this.currentView;
   },
-
+  loginRoute: function(){
+    if(this.currentView){
+      this.currentView.remove();
+      if (!$(".gwent-battle").length) {
+        $(".notifications").after('<div class="gwent-battle"></div>');
+      }
+      $(".notification-left").remove();
+    }
+    this.currentView = new LoginView({
+      app: this,
+      user: this.user
+    });
+  },
   lobbyRoute: function(){
     if(this.currentView){
       this.currentView.remove();
@@ -1010,6 +1024,9 @@ let User = Backbone.Model.extend({
     // this.listenTo(this.attributes, "change:room", this.subscribeRoom);
     app.receive("user:init", function(data) {
       localStorage["connectionId"] = data.connId;
+      if (data.needLogin) {
+        app.loginRoute();
+      }
     });
 
     app.receive("response:name", function(data){

@@ -1,7 +1,9 @@
+var Deck = require("./Deck");
+
 var User = (function(){
-  var User = function(socket){
+  var User = function(socket, token){
     if(!(this instanceof User)){
-      return (new User(socket));
+      return (new User(socket, token));
     }
     /**
      * constructor here
@@ -9,10 +11,11 @@ var User = (function(){
 
 
     this.socket = socket;
+    this.token = token;
+    this.userModel = null;
     this._rooms = [];
     this._id = socket.id;
-    this.generateName();
-    this.sendInit();
+    this.init();
 
     this._events();
   };
@@ -41,10 +44,45 @@ var User = (function(){
     return this._id;
   }
 
-  r.sendInit = function() {
+  r.init = async function() {
+    let valid = await this.validateToken();
     this.send("user:init", {
-      connId: this._id
+      connId: this._id,
+      needLogin: !valid,
     });
+  }
+
+  /**
+   * {
+   *  username: username,
+   *  expireTime: timestamp,
+   * }
+   */
+  r.validateToken = async function() {
+    if (!this.token) return false;
+    try {
+      let data = JSON.parse(new Buffer(this.token, "base64").toString());
+      if (data.expireTime < new Date().getTime()) {
+        return false;
+      }
+      this.userModel = await db.findUserByName(data.username);
+      if (!this.userModel) {
+        this.disconnect();
+        return false;
+      }
+      return true;
+    } catch (e) {
+      console.warn(e);
+      return false;
+    }
+  }
+
+  r.generateToken = function() {
+    let data = {
+      username: this.userModel.username,
+      expireTime: new Date().getTime() + 864000 * 1000, // 10 days
+    }
+    return new Buffer(JSON.stringify(data)).toString("base64");
   }
 
   r.send = function(event, data, room){
@@ -58,12 +96,6 @@ var User = (function(){
     }
   }
 
-  r.generateName = function(){
-    var name = "Guest" + (((Math.random() * 8999) + 1000) | 0);
-    this._name = name;
-    return name;
-  }
-
   r.setName = function(name) {
     name = name.slice(0, 20);
     console.log("user name changed from %s to %s", this._name, name);
@@ -71,7 +103,7 @@ var User = (function(){
   }
 
   r.getName = function() {
-    return this._name;
+    return this.userModel ? this.userModel.bandName : "anonymous";
   }
 
   r.getRoom = function() {
@@ -153,11 +185,53 @@ var User = (function(){
     var socket = this.socket;
     var self = this;
 
-    socket.on("request:name", function(data){
-      if(data && data.name){
-        self.setName(data.name);
+    socket.on("request:login", async function(data) {
+      let userModel = await db.findUserByName(data.username);
+      let msg, success = false, token;
+      if (!userModel) {
+        msg = "Cannot find user!";
+      } else if (data.password !== userModel.password) {
+        // dangerous
+        msg = "Wrong password!";
+      } else {
+        msg = "Login success!";
+        success = true;
+        self.userModel = userModel;
+        token = self.generateToken();
       }
-      socket.emit("response:name", {name: self.getName()});
+      socket.emit("response:login", {success: success, token: token});
+      socket.emit("notification", {message: msg});
+    });
+
+    socket.on("request:signin", async function(data) {
+      let exist = await db.findUserByName(data.username);
+      if (exist) {
+        socket.emit("response:signin", {success: false});
+        socket.emit("notification", {message: "User existed"});
+        return;
+      }
+      data.bandName = data.bandName || "北宇治高等学校";
+      await db.addUser(data);
+      self.userModel = await db.findUserByName(data.username);
+
+      // give initial 10 cards
+      let deck = data.initialDeck || "kitauji";
+      let cards = new Deck(deck).drawMany(10).map(c=>c.getKey());
+      await db.addCards(data.username, deck, cards);
+
+      socket.emit("response:signin", {
+        success: true,
+        token: self.generateToken(),
+        model: self.userModel,
+        initialCards: cards,
+      });
+    });
+
+    socket.on("request:name", function(data){
+      // if(data && data.name){
+      //   self.setName(data.name);
+      // }
+      // socket.emit("response:name", {name: self.getName()});
     })
 
     socket.on("request:matchmaking:bot", function() {

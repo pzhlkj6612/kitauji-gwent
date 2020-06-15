@@ -116,10 +116,20 @@ var Deck = (function(){
     return card;
   }
 
+  r.drawMany = function(times) {
+    let cards = [];
+    while(times--) {
+      var card = this.draw();
+      if (!card) break;
+      cards.push(card);
+    }
+    return cards;
+  }
+
   r._loadCards = function(){
     var self = this;
     this._deck = this.getDeck().map(function(cardkey){
-      //return Card(cardkey);
+      if (!self.side) return Card(cardkey);
       return self.side.createCard(cardkey);
     });
   }

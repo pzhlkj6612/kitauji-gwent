@@ -1,0 +1,101 @@
+<style>
+  body {
+    background: #ffffff center top no-repeat;
+    background-size: cover;
+  }
+
+  .container {
+    margin-bottom: 0;
+  }
+
+  .container-form-landing {
+    opacity: 1;
+    margin: 60px 0 0 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .field-session {
+    width: 250px !important;
+  }
+
+  .container {
+    background: transparent;
+  }
+
+  .icon-action-load {
+    background: url(/assets/texture/action-load.gif) no-repeat;
+    display: none;
+
+    width: 16px;
+    height: 16px;
+    float: right;
+    margin: 6px -7px 0 7px;
+  }
+
+  .startMatchmaking {
+    height: auto !important;
+    width: auto !important;
+    line-height: 29px;
+  }
+
+  .startMatchmakingWithBot {
+    height: auto !important;
+    width: auto !important;
+    line-height: 29px;
+    margin-right: 10px;
+    background: #01acc6;
+  }
+
+  .wrap-landing {
+    max-width: 800px;
+  }
+
+  .teaser-landing {
+    float: left;
+    width: 100%;
+    margin: 70px 0 0 0;
+    text-shadow: none;
+  }
+
+  .status-offline {
+    color: red;
+  }
+
+  .status-online {
+    color: green;
+  }
+</style>
+
+<section class="container-landing">
+  <div class="wrap-landing">
+    <img src="/assets/texture/eupho_matsuri.jpeg" height="300" alt="Gwent" class="logo-big">
+
+    <div class="container-form-landing">
+      <input id="username" type="text" placeholder="{{i18n "username"}}" class="field-session field-username">
+      <input id="password" type="password" placeholder="{{i18n "password"}}" class="field-session field-username" autofocus>
+      <div class="wrap-btn-action btn-register-action btn-login">
+        <input type="submit" value="{{i18n "log_in"}}" class="btn-action">
+      </div>
+      <div class="wrap-btn-action btn-register-action btn-signin">
+        <input type="submit" value="{{i18n "sign_in"}}" class="btn-action">
+      </div>
+    </div>
+    <p class="teaser-landing">
+      {{#if serverOffline}}
+        <span>{{i18n "server_stat"}}<span class="status-offline">{{i18n "offline"}}</span></span>
+      {{else}}
+        <span>{{i18n "online_count"}}<span class="nr-player-online">0</span></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span>{{i18n "idle_count"}}<span class="nr-player-idle">0</span></span>
+        <br>
+        <span>{{i18n "server_stat"}}<span class="status-online">{{i18n "online"}}</span></span>
+      {{/if}}
+    </p>
+  </div>
+</section>
+
+<footer class="rights">
+  <p>{{i18n "download"}}<a href="https://github.com/kitauji-gwent/kitauji-gwent/releases" target="_blank"> {{i18n "standalone"}} </a>{{i18n "stable"}}</p>
+  <p>This is a fan game and all rights are reserved by Kyoto Animation(and CD Projekt)</p>
+</footer>

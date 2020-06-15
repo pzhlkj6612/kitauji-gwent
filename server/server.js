@@ -5,10 +5,11 @@ var favicon = require('serve-favicon');
 var path = require('path');
 var app = express();
 var Config = require("../public/Config")
+var DB = require("./dao/db");
 
 global.connections = require("./Connections")();
-
 global.matchmaking = require("./Matchmaker")();
+global.db = new DB();
 
 global.Room = require("./Room");
 
@@ -46,7 +47,7 @@ var admin = io.of("/admin");
 io.on("connection", function(socket) { //global connection
   socket.on("user:init", function(data) {
     let user = null;
-    if (data && data.connId != null) {
+    if (data.connId != null) {
       user = connections.findById(data.connId);
       if (user && user.getRoom()) {
         console.log("user ", user.getName(), " reconnect");
@@ -59,7 +60,7 @@ io.on("connection", function(socket) { //global connection
       }
     }
     if (!user) {
-      connections.add(user = User(socket));
+      connections.add(user = User(socket, data.token));
       console.log("new user ", user.getName());
     }
 
