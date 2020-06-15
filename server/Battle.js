@@ -215,12 +215,19 @@ var Battle = (function(){
     })
   }
 
-  r.gameOver = function(winner){
-    this.send("gameover", {
+  r.gameOver = async function(winner){
+    let data = {
       winner: winner ? winner.getName() : "无人",
       p1Scores: this.p1.getScores(),
       p2Scores: this.p2.getScores(),
-    })
+    };
+    let result1 = await this._user1.endGame(winner && winner === this.p1, this.p2);
+    data.gameResult = result1;
+    this.p1.send("gameover", data, true);
+    let result2 = await this._user2.endGame(winner && winner === this.p2, this.p1);
+    data.gameResult = result2;
+    this.p2.send("gameover", data, true);
+
     this._user1.disconnect();
     this._user2.disconnect();
   }

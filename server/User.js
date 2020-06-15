@@ -1,5 +1,8 @@
-var Deck = require("./Deck");
+var Cache = require("./dao/cache");
+var Const = require("./Const");
 var LuckyDraw = require("./LuckyDraw");
+var Quest = require("./Quest");
+const deck = require("../assets/data/deck");
 
 var User = (function(){
   var User = function(socket, token){
@@ -31,6 +34,7 @@ var User = (function(){
   r._name = null;
   r._rooms = null;
   r._roomName = null;
+  r._scenario = null;
   r._inQueue = false;
   r.socket = null;
   r.disconnected = false;
@@ -182,6 +186,50 @@ var User = (function(){
     this._battleSide = battleSide;
   }
 
+  /**
+   * Record game state, etc.
+   */
+  r.endGame = async function(isWin, foe) {
+    let result = {};
+    if (!this._scenario) return result;
+
+    // update quest progress
+    let questState = Quest.updateQuestProgress(this.userModel.username, this._scenario, {
+      foeName: foe.getName(),
+      isWin,
+    });
+    result["questState"] = questState;
+    if (questState.completed) {
+      await Quest.onQuestCompleted(this.userModel.username, this._scenario, questState.success);
+    }
+
+    // do lucky draw based on result
+    result["newCard"] = await this.luckyDrawAfterGame_(isWin, foe, questState);
+    return result;
+  }
+
+  r.luckyDrawAfterGame_ = async function(isWin, foe, questState) {
+    if (!isWin) return [];
+    let scenario = this._scenario;
+    let possibility = 0;
+    if (foe.isBot()) possibility = 0.4;
+    else possibility = 0.6;
+    if (questState.success) {
+      possibility = 1;
+      scenario = Quest.getNextScenario(scenario);
+    }
+    if (Math.random() > possibility) return [];
+    let deck = this.userModel.initialDeck;
+    if (await Cache.getInstance().getCondition(this.userModel.username, Const.COND_UNLOCK_ALL_DECK)) {
+      let {faction, cards} = await LuckyDraw.getInstance().drawPreferOtherDeck(1, scenario, this.userModel.username, deck);
+      await db.addCards(data.username, faction, cards);
+      return cards;
+    }
+    let cards = await LuckyDraw.getInstance().draw(1, scenario, this.userModel.username, deck);
+    await db.addCards(data.username, faction, cards);
+    return cards;
+  }
+
   r._events = function() {
     var socket = this.socket;
     var self = this;
@@ -212,13 +260,13 @@ var User = (function(){
         return;
       }
       data.bandName = data.bandName || "北宇治高等学校";
+      data.initialDeck = data.initialDeck || "kitauji";
       await db.addUser(data);
       self.userModel = await db.findUserByName(data.username);
 
       // give initial 10 cards
-      let deck = data.initialDeck || "kitauji";
-      let cards = await LuckyDraw.getInstance().drawKyoto(10, data.username, deck);
-      await db.addCards(data.username, deck, cards);
+      let cards = await LuckyDraw.getInstance().draw(10, Const.SCENARIO_KYOTO, data.username, data.initialDeck);
+      await db.addCards(data.username, data.initialDeck, cards);
 
       socket.emit("response:signin", {
         success: true,
@@ -235,14 +283,17 @@ var User = (function(){
       // socket.emit("response:name", {name: self.getName()});
     })
 
-    socket.on("request:matchmaking:bot", function() {
+    socket.on("request:matchmaking:bot", function(data) {
       if(self._inQueue) return;
+      //TODO: removeFromQueue
+      self._scenario = data.scenario;
       matchmaking.findBotOpponent(self);
     });
 
     socket.on("request:matchmaking", function(data) {
       if(self._inQueue) return;
       self._roomName = data.roomName;
+      self._scenario = data.scenario;
       matchmaking.findOpponent(self, data.roomName);
     });
 
@@ -265,6 +316,10 @@ var User = (function(){
     })
 
     socket.on("request:quitGame", function() {
+      if (self._rooms.length && self.getRoom().hasUser() > 1) {
+        // quit game when other user still playing, record as lose
+        self.endGame(false, self._battleSide.foe);
+      }
       self.disconnect();
     })
   }

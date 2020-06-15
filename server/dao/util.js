@@ -5,6 +5,7 @@ var Util = (function() {
       "username": user.username,
       "password": user.password,
       "bandName": user.bandName,
+      "initialDeck": user.initialDeck,
       "winCount": user.winCount || 0,
       "loseCount": user.loseCount || 0,
     };

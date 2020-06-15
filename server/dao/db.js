@@ -8,6 +8,7 @@ const TABLE_USER = "user";
 const TABLE_CARD = "card";
 const TABLE_DRAW_STATS = "draw_stats";
 const TABLE_PROGRESS = "progress";
+const TABLE_CONDITION = "condition";
 
 class DB {
   constructor() {
@@ -31,6 +32,10 @@ class DB {
       this.db.createCollection(TABLE_PROGRESS, function(err) {
         if (err) throw err;
         console.log("progress table created!");
+      });
+      this.db.createCollection(TABLE_CONDITION, function(err) {
+        if (err) throw err;
+        console.log("condition table created!");
       });
     });
   }
@@ -120,7 +125,7 @@ class DB {
       username,
       scenario,
     }, {
-      $set: stats,
+      $set: {stats},
     }, {
       upsert: true,
     });
@@ -137,10 +142,14 @@ class DB {
   
   async findProgressByUserQuest(username, questName) {
     await this.connectPromise;
-    return await this.db.collection(TABLE_PROGRESS).findOne({
+    let result = await this.db.collection(TABLE_PROGRESS).findOne({
       username,
       questName,
     });
+    if (result) {
+      return result.progress;
+    }
+    return null;
   }
   
   async updateProgress(username, questName, progress) {
@@ -149,11 +158,39 @@ class DB {
       username,
       questName,
     }, {
-      $set: progress,
+      $set: {progress},
     }, {
       upsert: true,
     });
   };
+
+  // condition
+
+  async setCondition(username, conditionKey, value) {
+    await this.connectPromise;
+    return await this.db.collection(TABLE_CONDITION).updateOne({
+      username,
+    }, {
+      $set: {
+        [conditionKey]: value,
+      },
+    }, {
+      upsert: true,
+    });
+  }
+
+  async getCondition(username, conditionKey) {
+    await this.connectPromise;
+    let result = await this.db.collection(TABLE_CONDITION).findOne({
+      username,
+    }, {
+      [conditionKey]: true
+    });
+    if (result) {
+      return result[conditionKey];
+    }
+    return null;
+  }
 }
 
 module.exports = DB;
