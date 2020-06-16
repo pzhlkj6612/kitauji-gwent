@@ -20,6 +20,13 @@
     "standalone": "单机版",
     "stable": "更稳定",
 
+    "password": "密码",
+    "log_in": "登录",
+    "sign_in": "注册",
+    "username_validation": "仅限英文字母[a-zA-Z]和数字[0-9]",
+    "band_name": "例：北宇治高等学校",
+    "initial_deck": "初始牌组",
+
     "card_collection": "牌组",
     "card_in_deck": "当前阵容",
     "empty_hint": "从牌组中选择",
