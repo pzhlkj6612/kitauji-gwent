@@ -1,8 +1,11 @@
+var SortedSet = require('redis-sorted-set');
+
 let instance_;
 
 class Cache {
   constructor() {
-    this.cache = {};
+    // ranking based on win count
+    this.winRanking = new SortedSet();
     this.conditions = {};
   }
 
@@ -25,6 +28,22 @@ class Cache {
     this.conditions[username] = this.conditions[username] || {};
     this.conditions[username][conditionKey] = value;
     await db.setCondition(username, conditionKey, value);
+  }
+
+  async recordUserWin(username, isWin) {
+    await db.recordUserWin(username, isWin);
+    if (isWin) {
+      this.winRanking.set(username, (this.winRanking.get(username) || 0) + 1);
+    }
+  }
+
+  getUserRank(username) {
+    return this.winRanking.rank(username);
+  }
+
+  async getTopK(k) {
+    let topKUsers = this.winRanking.range(0, k);
+    return await db.findUserByNames(topKUsers);
   }
 }
 

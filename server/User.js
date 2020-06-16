@@ -197,6 +197,10 @@ var User = (function(){
     let result = {};
     if (!this._scenario) return result;
 
+    if (!foe.isBot()) {
+      await Cache.getInstance().recordUserWin(this.userModel.username, isWin);
+    }
+
     // update quest progress
     let questState = Quest.updateQuestProgress(this.userModel, this._scenario, {
       foeName: foe.getName(),

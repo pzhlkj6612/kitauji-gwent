@@ -55,6 +55,30 @@ class DB {
       username,
     });
   }
+
+  async findUserByNames(usernames) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_USER);
+    return await table.find({
+      username: {
+        $in: usernames,
+      }
+    }).toArray();
+  }
+
+  async recordUserWin(username, isWin) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_USER);
+    let update;
+    if (isWin) {
+      update = {winCount: 1};
+    } else {
+      update = {loseCount: 1}
+    };
+    return await table.updateOne({username}, {
+      $inc: update,
+    });
+  }
   
   // card
   
