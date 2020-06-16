@@ -198,14 +198,11 @@ var User = (function(){
     if (!this._scenario) return result;
 
     // update quest progress
-    let questState = Quest.updateQuestProgress(this.userModel.username, this._scenario, {
+    let questState = Quest.updateQuestProgress(this.userModel, this._scenario, {
       foeName: foe.getName(),
       isWin,
     });
     result["questState"] = questState;
-    if (questState.completed) {
-      await Quest.onQuestCompleted(this.userModel.username, this._scenario, questState.success);
-    }
 
     // do lucky draw based on result
     result["newCard"] = await this.luckyDrawAfterGame_(isWin, foe, questState);
@@ -217,7 +214,7 @@ var User = (function(){
     let scenario = this._scenario;
     let possibility = 0;
     if (foe.isBot()) possibility = 0.4;
-    else possibility = 0.6;
+    else possibility = 0.7;
     if (questState.success) {
       possibility = 1;
       scenario = Quest.getNextScenario(scenario);
