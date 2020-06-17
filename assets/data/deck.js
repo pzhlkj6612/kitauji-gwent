@@ -50,6 +50,10 @@ module.exports = {
       "shima_rie",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -99,6 +103,10 @@ module.exports = {
       "katou_hazuki",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -142,6 +150,10 @@ module.exports = {
       "morimoto_michio",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -204,6 +216,10 @@ module.exports = {
       "yoroizuka_mizore_1",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -254,6 +270,10 @@ module.exports = {
       "yoroizuka_mizore_1",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -298,6 +318,10 @@ module.exports = {
       "kishibe_miru_1",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -359,6 +383,10 @@ module.exports = {
       "kasaki_nozomi_2",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -407,6 +435,10 @@ module.exports = {
       "kasaki_nozomi_2",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -451,6 +483,10 @@ module.exports = {
       "kishibe_miru_2",
 
       "taki_noboru",
+      "taki_chihiro",
+      "matsumoto_michie",
+      "oumae_kumiko_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",

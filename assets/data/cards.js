@@ -547,10 +547,11 @@ module.exports = {
     rarity: 2,
     type: 0
   },
+  // leaders
   "taki_noboru": {
     name: "泷升",
     power: -1,
-    ability: "foltest_leader4",
+    ability: "foltest_leader1",
     img: "taki_noboru",
     faction: "neutral",
     type: 3
@@ -558,8 +559,32 @@ module.exports = {
   "taki_chihiro": {
     name: "泷千寻",
     power: -1,
-    ability: "foltest_leader4",
+    ability: "foltest_leader2",
     img: "taki_chihiro",
+    faction: "neutral",
+    type: 3
+  },
+  "matsumoto_michie": {
+    name: "松本美智恵",
+    power: -1,
+    ability: "francesca_leader1",
+    img: "matsumoto_michie",
+    faction: "neutral",
+    type: 3
+  },
+  "oumae_kumiko_shiki": {
+    name: "黄前久美子",
+    power: -1,
+    ability: "francesca_leader2",
+    img: "oumae_kumiko_shiki",
+    faction: "neutral",
+    type: 3
+  },
+  "tanaka_asuka_shiki": {
+    name: "田中明日香",
+    power: -1,
+    ability: "emreis_leader4",
+    img: "matsumoto_michie",
     faction: "neutral",
     type: 3
   },

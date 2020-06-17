@@ -56,10 +56,10 @@ var Deck = (function(){
   ];
 
   Deck.FACTION = {
-    NORTHERN_REALM: "northern",
+    SOUND_EUPHO_S1: "kumiko1",
     SCOIATAEL: "scoiatael",
-    NILFGAARDIAN_EMPIRE: "nilfgaardian",
-    MONSTERS: "monster"
+    OATHS_FINALE: "kitauji",
+    SOUND_EUPHO_S2: "kumiko1S2"
   }
 
   r.setCustomDeck = function(customDeck) {

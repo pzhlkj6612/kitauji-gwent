@@ -359,15 +359,10 @@ Battleside = (function() {
   }
 
   r.setLeadercard = function() {
-    if (this.isBot) {
-      let leaderCard = this.createCard("taki_chihiro");
-      this.field[Card.TYPE.LEADER].add(leaderCard);
-    }
-    var leaderCard = this.deck.find("type", Card.TYPE.LEADER);
-    this.deck.removeFromDeck(leaderCard[0]);
-    /*
-        this.getYourside().setField("leader", leaderCard[0]);*/
-    this.field[Card.TYPE.LEADER].add(leaderCard[0]);
+    var leaderCards = this.deck.find("type", Card.TYPE.LEADER);
+    let leaderCard = leaderCards[Math.random() * leaderCards.length | 0]
+    this.deck.removeFromDeck(leaderCard);
+    this.field[Card.TYPE.LEADER].add(leaderCard);
   }
 
   r.getLeader = function() {
@@ -902,7 +897,7 @@ Battleside = (function() {
 
   r.clearMainFields = function() {
     var rndCard = null;
-    if(this.deck.getFaction() === Deck.FACTION.MONSTERS) {
+    if(this.deck.getFaction() === Deck.FACTION.SOUND_EUPHO_S2) {
       rndCard = this.getRandomCardOnField();
       if(rndCard) {
         rndCard.__lock = true;

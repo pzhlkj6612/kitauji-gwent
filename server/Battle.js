@@ -175,7 +175,7 @@ var Battle = (function(){
     this.sendNotification("Start new round!");
 
 
-    if(winner.deck.getFaction() === Deck.FACTION.NORTHERN_REALM && !lastRound.isTie){
+    if(winner.deck.getFaction() === Deck.FACTION.SOUND_EUPHO_S1 && !lastRound.isTie){
       winner.draw(1);
       //console.log(winner.getName() + " draws 1 extra card! (Northern ability)");
       this.sendNotification(winner.getName() + " draws 1 extra card! (Northern ability)");
@@ -365,7 +365,7 @@ var Battle = (function(){
     //tie
 
     //check if is nilfgaardian faction ability
-    if(this.p1.deck.getFaction() === Deck.FACTION.NILFGAARDIAN_EMPIRE && this.p1.deck.getFaction() !== this.p2.deck.getFaction()){
+    if(this.p1.deck.getFaction() === Deck.FACTION.OATHS_FINALE && this.p1.deck.getFaction() !== this.p2.deck.getFaction()){
       this.p2.removeRuby();
       //console.log(this.p1.getName() + " wins the tie! (nilfgaardian ability)");
       this.sendNotification(this.p1.getName() + " wins the tie! (nilfgaardian ability)");
@@ -374,7 +374,7 @@ var Battle = (function(){
         isTie: false
       }
     }
-    if(this.p2.deck.getFaction() === Deck.FACTION.NILFGAARDIAN_EMPIRE && this.p1.deck.getFaction() !== this.p2.deck.getFaction()){
+    if(this.p2.deck.getFaction() === Deck.FACTION.OATHS_FINALE && this.p1.deck.getFaction() !== this.p2.deck.getFaction()){
       this.p1.removeRuby();
       //console.log(this.p2.getName() + " wins the tie! (nilfgaardian ability)");
       this.sendNotification(this.p2.getName() + " wins the tie! (nilfgaardian ability)");
