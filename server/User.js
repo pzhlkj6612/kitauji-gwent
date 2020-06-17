@@ -328,14 +328,17 @@ var User = (function(){
     })
 
     socket.on("request:matchmaking:bot", function(data) {
-      if(self._inQueue) return;
-      //TODO: removeFromQueue
+      if(self._inQueue) {
+        matchmaking.removeFromQueue(self, self._roomName);
+      }
       self._scenario = data.scenario;
       matchmaking.findBotOpponent(self);
     });
 
     socket.on("request:matchmaking", function(data) {
-      if(self._inQueue) return;
+      if(self._inQueue) {
+        matchmaking.removeFromQueue(self, self._roomName);
+      }
       self._roomName = data.roomName;
       self._scenario = data.scenario;
       matchmaking.findOpponent(self, data.roomName);
