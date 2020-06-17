@@ -11,4 +11,8 @@ module.exports = {
   PRICE_BRASS: 3,
 
   DEFAULT_LEADER: "taki_noboru",
+
+  ROOM_KYOTO: "room_kyoto",
+  ROOM_KANSAI: "room_kansai",
+  ROOM_ZENKOKU: "room_zenkoku",
 };

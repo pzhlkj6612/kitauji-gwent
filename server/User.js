@@ -341,7 +341,21 @@ var User = (function(){
       }
       self._roomName = data.roomName;
       self._scenario = data.scenario;
-      matchmaking.findOpponent(self, data.roomName);
+      if (self._scenario) {
+        switch (self._scenario) {
+          case Const.ROOM_KANSAI:
+            self._roomName = Const.ROOM_KANSAI;
+            break;
+          case Const.ROOM_ZENKOKU:
+            self._roomName = Const.ROOM_ZENKOKU;
+            break;
+          case Const.SCENARIO_KYOTO:
+          default:
+            self._roomName = Const.ROOM_KYOTO;
+            break;
+        }
+      }
+      matchmaking.findOpponent(self, self._roomName);
     });
 
     socket.on("request:gameLoaded", function(data){

@@ -1,4 +1,15 @@
 var HandWrittenBot = require("./HandWrittenBot");
+var Const = require("./Const");
+
+/**
+ * Special logic for these room:
+ * find opponent in same room first, then other room.
+ */
+const SPECIAL_ROOMS = [
+  Const.ROOM_KYOTO,
+  Const.ROOM_KANSAI,
+  Const.ROOM_ZENKOKU,
+];
 
 var Matchmaker = (function(){
   var Matchmaker = function(){
@@ -86,6 +97,11 @@ var Matchmaker = (function(){
     let queue = this._queue;
     if (opt_roomName) {
       queue = this._queueByRoom[opt_roomName];
+    }
+    if ((!queue || !queue.length) && SPECIAL_ROOMS.includes(opt_roomName)) {
+      queue = SPECIAL_ROOMS.find(room => {
+        this._queueByRoom[room] && this._queueByRoom[room].length;
+      });
     }
     if(!queue || !queue.length) return null;
     var foe = queue.splice(0, 1)[0];
