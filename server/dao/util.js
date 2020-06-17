@@ -6,6 +6,7 @@ var Util = (function() {
       "password": user.password,
       "bandName": user.bandName,
       "initialDeck": user.initialDeck,
+      "currentDeck": user.currentDeck || user.initialDeck,
       "winCount": user.winCount || 0,
       "loseCount": user.loseCount || 0,
     };
@@ -15,4 +16,3 @@ var Util = (function() {
 })();
 
 module.exports = Util;
-  

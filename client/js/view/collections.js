@@ -1,7 +1,6 @@
 let Backbone = require("backbone");
 
 let cardData = require("../../../assets/data/cards");
-let deckData = require("../../../assets/data/deck");
 let abilityData = require("../../../assets/data/abilities");
 
 let Collections = Backbone.View.extend({
@@ -14,20 +13,30 @@ let Collections = Backbone.View.extend({
   initialize: function(options){
     this.user = options.user;
     this.app = options.app;
-    this.deckKey = localStorage["customDeck"] || "kitauji";
+    this.app.receive("response:userCollections", this.onUserCollectionsResponse.bind(this));
+    this.app.send("request:userCollections");
+    this.deckKey = "kitauji";
+    this.collections = {};
+    this.leaderCollection = {};
+    this.customDeck = {};
+    this.dirty = false;
     this.reset();
     $(".gwent-battle").html(this.el);
     this.render();
   },
+  onUserCollectionsResponse: function(data) {
+    this.deckKey = data.currentDeck;
+    this.collections = data.collections || {};
+    this.leaderCollection = Object.keys(data.leaderCollection || {});
+    this.customDecks = data.customDecks || {};
+    this.reset();
+    this.render();
+  },
   reset: function() {
-    let deck = deckData[this.deckKey].data;
-    this.collection = this.toCardMap(deck);
-    this.leaderCollection = this.toLeaderList(deck);
-    let customDeck = localStorage[`customDeck${this.deckKey}`] || "{}";
-    customDeck = JSON.parse(customDeck);
-    this.currentDeck = customDeck["cardInDeck"] || {};
+    this.collection = this.collections[this.deckKey] || {};
+    this.currentDeck = this.customDecks[this.deckKey] || {};
     for (let key of Object.keys(this.currentDeck)) {
-      this.removeCardFrom(this.collection, key, this.currentDeck[key]._count);
+      this.removeCardFrom(this.collection, key, this.currentDeck[key]);
     }
     this.currentLeader = customDeck["leader"] || this.leaderCollection[0];
     this.collectionTab = "all_cards";
@@ -57,27 +66,25 @@ let Collections = Backbone.View.extend({
   },
   removeCardFrom: function(cards, key, count) {
     if (!cards[key]) return;
-    cards[key]._count -= count;
-    if (cards[key]._count === 0) {
+    cards[key] -= count;
+    if (cards[key] === 0) {
       delete cards[key];
     }
   },
   addCardTo: function(cards, key) {
     if (cards[key]) {
-      cards[key]._count++;
+      cards[key]++;
     } else {
-      cards[key] = {
-        _count: 1,
-      };
+      cards[key] = 1;
     }
   },
-  toCardModel: function(key, card) {
+  toCardModel: function(key, count) {
     if (!key) return null;
     return {
       _key: key,
       _data: cardData[key],
-      _count: card ? card._count : 1,
-      _showCount: card ? card._count > 1 : false,
+      _count: count || 1,
+      _showCount: count ? count > 1 : false,
     };
   },
   toCardModelList: function(collection, tab) {
@@ -115,14 +122,14 @@ let Collections = Backbone.View.extend({
   deckStats: function(cards) {
     let total = 0, unitCardCnt = 0, totalStrength = 0, heroCardCnt = 0;
     for (let key of Object.keys(cards)) {
-      total += cards[key]._count;
+      total += cards[key];
       if (cardData[key].type <= 2) {
-        unitCardCnt += cards[key]._count;
+        unitCardCnt += cards[key];
       }
       if (String(cardData[key].ability).includes("hero")) {
-        heroCardCnt += cards[key]._count;
+        heroCardCnt += cards[key];
       }
-      totalStrength += Math.max(0, cardData[key].power) * cards[key]._count;
+      totalStrength += Math.max(0, cardData[key].power) * cards[key];
     }
     return {
       total: total,
@@ -133,6 +140,7 @@ let Collections = Backbone.View.extend({
     };
   },
   render: function(){
+    if (!this.deckKey) return;
     let stats = this.deckStats(this.currentDeck);
     this.$el.html(this.template({
       "cardCollection": this.toCardModelList(this.collection, this.collectionTab),
@@ -188,6 +196,7 @@ let Collections = Backbone.View.extend({
     let scrolls = this.rememberScroll();
     this.render();
     this.restoreScroll(scrolls);
+    this.dirty = true;
   },
   onDeckClick: function(e) {
     let $card = $(e.target).closest(".card-cell");
@@ -199,6 +208,7 @@ let Collections = Backbone.View.extend({
     let scrolls = this.rememberScroll();
     this.render();
     this.restoreScroll(scrolls);
+    this.dirty = true;
   },
   rememberScroll: function() {
     let collectionScroll = $(".card-table.card-collections").scrollTop();
@@ -244,9 +254,9 @@ let Collections = Backbone.View.extend({
       cardInDeck: this.currentDeck,
       leader: this.currentLeader,
     }
-    localStorage["customDeck"] = this.deckKey;
-    localStorage[`customDeck${this.deckKey}`] = JSON.stringify(customDeck);
-    this.app.trigger("setDeck", "custom");
+    if (this.dirty) {
+      this.app.send("set:customDeck", customDeck);
+    }
     this.app.lobbyRoute();
   },
 });

@@ -1,5 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const Util = require("./util");
+const CardData = require("../../assets/data/cards")
 
 const MONGODB_PORT = 27017;
 const DB_NAME = "mydb";
@@ -66,6 +67,22 @@ class DB {
     }).toArray();
   }
 
+  /**
+   * update bandName, currentDeck
+   */
+  async updateUser(userModel) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_USER);
+    return await table.updateOne({
+      username: userModel.username
+    }, {
+      $set: {
+        bandName: userModel.bandName,
+        currentDeck: userModel.currentDeck,
+      }
+    });
+  }
+
   async recordUserWin(username, isWin) {
     await this.connectPromise;
     const table = this.db.collection(TABLE_USER);
@@ -102,6 +119,19 @@ class DB {
     return null;
   };
   
+  async findLeaderCardsByUser(username) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_CARD);
+    let result = await table.findOne({
+      username,
+      isLeaderCard: true,
+    });
+    if (result) {
+      return result.cards;
+    }
+    return null;
+  }
+
   async addCards(username, deck, cardList) {
     await this.connectPromise;
     const table = this.db.collection(TABLE_CARD);
@@ -130,6 +160,81 @@ class DB {
       cardMap,
     });
   };
+
+  async addLeaderCards(username, cardList) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_CARD);
+    let cards = {};
+    let exist = await this.findLeaderCardsByUser(username);
+    if (exist) {
+      cards = exist.cards;
+    }
+    for (let key of cardList) {
+      if (!cards[key]) cards[key] = 1;
+    }
+    return await table.updateOne({
+      username,
+      isLeaderCard: true,
+    }, {
+      $set: {cards},
+    }, {
+      upsert: true,
+    });
+  }
+
+  async loadAllCustomDeck(username) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_CARD);
+    return await table.find({
+      username,
+      isCustomDeck: true,
+    }).toArray();
+  }
+
+  async loadCustomDeck(username, deck) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_CARD);
+    let result = await table.findOne({
+      username,
+      deck,
+      isCustomDeck: true,
+    });
+    if (result) {
+      return result.customDeck;
+    }
+    return {};
+  }
+
+  async storeCustomDeck(username, deck, customDeck) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_CARD);
+    return await table.updateOne({
+      username,
+      deck,
+      isCustomDeck: true,
+    }, {
+      $set: {customDeck},
+    }, {
+      upsert: true,
+    });
+  }
+
+  async storeCustomDeckByList(username, deck, cardList) {
+    let leader = cardList.find(c=>CardData[c].type === 3);
+    let cardInDeck = {};
+    for (let key of cardList) {
+      if (CardData[key].type !== 3) {
+        cardInDeck[key] = cardInDeck[key] ? cardInDeck[key] + 1 : 1;
+      }
+    }
+    return await this.storeCustomDeck(username, deck, {
+      deck,
+      cardInDeck,
+      leader,
+    });
+  }
+
+  // draw stats
 
   async loadDrawStats(username, scenario) {
     await this.connectPromise;

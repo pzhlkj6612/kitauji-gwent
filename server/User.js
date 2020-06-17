@@ -16,6 +16,7 @@ var User = (function(){
     this.socket = socket;
     this.token = token;
     this.userModel = null;
+    this._deck = null;
     this._rooms = [];
     this._id = socket.id;
     this.init();
@@ -57,6 +58,12 @@ var User = (function(){
     });
   }
 
+  r.loadUserModel = async function(username) {
+    this.userModel = await db.findUserByName(username);
+    if (!this.userModel) return;
+    this._deck = await db.loadCustomDeck(username, this.userModel.currentDeck);
+  }
+
   /**
    * {
    *  username: username,
@@ -70,7 +77,7 @@ var User = (function(){
       if (data.expireTime < new Date().getTime()) {
         return false;
       }
-      this.userModel = await db.findUserByName(data.username);
+      this.loadUserModel(data.username);
       if (!this.userModel) {
         this.disconnect();
         return false;
@@ -275,11 +282,16 @@ var User = (function(){
         data.initialDeck = LuckyDraw.getRandomDeck();
       }
       await db.addUser(data);
-      self.userModel = await db.findUserByName(data.username);
 
       // give initial 10 cards
       let cards = await LuckyDraw.getInstance().draw(10, Const.SCENARIO_KYOTO, data.username, data.initialDeck);
       await db.addCards(data.username, data.initialDeck, cards);
+      // give initial leader card
+      await db.addLeaderCards(data.username, [Const.DEFAULT_LEADER]);
+      cards.push(Const.DEFAULT_LEADER);
+      await db.storeCustomDeckByList(data.username, data.initialDeck, cards);
+
+      self.loadUserModel(data.username);
 
       socket.emit("response:signin", {
         success: true,
@@ -287,6 +299,25 @@ var User = (function(){
         model: self.userModel,
         initialCards: cards,
       });
+    });
+
+    socket.on("request:userCollections", async function() {
+      let response = {
+        currentDeck: this.userModel.currentDeck,
+        collections: {},
+        leaderCollection: {},
+        customDecks: {},
+      };
+      let allDecks = await db.findAllCardsByUser(this.userModel.username);
+      for (let deck of allDecks) {
+        response.collections[deck.deck] = deck.cards;
+      }
+      response.leaderCollection = await db.findLeaderCardsByUser(this.userModel.username);
+      let customDecks = await db.loadAllCustomDeck(this.userModel.username);
+      for (let deck of customDecks) {
+        response.customDecks[deck.deck] = deck.customDeck;
+      }
+      socket.emit("response:userCollections", response);
     });
 
     socket.on("request:name", function(data){
@@ -322,10 +353,14 @@ var User = (function(){
       }
     })
 
-    socket.on("set:customDeck", function(data) {
-      if(data){
-        self.setDeck(JSON.parse(data));
+    socket.on("set:customDeck", async function(data) {
+      if (!data) {
+        return;
       }
+      self.userModel.currentDeck = data.deck;
+      self.setDeck(data);
+      await db.storeCustomDeck(self.userModel.username, data.deck, data);
+      await db.udpateUser(self.userModel);
     })
 
     socket.on("request:quitGame", function() {

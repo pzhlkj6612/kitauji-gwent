@@ -9,4 +9,6 @@ module.exports = {
   PRICE_GOLD: 1,
   PRICE_SILVER: 2,
   PRICE_BRASS: 3,
+
+  DEFAULT_LEADER: "taki_noboru",
 };
