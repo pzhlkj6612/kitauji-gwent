@@ -36,11 +36,11 @@ var HandWrittenBot = (function(){
       this._id = this.generateID();
       switch (user.getScenario()) {
         case Const.SCENARIO_KYOTO:
-          this.setDeck("random_normal");
+          this.setDeck("random_easy");
           this.generateName(["kyoto"]);
           break;
         case Const.SCENARIO_KANSAI:
-          this.setDeck("random_advanced");
+          this.setDeck("random_normal");
           this.generateName(["kansai"]);
           break;
         case Const.SCENARIO_ZENKOKU:
@@ -87,10 +87,12 @@ var HandWrittenBot = (function(){
           connections.roomCollection[this.getRoom().getID()].setReady(self);
           break;
         case "redraw:cards":
-          this.redraw();
+          setTimeout(() => this.redraw(), 0);
           break;
         case "redraw:close":
-          this.socket.trigger("redraw:close_client");
+          setTimeout(() => {
+            self.socket.trigger("redraw:close_client");
+          }, 0);
           break;
         case "update:info":
           this.updateInfo(data);
@@ -169,12 +171,14 @@ var HandWrittenBot = (function(){
           if (cards.filter(c=>Util.isMuster(c, card._data.musterType)).length > 1) {
             priority -= card._data.power;
           }
-        } else if (card._data.ability) {
-          priority += 2;
         } else if (Util.isWeather(card)) {
           priority = 5 - cards.filter(c=>Util.isWeather(c)).length;
-        } else if (card.type === 4) {
-          priority = 8 - cards.filter(c=>Util.isWeather(c)).length;
+        } else if (Util.isDecoy(card)) {
+          priority = 12 - (cards.filter(c=>Util.isDecoy(c)).length - 1) * 6;
+        } else if (Util.isScorch(card, true)) {
+          priority = 8 - (cards.filter(c=>c.type===4).length - 1) * 4;
+        } else if (card._data.ability) {
+          priority += 2;
         }
         return priority;
       }
@@ -307,6 +311,9 @@ var HandWrittenBot = (function(){
     }
   
     r.setBattleSide = function(battleSide) {
+    }
+
+    r.endGame = function() {
     }
 
     return HandWrittenBot;

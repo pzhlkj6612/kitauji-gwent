@@ -24,7 +24,8 @@
     "log_in": "ログイン",
     "sign_in": "新規登録",
     "username_validation": "半角英数字のみ",
-    "band_name": "例：北宇治高等学校",
+    "band_name": "バンド名",
+    "band_name_hint": "例：北宇治高等学校",
     "initial_deck": "初期デッキ",
 
     "card_collection": "カードコレクション",

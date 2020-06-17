@@ -111,6 +111,47 @@ module.exports = {
       "taibu"
     ]
   },
+  "kitauji3": {
+    faction: "kitauji",
+    data: [
+      "kenzaki_ririka",
+      "kabutodani_eru",
+      "koteyama_suruga",
+      "maki_chikai",
+      "suzuki_mirei",
+      "kamaya_tsubame",
+      "tsukinaga_motomu",
+      "tsukamoto_shuichi",
+      "kishibe_miru",
+      "higashiura_motoko",
+      "suzuki_satsuki",
+      "oda_meiko",
+      "takahashi_sari",
+      "nakano_tsubomi",
+      "nakagawa_natsuki",
+      "kohinata_yume",
+      "etou_kana",
+      "hiraishi_narumi",
+      "yamane_tsumiki",
+      "maeda_aota",
+      "maeda_sosuke",
+      "kitayama_tairu",
+      "hirao_sumiko",
+      "ono_miyoko",
+      "inoue_shirabe",
+      "morimoto_michio",
+
+      "taki_noboru",
+
+      "sunfes",
+      "wasure",
+      "daisangakushou",
+      "daikichiyama",
+      "niiyama",
+      "tubakun",
+      "taibu"
+    ]
+  },
   "kumiko1": {
     faction: "kumiko1",
     data: [
@@ -226,6 +267,47 @@ module.exports = {
       "taibu"
     ]
   },
+  "kumiko1_3": {
+    faction: "kumiko1",
+    data: [
+      "souga_yoriko",
+      "himegami_kotoko",
+      "miya_kiriko",
+      "wataru_horie",
+      "watanabe_tsune",
+      "taura_mei",
+      "noguchi_hideri",
+      "kayama_saki",
+      "oda_meiko_1",
+      "takahashi_sari_1",
+      "oumae_kumiko_1",
+      "inoue_junna_1",
+      "sakai_masako_1",
+      "takigawa_chikao_1",
+      "tsukamoto_shuichi_1",
+      "maki_chikai_1",
+      "morimoto_michio_1",
+      "kamaya_tsubame_1",
+      "yoshikawa_yuko_1",
+      "nakagawa_natsuki_1",
+      "kabe_tomoe_1",
+      "morita_shinobu_1",
+      "shima_rie_1",
+      "ono_miyoko_1",
+      "hirao_sumiko_1",
+      "kishibe_miru_1",
+
+      "taki_noboru",
+
+      "sunfes",
+      "wasure",
+      "daisangakushou",
+      "daikichiyama",
+      "hashimoto",
+      "tubakun",
+      "taibu"
+    ]
+  },
   "kumiko1S2": {
     faction: "kumiko1S2",
     data: [
@@ -334,6 +416,47 @@ module.exports = {
       "hashimoto",
       "tubakun",
       "tubakun",
+      "tubakun",
+      "taibu"
+    ]
+  },
+  "kumiko1S2_3": {
+    faction: "kumiko1S2",
+    data: [
+      "souga_yoriko_2",
+      "himegami_kotoko_2",
+      "okamoto_raimu_2",
+      "miya_kiriko_2",
+      "wataru_horie_2",
+      "watanabe_tsune_2",
+      "kahashi_hiro_2",
+      "taura_mei_2",
+      "noguchi_hideri_2",
+      "kayama_saki_2",
+      "oda_meiko_2",
+      "takahashi_sari_2",
+      "inoue_junna_2",
+      "sakai_masako_2",
+      "takigawa_chikao_2",
+      "tsukamoto_shuichi_2",
+      "maki_chikai_2",
+      "morimoto_michio_2",
+      "kamaya_tsubame_2",
+      "yoshikawa_yuko_2",
+      "nakagawa_natsuki_2",
+      "kabe_tomoe_2",
+      "shima_rie_2",
+      "ono_miyoko_2",
+      "hirao_sumiko_2",
+      "kishibe_miru_2",
+
+      "taki_noboru",
+
+      "sunfes",
+      "wasure",
+      "daisangakushou",
+      "pool",
+      "niiyama",
       "tubakun",
       "taibu"
     ]

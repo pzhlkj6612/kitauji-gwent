@@ -2,7 +2,6 @@ var Cache = require("./dao/cache");
 var Const = require("./Const");
 var LuckyDraw = require("./LuckyDraw");
 var Quest = require("./Quest");
-const deck = require("../assets/data/deck");
 
 var User = (function(){
   var User = function(socket, token){
@@ -54,6 +53,7 @@ var User = (function(){
     this.send("user:init", {
       connId: this._id,
       needLogin: !valid,
+      model: this.userModel,
     });
   }
 
@@ -210,6 +210,7 @@ var User = (function(){
 
     // do lucky draw based on result
     result["newCard"] = await this.luckyDrawAfterGame_(isWin, foe, questState);
+    console.info("user get new card: ", result["newCard"]);
     return result;
   }
 
@@ -217,7 +218,7 @@ var User = (function(){
     if (!isWin) return [];
     let scenario = this._scenario;
     let possibility = 0;
-    if (foe.isBot()) possibility = 0.4;
+    if (foe.isBot()) possibility = 0.8;
     else possibility = 0.7;
     if (questState.success) {
       possibility = 1;
@@ -253,7 +254,11 @@ var User = (function(){
         self.userModel = userModel;
         token = self.generateToken();
       }
-      socket.emit("response:login", {success: success, token: token});
+      socket.emit("response:login", {
+        success: success,
+        token: token,
+        model: self.userModel,
+      });
       socket.emit("notification", {message: msg});
     });
 
@@ -266,6 +271,9 @@ var User = (function(){
       }
       data.bandName = data.bandName || "北宇治高等学校";
       data.initialDeck = data.initialDeck || "kitauji";
+      if (data.initialDeck === "random") {
+        data.initialDeck = LuckyDraw.getRandomDeck();
+      }
       await db.addUser(data);
       self.userModel = await db.findUserByName(data.username);
 
@@ -323,7 +331,7 @@ var User = (function(){
     socket.on("request:quitGame", function() {
       if (self._rooms.length && self.getRoom().hasUser() > 1) {
         // quit game when other user still playing, record as lose
-        self.endGame(false, self._battleSide.foe);
+        self.endGame(false, self._battleSide.foe.getUser());
       }
       self.disconnect();
     })

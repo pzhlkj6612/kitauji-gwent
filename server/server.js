@@ -30,6 +30,8 @@ global.io = require("socket.io")(server, {
 io.set('origins', '*:*');
 server.listen(Config.Server.port);
 
+console.info(`Please visit ${Config.Server.port} to start playing`);
+
 app.use(function(req, res, next) {
   res.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'");
   return next();

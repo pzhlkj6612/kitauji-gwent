@@ -48,6 +48,10 @@ class LuckyDraw {
     return instance_;
   }
 
+  static getRandomDeck() {
+    return FACTION[(Math.random() * FACTION.length | 0)];
+  }
+
   /**
    * generate gaussian random number using central limit
    */

@@ -43,6 +43,12 @@ var Deck = (function(){
     "kumiko1S2"
   ];
 
+  Deck.EASY_FACTION = [
+    "kitauji3",
+    "kumiko1_3",
+    "kumiko1S2_3"
+  ];
+
   Deck.ADVANCED_FACTION = [
     "kitauji2",
     "kumiko1_2",
@@ -77,6 +83,9 @@ var Deck = (function(){
 
     if(deckKey === "random"){
       var decks = _.allKeys(DeckData);
+      deck = DeckData[decks[(Math.random() * decks.length) | 0]];
+    } else if(deckKey === "random_easy"){
+      var decks = Deck.EASY_FACTION;
       deck = DeckData[decks[(Math.random() * decks.length) | 0]];
     } else if(deckKey === "random_normal"){
       var decks = Deck.NORMAL_FACTION;

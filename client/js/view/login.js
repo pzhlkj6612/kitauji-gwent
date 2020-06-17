@@ -1,4 +1,5 @@
 let Backbone = require("backbone");
+let CardData = require("../../../assets/data/cards");
 
 let Login = Backbone.View.extend({
   template: require("../../templates/login.handlebars"),
@@ -41,16 +42,28 @@ let Login = Backbone.View.extend({
   onLoginResponse: function(data) {
     if (data.success) {
       localStorage.setItem("token", data.token);
+      this.user.setUserModel(data.model);
       this.app.lobbyRoute();
     }
   },
   onSignInResponse: function(data) {
     if (data.success) {
       localStorage.setItem("token", data.token);
+      this.user.setUserModel(data.model);
       this.app.lobbyRoute();
+      this.showInitialCards(data.initialCards);
     }
     this.signInModal &&
       this.signInModal.$el.find("#btnSignIn").removeClass("disabled");
+  },
+  showInitialCards(cards) {
+    let data = {};
+    for (let key of cards) {
+      data[key] = {
+        _data: CardData[key],
+      };
+    }
+    this.app.trigger("showInitialCards", data);
   },
 });
 

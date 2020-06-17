@@ -58,5 +58,8 @@ Util.isKasa = function(card) {
 Util.isWeather = function(card) {
   return card._data.type === 5;
 }
+Util.isDecoy = function(card) {
+  return card._data.ability === "decoy";
+}
 
 module.exports = Util;

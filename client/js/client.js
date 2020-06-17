@@ -1007,8 +1007,13 @@ let ChooseSideModal = Modal.extend({
   }
 });
 
+let InitialCardsModal = Modal.extend({
+  template: require("../templates/modal.initialCards.handlebars"),
+});
+
 let User = Backbone.Model.extend({
   defaults: {
+    userModel: null,
     name: typeof localStorage["userName"] === "string" ? localStorage["userName"].slice(0, 20) : null,
     deck: "random",
     locale: "zh",
@@ -1026,6 +1031,8 @@ let User = Backbone.Model.extend({
       localStorage["connectionId"] = data.connId;
       if (data.needLogin) {
         app.loginRoute();
+      } else {
+        self.setUserModel(data.model);
       }
     });
 
@@ -1189,8 +1196,9 @@ let User = Backbone.Model.extend({
 
     app.on("startMatchmakingWithBot", this.startMatchmakingWithBot, this);
     app.on("startMatchmaking", this.startMatchmaking, this);
-    app.on("setName", this.setName, this);
+    app.on("changeBandName", this.changeBandName, this);
     app.on("setDeck", this.setDeck, this);
+    app.on("showInitialCards", this.showInitialCards, this);
     $("#locale").change(this.setLocale.bind(this));
 
     app.receive("notification", function(data){
@@ -1203,17 +1211,28 @@ let User = Backbone.Model.extend({
     i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(){
-    this.get("app").send("request:matchmaking:bot");
+    this.get("app").send("request:matchmaking:bot", {
+      scenario: "kyoto",
+    });
   },
   startMatchmaking: function(roomName){
-    this.get("app").send("request:matchmaking", {roomName: roomName});
+    this.get("app").send("request:matchmaking", {
+      roomName: roomName,
+      scenario: "kyoto",
+    });
   },
   subscribeRoom: function(){
     let room = this.get("room");
     let app = this.get("app");
     //app.socket.subscribe(room);
   },
-  setName: function(name){
+  setUserModel: function(model) {
+    this.set("userModel", model);
+    this.set("name", model.bandName);
+    localStorage["userName"] = name;
+    // this.get("app").send("request:questProgress", {name: name});
+  },
+  changeBandName: function(name){
     name = name.slice(0, 20);
     this.get("app").send("request:name", {name: name});
     localStorage["userName"] = name;
@@ -1259,7 +1278,12 @@ let User = Backbone.Model.extend({
     })
 
     return abilities;
-  }
+  },
+  showInitialCards: function(cards) {
+    this.set("initialCards", cards);
+    let modal = new InitialCardsModal({model: this});
+    this.get("app").getCurrentView().$el.prepend(modal.render().el);
+  },
 });
 
 let Lobby = Backbone.View.extend({
@@ -1319,7 +1343,7 @@ let Lobby = Backbone.View.extend({
   },
   changeName: function(e){
     let name = $(e.target).val();
-    this.app.trigger("setName", name);
+    this.app.trigger("changeBandName", name);
   },
   renderStatus: function(data){
     this.$el.find(".nr-player-online").html(data.online);

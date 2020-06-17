@@ -24,7 +24,8 @@
     "log_in": "Log In",
     "sign_in": "Sign In",
     "username_validation": "Use letters[a-zA-Z] and numbers[0-9] only",
-    "band_name": "e.g. Kitauji Wind Club",
+    "band_name": "Band Name",
+    "band_name_hint": "e.g. Kitauji Wind Club",
     "initial_deck": "Initial Deck",
 
     "card_collection": "Card Collection",

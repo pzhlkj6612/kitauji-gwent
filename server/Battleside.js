@@ -31,6 +31,7 @@ Battleside = (function() {
     this.field[Card.TYPE.SIEGE] = Field(this, true);
 
     this.n = n ? "p2" : "p1";
+    this._user = user;
     this._name = user.getName();
     this.battle = battle;
     this.hand = Hand();
@@ -438,6 +439,10 @@ Battleside = (function() {
 
   r.getName = function() {
     return this._name;
+  }
+
+  r.getUser = function() {
+    return this._user;
   }
 
   r.send = function(event, msg, isPrivate) {
@@ -1043,7 +1048,9 @@ Battleside = (function() {
       }
 
       self.battle.updateSelf(self);
-      this.send("redraw:cards", null, true);
+      if (left) {
+        self.send("redraw:cards", null, true);
+      }
     })
 
     this.receive("redraw:close_client", function() {
