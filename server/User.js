@@ -216,9 +216,30 @@ var User = (function(){
     result["questState"] = questState;
 
     // do lucky draw based on result
-    result["newCard"] = await this.luckyDrawAfterGame_(isWin, foe, questState);
-    console.info("user get new card: ", result["newCard"]);
+    let newLeader = luckyDrawLeaderAfterGame_(questState);
+    if (newLeader) {
+      result["newLeader"] = newLeader;
+      console.info("user get new leader: ", newLeader);
+    } else {
+      result["newCard"] = await this.luckyDrawAfterGame_(isWin, foe, questState);
+      console.info("user get new card: ", result["newCard"]);
+    }
     return result;
+  }
+
+  r.luckyDrawLeaderAfterGame_ = async function(questState) {
+    // must win zenkoku
+    if (this._scenario !== Const.SCENARIO_ZENKOKU || !questState.success) {
+      return null;
+    }
+    // 20% chance
+    if (Math.random() > 0.1) return null;
+    let userLeaders = await db.findLeaderCardsByUser(this.userModel.username);
+    let newLeader = LuckyDraw.getInstance().drawLeader(userLeaders);
+    if (newLeader) {
+      await db.addLeaderCards(this.userModel.username, [newLeader]);
+    }
+    return newLeader;
   }
 
   r.luckyDrawAfterGame_ = async function(isWin, foe, questState) {
@@ -238,7 +259,7 @@ var User = (function(){
       await db.addCards(data.username, faction, cards);
       return cards;
     }
-    let cards = await LuckyDraw.getInstance().draw(1, scenario, this.userModel.username, deck);
+    let {faction, cards} = await LuckyDraw.getInstance().drawSingleAvoidDuplicate(scenario, this.userModel.username, deck);
     await db.addCards(data.username, faction, cards);
     return cards;
   }

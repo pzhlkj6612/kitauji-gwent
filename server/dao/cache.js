@@ -14,14 +14,14 @@ class Cache {
     return instance_;
   }
 
-  async getCondition(username, conditionKey) {
+  async getCondition(username, conditionKey, opt_defaultValue) {
     this.conditions[username] = this.conditions[username] || {};
     let condition = this.conditions[username][conditionKey];
     if (condition != null) {
       return condition;
     }
     condition = this.conditions[username][conditionKey] = await db.getCondition(username, conditionKey);
-    return condition;
+    return condition != null ? conditionKey : opt_defaultValue;
   }
 
   async setCondition(username, conditionKey, value) {

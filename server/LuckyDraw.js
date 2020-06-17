@@ -1,6 +1,7 @@
 var DeckData = require("../assets/data/deck");
 var CardData = require("../assets/data/cards");
 var Const = require("./Const");
+var Cache = require("./dao/cache");
 
 const RARITY_N = 0;
 const RARITY_R = 1;
@@ -18,6 +19,14 @@ const FACTION = [
   "kitauji",
   "kumiko1",
   "kumiko1S2"
+];
+
+const LEADERS = [
+  "taki_noboru",
+  "taki_chihiro",
+  "matsumoto_michie",
+  "oumae_kumiko_shiki",
+  "tanaka_asuka_shiki",
 ];
 
 const SCENARIOS = {
@@ -55,7 +64,7 @@ class LuckyDraw {
   /**
    * generate gaussian random number using central limit
    */
-  gaussianRandom(mu, sigma) {
+  gaussianRandom_(mu, sigma) {
     let nsamples = 12
     if (!sigma) sigma = 1
     if (!mu) mu = 0
@@ -80,7 +89,7 @@ class LuckyDraw {
 
   generateStep_(weight, weightSum) {
     let percent = weight * 1.0 / weightSum;
-    return this.gaussianRandom(1/percent, 1/percent/3);
+    return this.gaussianRandom_(1/percent, 1/percent/3);
   }
 
   /**
@@ -113,6 +122,29 @@ class LuckyDraw {
     return {
       faction,
       cards,
+    };
+  }
+
+  async drawSingleAvoidDuplicate(scenario, username, deckKey) {
+    scenario = SCENARIOS[scenario];
+    let steps = await db.loadDrawStats(username, scenario.name);
+    if (!steps) {
+      steps = this.generateSteps_(scenario.weights);
+    }
+    let userDeck = await db.findCardsByUser(username, deckKey) || {};
+    let rarity = this.nextRarity_(scenario.weights, steps);
+    let card = this.drawByRarity_(rarity, deckKey, userDeck);
+    // card exist, try draw from other deck
+    if (userDeck[card] && Math.random() < 0.8) {
+      if (this.countUserDeck_(userDeck) > DeckData[deckKey].length) {
+        Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
+      }
+      return await this.drawPreferOtherDeck(1, scenario, username, deckKey);
+    }
+    await db.storeDrawStats(username, scenario.name, steps);
+    return {
+      faction: deckKey,
+      cards: [card],
     };
   }
 
@@ -158,6 +190,26 @@ class LuckyDraw {
 
   isUnitCard_(card) {
     return CardData[card].type !== 4 && CardData[card].type !== 5;
+  }
+
+  countUserDeck_(userDeck) {
+    let count = 0;
+    for (let key of Object.keys(userDeck)) {
+      count += userDeck[key];
+    }
+    return count;
+  }
+
+  drawLeader(userLeaders) {
+    if (userLeaders && userLeaders.length >= LEADERS.length) {
+      // already have all leaders
+      return null;
+    }
+    let i = (Math.random() * LEADERS.length) | 0;
+    while (userLeaders.includes(LEADERS[i])) {
+      i = (i + 1) % LEADERS.length;
+    }
+    return LEADERS[i];
   }
 }
 

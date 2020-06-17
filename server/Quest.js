@@ -1,5 +1,4 @@
 var Const = require("./Const");
-var Cache = require("./dao/cache");
 
 function getNextScenario(scenario) {
   switch (scenario) {
@@ -34,10 +33,6 @@ async function updateQuestProgress(userModel, scenario, gameResult) {
     // unlock next scenario
     if (result.success) {
       await db.updateProgress(username, getNextScenario(scenario), []);
-      // win zenkoku gold, unlock other decks
-      if (scenario === Const.SCENARIO_ZENKOKU) {
-        Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
-      }
     }
   }
   await db.updateProgress(username, scenario, progress);
