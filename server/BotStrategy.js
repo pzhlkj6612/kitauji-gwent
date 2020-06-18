@@ -143,8 +143,31 @@ var BotStrategy = (function(){
       let discard = state.ownSide.discard.filter(c => c._id !== card._id);
       return [this.bot.playCardCommand(card)].concat(selectMedic(discard));
     }
+    r.generateForLeader = function(card) {
+      let commands = [this.bot.playLeaderCommand()];
+      if (card._data.ability === "emreis_leader4") {
+        let state = this.bot.state;
+        let foeDiscard = state.foeSide.dicard;
+        let medics = foeDiscard.filter(c=>Util.isMedic(c));
+        let spies = foeDiscard.filter(c=>Util.isSpy(c));
+        let normals = foeDiscard.filter(c=>Util.canReplace(c));
+        if (medics.length) {
+          commands.push(this.bot.playEmreisLeader4Command(this.getMax(medics)));
+        } else if (spies.length) {
+          commands.push(this.bot.playEmreisLeader4Command(this.getMin(spies)));
+        } else if (normals.length) {
+          commands.push(thsi.bot.playEmreisLeader4Command(this.getMax(normals)));
+        } else {
+          commands.push(thsi.bot.playEmreisLeader4Command(null));
+        }
+      }
+      return commands;
+    }
     r.generateCommands = function(card) {
       let state = this.bot.state;
+      if (card && card._data.type === 3) {
+        return generateForLeader(card);
+      }
       if (!card || state.ownHand.every(c => c._id !== card._id)) {
         return [];
       }
@@ -174,7 +197,11 @@ var BotStrategy = (function(){
       if (spies.length > 0) {
         return this.getMin(spies);
       }
-      return this.getMaxPossibility(state.ownHand);
+      let cards = [].concat(state.ownHand);
+      if (!state.ownLeader._disabled) {
+        cards.push(state.ownLeader);
+      }
+      return this.getMaxPossibility(cards);
     }
     r.getMin = function(cards) {
       let minCard = cards[0];
@@ -247,7 +274,7 @@ var BotStrategy = (function(){
           } else {
             reward = 1;
           }
-        } else if (card._data.ability === "decoy") {
+        } else if (Util.isDecoy(card)) {
           // play decoy if spies or medic on own field
           if (this.getFieldCards(true).some(c=>Util.isSpy(c))) {
             reward = 100;
@@ -280,9 +307,9 @@ var BotStrategy = (function(){
           }
         } else if (Util.isBond(card)) {
           reward = Math.max(realPower - card._data.power * 0.4, 0);
-        } else if (Util.isWeather(card)) {
+        } else if (Util.isWeather(card)) { // weather card or leader
           // clear weather?
-          if (card._data.ability === "weather_clear") {
+          if (card._data.ability === "weather_clear" || card._data.ability === "foltest_leader2") {
             let weathers = state.ownFields.weather.cards;
             let foeDebuff = 0, ownDebuff = 0;
             weathers.map(w=>this.getFieldByWeather(w)).forEach(f=>{
@@ -301,6 +328,15 @@ var BotStrategy = (function(){
             realPower = Math.max(foeScore - ownScore, 0);
             reward = foeScore - ownScore;
             if (foeScore > ownScore) reward += (foeHandScore - handScore) * 0.2;
+          }
+        } else if (Util.isEmreisLeader4(card)) {
+          let discard = state.foeSide.dicard;
+          if (!discard.length) {
+            reward = -1;
+          } if (discard.some(c=>Util.canReplace(c) && (Util.isSpy(c) || Util.isMedic(c)))) {
+            reward = 100;
+          } else {
+            reward = 1;
           }
         } else if (Util.isMoraleBoost(card)) {
           let field = this.getField(state.ownFields, card._data.type);
@@ -490,8 +526,10 @@ var BotStrategy = (function(){
     r.getFieldByWeather = function(card) {
       switch (card._data.ability) {
         case "weather_frost":
+        case "francesca_leader1":
           return 0;
         case "weather_fog":
+        case "foltest_leader1":
           return 1;
         case "weather_rain":
           return 2;

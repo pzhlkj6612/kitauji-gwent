@@ -201,6 +201,17 @@ var HandWrittenBot = (function(){
         setTimeout(() => this.socket.trigger(commands[i].event, commands[i]), 500 * i); 
       }
     }
+    r.playLeaderCommand = function() {
+      return {
+        event: "activate:leader",
+      };
+    }
+    r.playEmreisLeader4Command = function(card) {
+      return {
+        event: "emreis_leader4:chooseCardFromDiscard",
+        cardID: card && card._id,
+      };
+    }
     r.playPassCommand = function() {
       return {
         event: "set:passing"

@@ -27,8 +27,12 @@ Util.isMoraleBoost = function(card, includeHero) {
     (includeHero && String(card._data.ability).includes("morale_boost"));
 }
 Util.isHorn = function(card, isHornCard) {
-  if (isHornCard) return card._data.ability === "commanders_horn_card";
-  return card._data.ability !== "commanders_horn_card" && String(card._data.ability).includes("commanders_horn");
+  if (isHornCard) {
+    return card._data.ability === "commanders_horn_card";
+  }
+  return card._data.ability !== "commanders_horn_card" &&
+    (String(card._data.ability).includes("commanders_horn") ||
+    card._data.ability === "francesca_leader2");
 }
 Util.isBond = function(card, opt_bondType) {
   return card._data.ability === "tight_bond" &&
@@ -56,10 +60,16 @@ Util.isKasa = function(card) {
   return card._data.ability === "kasa";
 }
 Util.isWeather = function(card) {
-  return card._data.type === 5;
+  return card._data.type === 5 ||
+    card._data.ability === "foltest_leader2" ||
+    card._data.ability === "foltest_leader1" ||
+    card._data.ability === "francesca_leader1";
 }
 Util.isDecoy = function(card) {
   return card._data.ability === "decoy";
+}
+Util.isEmreisLeader4 = function(card) {
+  return card._data.ability === "emreis_leader4";
 }
 
 module.exports = Util;
