@@ -1,4 +1,5 @@
 var Util = require("./CardUtil");
+var Deck = require("./Deck");
 
 var BotStrategy = (function(){
     var BotStrategy = function(bot){
@@ -469,7 +470,7 @@ var BotStrategy = (function(){
           }
         }
       }
-      if (state.ownSide.score <= state.foeSide.score && state.foeSide.passing) {
+      if (!this.isScoreLeading() && state.foeSide.passing) {
         console.warn("foe passing and lead, should play the smallest card which make us lead");
         let diff = state.foeSide.score - state.ownSide.score;
         let index = -1;
@@ -482,12 +483,19 @@ var BotStrategy = (function(){
         console.warn("pass due to reward too small");
         return null;
       }
-      if (state.ownSide.score > state.foeSide.score && state.foeSide.passing) {
+      if (this.isScoreLeading() && state.foeSide.passing) {
         console.warn("pass due to foe passing and we lead");
         return null;
       }
       // console.warn("selected ", cards[maxCardIdx]);
       return cards[maxCardIdx];
+    }
+    r.isScoreLeading = function() {
+      let state = this.bot.state;
+      if (state.ownSide.faction === Deck.FACTION.OATHS_FINALE) {
+        return state.ownSide.score >= state.foeSide.score;
+      }
+      return state.ownSide.score > state.foeSide.score;
     }
     r.getAttackReward = function(cards, attackPower) {
       cards = cards.filter(c=>Util.canReplace(c));

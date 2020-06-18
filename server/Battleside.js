@@ -398,6 +398,7 @@ Battleside = (function() {
       score: this.calcScore(),
       hand: this.hand.length(),
       deck: this.deck.length(),
+      faction: this.deck.getFaction(),
       discard: this.getDiscard(false),
       scorched: this.getScorched(false),
       placedCard: this.getPlacedCard(false),
