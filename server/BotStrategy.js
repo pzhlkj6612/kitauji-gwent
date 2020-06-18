@@ -125,7 +125,8 @@ var BotStrategy = (function(){
         } else if (spies.length > 0) {
           return [this.bot.medicChooseCardCommand(this.getMin(spies))];
         } else if (normals.length > 0) {
-          let card = this.getMax(normals);
+          let card = this.getMaxPossibility(normals);
+          if (!card) card = this.getMax(normals);
           let commands = [this.bot.medicChooseCardCommand(card)];
           if (Util.isAttack(card)) {
             commands = commands.concat(this.generateForChooseAttack(card._data.attackPower));
@@ -201,7 +202,7 @@ var BotStrategy = (function(){
       if (!state.ownLeader._disabled) {
         cards.push(state.ownLeader);
       }
-      return this.getMaxPossibility(cards);
+      return this.getMaxPossibility(cards, true);
     }
     r.getMin = function(cards) {
       let minCard = cards[0];
@@ -254,7 +255,11 @@ var BotStrategy = (function(){
       }
       return hand;
     }
-    r.getMaxPossibility = function(cards) {
+    /**
+     * @param {Array} cards 
+     * @param {boolean} useAdvanceStrategy consider lives, store, etc.
+     */
+    r.getMaxPossibility = function(cards, useAdvanceStrategy) {
       // console.warn("start calculating rewards");
       let state = this.bot.state;
       let realPowers = [];
@@ -410,8 +415,11 @@ var BotStrategy = (function(){
           maxReward = reward;
           maxCardIdx = i;
         }
+        if (maxReward >= 100) {
+          return cards[maxCardIdx];
+        }
       }
-      if (maxReward >= 100) {
+      if (!useAdvanceStrategy) {
         return cards[maxCardIdx];
       }
       let handPower = realPowers.reduce((sum,p)=>sum+p,0);
