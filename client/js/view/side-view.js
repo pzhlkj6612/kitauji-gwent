@@ -98,6 +98,8 @@ let SideView = Backbone.View.extend({
     $field.find(".large-field-counter").html(score)
     if(horn){
       this.$fields.find(".field-horn-close").html(this.templateCards([horn]));
+    } else {
+      this.$fields.find(".field-horn-close").html("");
     }
 
     let isInfluencedByWeather;
@@ -150,6 +152,8 @@ let SideView = Backbone.View.extend({
     $field.find(".large-field-counter").html(score)
     if(horn){
       this.$fields.find(".field-horn-range").html(this.templateCards([horn]));
+    } else {
+      this.$fields.find(".field-horn-range").html("");
     }
 
     let isInfluencedByWeather;
@@ -183,6 +187,8 @@ let SideView = Backbone.View.extend({
     $field.find(".large-field-counter").html(score)
     if(horn){
       this.$fields.find(".field-horn-siege").html(this.templateCards([horn]));
+    } else {
+      this.$fields.find(".field-horn-siege").html("");
     }
 
     let isInfluencedByWeather;
