@@ -18,7 +18,7 @@ let Collections = Backbone.View.extend({
     this.deckKey = "kitauji";
     this.collections = {};
     this.leaderCollection = {};
-    this.customDeck = {};
+    this.customDecks = {};
     this.dirty = false;
     this.reset();
     $(".gwent-battle").html(this.el);
@@ -35,10 +35,11 @@ let Collections = Backbone.View.extend({
   reset: function() {
     this.collection = this.collections[this.deckKey] || {};
     this.currentDeck = this.customDecks[this.deckKey] || {};
+    this.currentLeader = this.currentDeck["leader"] || this.leaderCollection[0];
+    this.currentDeck = this.currentDeck["cardInDeck"] || {};
     for (let key of Object.keys(this.currentDeck)) {
       this.removeCardFrom(this.collection, key, this.currentDeck[key]);
     }
-    this.currentLeader = customDeck["leader"] || this.leaderCollection[0];
     this.collectionTab = "all_cards";
     this.deckTab = "all_cards";
   },

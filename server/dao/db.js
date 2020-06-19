@@ -138,14 +138,13 @@ class DB {
   
     let exist = await this.findCardsByUser(username, deck);
     if (exist) {
-      let existCards = exist["cards"];
       for (let key of cardList) {
-        if (existCards[key]) existCards[key]++;
-        else existCards[key] = 1;
+        if (exist[key]) exist[key]++;
+        else exist[key] = 1;
       }
       return await table.updateOne({username, deck}, {
         $set: {
-          cards: existCards,
+          cards: exist,
         }
       });
     }
@@ -157,7 +156,7 @@ class DB {
     return await table.insertOne({
       username,
       deck,
-      cardMap,
+      cards: cardMap,
     });
   };
 

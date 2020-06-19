@@ -66,7 +66,7 @@ var Deck = (function(){
     let deck = [];
     let cardInDeck = customDeck.cardInDeck;
     for (let key of Object.keys(cardInDeck)) {
-      for (let i=0; i<cardInDeck[key]._count; i++) deck.push(key);
+      for (let i=0; i<cardInDeck[key]; i++) deck.push(key);
     }
     deck.push(customDeck.leader);
 

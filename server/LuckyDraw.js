@@ -112,22 +112,22 @@ class LuckyDraw {
     return result;
   }
 
-  async drawPreferOtherDeck(times, scenario, username, initialDeck) {
+  async drawPreferOtherDeck(times, scenarioName, username, initialDeck) {
     let faction;
     let retry = 2;
     do {
       faction = FACTION[(Math.random() * FACTION.length) | 0];
     } while (faction === initialDeck && retry-- > 0);
-    let cards = await draw(times, scenario, username, faction);
+    let cards = await this.draw(times, scenarioName, username, faction);
     return {
       faction,
       cards,
     };
   }
 
-  async drawSingleAvoidDuplicate(scenario, username, deckKey) {
-    scenario = SCENARIOS[scenario];
-    let steps = await db.loadDrawStats(username, scenario.name);
+  async drawSingleAvoidDuplicate(scenarioName, username, deckKey) {
+    let scenario = SCENARIOS[scenarioName];
+    let steps = await db.loadDrawStats(username, scenarioName);
     if (!steps) {
       steps = this.generateSteps_(scenario.weights);
     }
@@ -139,18 +139,22 @@ class LuckyDraw {
       if (this.countUserDeck_(userDeck) > DeckData[deckKey].length) {
         Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
       }
-      return await this.drawPreferOtherDeck(1, scenario, username, deckKey);
+      return await this.drawPreferOtherDeck(1, scenarioName, username, deckKey);
     }
-    await db.storeDrawStats(username, scenario.name, steps);
+    try {
+      await db.storeDrawStats(username, scenarioName, steps);
+    } catch (e) {
+      console.warn(e);
+    }
     return {
       faction: deckKey,
       cards: [card],
     };
   }
 
-  async draw(times, scenario, username, deckKey) {
-    scenario = SCENARIOS[scenario];
-    let steps = await db.loadDrawStats(username, scenario.name);
+  async draw(times, scenarioName, username, deckKey, opt_guaranteeSSR) {
+    let scenario = SCENARIOS[scenarioName];
+    let steps = await db.loadDrawStats(username, scenarioName);
     if (!steps) {
       steps = this.generateSteps_(scenario.weights);
     }
@@ -158,11 +162,15 @@ class LuckyDraw {
     let newCards = [];
     for (let i = 0; i < times; i++) {
       let rarity = this.nextRarity_(scenario.weights, steps);
+      if (opt_guaranteeSSR && i === times - 1) {
+        rarity = RARITY_SSR;
+      }
       let card = this.drawByRarity_(rarity, deckKey, userDeck);
       newCards.push(card);
       userDeck[card] = userDeck[card] ? userDeck[card] + 1 : 1;
     }
-    await db.storeDrawStats(username, scenario.name, steps);
+
+    await db.storeDrawStats(username, scenarioName, steps);
     return newCards;
   }
 

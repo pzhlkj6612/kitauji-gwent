@@ -122,20 +122,18 @@ module.exports = {
   "kitauji3": {
     faction: "kitauji",
     data: [
-      "kenzaki_ririka",
-      "kabutodani_eru",
-      "koteyama_suruga",
       "maki_chikai",
       "suzuki_mirei",
+      "kamaya_tsubame",
       "kamaya_tsubame",
       "tsukinaga_motomu",
       "tsukamoto_shuichi",
       "kishibe_miru",
       "higashiura_motoko",
       "suzuki_satsuki",
+      "suzuki_satsuki",
       "oda_meiko",
       "takahashi_sari",
-      "nakano_tsubomi",
       "nakagawa_natsuki",
       "kohinata_yume",
       "etou_kana",
@@ -152,16 +150,12 @@ module.exports = {
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
-      "oumae_kumiko_shiki",
-      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
       "daisangakushou",
       "daikichiyama",
       "niiyama",
-      "tubakun",
-      "taibu"
     ]
   },
   "kumiko1": {
@@ -303,10 +297,11 @@ module.exports = {
       "oumae_kumiko_1",
       "inoue_junna_1",
       "sakai_masako_1",
-      "takigawa_chikao_1",
       "tsukamoto_shuichi_1",
       "maki_chikai_1",
+      "maki_chikai_1",
       "morimoto_michio_1",
+      "kamaya_tsubame_1",
       "kamaya_tsubame_1",
       "yoshikawa_yuko_1",
       "nakagawa_natsuki_1",
@@ -314,22 +309,17 @@ module.exports = {
       "morita_shinobu_1",
       "shima_rie_1",
       "ono_miyoko_1",
-      "hirao_sumiko_1",
       "kishibe_miru_1",
 
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
-      "oumae_kumiko_shiki",
-      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
       "daisangakushou",
       "daikichiyama",
       "hashimoto",
-      "tubakun",
-      "taibu"
     ]
   },
   "kumiko1S2": {
@@ -457,7 +447,6 @@ module.exports = {
     data: [
       "souga_yoriko_2",
       "himegami_kotoko_2",
-      "okamoto_raimu_2",
       "miya_kiriko_2",
       "wataru_horie_2",
       "watanabe_tsune_2",
@@ -470,31 +459,27 @@ module.exports = {
       "inoue_junna_2",
       "sakai_masako_2",
       "takigawa_chikao_2",
-      "tsukamoto_shuichi_2",
       "maki_chikai_2",
       "morimoto_michio_2",
+      "kamaya_tsubame_2",
       "kamaya_tsubame_2",
       "yoshikawa_yuko_2",
       "nakagawa_natsuki_2",
       "kabe_tomoe_2",
+      "kabe_tomoe_2",
       "shima_rie_2",
       "ono_miyoko_2",
-      "hirao_sumiko_2",
       "kishibe_miru_2",
 
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
-      "oumae_kumiko_shiki",
-      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
       "daisangakushou",
       "pool",
       "niiyama",
-      "tubakun",
-      "taibu"
     ]
   },
 }

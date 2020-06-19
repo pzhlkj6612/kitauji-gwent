@@ -149,7 +149,7 @@ var BotStrategy = (function(){
       let commands = [this.bot.playLeaderCommand()];
       if (card._data.ability === "emreis_leader4") {
         let state = this.bot.state;
-        let foeDiscard = state.foeSide.dicard;
+        let foeDiscard = state.foeSide.dicard || [];
         let medics = foeDiscard.filter(c=>Util.isMedic(c));
         let spies = foeDiscard.filter(c=>Util.isSpy(c));
         let normals = foeDiscard.filter(c=>Util.canReplace(c));
@@ -168,7 +168,7 @@ var BotStrategy = (function(){
     r.generateCommands = function(card) {
       let state = this.bot.state;
       if (card && card._data.type === 3) {
-        return generateForLeader(card);
+        return this.generateForLeader(card);
       }
       if (!card || state.ownHand.every(c => c._id !== card._id)) {
         return [];
@@ -337,9 +337,9 @@ var BotStrategy = (function(){
           }
         } else if (Util.isEmreisLeader4(card)) {
           let discard = state.foeSide.dicard;
-          if (!discard.length) {
+          if (!discard || !discard.length) {
             reward = -1;
-          } if (discard.some(c=>Util.canReplace(c) && (Util.isSpy(c) || Util.isMedic(c)))) {
+          } else if (discard.some(c=>Util.canReplace(c) && (Util.isSpy(c) || Util.isMedic(c)))) {
             reward = 100;
           } else {
             reward = 1;
@@ -492,9 +492,6 @@ var BotStrategy = (function(){
     }
     r.isScoreLeading = function() {
       let state = this.bot.state;
-      if (state.ownSide.faction === Deck.FACTION.OATHS_FINALE) {
-        return state.ownSide.score >= state.foeSide.score;
-      }
       return state.ownSide.score > state.foeSide.score;
     }
     r.getAttackReward = function(cards, attackPower) {

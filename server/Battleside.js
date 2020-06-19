@@ -360,8 +360,10 @@ Battleside = (function() {
 
   r.setLeadercard = function() {
     var leaderCards = this.deck.find("type", Card.TYPE.LEADER);
-    let leaderCard = leaderCards[Math.random() * leaderCards.length | 0]
-    this.deck.removeFromDeck(leaderCard);
+    let leaderCard = leaderCards[Math.random() * leaderCards.length | 0];
+    for (let card of leaderCards) {
+      this.deck.removeFromDeck(card);
+    }
     this.field[Card.TYPE.LEADER].add(leaderCard);
   }
 
