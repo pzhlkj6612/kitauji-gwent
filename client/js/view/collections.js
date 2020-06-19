@@ -34,6 +34,11 @@ let Collections = Backbone.View.extend({
   },
   reset: function() {
     this.collection = this.collections[this.deckKey] || {};
+    let neutralCollection = this.collections["neutral"] || {};
+    // add neutral cards to current collection
+    for (let key of Object.keys(neutralCollection)) {
+      this.addCardTo(this.collection, key, neutralCollection[key]);
+    }
     this.currentDeck = this.customDecks[this.deckKey] || {};
     this.currentLeader = this.currentDeck["leader"] || this.leaderCollection[0];
     this.currentDeck = this.currentDeck["cardInDeck"] || {};

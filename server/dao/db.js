@@ -1,6 +1,7 @@
 const MongoClient = require('mongodb').MongoClient;
 const Util = require("./util");
-const CardData = require("../../assets/data/cards")
+const CardData = require("../../assets/data/cards");
+const Const = require("../Const");
 
 const MONGODB_PORT = 27017;
 const DB_NAME = "mydb";
@@ -136,28 +137,38 @@ class DB {
     await this.connectPromise;
     const table = this.db.collection(TABLE_CARD);
   
-    let exist = await this.findCardsByUser(username, deck);
-    if (exist) {
-      for (let key of cardList) {
-        if (exist[key]) exist[key]++;
-        else exist[key] = 1;
+    let cardMap = await this.findCardsByUser(username, deck) || {};
+    let neutralCardMap = await this.findCardsByUser(username, Const.NEUTRAL_DECK) || {};
+    for (let key of cardList) {
+      if (CardData[key].faction === Const.NEUTRAL_DECK) {
+        if (neutralCardMap[key]) neutralCardMap[key]++;
+        else neutralCardMap[key] = 1;
+      } else {
+        if (cardMap[key]) cardMap[key]++;
+        else cardMap[key] = 1;
       }
-      return await table.updateOne({username, deck}, {
+    }
+    if (Object.keys(cardMap).length) {
+      await table.updateOne({username, deck}, {
         $set: {
-          cards: exist,
+          cards: cardMap,
         }
+      }, {
+        upsert: true,
       });
     }
-    let cardMap = {};
-    for (let key of cardList) {
-      if (cardMap[key]) cardMap[key]++;
-      else cardMap[key] = 1;
+    if (Object.keys(neutralCardMap).length) {
+      await table.updateOne({
+        username,
+        deck: Const.NEUTRAL_DECK,
+      }, {
+        $set: {
+          cards: cardMap,
+        }
+      }, {
+        upsert: true,
+      });
     }
-    return await table.insertOne({
-      username,
-      deck,
-      cards: cardMap,
-    });
   };
 
   async addLeaderCards(username, cardList) {
