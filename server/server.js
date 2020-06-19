@@ -83,7 +83,7 @@ admin.on("connection", function(socket) {
   socket.on("sendMessage", function(msg) {
     console.log("admin send msg: " + msg);
     io.emit("notification", {
-      message: msg
+      msgKey: msg
     })
   })
 })

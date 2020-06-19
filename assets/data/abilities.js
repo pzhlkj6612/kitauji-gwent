@@ -35,7 +35,7 @@ module.exports = {
           .filter(c=>!c.hasAbility("hero") && c.getGrade()===3)
           .map(c=>c.getID()),
       }, true);
-      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to destroy.")
+      this.sendNotificationTo(this.foe, "msg_choose_taibu", [this.getName()]);
     }
   },
   "attack": {
@@ -54,7 +54,7 @@ module.exports = {
           .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy"))
           .map(c=>c.getID()),
       }, true);
-      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to attack.")
+      this.sendNotificationTo(this.foe, "msg_choose_attack", [this.getName()]);
     }
   },
   "lips": {
@@ -103,7 +103,7 @@ module.exports = {
           .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy"))
           .map(c=>c.getID()),
       }, true);
-      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to attack.")
+      this.sendNotificationTo(this.foe, "msg_choose_attack", [this.getName()]);
     }
   },
   "tunning": {
@@ -134,7 +134,7 @@ module.exports = {
           .filter(c=>!c.hasAbility("hero") && !c.hasAbility("decoy") && c.getID()!==id)
           .map(c=>c.getID()),
       }, true);
-      this.sendNotificationTo(this.foe, this.getName() + " chooses a card to heal.")
+      this.sendNotificationTo(this.foe, "msg_choose_heal", [this.getName()]);
     }
   },
   "kasa": {
@@ -176,7 +176,7 @@ module.exports = {
         cards: discard
       }, true);
 
-      this.sendNotificationTo(this.foe, this.getName() + " chooses a card from discard pile.")
+      this.sendNotificationTo(this.foe, "msg_choose_medic", [this.getName()]);
     }
   },
   "morale_boost": {
@@ -252,7 +252,7 @@ module.exports = {
     changeSide: true,
     onAfterPlace: function(){
       this.draw(2);
-      this.sendNotification(this.getName() + " activated Spy! Draws +2 cards.")
+      this.sendNotification("msg_played_spy", [this.getName()]);
     }
   },
   "weather_fog": {

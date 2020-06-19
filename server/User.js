@@ -275,12 +275,12 @@ var User = (function(){
       let userModel = await db.findUserByName(data.username);
       let msg, success = false, token;
       if (!userModel) {
-        msg = "Cannot find user!";
+        msg = "msg_no_user";
       } else if (data.password !== userModel.password) {
         // dangerous
-        msg = "Wrong password!";
+        msg = "msg_wrong_password";
       } else {
-        msg = "Login success!";
+        msg = "msg_login_success";
         success = true;
         self.userModel = userModel;
         token = self.generateToken();
@@ -290,14 +290,14 @@ var User = (function(){
         token: token,
         model: self.userModel,
       });
-      socket.emit("notification", {message: msg});
+      socket.emit("notification", {msgKey: msg});
     });
 
     socket.on("request:signin", async function(data) {
       let exist = await db.findUserByName(data.username);
       if (exist) {
         socket.emit("response:signin", {success: false});
-        socket.emit("notification", {message: "User existed"});
+        socket.emit("notification", {msgKey: "msg_user_exist", values: [data.username]});
         return;
       }
       data.bandName = data.bandName || "北宇治高等学校";

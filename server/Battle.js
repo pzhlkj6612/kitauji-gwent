@@ -119,7 +119,7 @@ var Battle = (function(){
     .then(function(){
       this.on("NextTurn", this.switchTurn);
       var side = Math.random() > 0.5 ? this.p1 : this.p2;
-      this.sendNotification(side.getName() + " begins!");
+      this.sendNotification("msg_begin", [side.getName()]);
       this.switchTurn(side);
     }.bind(this));
 
@@ -172,13 +172,13 @@ var Battle = (function(){
     this.p2.resetNewRound();
 
     //console.log("start new round!");
-    this.sendNotification("Start new round!");
+    this.sendNotification("msg_new_round");
 
 
     if(winner.deck.getFaction() === Deck.FACTION.SOUND_EUPHO_S1 && !lastRound.isTie){
       winner.draw(1);
       //console.log(winner.getName() + " draws 1 extra card! (Northern ability)");
-      this.sendNotification(winner.getName() + " draws 1 extra card! (Northern ability)");
+      this.sendNotification("msg_draw_extra_card", [winner.getName()]);
     }
 
     this.update();
@@ -193,7 +193,7 @@ var Battle = (function(){
       this.waitForScoiatael(this.p2);
     }
     else {
-      this.sendNotification(winner.getName() + " begins!");
+      this.sendNotification("msg_begin", [winner.getName()]);
       this.switchTurn(winner);
     }
   }
@@ -202,7 +202,7 @@ var Battle = (function(){
     var self = this;
     side.turn();
     side.foe.wait();
-    self.sendNotification(side.getName() + " decides who starts first");
+    self.sendNotification("msg_decide_who_start", [side.getName()]);
     side.send("request:chooseWhichSideBegins", null, true);
     side.socket.once("response:chooseWhichSideBegins", function(data){
       //console.log("which side? ", data.side);
@@ -210,14 +210,14 @@ var Battle = (function(){
       if(data.side !== "p1" && data.side !== "p2")
         throw new Error("Unknown side property! - ", data.side);
 
-      self.sendNotification(side.getName() + " choose " + self[data.side].getName());
+      // self.sendNotification(side.getName() + " choose " + self[data.side].getName());
       self.switchTurn(self[data.side]);
     })
   }
 
   r.gameOver = async function(winner){
     let data = {
-      winner: winner ? winner.getName() : "无人",
+      winner: winner ? winner.getName() : null,
       p1Scores: this.p1.getScores(),
       p2Scores: this.p2.getScores(),
     };
@@ -368,7 +368,7 @@ var Battle = (function(){
     if(this.p1.deck.getFaction() === Deck.FACTION.OATHS_FINALE && this.p1.deck.getFaction() !== this.p2.deck.getFaction()){
       this.p2.removeRuby();
       //console.log(this.p1.getName() + " wins the tie! (nilfgaardian ability)");
-      this.sendNotification(this.p1.getName() + " wins the tie! (nilfgaardian ability)");
+      this.sendNotification("msg_win_the_tie", [this.p1.getName()]);
       return {
         loser: this.p2,
         isTie: false
@@ -377,7 +377,7 @@ var Battle = (function(){
     if(this.p2.deck.getFaction() === Deck.FACTION.OATHS_FINALE && this.p1.deck.getFaction() !== this.p2.deck.getFaction()){
       this.p1.removeRuby();
       //console.log(this.p2.getName() + " wins the tie! (nilfgaardian ability)");
-      this.sendNotification(this.p2.getName() + " wins the tie! (nilfgaardian ability)");
+      this.sendNotification("msg_win_the_tie", [this.p2.getName()]);
       return {
         loser: this.p1,
         isTie: false
@@ -440,15 +440,17 @@ var Battle = (function(){
     this.channel = null;
   }
 
-  r.sendNotification = function(msg){
+  r.sendNotification = function(msg, values) {
     this.send("notification", {
-      message: msg
+      msgKey: msg,
+      values
     })
   }
 
-  r.sendNotificationTo = function(side, msg) {
+  r.sendNotificationTo = function(side, msg, values) {
     side.send("notification", {
-      message: msg
+      msgKey: msg,
+      values
     }, true)
   }
 

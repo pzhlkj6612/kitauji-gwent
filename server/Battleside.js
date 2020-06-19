@@ -100,7 +100,7 @@ Battleside = (function() {
 
       ability.onActivate.apply(self, [leaderCard]);
       leaderCard.setDisabled(true);
-      self.battle.sendNotification(self.getName() + " activated " + leaderCard.getName() + "! (leadercard)");
+      self.battle.sendNotification("msg_leader_activated", [self.getName(), leaderCard.getName()]);
       self.update();
       if(ability.waitResponse) {
         return;
@@ -143,7 +143,7 @@ Battleside = (function() {
       self._healed = [];
       // self.update();
 
-      self.battle.sendNotification(self.getName() + " passed!");
+      self.battle.sendNotification(msg_passed, [self.getName()]);
       //self.runEvent("NextTurn", null, [self.foe]);
       self.endTurn();
     })
@@ -174,7 +174,7 @@ Battleside = (function() {
     this.receive("emreis_leader4:chooseCardFromDiscard", function(data) {
       if(!data) {
         self.endTurn();
-        self.sendNotificationTo(self.foe, self.getName() + " takes no card from your discard pile (or there wasn't any card to choose)");
+        self.sendNotificationTo(self.foe, "msg_choose_no_card", [self.getName()]);
         //self.runEvent("NextTurn", null, [self.foe]);
         return;
       }
@@ -190,7 +190,7 @@ Battleside = (function() {
       self.foe.removeFromDiscard(card);
 
       //self.placeCard(card);
-      self.sendNotificationTo(self.foe, self.getName() + " takes " + card.getName() + " from your discard pile into his hand.");
+      self.sendNotificationTo(self.foe, "msg_choose_discard", [self.getName(), card.getName()]);
       self.hand.add(card);
 
       self.endTurn();
@@ -235,7 +235,7 @@ Battleside = (function() {
         self.endTurn();
         return;
       }
-      self.battle.sendNotification(self.getName() + " heal " + card.getName());
+      self.battle.sendNotification("msg_healed", [self.getName(), card.getName()]);
       card.setBoost("heal", card.getBoostByKey("heal") + Number(data.healPower));
       self._healed.push(card);
       self.update();
@@ -268,7 +268,7 @@ Battleside = (function() {
         self.endTurn();
         return;
       }
-      self.battle.sendNotification(self.getName() + " attack " + card.getName());
+      self.battle.sendNotification("msg_attacked", [self.getName(), card.getName()]);
       card.setBoost("attack", card.getBoostByKey("attack") - Number(data.attackPower));
       if (card.getPower(true) <= 0) {
         var removed = self.foe.field[card.getType()].removeCard(card);
@@ -511,8 +511,6 @@ Battleside = (function() {
     this._placedCard = card;
     this.checkAbilities(card, obj);
     if(obj._cancelPlacement && !obj.forceField) {
-
-      //this.battle.sendNotification(this.getName() + " played " + card.getName() + "!");
       return 0;
     }
     if(obj._nextTurn && !obj.forceField) {
@@ -586,7 +584,7 @@ Battleside = (function() {
       });
       self.hand.remove(card);
 
-      self.battle.sendNotification(self.getName() + " played " + card.getName());
+      self.battle.sendNotification("msg_played", [self.getName(), card.getName()]);
     })
   }
 
@@ -737,7 +735,7 @@ Battleside = (function() {
           self.update();
           //self.runEvent("NextTurn", null, [self.foe]);
           self.endTurn();
-          self.battle.sendNotification(self.getName() + " played Decoy!");
+          self.battle.sendNotification("msg_played_decoy", [self.getName()]);
         })
       }
       if(ability.onEachTurn) {
@@ -794,7 +792,7 @@ Battleside = (function() {
 
     if(targetRow === Card.TYPE.WEATHER) {
       if(!onRoundEnd) {
-        this.battle.sendNotification(this.getName() + " played Clear Weather!");
+        this.battle.sendNotification("msg_played_clear_weather", [this.getName()]);
       }
       field = this.field[targetRow];
       field.removeAll();
@@ -834,24 +832,15 @@ Battleside = (function() {
     var side = this.foe;
     var field = side.field[Card.TYPE.CLOSE_COMBAT];
 
-    this.battle.sendNotification(this.getName() + " played " + card.getName());
+    this.battle.sendNotification("msg_played", [this.getName(), card.getName()]);
 
     if(field.getScore() < 10) {
-      this.battle.sendNotification("Scorch: Score is under 10! Nothing happens.");
+      this.battle.sendNotification("msg_no_scorch");
       return;
     }
 
     var cards = field.getHighestCards(true);
     var removeCards = field.removeCard(cards);
-
-
-    // var txt = "Scorch destroyed:";
-    // for(var i = 0; i < removeCards.length; i++) {
-    //   var c = removeCards[i];
-    //   txt += "\n" + c.getName();
-    // }
-
-    // this.battle.sendNotification(txt);
 
     side.addToDiscard(removeCards, true);
   }
@@ -868,7 +857,7 @@ Battleside = (function() {
     var highest = 0;
     var self = this;
 
-    this.battle.sendNotification(this.getName() + " played " + card.getName());
+    this.battle.sendNotification("msg_played", [this.getName(), card.getName()]);
 
     cards.forEach(function(card) {
       if(noHeroes && card.hasAbility("hero")) return;
@@ -888,14 +877,6 @@ Battleside = (function() {
       var removed = side.field[card.getType()].removeCard(card);
       side.addToDiscard(removed, true);
     })
-
-    // var txt = "Scorch destroyed:";
-    // for(var i = 0; i < res.length; i++) {
-    //   var c = res[i];
-    //   txt += "\n" + c.getName();
-    // }
-
-    // this.battle.sendNotification(txt);
   }
 
   r.clearMainFields = function() {
@@ -904,10 +885,10 @@ Battleside = (function() {
       rndCard = this.getRandomCardOnField();
       if(rndCard) {
         rndCard.__lock = true;
-        this.sendNotification(this.getName() + ": Monsters faction ability triggered! " + rndCard.getName());
+        this.sendNotification("msg_monsters_faction_triggered", [this.getName(), rndCard.getName()]);
       }
       else {
-        this.sendNotification(this.getName() + ": Monsters faction ability triggered! But no card found.");
+        this.sendNotification("msg_monsters_not_triggered", [this.getName()]);
       }
     }
     var cards1 = this.field[Card.TYPE.CLOSE_COMBAT].removeAll();
@@ -1062,7 +1043,7 @@ Battleside = (function() {
   r.finishReDraw = function() {
     this.wait();
     this._reDrawPromise.resolve("done");
-    this.sendNotificationTo(this.foe, this.getName() + " finished redraw phase.")
+    this.sendNotificationTo(this.foe, "msg_finish_redraw", [this.getName()]);
     this._isReDrawing = false;
   }
 
