@@ -437,7 +437,7 @@ module.exports = {
     name: "",
     description: "Doubles the strength of all Siege units, unless a Commander's Horn is already in play on that row",
     onActivate: function(){
-      this.setHorn("commanders_horn", 2);
+      this.setHorn("hashimoto", 2);
     }
   },
   "foltest_leader4": {
@@ -461,7 +461,7 @@ module.exports = {
     name: "Francesca Findabair the Beautiful",
     description: "Doubles the strength of all your Ranged Combat units (unless a Commander's Horn is also present on that row).",
     onActivate: function(){
-      this.setHorn("commanders_horn", 1);
+      this.setHorn("niiyama", 1);
     }
   },
   "francesca_leader3": {
@@ -499,7 +499,7 @@ module.exports = {
     name: "Eredin King of the Wild Hunt",
     description: "Double the strength of all your Close Combat units (unless a Commander's Horn is also present on that row).",
     onActivate: function(){
-      this.setHorn("commanders_horn", 0);
+      this.setHorn("niiyama", 0);
     }
   },
   "emreis_leader4": {
