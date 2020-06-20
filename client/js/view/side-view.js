@@ -2,10 +2,10 @@ let Backbone = require("backbone");
 
 let SideView = Backbone.View.extend({
   el: ".container",
-  template: require("../templates/cards.handlebars"),
-  templateCards: require("../templates/fieldCards.handlebars"),
-  templateInfo: require("../templates/info.handlebars"),
-  templateCardpiles: require("../templates/cardpiles.handlebars"),
+  template: require("../../templates/cards.handlebars"),
+  templateCards: require("../../templates/fieldCards.handlebars"),
+  templateInfo: require("../../templates/info.handlebars"),
+  templateCardpiles: require("../../templates/cardpiles.handlebars"),
   initialize: function(options){
     let self = this;
     this.side = options.side;

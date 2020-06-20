@@ -448,11 +448,12 @@ let Notification = Backbone.View.extend({
     "click .alert": "onClick"
   },
   initialize: function(opt){
-    this.opt = opt;
+    this.msgKey = opt.msgKey;
+    this.values = opt.values;
     $(".notifications").append(this.el);
   },
   render: function(){
-    this.$el.html(this.template(this.opt));
+    this.$el.html(this.template(i18n.getText(this.msgKey, this.values)));
     this.show();
     return this;
   },

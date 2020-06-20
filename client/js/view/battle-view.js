@@ -3,10 +3,10 @@ let Modal = require("./modal");
 let SideView = require("./side-view");
 
 let cardData = require("../../../assets/data/cards");
-let abilityData = require("../../assets/data/abilities");
+let abilityData = require("../../../assets/data/abilities");
 
 let BattleView = Backbone.View.extend({
-  template: require("../templates/battle.handlebars"),
+  template: require("../../templates/battle.handlebars"),
   initialize: function(options){
     let self = this;
     let user = this.user = options.user;
@@ -427,7 +427,7 @@ let BattleView = Backbone.View.extend({
 });
 
 let MedicModal = Modal.extend({
-  template: require("../templates/modal.medic.handlebars"),
+  template: require("../../templates/modal.medic.handlebars"),
   events: {
     "click .card": "onCardClick"
   },
@@ -446,7 +446,7 @@ let MedicModal = Modal.extend({
 });
 
 let LeaderEmreis4Modal = Modal.extend({
-  template: require("../templates/modal.emreis_leader4.handlebars"),
+  template: require("../../templates/modal.emreis_leader4.handlebars"),
   events: {
     "click .card": "onCardClick"
   },
@@ -464,7 +464,7 @@ let LeaderEmreis4Modal = Modal.extend({
 });
 
 let ReDrawModal = Modal.extend({
-  template: require("../templates/modal.redraw.handlebars"),
+  template: require("../../templates/modal.redraw.handlebars"),
   initialize: function(){
     this.listenTo(this.model, "change:isReDrawing", this.cancel);
   },
@@ -486,7 +486,7 @@ let ReDrawModal = Modal.extend({
 });
 
 let ChooseSideModal = Modal.extend({
-  template: require("../templates/modal.side.handlebars"),
+  template: require("../../templates/modal.side.handlebars"),
   events: {
     "click .btn": "onBtnClick"
   },
@@ -510,7 +510,7 @@ let ChooseSideModal = Modal.extend({
 });
 
 let Preview = Backbone.View.extend({
-  template: require("../templates/preview.handlebars"),
+  template: require("../../templates/preview.handlebars"),
   initialize: function(opt){
     this.card = cardData[opt.key];
     this.size = opt.size || "lg";
