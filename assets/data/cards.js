@@ -216,7 +216,7 @@ module.exports = {
     ability: "commanders_horn_card",
     img: "hashimoto",
     faction: "neutral",
-    rarity: 2,
+    rarity: 1,
     type: 4
   },
   "niiyama": {
@@ -225,7 +225,7 @@ module.exports = {
     ability: "commanders_horn_card",
     img: "niiyama",
     faction: "neutral",
-    rarity: 2,
+    rarity: 1,
     type: 4
   },
   "daisangakushou": {
@@ -234,7 +234,7 @@ module.exports = {
     ability: "weather_fog",
     img: "daisangakushou",
     faction: "neutral",
-    rarity: 1,
+    rarity: 0,
     type: 5
   },
   "sunfes": {
@@ -243,7 +243,7 @@ module.exports = {
     ability: "weather_frost",
     img: "sunfes",
     faction: "neutral",
-    rarity: 1,
+    rarity: 0,
     type: 5
   },
   "wasure": {
@@ -252,7 +252,7 @@ module.exports = {
     ability: "weather_rain",
     img: "wasure",
     faction: "neutral",
-    rarity: 1,
+    rarity: 0,
     type: 5
   },
   "daikichiyama": {
@@ -261,7 +261,7 @@ module.exports = {
     ability: "weather_clear",
     img: "daikichiyama",
     faction: "neutral",
-    rarity: 1,
+    rarity: 0,
     type: 5
   },
   "pool": {
@@ -270,7 +270,7 @@ module.exports = {
     ability: "weather_clear",
     img: "pool",
     faction: "neutral",
-    rarity: 1,
+    rarity: 0,
     type: 5
   },
   "kabe_tomoe": {
@@ -576,7 +576,7 @@ module.exports = {
     name: "黄前久美子",
     power: -1,
     ability: "francesca_leader2",
-    img: "oumae_kumiko_shiki",
+    img: "oumae_kumiko",
     faction: "neutral",
     type: 3
   },
@@ -584,7 +584,7 @@ module.exports = {
     name: "田中明日香",
     power: -1,
     ability: "emreis_leader4",
-    img: "matsumoto_michie",
+    img: "tanaka_asuka",
     faction: "neutral",
     type: 3
   },
