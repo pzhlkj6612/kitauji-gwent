@@ -163,7 +163,7 @@ class DB {
         deck: Const.NEUTRAL_DECK,
       }, {
         $set: {
-          cards: cardMap,
+          cards: neutralCardMap,
         }
       }, {
         upsert: true,

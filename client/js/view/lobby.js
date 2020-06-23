@@ -1,11 +1,12 @@
 let Backbone = require("backbone");
+let Modal = require("./modal");
 
 let Lobby = Backbone.View.extend({
   defaults: {
     id: ""
   },
 
-  template: require("../templates/lobby.handlebars"),
+  template: require("../../templates/lobby.handlebars"),
   initialize: function(options){
     this.user = options.user;
     this.app = options.app;
@@ -13,6 +14,7 @@ let Lobby = Backbone.View.extend({
     this.app.receive("update:playerOnline", this.renderStatus.bind(this));
 
     this.listenTo(this.app.user, "change:serverOffline", this.render);
+    this.listenTo(this.app.user, "change:userModel", this.render);
     this.listenTo(this.app.user, "change:name", this.setName);
     $(".gwent-battle").html(this.el);
     this.render();
@@ -20,6 +22,8 @@ let Lobby = Backbone.View.extend({
   events: {
     "click .startMatchmaking": "startMatchmaking",
     "click .startMatchmakingWithBot": "startMatchmakingWithBot",
+    "click .btnCollection": "goToCollection",
+    "click .btnContest": "openMatchModal",
     "blur .name-input": "changeName",
     "blur .room-name-input": "changeRoomName",
     "change #deckChoice": "setDeck",
@@ -30,6 +34,21 @@ let Lobby = Backbone.View.extend({
     this.$el.find("#deckChoice").val(this.user.get("deck")).attr("selected", true);
     $("#locale").val(this.user.get("locale")).attr("selected", true);
     return this;
+  },
+  goToCollection: function() {
+    this.app.collectionsRoute();
+  },
+  openMatchModal: function(e) {
+    let $btn = $(e.target).closest(".btnContest");
+    let scenario = $btn.data("scenario");
+    let title = i18n.getText("scenario_" + scenario);
+    let model = Backbone.Model.extend({});
+    let modal = new StartMatchModal({model: new model({
+      app: this.app,
+      title: title,
+      scenario: scenario,
+    })});
+    this.$el.prepend(modal.render().el);
   },
   startMatchmaking: function(){
     this.$el.find(".image-gif-loader").show();
@@ -59,6 +78,24 @@ let Lobby = Backbone.View.extend({
   renderStatus: function(data){
     this.$el.find(".nr-player-online").html(data.online);
     this.$el.find(".nr-player-idle").html(data.idle);
+  }
+});
+
+let StartMatchModal = Modal.extend({
+  template: require("../../templates/modal.startMatch.handlebars"),
+  events: {
+    "click .startMatchmakingWithBot": "startMatchWithBot",
+    "click .startMatchmaking": "startMatch"
+  },
+  startMatchWithBot: function(e) {
+    this.model.get("app").trigger("startMatchmakingWithBot", {
+      scenario: this.model.get("scenario"),
+    });
+  },
+  startMatch: function(e) {
+    this.model.get("app").trigger("startMatchmaking", {
+      scenario: this.model.get("scenario"),
+    });
   }
 });
 

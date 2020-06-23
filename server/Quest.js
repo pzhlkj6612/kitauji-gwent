@@ -27,6 +27,7 @@ async function updateQuestProgress(userModel, scenario, gameResult) {
     // success condition: win all games in a quest
     let wins = progress.filter(g=>g.isWin).length;
     result.success = (wins === gamesPerQuest);
+    result.scenario = scenario;
     result.report = generateQuestReport(userModel, progress, getUserPrice(wins, gamesPerQuest));
     // reset current task progress
     progress = [];
@@ -49,14 +50,14 @@ function getUserPrice(wins, gamesPerQuest) {
   if (wins >= gamesPerQuest - 3) {
     return Const.PRICE_SILVER;
   }
-  return Const.PRICE_BRASS;
+  return Const.PRICE_BRONZE;
 }
 
 const QUOTA = {
   [Const.PRICE_REPRESENTATIVE]: 0.1,
   [Const.PRICE_GOLD]: 0.1,
   [Const.PRICE_SILVER]: 0.3,
-  [Const.PRICE_BRASS]: 0.5,
+  [Const.PRICE_BRONZE]: 0.5,
 }
 
 function generateQuestReport(userModel, progress, userPrice) {
@@ -67,8 +68,12 @@ function generateQuestReport(userModel, progress, userPrice) {
   let gameResults = {};
   for (let game of progress) {
     let point = game.isWin ? -1 : 1;
-    gameResults[game.foeName] = gameResults[game.foeName] ? gameResults[game.foeName] + point : point;
-    allSchools.push(game.foeName);
+    if (gameResults[game.foeName]) {
+      gameResults[game.foeName] = gameResults[game.foeName] + point;
+    } else {
+      gameResults[game.foeName] = point;
+      allSchools.push(game.foeName);
+    }
   }
   allSchools.sort((a, b) => {
     if (gameResults[a] > gameResults[b]) {
@@ -82,7 +87,7 @@ function generateQuestReport(userModel, progress, userPrice) {
   // put schools into price slots
   let total = allSchools.length + 1;
   let prices = {};
-  for (let price of [Const.PRICE_REPRESENTATIVE, Const.PRICE_GOLD, Const.PRICE_SILVER, Const.PRICE_BRASS]) {
+  for (let price of [Const.PRICE_REPRESENTATIVE, Const.PRICE_GOLD, Const.PRICE_SILVER, Const.PRICE_BRONZE]) {
     let quota = Math.min(allSchools.length, Math.max(total * QUOTA[price], 1));
     prices[price] = [];
     // user won this price, take 1 quota

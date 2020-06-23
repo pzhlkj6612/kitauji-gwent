@@ -28,6 +28,19 @@
     "band_name_hint": "例：北宇治高等学校",
     "initial_deck": "初始牌组",
 
+    "log_out": "退出",
+    "scoreboard": "排行榜",
+    "scenario_kyoto": "京都府大赛",
+    "scenario_kansai": "关西大赛",
+    "scenario_zenkoku": "全国大赛",
+
+    "result_of": "{0}结果发表",
+    "price_representative": "金奖（代表）",
+    "price_gold": "金奖",
+    "price_silver": "银奖",
+    "price_bronze": "铜奖",
+    "lucky_draw_text": "你获得了【{0}】！请在牌组中查看。",
+
     "card_collection": "牌组",
     "card_in_deck": "当前阵容",
     "empty_hint": "从牌组中选择",

@@ -552,15 +552,6 @@ ul {
     float: left;
 }
 
-.icon-action-load {
-    background: url(../assets/texture/action-load.gif) no-repeat;
-    width: 16px;
-    height: 16px;
-    float: right;
-    margin: 5px -7px 0 7px;
-    display: none;
-}
-
 .form-session {
     float: left;
 }
@@ -595,7 +586,7 @@ ul {
 }
 
 .wrap-btn-action:hover {
-    box-shadow: 0 0 10px 0 rgba(217, 111, 31, 0.8);
+    box-shadow: 0 0 10px 0 rgba(217, 111, 31, 0.8) !important;
 }
 
 .btn-action {

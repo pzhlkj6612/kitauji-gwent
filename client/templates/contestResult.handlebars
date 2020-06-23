@@ -1,0 +1,22 @@
+<div class="contestResult">
+  <div class="contestResult-background"></div>
+  <div class="bbm-wrapper dialog" style="display: block;">
+    <div class="bbm-modal bbm-modal--open" style="opacity: 1;">
+      <div class="bbm-modal__topbar">
+        <h3 class="bbm-modal__title">{{title}}</h3>
+      </div>
+      <div class="bbm-modal__section">
+          {{#each schools}}
+            <div class="col-xs-12 {{#if this.isMe}}isMe{{/if}}" style="margin-bottom: 5px;">
+              <div class="col-xs-6 school-name">
+                {{this.name}}
+              </div>
+              <div class="col-xs-6 price {{this.className}}">
+                {{this.price}}
+              </div>
+            </div>
+          {{/each}}
+      </div>
+    </div>
+  </div>
+</div>

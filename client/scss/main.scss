@@ -4,6 +4,9 @@
 @import "effects";
 @import "base";
 @import "collections";
+@import "lobby";
+@import "luckyDraw";
+@import "contestResult";
 
 
 $height: 600px;
@@ -790,20 +793,15 @@ $game-height: 800px;
   display: flex;
 }
 
-.startMatchmaking {
-  height: 50px;
-  line-height: 35px;
-  width: 200px;
-  text-align: left;
-}
-
 .image-gif-loader {
-  background: url("../../assets/texture/content-load.gif");
-  display: block;
-  height: 32px;
-  width: 32px;
-  margin-left: 10px;
-
+  position: absolute;
+  background: black url("../../assets/texture/content-load.gif") no-repeat;
+  background-position: center;
+  opacity: .4;
+  display: none;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
 }
 
 @keyframes Woob{

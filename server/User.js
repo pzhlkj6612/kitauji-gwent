@@ -212,7 +212,7 @@ var User = (function(){
     }
 
     // update quest progress
-    let questState = Quest.updateQuestProgress(this.userModel, this._scenario, {
+    let questState = await Quest.updateQuestProgress(this.userModel, this._scenario, {
       foeName: foe.getName(),
       isWin,
     });
@@ -221,7 +221,7 @@ var User = (function(){
     // do lucky draw based on result
     let newLeader = await this.luckyDrawLeaderAfterGame_(questState);
     if (newLeader) {
-      result["newLeader"] = newLeader;
+      result["newCard"] = newLeader;
       console.info("user get new leader: ", newLeader);
     } else {
       result["newCard"] = await this.luckyDrawAfterGame_(isWin, foe, questState);
@@ -282,7 +282,7 @@ var User = (function(){
       } else {
         msg = "msg_login_success";
         success = true;
-        self.userModel = userModel;
+        await self.loadUserModel(data.username);
         token = self.generateToken();
       }
       socket.emit("response:login", {
@@ -353,6 +353,7 @@ var User = (function(){
     })
 
     socket.on("request:matchmaking:bot", function(data) {
+      if (self.getRoom()) return;
       if(self._inQueue) {
         matchmaking.removeFromQueue(self, self._roomName);
       }
@@ -361,6 +362,7 @@ var User = (function(){
     });
 
     socket.on("request:matchmaking", function(data) {
+      if (self.getRoom()) return;
       if(self._inQueue) {
         matchmaking.removeFromQueue(self, self._roomName);
       }
@@ -395,7 +397,7 @@ var User = (function(){
       self.userModel.currentDeck = data.deck;
       self.setDeck(data);
       await db.storeCustomDeck(self.userModel.username, data.deck, data);
-      await db.udpateUser(self.userModel);
+      await db.updateUser(self.userModel);
     })
 
     socket.on("request:quitGame", function() {

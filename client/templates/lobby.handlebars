@@ -1,61 +1,16 @@
 <style>
-  body {
-    background: #ffffff center top no-repeat;
-    background-size: cover;
-  }
-
-  .container {
-    margin-bottom: 0;
-  }
-
-  .container-form-landing {
-    opacity: 1;
-    margin: 60px 0 0 0;
-    display: flex;
-    justify-content: center;
-  }
-
-  .field-session {
-    width: 250px !important;
-  }
-
-  .container {
-    background: transparent;
-  }
-
-  .icon-action-load {
-    background: url(/assets/texture/action-load.gif) no-repeat;
-    display: none;
-
-    width: 16px;
-    height: 16px;
-    float: right;
-    margin: 6px -7px 0 7px;
-  }
 
   .startMatchmaking {
-    height: auto !important;
-    width: auto !important;
-    line-height: 29px;
+  padding: 0;
   }
 
   .startMatchmakingWithBot {
-    height: auto !important;
-    width: auto !important;
-    line-height: 29px;
-    margin-right: 10px;
-    background: #01acc6;
+  padding: 0;
+  background: #01acc6;
   }
 
-  .wrap-landing {
-    max-width: 800px;
-  }
-
-  .teaser-landing {
-    float: left;
-    width: 100%;
-    margin: 70px 0 0 0;
-    text-shadow: none;
+  .btnCollection {
+    background: #09c237;
   }
 
   .status-offline {
@@ -67,7 +22,69 @@
   }
 </style>
 
-<section class="container-landing">
+<div class="lobby">
+  <div class="lobby-header">
+    <a>{{userModel.username}}</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a>{{i18n "log_out"}}</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <a>{{i18n "scoreboard"}}</a>
+  </div>
+  <div class="lobby-main">
+    <div class="col-xs-6 kanban"></div>
+    <div class="col-xs-6 lobby-panel">
+      <div class="panel-row">
+        <div class="panel-btn panel-btn-sm btnCollection">
+          <div class="btn-text">編成</div>
+          <div class="btn-background-partial btn-collection"></div>
+        </div>
+      </div>
+      <p class="subtitle">練習</p>
+      <div class="panel-row">
+        <div class="panel-btn panel-btn-sm wrap-btn-action startMatchmakingWithBot">
+          <div class="btn-text">{{i18n "bot"}}</div>
+          <div class="btn-background-partial btn-startMatchWithBot"></div>
+        </div>
+        <div class="panel-btn panel-btn-sm wrap-btn-action startMatchmaking">
+          <div class="btn-text">{{i18n "matching"}}</div>
+          <div class="image-gif-loader"></div>
+          <div class="btn-background-partial btn-startMatch"></div>
+        </div>
+      </div>
+      <p class="subtitle">コンクール</p>
+      <div class="panel-row">
+        <div class="panel-btn btnContest" data-scenario="kyoto">
+          <div class="btn-text">{{i18n "scenario_kyoto"}}</div>
+          <div class="btn-background btn-kyoto">
+          </div>
+        </div>
+        <div class="panel-btn btnContest" data-scenario="kansai">
+          <div class="btn-text">{{i18n "scenario_kansai"}}</div>
+          <div class="btn-background btn-kansai">
+          </div>
+        </div>
+        <div class="panel-btn btnContest" data-scenario="zenkoku">
+          <div class="btn-text">{{i18n "scenario_zenkoku"}}</div>
+          <div class="btn-background btn-zenkoku">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lobby-footer">
+    {{#if serverOffline}}
+      <span>{{i18n "server_stat"}}<span class="status-offline">{{i18n "offline"}}</span></span>
+    {{else}}
+      <span>{{i18n "online_count"}}<span class="nr-player-online">0</span></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <span>{{i18n "idle_count"}}<span class="nr-player-idle">0</span></span>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <span>{{i18n "server_stat"}}<span class="status-online">{{i18n "online"}}</span></span>
+    {{/if}}
+  </div>
+</div>
+
+{{!-- <section class="container-landing">
   <div class="wrap-landing">
     <img src="/assets/texture/eupho_matsuri.jpeg" height="300" alt="Gwent" class="logo-big">
 
@@ -97,21 +114,5 @@
         <i class="icon-action-load image-gif-loader"></i>
       </div>
     </div>
-    <p class="teaser-landing">
-      {{#if serverOffline}}
-        <span>{{i18n "server_stat"}}<span class="status-offline">{{i18n "offline"}}</span></span>
-      {{else}}
-        <span>{{i18n "online_count"}}<span class="nr-player-online">0</span></span>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <span>{{i18n "idle_count"}}<span class="nr-player-idle">0</span></span>
-        <br>
-        <span>{{i18n "server_stat"}}<span class="status-online">{{i18n "online"}}</span></span>
-      {{/if}}
-    </p>
   </div>
-</section>
-
-<footer class="rights">
-  <p>{{i18n "download"}}<a href="https://github.com/kitauji-gwent/kitauji-gwent/releases" target="_blank"> {{i18n "standalone"}} </a>{{i18n "stable"}}</p>
-  <p>This is a fan game and all rights are reserved by Kyoto Animation(and CD Projekt)</p>
-</footer>
+</section> --}}

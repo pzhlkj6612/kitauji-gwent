@@ -5,7 +5,10 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  background: black;
+  background: #222 url("/assets/texture/kanban/mvbg.jpg");
+  background-blend-mode: overlay;
+  // background-position: center;
+  background-size: cover;
   color: #ccc;
 
   .collections-side {
@@ -80,64 +83,6 @@
     }
   }
 
-  .card-cell {
-    display: inline-block;
-    cursor: pointer;
-    z-index: 10;
-    height: 288px;
-    width: 154px;
-    position: relative;
-    border-radius: 8px;
-    margin: 5px;
-
-    i {
-      border-radius: 10px;
-      top: 2px;
-      left: 2px;
-      display: block;
-      position: absolute;
-      z-index: 10;
-    }
-
-    .card-animation {
-      border-radius: 8px;
-    }
-
-    .card-count {
-      position: absolute;
-      z-index: 11;
-      right: 0px;
-      width: 50px;
-      height: 32px;
-      background: #00000030;
-
-      .card-icon {
-        background-image: url("/assets/texture/card_icon.png");
-        background-size: contain;
-        width: 24px;
-        height: 24px;
-        margin-top: 2px;
-      }
-
-      .count-text {
-        position: absolute;
-        left: 24px;
-        line-height: 32px;
-        font-size: 18px;
-        font-weight: bold;
-      }
-    }
-
-    .ability-desc {
-      text-align: left;
-      padding: 0 5px;
-      position: absolute;
-      bottom: 0;
-      z-index: 11;
-      background: #10101091;
-    }
-  }
-
   .collections-middle {
     width: 20%;
     text-align: center;
@@ -187,5 +132,63 @@
         background: #aaa;
       }
     }
+  }
+}
+
+.card-cell {
+  display: inline-block;
+  cursor: pointer;
+  z-index: 10;
+  height: 288px;
+  width: 154px;
+  position: relative;
+  border-radius: 8px;
+  margin: 5px;
+
+  i {
+    border-radius: 10px;
+    top: 2px;
+    left: 2px;
+    display: block;
+    position: absolute;
+    z-index: 10;
+  }
+
+  .card-animation {
+    border-radius: 8px;
+  }
+
+  .card-count {
+    position: absolute;
+    z-index: 11;
+    right: 0px;
+    width: 50px;
+    height: 32px;
+    background: #00000030;
+
+    .card-icon {
+      background-image: url("/assets/texture/card_icon.png");
+      background-size: contain;
+      width: 24px;
+      height: 24px;
+      margin-top: 2px;
+    }
+
+    .count-text {
+      position: absolute;
+      left: 24px;
+      line-height: 32px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  .ability-desc {
+    text-align: left;
+    padding: 0 5px;
+    position: absolute;
+    bottom: 0;
+    z-index: 11;
+    background: #10101091;
   }
 }

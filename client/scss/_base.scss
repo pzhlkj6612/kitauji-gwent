@@ -75,7 +75,7 @@ body {
 
 .bbm-modal__title {
   font-size: 26px;
-  color: #8798ac;
+  color: white;
   margin: 0 0 20px 0;
 }
 
@@ -107,7 +107,7 @@ body {
   right: 0;
   transition: all .2s ease-in-out 0s;
   z-index: 200;
-  padding: 20px;
+  padding: 3px 5px;
 }
 
 .setting-locale {
@@ -140,7 +140,7 @@ body {
 
 .music-options {
   position: absolute;
-  right: 20px;
+  right: 5px;
   background: #404d5b86;
   padding: 0 5px;
   color: #ffffff;
@@ -155,7 +155,7 @@ body {
 }
 
 .volume {
-  width: 40px;
+  width: 30px;
   background: none;
   border: 0;
   padding: 5px;

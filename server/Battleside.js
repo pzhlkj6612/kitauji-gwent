@@ -143,7 +143,7 @@ Battleside = (function() {
       self._healed = [];
       // self.update();
 
-      self.battle.sendNotification(msg_passed, [self.getName()]);
+      self.battle.sendNotification("msg_passed", [self.getName()]);
       //self.runEvent("NextTurn", null, [self.foe]);
       self.endTurn();
     })

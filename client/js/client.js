@@ -9,7 +9,9 @@ let CollectionsView = require("./view/collections");
 let LoginView = require("./view/login");
 let BattleView = require("./view/battle-view");
 let Modal = require("./view/modal");
+let LuckyDraw = require("./view/lucky-draw");
 let I18n = require("./i18n");
+const ContestResultModal = require("./view/contest-result");
 
 window.$ = $;
 window.i18n = new I18n("zh");
@@ -55,7 +57,7 @@ let App = Backbone.Router.extend({
     this.user = new User({app: this});
 
     /*Backbone.history.start();*/
-    this.lobbyRoute();
+    this.loginRoute();
   },
   connect: function(){
     if (this.socket) {
@@ -176,7 +178,26 @@ let WinnerModal = Modal.extend({
   },
   onBtnClick: function(e) {
     this.remove();
-    this.model.get("app").initialize();
+    let gameResult = this.model.get("gameResult");
+    if (gameResult.questState && gameResult.questState.completed) {
+      let contestReport = new ContestResultModal({
+        app: this.model.get("app"),
+        user: this.model.get("user"),
+        gameResult: gameResult,
+      });
+      $("body").prepend(contestReport.render().el);
+    } else if (gameResult.newCard) {
+      let luckyDraw = new LuckyDraw({
+        app: this.model.get("app"),
+        card: gameResult.newCard,
+      });
+      $("body").prepend(luckyDraw.render().el);
+    } else {
+      this.model.get("app").initialize();
+    }
+  },
+  beforeCancel: function() {
+    return false;
   }
 });
 
@@ -202,9 +223,8 @@ let User = Backbone.Model.extend({
     // this.listenTo(this.attributes, "change:room", this.subscribeRoom);
     app.receive("user:init", function(data) {
       localStorage["connectionId"] = data.connId;
-      if (data.needLogin) {
-        app.loginRoute();
-      } else {
+      if (!data.needLogin) {
+        app.lobbyRoute();
         self.setUserModel(data.model);
       }
     });
@@ -347,7 +367,9 @@ let User = Backbone.Model.extend({
       let model = Backbone.Model.extend({});
       let modal = new WinnerModal({model: new model({
         app: app,
+        user: self,
         winner: winner,
+        gameResult: data.gameResult,
         p1_1: p1Scores[0],
         p2_1: p2Scores[0],
         p1_win_1: p1Scores[0] >= p2Scores[0],
@@ -383,15 +405,17 @@ let User = Backbone.Model.extend({
     this.set("locale", localStorage["locale"] || "zh");
     i18n.loadDict(this.get("locale"));
   },
-  startMatchmakingWithBot: function(){
+  startMatchmakingWithBot: function(data){
+    data = data || {};
     this.get("app").send("request:matchmaking:bot", {
-      scenario: "kyoto",
+      scenario: data.scenario,
     });
   },
-  startMatchmaking: function(roomName){
+  startMatchmaking: function(data){
+    data = data || {};
     this.get("app").send("request:matchmaking", {
-      roomName: roomName,
-      scenario: "kyoto",
+      roomName: data.roomName,
+      scenario: data.scenario,
     });
   },
   subscribeRoom: function(){
@@ -453,7 +477,7 @@ let Notification = Backbone.View.extend({
     $(".notifications").append(this.el);
   },
   render: function(){
-    this.$el.html(this.template(i18n.getText(this.msgKey, this.values)));
+    this.$el.html(this.template({message: i18n.getText(this.msgKey, this.values)}));
     this.show();
     return this;
   },

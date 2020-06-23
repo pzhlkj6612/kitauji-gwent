@@ -1,0 +1,79 @@
+.contestResult {
+  background-color: black;
+  position: fixed;
+  z-index: 30;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 1s;
+
+  .contestResult-background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: url("/assets/texture/contest.png") center;
+    background-size: cover;
+    opacity: 0;
+    transition: all 1s;
+  }
+  .bbm-wrapper {
+    background: none;
+  }
+
+  .bbm-modal__section {
+    color: white;
+  }
+
+  .isMe {
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  .price {
+    text-align: right;
+  }
+
+  .price-gold::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: gold;
+  }
+
+  .price-silver::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: silver;
+  }
+
+  .price-bronze::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: saddlebrown;
+  }
+
+  .dialog {
+    opacity: 0;
+    transition: all 1s;
+  }
+
+  .visible {
+    opacity: 1;
+  }
+}

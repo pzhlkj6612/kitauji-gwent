@@ -1,7 +1,7 @@
 let Backbone = require("backbone");
 
 let Modal = Backbone.Modal.extend({
-  template: require("../templates/modal.handlebars"),
+  template: require("../../templates/modal.handlebars"),
   cancelEl: ".bbm-close",
   cancel: function(){
     this.model.set("openDiscard", false);

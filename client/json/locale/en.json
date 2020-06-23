@@ -28,6 +28,19 @@
     "band_name_hint": "e.g. Kitauji Wind Club",
     "initial_deck": "Initial Deck",
 
+    "log_out": "Log Out",
+    "scoreboard": "Leaderboard",
+    "scenario_kyoto": "Kyoto Contest",
+    "scenario_kansai": "Kansai Contest",
+    "scenario_zenkoku": "National Contest",
+
+    "result_of": "Result of {0}",
+    "price_representative": "Gold (Representative)",
+    "price_gold": "Gold",
+    "price_silver": "Silver",
+    "price_bronze": "Bronze",
+    "lucky_draw_text": "You get {0}! Check your deck for detail.",
+
     "card_collection": "Card Collection",
     "card_in_deck": "Cards in Deck",
     "empty_hint": "Select from card collection",

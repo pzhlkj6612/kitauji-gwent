@@ -8,7 +8,7 @@ module.exports = {
   PRICE_REPRESENTATIVE: 0,
   PRICE_GOLD: 1,
   PRICE_SILVER: 2,
-  PRICE_BRASS: 3,
+  PRICE_BRONZE: 3,
 
   DEFAULT_LEADER: "taki_noboru",
   NEUTRAL_DECK: "neutral",

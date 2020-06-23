@@ -28,6 +28,19 @@
     "band_name_hint": "例：北宇治高等学校",
     "initial_deck": "初期デッキ",
 
+    "log_out": "ログアウト",
+    "scoreboard": "ランキング",
+    "scenario_kyoto": "京都府大会",
+    "scenario_kansai": "関西大会",
+    "scenario_zenkoku": "全国大会",
+
+    "result_of": "{0}結果発表",
+    "price_representative": "金賞(代表)",
+    "price_gold": "金賞",
+    "price_silver": "銀賞",
+    "price_bronze": "銅賞",
+    "lucky_draw_text": "「{0}」を手に入れました！デッキをチェックしてください。",
+
     "card_collection": "カードコレクション",
     "card_in_deck": "編成",
     "empty_hint": "デッキから選ぶ",
