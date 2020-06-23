@@ -12,6 +12,8 @@ let Lobby = Backbone.View.extend({
     this.app = options.app;
 
     this.app.receive("update:playerOnline", this.renderStatus.bind(this));
+    this.app.receive("response:questProgress", this.onQuestProgressResponse.bind(this));
+    this.app.send("request:questProgress");
 
     this.listenTo(this.app.user, "change:serverOffline", this.render);
     this.listenTo(this.app.user, "change:userModel", this.render);
@@ -40,6 +42,7 @@ let Lobby = Backbone.View.extend({
   },
   openMatchModal: function(e) {
     let $btn = $(e.target).closest(".btnContest");
+    if ($btn.hasClass("disabled")) return;
     let scenario = $btn.data("scenario");
     let title = i18n.getText("scenario_" + scenario);
     let model = Backbone.Model.extend({});
@@ -78,7 +81,15 @@ let Lobby = Backbone.View.extend({
   renderStatus: function(data){
     this.$el.find(".nr-player-online").html(data.online);
     this.$el.find(".nr-player-idle").html(data.idle);
-  }
+  },
+  onQuestProgressResponse: function(progress) {
+    for (let task of Object.keys(progress)) {
+      let btn = this.$el.find(`.btnContest[data-scenario="${task}"]`);
+      if (!btn.length) continue;
+      btn.removeClass("disabled");
+      btn.find(".progress-text").html(`${progress[task]}/5`);
+    }
+  },
 });
 
 let StartMatchModal = Modal.extend({

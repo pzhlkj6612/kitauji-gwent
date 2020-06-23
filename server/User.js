@@ -325,6 +325,15 @@ var User = (function(){
       });
     });
 
+    socket.on("request:questProgress", async function() {
+      let tasks = await db.findProgressByUser(self.userModel.username);
+      let progress = {};
+      for (let task of tasks) {
+        progress[task.questName] = task.progress.length;
+      }
+      socket.emit("response:questProgress", progress);
+    });
+
     socket.on("request:userCollections", async function() {
       let response = {
         currentDeck: self.userModel.currentDeck,

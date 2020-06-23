@@ -72,10 +72,6 @@
   border: 2px solid #ffffff;
   box-shadow: 3px 3px 11px 0px #0000003d;
 
-  .disabled {
-    filter: grayscale(100%);
-  }
-
   .btn-text {
     position: absolute;
     text-align: center;
@@ -131,6 +127,24 @@
   }
 }
 
+.disabled {
+  .btn-background {
+    filter: grayscale(100%);
+  }
+  .quest-progress {
+    display: none;
+  }
+}
+
+.disabled:hover,
+.disabled:focus {
+  color: white !important;
+  .btn-background {
+    transform: none !important;
+    filter: grayscale(100%) !important;
+  }
+}
+
 .panel-btn-sm {
   height: 90px !important;
 }
@@ -149,6 +163,24 @@
 .panel-btn:hover,
 .panel-btn:focus {
   color: #ddd;
+}
+
+.quest-progress {
+  position: absolute;
+  z-index: 11;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  height: 24px;
+  background: #00000030;
+
+  .progress-text {
+    position: absolute;
+    right: 5px;
+    line-height: 24px;
+    font-size: 18px;
+    font-weight: bold;
+  }
 }
 
 .lobby-footer {

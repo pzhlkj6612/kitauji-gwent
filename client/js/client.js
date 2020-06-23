@@ -186,7 +186,7 @@ let WinnerModal = Modal.extend({
         gameResult: gameResult,
       });
       $("body").prepend(contestReport.render().el);
-    } else if (gameResult.newCard) {
+    } else if (gameResult.newCard && gameResult.newCard.length) {
       let luckyDraw = new LuckyDraw({
         app: this.model.get("app"),
         card: gameResult.newCard,
