@@ -4,6 +4,8 @@ module.exports = {
   SCENARIO_KYOTO: "kyoto",
   SCENARIO_KANSAI: "kansai",
   SCENARIO_ZENKOKU: "zenkoku",
+  // not a quest, just with higher weight for SSR
+  SCENARIO_ZENKOKU_GOLD: "zenkoku_gold",
 
   PRICE_REPRESENTATIVE: 0,
   PRICE_GOLD: 1,

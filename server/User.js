@@ -357,6 +357,26 @@ var User = (function(){
       socket.emit("response:userCollections", response);
     });
 
+    socket.on("request:ranking", async function() {
+      let result = {
+        myRank: null,
+        ranking: [],
+      }
+      let users = await Cache.getInstance().getTopK(10);
+      let i = 1;
+      for (let user of users) {
+        result.ranking.push({
+          rank: i++,
+          username: user.username,
+          bandName: user.bandName,
+          winCount: user.winCount,
+          loseCount: user.loseCount,
+        });
+      }
+      result.myRank = await Cache.getInstance().getUserRank(self.userModel.username);
+      socket.emit("response:ranking", result);
+    });
+
     socket.on("request:name", function(data){
       // if(data && data.name){
       //   self.setName(data.name);

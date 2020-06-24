@@ -2,8 +2,9 @@ var Const = require("./Const");
 
 function getNextScenario(scenario) {
   switch (scenario) {
-    case Const.SCENARIO_KANSAI:
     case Const.SCENARIO_ZENKOKU:
+      return Const.SCENARIO_ZENKOKU_GOLD;
+    case Const.SCENARIO_KANSAI:
       return Const.SCENARIO_ZENKOKU;
     case Const.SCENARIO_KYOTO:
       return Const.SCENARIO_KANSAI;

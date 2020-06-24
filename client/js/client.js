@@ -208,7 +208,7 @@ let InitialCardsModal = Modal.extend({
 let User = Backbone.Model.extend({
   defaults: {
     userModel: null,
-    name: typeof localStorage["userName"] === "string" ? localStorage["userName"].slice(0, 20) : null,
+    name: typeof localStorage["bandName"] === "string" ? localStorage["bandName"].slice(0, 20) : null,
     deck: "random",
     locale: "zh",
     serverOffline: true
@@ -231,6 +231,7 @@ let User = Backbone.Model.extend({
 
     app.receive("response:name", function(data){
       self.set("name", data.name);
+      localStorage["bandName"] = this.app.user.get("name");
     });
 
     app.receive("init:battle", function(data){
@@ -400,7 +401,6 @@ let User = Backbone.Model.extend({
       new Notification(data).render();
     })
 
-    app.send("request:name", this.get("name") === null ? null : {name: this.get("name")});
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
     i18n.loadDict(this.get("locale"));
@@ -426,13 +426,12 @@ let User = Backbone.Model.extend({
   setUserModel: function(model) {
     this.set("userModel", model);
     this.set("name", model.bandName);
-    localStorage["userName"] = name;
-    // this.get("app").send("request:questProgress", {name: name});
+    localStorage["bandName"] = name;
   },
   changeBandName: function(name){
     name = name.slice(0, 20);
     this.get("app").send("request:name", {name: name});
-    localStorage["userName"] = name;
+    localStorage["bandName"] = name;
   },
   setDeck: function(deckKey){
     //console.log("deck: ", deckKey);
@@ -462,6 +461,11 @@ let User = Backbone.Model.extend({
     this.set("initialCards", cards);
     let modal = new InitialCardsModal({model: this});
     this.get("app").getCurrentView().$el.prepend(modal.render().el);
+  },
+  logout: function() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("connectionId");
+    location.reload();
   },
 });
 

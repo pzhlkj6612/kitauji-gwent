@@ -12,20 +12,22 @@ let Lobby = Backbone.View.extend({
     this.app = options.app;
 
     this.app.receive("update:playerOnline", this.renderStatus.bind(this));
+    this.app.receive("response:ranking", this.onRankingResponse.bind(this));
     this.app.receive("response:questProgress", this.onQuestProgressResponse.bind(this));
     this.app.send("request:questProgress");
 
     this.listenTo(this.app.user, "change:serverOffline", this.render);
     this.listenTo(this.app.user, "change:userModel", this.render);
-    this.listenTo(this.app.user, "change:name", this.setName);
     $(".gwent-battle").html(this.el);
     this.render();
   },
   events: {
-    "click .startMatchmaking": "startMatchmaking",
-    "click .startMatchmakingWithBot": "startMatchmakingWithBot",
+    "click #startMatchmaking": "startMatchmaking",
+    "click #startMatchmakingWithBot": "startMatchmakingWithBot",
     "click .btnCollection": "goToCollection",
     "click .btnContest": "openMatchModal",
+    "click #logout": "logout",
+    "click #ranking": "onRankingClick",
     "blur .name-input": "changeName",
     "blur .room-name-input": "changeRoomName",
     "change #deckChoice": "setDeck",
@@ -39,6 +41,12 @@ let Lobby = Backbone.View.extend({
   },
   goToCollection: function() {
     this.app.collectionsRoute();
+  },
+  logout: function() {
+    this.user.logout();
+  },
+  onRankingClick: function() {
+    this.app.send("request:ranking");
   },
   openMatchModal: function(e) {
     let $btn = $(e.target).closest(".btnContest");
@@ -56,7 +64,7 @@ let Lobby = Backbone.View.extend({
   startMatchmaking: function(){
     this.$el.find(".image-gif-loader").show();
     let roomName = this.$el.find(".room-name-input").val();
-    this.app.trigger("startMatchmaking", roomName);
+    this.app.trigger("startMatchmaking", {roomName});
   },
   startMatchmakingWithBot: function(){
     this.app.trigger("startMatchmakingWithBot");
@@ -69,10 +77,6 @@ let Lobby = Backbone.View.extend({
       return;
     }
     this.app.trigger("setDeck", val);
-  },
-  setName: function(){
-    localStorage["userName"] = this.app.user.get("name");
-    this.$el.find(".name-input").val(this.app.user.get("name"));
   },
   changeName: function(e){
     let name = $(e.target).val();
@@ -90,13 +94,21 @@ let Lobby = Backbone.View.extend({
       btn.find(".progress-text").html(`${progress[task]}/5`);
     }
   },
+  onRankingResponse: function(response) {
+    let model = Backbone.Model.extend({});
+    let modal = new RankingModal({model: new model({
+      myRank: response.myRank || "+∞",
+      ranking: response.ranking,
+    })});
+    this.$el.prepend(modal.render().el);
+  },
 });
 
 let StartMatchModal = Modal.extend({
   template: require("../../templates/modal.startMatch.handlebars"),
   events: {
-    "click .startMatchmakingWithBot": "startMatchWithBot",
-    "click .startMatchmaking": "startMatch"
+    "click #startMatchmakingWithBot2": "startMatchWithBot",
+    "click #startMatchmaking2": "startMatch"
   },
   startMatchWithBot: function(e) {
     this.model.get("app").trigger("startMatchmakingWithBot", {
@@ -104,10 +116,17 @@ let StartMatchModal = Modal.extend({
     });
   },
   startMatch: function(e) {
+    this.$el.find(".image-gif-loader").show();
+    let roomName = this.$el.find(".room-name-input").val();
     this.model.get("app").trigger("startMatchmaking", {
+      roomName: roomName,
       scenario: this.model.get("scenario"),
     });
   }
+});
+
+let RankingModal = Modal.extend({
+  template: require("../../templates/modal.ranking.handlebars"),
 });
 
 module.exports = Lobby;

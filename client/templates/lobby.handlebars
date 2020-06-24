@@ -24,11 +24,11 @@
 
 <div class="lobby">
   <div class="lobby-header">
-    <a>{{userModel.username}}</a>
+    <a id="username">{{userModel.username}}</a>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <a>{{i18n "log_out"}}</a>
+    <a id="logout">{{i18n "log_out"}}</a>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <a>{{i18n "scoreboard"}}</a>
+    <a id="ranking">{{i18n "scoreboard"}}</a>
   </div>
   <div class="lobby-main">
     <div class="col-xs-6 kanban"></div>
@@ -41,11 +41,11 @@
       </div>
       <p class="subtitle">練習</p>
       <div class="panel-row">
-        <div class="panel-btn panel-btn-sm wrap-btn-action startMatchmakingWithBot">
+        <div id="startMatchmakingWithBot" class="panel-btn panel-btn-sm wrap-btn-action startMatchmakingWithBot">
           <div class="btn-text">{{i18n "bot"}}</div>
           <div class="btn-background-partial btn-startMatchWithBot"></div>
         </div>
-        <div class="panel-btn panel-btn-sm wrap-btn-action startMatchmaking">
+        <div id="startMatchmaking" class="panel-btn panel-btn-sm wrap-btn-action startMatchmaking">
           <div class="btn-text">{{i18n "matching"}}</div>
           <div class="image-gif-loader"></div>
           <div class="btn-background-partial btn-startMatch"></div>

@@ -155,6 +155,7 @@ let Collections = Backbone.View.extend({
       "collectionTab": i18n.getText(this.collectionTab),
       "deckTab": i18n.getText(this.deckTab),
       "leader": this.toCardModel(this.currentLeader),
+      "specialExceed": stats.specialCardCnt > 10,
       "disabled": stats.total < 10 || stats.specialCardCnt > 10,
       "stats": stats,
     }));

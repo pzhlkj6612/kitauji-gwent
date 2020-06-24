@@ -27,7 +27,7 @@
 
 .kanban {
   height: 100%;
-  background-image: url("/assets/texture/kanban/67.kumiko.oumae.png");
+  // background-image: url("/assets/texture/kanban/67.kumiko.oumae.png");
   // background-position: center;
   background-size: cover;
 }
@@ -191,4 +191,18 @@
   font-size: 18px;
   font-weight: 300;
   line-height: 29pt;
+}
+
+.ranking-modal-content {
+  color: white;
+}
+
+.ranking-table {
+  min-height: 300px;
+  table {
+    width: 100%;
+  }
+  th {
+    padding-right: 50px;
+  }
 }

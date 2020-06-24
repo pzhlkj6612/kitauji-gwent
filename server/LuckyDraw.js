@@ -41,7 +41,11 @@ const SCENARIOS = {
   [Const.SCENARIO_ZENKOKU]: {
     name: Const.SCENARIO_ZENKOKU,
     weights: [0, 20, 20, 5],
-  }
+  },
+  [Const.SCENARIO_ZENKOKU_GOLD]: {
+    name: Const.SCENARIO_ZENKOKU_GOLD,
+    weights: [0, 0, 15, 10],
+  },
 }
 
 let instance_;
