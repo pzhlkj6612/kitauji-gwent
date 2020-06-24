@@ -27,10 +27,29 @@
 
 .kanban {
   height: 100%;
-  // background-image: url("/assets/texture/kanban/67.kumiko.oumae.png");
   background-position: center;
   background-size: cover;
 }
+.kanban-kumiko {
+  background-image: url("/assets/texture/kanban/67.kumiko.oumae.png");
+}
+.kanban-ririka {
+  background-image: url("/assets/texture/kanban/14.ririka.kenzaki.png");
+}
+.kanban-mizore {
+  background-image: url("/assets/texture/kanban/13.mizore.yoroizuka.png");
+}
+.kanban-nozomi {
+  background-image: url("/assets/texture/kanban/18.nozomi.kasaki.png");
+}
+.kanban-reina {
+  background-image: url("/assets/texture/kanban/41.reina.kousaka.png");
+}
+.kanban-kanade {
+  background-image: url("/assets/texture/kanban/68.kanade.hisaishi.png");
+}
+
+
 
 .lobby-panel {
   overflow-y: scroll;

@@ -101,7 +101,7 @@
 
     "ability_desc_fog_leader": "演奏《利兹与青鸟》第三乐章，令双方所有铜管乐器吹奏能力降为1。",
     "ability_desc_frost_leader": "参加SunFes，令双方所有木管乐器吹奏能力降为1。",
-    "ability_desc_ranged_horn_leader": "使同一行内除自己之外的部员吹奏实力翻倍(不能与支援叠加)。",
+    "ability_desc_ranged_horn_leader": "使铜管乐器部员吹奏实力翻倍(不能与支援叠加)。",
     "ability_desc_emreis_leader": "从对方退部/毕业部员中获得一名部员。",
 
     "faction_ability_kumiko1": "每赢得一轮可以获得一名部员",

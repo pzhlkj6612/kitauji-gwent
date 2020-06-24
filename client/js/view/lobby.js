@@ -1,6 +1,15 @@
 let Backbone = require("backbone");
 let Modal = require("./modal");
 
+const KANBAN_CHARACTERS = [
+  "kanban-kumiko",
+  "kanban-ririka",
+  "kanban-mizore",
+  "kanban-nozomi",
+  "kanban-reina",
+  "kanban-kanade",
+];
+
 let Lobby = Backbone.View.extend({
   defaults: {
     id: ""
@@ -41,6 +50,7 @@ let Lobby = Backbone.View.extend({
     this.$el.html(this.template(this.user.attributes));
     this.$el.find("#deckChoice").val(this.user.get("deck")).attr("selected", true);
     $("#locale").val(this.user.get("locale")).attr("selected", true);
+    this.renderKanban();
     this.renderStatus(this.serverStatus);
     this.renderQuestProgress(this.questProgress);
     return this;
@@ -101,6 +111,10 @@ let Lobby = Backbone.View.extend({
       btn.removeClass("disabled");
       btn.find(".progress-text").html(`${this.questProgress[task]}/5`);
     }
+  },
+  renderKanban: function() {
+    let character = KANBAN_CHARACTERS[(Math.random() * KANBAN_CHARACTERS.length) | 0];
+    this.$el.find(".kanban").addClass(character);
   },
   onRankingResponse: function(response) {
     let model = Backbone.Model.extend({});
