@@ -176,7 +176,7 @@ var HandWrittenBot = (function(){
         } else if (Util.isDecoy(card)) {
           priority = 12 - (cards.filter(c=>Util.isDecoy(c)).length - 1) * 6;
         } else if (Util.isScorch(card, true)) {
-          priority = 8 - (cards.filter(c=>c.type===4).length - 1) * 4;
+          priority = 8 - (cards.filter(c=>c._data.type===4).length - 1) * 4;
         } else if (card._data.ability) {
           priority += 2;
         }

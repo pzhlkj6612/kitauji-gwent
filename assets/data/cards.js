@@ -530,7 +530,7 @@ module.exports = {
   },
   "morimoto_michio": {
     name: "森本美千代",
-    power: 6,
+    power: 7,
     ability: null,
     img: "morimoto_michio",
     faction: "kitauji",
@@ -551,7 +551,7 @@ module.exports = {
   "taki_noboru": {
     name: "泷升",
     power: -1,
-    ability: "foltest_leader1",
+    ability: "fog_leader",
     img: "taki_noboru",
     faction: "neutral",
     type: 3
@@ -559,7 +559,7 @@ module.exports = {
   "taki_chihiro": {
     name: "泷千寻",
     power: -1,
-    ability: "foltest_leader2",
+    ability: "clear_weather_leader",
     img: "taki_chihiro",
     faction: "neutral",
     type: 3
@@ -567,7 +567,7 @@ module.exports = {
   "matsumoto_michie": {
     name: "松本美智恵",
     power: -1,
-    ability: "francesca_leader1",
+    ability: "frost_leader",
     img: "matsumoto_michie",
     faction: "neutral",
     type: 3
@@ -575,7 +575,7 @@ module.exports = {
   "oumae_kumiko_shiki": {
     name: "黄前久美子",
     power: -1,
-    ability: "francesca_leader2",
+    ability: "ranged_horn_leader",
     img: "oumae_kumiko",
     faction: "neutral",
     type: 3

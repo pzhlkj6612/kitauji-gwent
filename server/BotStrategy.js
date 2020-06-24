@@ -149,7 +149,7 @@ var BotStrategy = (function(){
       let commands = [this.bot.playLeaderCommand()];
       if (card._data.ability === "emreis_leader4") {
         let state = this.bot.state;
-        let foeDiscard = state.foeSide.dicard || [];
+        let foeDiscard = state.foeSide.discard || [];
         let medics = foeDiscard.filter(c=>Util.isMedic(c));
         let spies = foeDiscard.filter(c=>Util.isSpy(c));
         let normals = foeDiscard.filter(c=>Util.canReplace(c));
@@ -158,9 +158,9 @@ var BotStrategy = (function(){
         } else if (spies.length) {
           commands.push(this.bot.playEmreisLeader4Command(this.getMin(spies)));
         } else if (normals.length) {
-          commands.push(thsi.bot.playEmreisLeader4Command(this.getMax(normals)));
+          commands.push(this.bot.playEmreisLeader4Command(this.getMax(normals)));
         } else {
-          commands.push(thsi.bot.playEmreisLeader4Command(null));
+          commands.push(this.bot.playEmreisLeader4Command(null));
         }
       }
       return commands;
@@ -315,7 +315,7 @@ var BotStrategy = (function(){
           reward = Math.max(realPower - card._data.power * 0.4, 0);
         } else if (Util.isWeather(card)) { // weather card or leader
           // clear weather?
-          if (card._data.ability === "weather_clear" || card._data.ability === "foltest_leader2") {
+          if (card._data.ability === "weather_clear" || card._data.ability === "clear_weather_leader") {
             let weathers = state.ownFields.weather.cards;
             let foeDebuff = 0, ownDebuff = 0;
             weathers.map(w=>this.getFieldByWeather(w)).forEach(f=>{
@@ -336,7 +336,7 @@ var BotStrategy = (function(){
             if (foeScore > ownScore) reward += (foeHandScore - handScore) * 0.2;
           }
         } else if (Util.isEmreisLeader4(card)) {
-          let discard = state.foeSide.dicard;
+          let discard = state.foeSide.discard;
           if (!discard || !discard.length) {
             reward = -1;
           } else if (discard.some(c=>Util.canReplace(c) && (Util.isSpy(c) || Util.isMedic(c)))) {
@@ -362,6 +362,11 @@ var BotStrategy = (function(){
           reward = maxBoost * 0.5;
         } else if (Util.isHorn(card)) {
           realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, card._data.type));
+          reward = realPower * 0.5;
+        } else if (Util.isHornLeader(card)) {
+          if (card._data.ability === "ranged_horn_leader") {
+            realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, 1));
+          }
           reward = realPower * 0.5;
         } else if (Util.isAttack(card)) {
           reward = this.getAttackReward(this.getFieldCards(false), card._data.attackPower);
@@ -392,7 +397,7 @@ var BotStrategy = (function(){
             reward = Math.max(realPower - negBoosts - card._data.power * 0.5, 0);
           }
         } else if (Util.isMonaka(card)) {
-          let cards = this.getFieldCards(false).filter(c=>Util.canReplace(c));
+          let cards = this.getFieldCards(true).filter(c=>Util.canReplace(c));
           reward = Math.max(realPower - card._data.power * 0.5, 0);
           if (cards.length > 0) reward += 2;
           else reward -= 2;
@@ -425,7 +430,7 @@ var BotStrategy = (function(){
       }
       let handPower = realPowers.reduce((sum,p)=>sum+p,0);
       // cheat!
-      let foeHandPower = state.foeHand.reduce((sum,c)=>sum+this.getRealPower(c,true),0);
+      let foeHandPower = Math.max(0, state.foeHand.reduce((sum,c)=>sum+this.getRealPower(c,true),0));
       if (state.ownSide.lives > 1) {
         // 2:2 or 2:1
         if (maxReward <= 0) {
@@ -454,7 +459,7 @@ var BotStrategy = (function(){
       } else if (state.foeSide.lives > 1) {
         // 1:2
         if (state.ownSide.score - state.foeSide.score > foeHandPower) {
-          console.warn("pass due to large leading");
+          console.warn(`pass due to large leading(foeHandPower=${foeHandPower})`);
           return null;
         }
         if (state.ownSide.score > state.foeSide.score) {
@@ -539,10 +544,10 @@ var BotStrategy = (function(){
     r.getFieldByWeather = function(card) {
       switch (card._data.ability) {
         case "weather_frost":
-        case "francesca_leader1":
+        case "frost_leader":
           return 0;
         case "weather_fog":
-        case "foltest_leader1":
+        case "fog_leader":
           return 1;
         case "weather_rain":
           return 2;

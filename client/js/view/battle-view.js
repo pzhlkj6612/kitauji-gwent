@@ -57,7 +57,7 @@ let BattleView = Backbone.View.extend({
     "click .button-pass": "onPassing",
     "click .button-quit": "onQuit",
     "click .field-discard": "openDiscard",
-    "click .field-leader.card-wrap": "clickLeader"
+    "click .field-leader>.card-wrap": "clickLeader"
   },
   onPassing: function(){
     if(this.user.get("passing")) return;

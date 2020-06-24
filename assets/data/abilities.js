@@ -416,24 +416,28 @@ module.exports = {
     commandersHorn: true,
     isCommandersHornCard: true
   },
-  "foltest_leader1": {
+  "fog_leader": {
     name: "",
     description: "",
     onActivate: function(){
-      var cards = this.deck.find("key", "impenetrable_fog")
-      if(!cards.length) return;
-      var card = this.deck.removeFromDeck(cards[0]);
+      var cards = this.deck.find("key", "daisangakushou");
+      let card;
+      if(cards.length) {
+        card = this.deck.removeFromDeck(cards[0]);
+      } else {
+        card = this.createCard("daisangakushou");
+      }
       this.placeCard(card);
     }
   },
-  "foltest_leader2": {
+  "clear_weather_leader": {
     name: "",
     description: "",
     onActivate: function(){
       this.setWeather(5);
     }
   },
-  "foltest_leader3": {
+  "siege_horn_leader": {
     name: "",
     description: "Doubles the strength of all Siege units, unless a Commander's Horn is already in play on that row",
     onActivate: function(){
@@ -447,55 +451,28 @@ module.exports = {
       //scorch siege
     }
   },
-  "francesca_leader1": {
+  "frost_leader": {
     name: "",
     description: "",
     onActivate: function(){
-      var cards = this.deck.find("key", "biting_frost")
-      if(!cards.length) return;
-      var card = this.deck.removeFromDeck(cards[0]);
+      var cards = this.deck.find("key", "sunfes")
+      let card;
+      if(cards.length) {
+        card = this.deck.removeFromDeck(cards[0]);
+      } else {
+        card = this.createCard("sunfes");
+      }
       this.placeCard(card);
     }
   },
-  "francesca_leader2": {
+  "ranged_horn_leader": {
     name: "Francesca Findabair the Beautiful",
     description: "Doubles the strength of all your Ranged Combat units (unless a Commander's Horn is also present on that row).",
     onActivate: function(){
       this.setHorn("niiyama", 1);
     }
   },
-  "francesca_leader3": {
-    name: "",
-    description: "",
-    onActivate: function(){
-    }
-  },
-  "francesca_leader4": {
-    name: "",
-    description: "",
-    onActivate: function(){
-    }
-  },
-  "eredin_leader1": {
-    name: "",
-    description: "",
-    onActivate: function(){
-    }
-  },
-  "eredin_leader2": {
-    name: "",
-    description: "",
-    onActivate: function(){
-    }
-  },
-  "eredin_leader3": {
-    name: "",
-    description: "",
-    onActivate: function(){
-
-    }
-  },
-  "eredin_leader4": {
+  "close_horn_leader": {
     name: "Eredin King of the Wild Hunt",
     description: "Double the strength of all your Close Combat units (unless a Commander's Horn is also present on that row).",
     onActivate: function(){

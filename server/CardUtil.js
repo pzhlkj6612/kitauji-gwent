@@ -26,13 +26,15 @@ Util.isMoraleBoost = function(card, includeHero) {
   return card._data.ability === "morale_boost" ||
     (includeHero && String(card._data.ability).includes("morale_boost"));
 }
+Util.isHornLeader = function(card) {
+  return card._data.ability === "ranged_horn_leader";
+}
 Util.isHorn = function(card, isHornCard) {
   if (isHornCard) {
     return card._data.ability === "commanders_horn_card";
   }
   return card._data.ability !== "commanders_horn_card" &&
-    (String(card._data.ability).includes("commanders_horn") ||
-    card._data.ability === "francesca_leader2");
+    String(card._data.ability).includes("commanders_horn");
 }
 Util.isBond = function(card, opt_bondType) {
   return card._data.ability === "tight_bond" &&
@@ -61,9 +63,9 @@ Util.isKasa = function(card) {
 }
 Util.isWeather = function(card) {
   return card._data.type === 5 ||
-    card._data.ability === "foltest_leader2" ||
-    card._data.ability === "foltest_leader1" ||
-    card._data.ability === "francesca_leader1";
+    card._data.ability === "clear_weather_leader" ||
+    card._data.ability === "fog_leader" ||
+    card._data.ability === "frost_leader";
 }
 Util.isDecoy = function(card) {
   return card._data.ability === "decoy";
