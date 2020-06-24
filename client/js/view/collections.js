@@ -77,11 +77,12 @@ let Collections = Backbone.View.extend({
       delete cards[key];
     }
   },
-  addCardTo: function(cards, key) {
+  addCardTo: function(cards, key, opt_count) {
+    opt_count = opt_count || 1;
     if (cards[key]) {
-      cards[key]++;
+      cards[key] += opt_count;
     } else {
-      cards[key] = 1;
+      cards[key] = opt_count;
     }
   },
   toCardModel: function(key, count) {

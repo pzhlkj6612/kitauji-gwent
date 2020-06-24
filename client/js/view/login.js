@@ -77,7 +77,7 @@ let SignInModal = Backbone.Modal.extend({
     let username = this.$el.find("#username").val();
     let password = this.$el.find("#password").val();
     let bandName = this.$el.find("#bandName").val();
-    let initalDeck = this.$el.find("#initialDeck").val();
+    let initialDeck = this.$el.find("#initialDeck").val();
     if (!username || !password) {
       return;
     }
@@ -88,7 +88,7 @@ let SignInModal = Backbone.Modal.extend({
       username: username,
       password: password,
       bandName: bandName,
-      initalDeck: initalDeck,
+      initialDeck: initialDeck,
     });
     this.$el.find("#btnSignIn").addClass("disabled");
   }
