@@ -105,7 +105,7 @@ let Lobby = Backbone.View.extend({
   onRankingResponse: function(response) {
     let model = Backbone.Model.extend({});
     let modal = new RankingModal({model: new model({
-      myRank: response.myRank || "+∞",
+      myRank: response.myRank == null ? "+∞" : response.myRank + 1,
       ranking: response.ranking,
     })});
     this.$el.prepend(modal.render().el);

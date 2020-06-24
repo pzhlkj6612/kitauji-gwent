@@ -235,12 +235,13 @@ var User = (function(){
   }
 
   r.luckyDrawLeaderAfterGame_ = async function(questState) {
-    // must complete zenkoku
-    if (this._scenario !== Const.SCENARIO_ZENKOKU || !questState.completed) {
+    // must complete kansai or zenkoku
+    if (this._scenario !== Const.SCENARIO_KANSAI ||
+      this._scenario !== Const.SCENARIO_ZENKOKU ||
+      !questState.completed) {
       return null;
     }
-    // 20% chance
-    if (Math.random() > 0.2) return null;
+    if (Math.random() > 0.3) return null;
     let userLeaders = await db.findLeaderCardsByUser(this.userModel.username);
     let newLeader = LuckyDraw.getInstance().drawLeader(userLeaders);
     if (newLeader) {

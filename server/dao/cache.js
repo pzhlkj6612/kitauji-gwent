@@ -14,6 +14,14 @@ class Cache {
     return instance_;
   }
 
+  async initialize() {
+    let allUser = await db.getAllUser();
+    for (let user of allUser) {
+      if (!user.winCount) continue;
+      this.winRanking.set(user.username, user.winCount);
+    }
+  }
+
   async getCondition(username, conditionKey, opt_defaultValue) {
     this.conditions[username] = this.conditions[username] || {};
     let condition = this.conditions[username][conditionKey];

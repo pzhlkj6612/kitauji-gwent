@@ -17,9 +17,10 @@ let Collections = Backbone.View.extend({
     this.app.send("request:userCollections");
     this.deckKey = "kitauji";
     this.collections = {};
-    this.leaderCollection = {};
+    this.leaderCollection = [];
     this.customDecks = {};
     this.dirty = false;
+    this.chooseLeader = false;
     this.reset();
     $(".gwent-battle").html(this.el);
     this.render();
@@ -55,6 +56,8 @@ let Collections = Backbone.View.extend({
     "click .card-filters.card-collections": "switchCollectionTab",
     "click .card-filters.card-in-deck": "switchDeckTab",
     "click .deck-confirm": "confirmDeck",
+    "click .leader-field": "onLeaderClick",
+    "click .leader-collection>.card-cell": "chooseLeader",
     "mouseover .card-cell": "onMouseover",
     "mouseleave .card-cell": "onMouseleave",
     "click .button-quit": "onQuit",
@@ -94,6 +97,13 @@ let Collections = Backbone.View.extend({
       _count: count || 1,
       _showCount: count ? count > 1 : false,
     };
+  },
+  toLeaderCardModelList: function(leaderList) {
+    let cards = [];
+    for (let leader of leaderList) {
+      cards.push(this.toCardModel(leader));
+    }
+    return cards;
   },
   toCardModelList: function(collection, tab) {
     let cards = [];
@@ -154,6 +164,7 @@ let Collections = Backbone.View.extend({
       "factionAbility": i18n.getText(`faction_ability_${this.deckKey}`),
       "cardCollection": this.toCardModelList(this.collection, this.collectionTab),
       "cardInDeck": this.toCardModelList(this.currentDeck, this.deckTab),
+      "leaderCollection": this.toLeaderCardModelList(this.leaderCollection),
       "collectionTab": i18n.getText(this.collectionTab),
       "deckTab": i18n.getText(this.deckTab),
       "leader": this.toCardModel(this.currentLeader),
@@ -272,6 +283,17 @@ let Collections = Backbone.View.extend({
   onQuit: function() {
     this.app.lobbyRoute();
   },
+  onLeaderClick: function() {
+    this.$el.find(".leader-collection").removeClass("hidden");
+  },
+  chooseLeader: function(e) {
+    let $card = $(e.target).closest(".card-cell");
+    if (!$card.length) return;
+    this.currentLeader = $card.data("key");
+    this.dirty = true;
+    this.render();
+    this.$el.find(".leader-collection").addClass("hidden");
+  }
 });
 
 module.exports = Collections;

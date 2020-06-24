@@ -1,5 +1,10 @@
 <button class="btn btn-danger button-quit">Quit</button>
 <div class="gwent-collections">
+  <div class="leader-collection hidden">
+    {{#each leaderCollection}}
+      {{>cardCell this}}
+    {{/each}}
+  </div>
   <div class="collections-side">
     <div class="side-title">
         <h4>{{i18n "card_collection"}}</h4>

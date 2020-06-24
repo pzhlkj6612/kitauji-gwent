@@ -6,10 +6,12 @@ var path = require('path');
 var app = express();
 var Config = require("../public/Config")
 var DB = require("./dao/db");
+var Cache = require("./dao/cache");
 
 global.connections = require("./Connections")();
 global.matchmaking = require("./Matchmaker")();
 global.db = new DB();
+Cache.getInstance().initialize();
 
 global.Room = require("./Room");
 

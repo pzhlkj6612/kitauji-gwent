@@ -222,12 +222,12 @@ class LuckyDraw {
   }
 
   drawLeader(userLeaders) {
-    if (userLeaders && userLeaders.length >= LEADERS.length) {
+    if (userLeaders && Object.keys(userLeaders).length >= LEADERS.length) {
       // already have all leaders
       return null;
     }
     let i = (Math.random() * LEADERS.length) | 0;
-    while (userLeaders.includes(LEADERS[i])) {
+    while (userLeaders[LEADERS[i]]) {
       i = (i + 1) % LEADERS.length;
     }
     return LEADERS[i];

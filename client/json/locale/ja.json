@@ -68,6 +68,7 @@
 
     "discard_members": "の退部/卒業部員",
     "close": "閉じる",
+    "emreis_title": "敵の退部/卒業部員から部員を１人もらいます",
     "medic_title": "部員を復活させる",
     "redraw_title": "カードを2枚まで選択して、もう一度引く",
     "game_over": "ゲームオーバー",
@@ -133,7 +134,7 @@
     "msg_choose_attack": "「{0}」は攻撃相手を選びます",
     "msg_choose_heal": "「{0}」は癒やす相手を選びます",
     "msg_choose_medic": "「{0}」は退部/卒業部員から選びます",
-    "msg_played_spy": "「{0}」はスパイを使いました！部員を２人もらいました",
+    "msg_played_spy": "「{0}」は「スパイ」を使いました！部員を２人もらいました",
     "no_one": "誰も",
 
     "tubakun": "チューバ君",

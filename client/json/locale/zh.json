@@ -66,8 +66,9 @@
     "hero_cards": "英雄牌",
     "confirm": "确认",
 
-    "discard_members": "的毕业/退部成员",
+    "discard_members": "的退部/毕业成员",
     "close": "关闭",
+    "emreis_title": "获得一名对方退部/毕业成员",
     "medic_title": "复活一名成员",
     "redraw_title": "选择2张牌重新抽牌",
     "game_over": "比赛结束",

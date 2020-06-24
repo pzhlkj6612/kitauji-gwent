@@ -68,6 +68,12 @@ class DB {
     }).toArray();
   }
 
+  async getAllUser() {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_USER);
+    return await table.find({}).toArray();
+  }
+
   /**
    * update bandName, currentDeck
    */
@@ -189,7 +195,7 @@ class DB {
     let cards = {};
     let exist = await this.findLeaderCardsByUser(username);
     if (exist) {
-      cards = exist.cards;
+      cards = exist;
     }
     for (let key of cardList) {
       if (!cards[key]) cards[key] = 1;
