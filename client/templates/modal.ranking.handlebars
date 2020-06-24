@@ -2,14 +2,14 @@
   <h3 class="bbm-modal__title">{{i18n "scoreboard"}}</h3>
 </div>
 <div class="bbm-modal__section ranking-modal-content">
-  <h4>My rank: {{myRank}}</h4>
+  <h4>{{i18n "my_rank"}}: {{myRank}}</h4>
   <div class="ranking-table">
     <table>
       <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Win Count</th>
-        <th>Lose Count</th>
+        <th>{{i18n "rank"}}</th>
+        <th>{{i18n "name"}}</th>
+        <th>{{i18n "win_count"}}</th>
+        <th>{{i18n "lose_count"}}</th>
       </tr>
       {{#each ranking}}
       <tr>
