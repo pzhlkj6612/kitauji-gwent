@@ -57,6 +57,7 @@ let Collections = Backbone.View.extend({
     "click .deck-confirm": "confirmDeck",
     "mouseover .card-cell": "onMouseover",
     "mouseleave .card-cell": "onMouseleave",
+    "click .button-quit": "onQuit",
   },
   toLeaderList: function(deck) {
     return deck.filter(key => cardData[key].type === 3);
@@ -265,6 +266,9 @@ let Collections = Backbone.View.extend({
     if (this.dirty) {
       this.app.send("set:customDeck", customDeck);
     }
+    this.app.lobbyRoute();
+  },
+  onQuit: function() {
     this.app.lobbyRoute();
   },
 });

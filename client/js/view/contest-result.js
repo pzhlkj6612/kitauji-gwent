@@ -32,7 +32,7 @@ let ContestResultModal = Backbone.View.extend({
     this.$el.find(".dialog").removeClass("visible");
     setTimeout(() => {
       this.remove();
-      if (this.gameResult.newCard) {
+      if (this.gameResult.newCard && this.gameResult.newCard.length) {
         let luckyDraw = new LuckyDraw({
           app: this.app,
           card: this.gameResult.newCard,

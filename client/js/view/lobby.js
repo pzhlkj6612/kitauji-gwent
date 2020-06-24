@@ -10,10 +10,12 @@ let Lobby = Backbone.View.extend({
   initialize: function(options){
     this.user = options.user;
     this.app = options.app;
+    this.serverStatus = {};
+    this.questProgress = {};
 
     this.app.receive("update:playerOnline", this.renderStatus.bind(this));
     this.app.receive("response:ranking", this.onRankingResponse.bind(this));
-    this.app.receive("response:questProgress", this.onQuestProgressResponse.bind(this));
+    this.app.receive("response:questProgress", this.renderQuestProgress.bind(this));
     this.app.send("request:questProgress");
 
     this.listenTo(this.app.user, "change:serverOffline", this.render);
@@ -37,6 +39,8 @@ let Lobby = Backbone.View.extend({
     this.$el.html(this.template(this.user.attributes));
     this.$el.find("#deckChoice").val(this.user.get("deck")).attr("selected", true);
     $("#locale").val(this.user.get("locale")).attr("selected", true);
+    this.renderStatus(this.serverStatus);
+    this.renderQuestProgress(this.questProgress);
     return this;
   },
   goToCollection: function() {
@@ -83,10 +87,12 @@ let Lobby = Backbone.View.extend({
     this.app.trigger("changeBandName", name);
   },
   renderStatus: function(data){
+    this.serverStatus = data;
     this.$el.find(".nr-player-online").html(data.online);
     this.$el.find(".nr-player-idle").html(data.idle);
   },
-  onQuestProgressResponse: function(progress) {
+  renderQuestProgress: function(progress) {
+    this.questProgress = progress;
     for (let task of Object.keys(progress)) {
       let btn = this.$el.find(`.btnContest[data-scenario="${task}"]`);
       if (!btn.length) continue;
