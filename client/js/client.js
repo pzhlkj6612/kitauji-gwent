@@ -210,6 +210,7 @@ let User = Backbone.Model.extend({
     userModel: null,
     name: typeof localStorage["bandName"] === "string" ? localStorage["bandName"].slice(0, 20) : null,
     deck: "random",
+    scenario: null,
     locale: "zh",
     serverOffline: true
   },
@@ -389,6 +390,9 @@ let User = Backbone.Model.extend({
     app.receive("request:chooseWhichSideBegins", function(){
       self.set("chooseSide", true);
     })
+    app.receive("response:questProgress", function(data) {
+      self.set("questProgress", data);
+    });
 
     app.on("startMatchmakingWithBot", this.startMatchmakingWithBot, this);
     app.on("startMatchmaking", this.startMatchmaking, this);
@@ -407,12 +411,14 @@ let User = Backbone.Model.extend({
   },
   startMatchmakingWithBot: function(data){
     data = data || {};
+    this.set("scenario", data.scenario);
     this.get("app").send("request:matchmaking:bot", {
       scenario: data.scenario,
     });
   },
   startMatchmaking: function(data){
     data = data || {};
+    this.set("scenario", data.scenario);
     this.get("app").send("request:matchmaking", {
       roomName: data.roomName,
       scenario: data.scenario,

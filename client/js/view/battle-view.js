@@ -40,7 +40,13 @@ let BattleView = Backbone.View.extend({
       clearInterval(interval);
     }.bind(this), 10);
 
-    bgm.play();
+    if (user.get("scenario") && (
+      user.get("questProgress")[user.get("scenario")] === 4
+    )) {
+      bgm.setMode("finale", true);
+    } else {
+      bgm.setMode("battle", true);
+    }
     this.render();
 
 

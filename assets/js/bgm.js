@@ -1,41 +1,33 @@
-// Start music.
-// $(".video-self").tubeplayer({
-//   width: 0.001,
-//   height: 0.001,
-//   initialVideo: "UE9fPWy1_o4",
-//   autoPlay: true,
-//   onPlayerPlaying: function(id){
-//     if(localStorage.getItem('volume') == 'off') {
-//       $('.music-icon').removeClass('active');
-//       $(".video-self").tubeplayer('mute');
-//     }
+var battleList = [
+  "daiichigakushou.mp3",
+  "kaiheitai.mp3",
+  "dream_solister.mp3",
+  "winds_of_provence.mp3",
+  "samba_de_loves_you.mp3",
+];
 
-//     if(localStorage.getItem('volumeValue') != null) {
-//       $('.video-self').tubeplayer('volume', localStorage.getItem('volumeValue'));
-//       $('.volume').val(localStorage.getItem('volumeValue'));
-//     } else {
-//       $('.volume').val('75');
-//       $('.video-self').tubeplayer('volume', 75);
-//     }
-//   },
-//   onPlayerEnded: function(){
-//     $(".video-self").tubeplayer('play');
-//   }
-// });
+var finale = [
+  "kasanaru_kokoro.mp3",
+  "soshite_tsukino_kyoku_ga_hajimaru.mp3",
+];
 
-var bgmList = [
-  "第一楽章.mp3",
-  "海兵队.mp3",
-  "DREAM SOLISTER.mp3",
-  "プロヴァンスの風.mp3",
-  "Samba de Loves You.mp3",
-]
+var lobbyList = [
+  "shintenchi.mp3",
+  "seishun_naru_nichijo.mp3",
+  "ketsui_wo_arata_ni.mp3",
+];
 
-function Bgm(index) {
+function Bgm(playList) {
+  this.randomSong = function() {
+    return this.playList[(Math.random() * this.playList.length) | 0];
+  }
+  this.isPlaying = false;
+  this.playList = playList;
   this.sound = document.createElement("audio");
-  this.sound.src = "/assets/bgm/" + bgmList[index];
+  this.sound.src = "/assets/bgm/" + this.randomSong();
   this.sound.setAttribute("preload", "auto");
   this.sound.setAttribute("controls", "none");
+  this.sound.muted = true;
   this.sound.style.display = "none";
   document.body.appendChild(this.sound);
   this.play = function(){
@@ -51,24 +43,49 @@ function Bgm(index) {
       this.setVolume(75);
       $('.volume').val('75');
     }
+    this.isPlaying = true;
     this.sound.play();
+    this.sound.muted = false;
     this.sound.addEventListener('ended',function(){
       //play next song
-      index = (index + 1) % bgmList.length;
-      self.sound.src = "/assets/bgm/" + bgmList[index];
+      self.sound.src = "/assets/bgm/" + self.randomSong();
       self.sound.load();
       self.sound.play();
     });
   }
   this.stop = function(){
+    this.isPlaying = false;
     this.sound.pause();
   }
   this.setVolume = function(volume) {
     this.sound.volume = volume * 1.0 / 100;
   }
+  this.setMode = function(mode, opt_force) {
+    if (!opt_force && this.isPlaying) {
+      return;
+    }
+    var playList;
+    switch (mode) {
+      case "battle":
+        playList = battleList;
+        break;
+      case "finale":
+        playList = finale;
+        break;
+      case "lobby":
+      default:
+        playList = lobbyList;
+        break;
+    }
+    if (this.playList === playList && this.isPlaying) return;
+    this.playList = playList;
+    this.sound.src = "/assets/bgm/" + this.randomSong();
+    this.sound.load();
+    this.play();
+  }
 }
 
-var bgm = new Bgm((Math.random() * bgmList.length) | 0);
+var bgm = new Bgm(lobbyList);
 
 // Set volume.
 $('.volume').on('blur', function() {

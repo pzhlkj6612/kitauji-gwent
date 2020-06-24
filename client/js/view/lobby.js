@@ -15,11 +15,13 @@ let Lobby = Backbone.View.extend({
 
     this.app.receive("update:playerOnline", this.renderStatus.bind(this));
     this.app.receive("response:ranking", this.onRankingResponse.bind(this));
-    this.app.receive("response:questProgress", this.renderQuestProgress.bind(this));
     this.app.send("request:questProgress");
 
     this.listenTo(this.app.user, "change:serverOffline", this.render);
     this.listenTo(this.app.user, "change:userModel", this.render);
+    this.listenTo(this.app.user, "change:questProgress", this.renderQuestProgress.bind(this));
+
+    bgm.setMode("lobby");
     $(".gwent-battle").html(this.el);
     this.render();
   },
@@ -91,13 +93,13 @@ let Lobby = Backbone.View.extend({
     this.$el.find(".nr-player-online").html(data.online);
     this.$el.find(".nr-player-idle").html(data.idle);
   },
-  renderQuestProgress: function(progress) {
-    this.questProgress = progress;
-    for (let task of Object.keys(progress)) {
+  renderQuestProgress: function() {
+    this.questProgress = this.user.get("questProgress") || {};
+    for (let task of Object.keys(this.questProgress)) {
       let btn = this.$el.find(`.btnContest[data-scenario="${task}"]`);
       if (!btn.length) continue;
       btn.removeClass("disabled");
-      btn.find(".progress-text").html(`${progress[task]}/5`);
+      btn.find(".progress-text").html(`${this.questProgress[task]}/5`);
     }
   },
   onRankingResponse: function(response) {
