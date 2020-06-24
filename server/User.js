@@ -56,6 +56,10 @@ var User = (function(){
       needLogin: !valid,
       model: this.userModel,
     });
+    this.socket.emit("update:playerOnline", {
+      online: connections.length(),
+      idle: connections.getIdleUserCount(),
+    });
   }
 
   r.loadUserModel = async function(username) {
@@ -231,12 +235,12 @@ var User = (function(){
   }
 
   r.luckyDrawLeaderAfterGame_ = async function(questState) {
-    // must win zenkoku
-    if (this._scenario !== Const.SCENARIO_ZENKOKU || !questState.success) {
+    // must complete zenkoku
+    if (this._scenario !== Const.SCENARIO_ZENKOKU || !questState.completed) {
       return null;
     }
     // 20% chance
-    if (Math.random() > 0.1) return null;
+    if (Math.random() > 0.2) return null;
     let userLeaders = await db.findLeaderCardsByUser(this.userModel.username);
     let newLeader = LuckyDraw.getInstance().drawLeader(userLeaders);
     if (newLeader) {
@@ -246,7 +250,7 @@ var User = (function(){
   }
 
   r.luckyDrawAfterGame_ = async function(isWin, foe, questState) {
-    if (!isWin) return [];
+    if (!isWin && !questState.completed) return [];
     let scenario = this._scenario;
     let possibility = 0;
     if (foe.isBot()) possibility = 1;

@@ -107,17 +107,29 @@ class DB {
     }).toArray();
   };
   
-  async findCardsByUser(username, deck) {
+  async findCardsByUser(username, deck, includeNeutral) {
     await this.connectPromise;
     const table = this.db.collection(TABLE_CARD);
     let result = await table.findOne({
       username,
       deck,
     });
+    let cards = {};
     if (result) {
-      return result.cards;
+      cards = result.cards;
     }
-    return null;
+    if (includeNeutral) {
+      let neutral = await table.findOne({
+        username,
+        deck: Const.NEUTRAL_DECK,
+      });
+      if (neutral) {
+        for (let card of Object.keys(neutral.cards)) {
+          cards[card] = neutral.cards[card];
+        }
+      }
+    }
+    return cards;
   };
   
   async findLeaderCardsByUser(username) {

@@ -36,7 +36,7 @@ const SCENARIOS = {
   },
   [Const.SCENARIO_KANSAI]: {
     name: Const.SCENARIO_KANSAI,
-    weights: [10, 30, 10, 3],
+    weights: [10, 30, 15, 3],
   },
   [Const.SCENARIO_ZENKOKU]: {
     name: Const.SCENARIO_ZENKOKU,
@@ -135,7 +135,7 @@ class LuckyDraw {
     if (!steps) {
       steps = this.generateSteps_(scenario.weights);
     }
-    let userDeck = await db.findCardsByUser(username, deckKey) || {};
+    let userDeck = await db.findCardsByUser(username, deckKey, true) || {};
     let rarity = this.nextRarity_(scenario.weights, steps);
     let card = this.drawByRarity_(rarity, deckKey, userDeck);
     // card exist, try draw from other deck
@@ -162,7 +162,7 @@ class LuckyDraw {
     if (!steps) {
       steps = this.generateSteps_(scenario.weights);
     }
-    let userDeck = await db.findCardsByUser(username, deckKey) || {};
+    let userDeck = await db.findCardsByUser(username, deckKey, true) || {};
     let newCards = [];
     for (let i = 0; i < times; i++) {
       let rarity = this.nextRarity_(scenario.weights, steps);
@@ -181,8 +181,17 @@ class LuckyDraw {
   drawByRarity_(rarity, deckKey, userDeck) {
     let deck = DeckData[deckKey];
     let cards = deck.data.filter(c => {
-      return CardData[c].type !== 3 && CardData[c].rarity === rarity;
+      return CardData[c].type !== 3 &&
+        CardData[c].rarity === rarity &&
+        (Math.random() < 0.5 && !userDeck[c]);// partially keep duplicated card
     });
+    if (!cards.length) {
+      // ensure cards not empty
+      cards = deck.data.filter(c => {
+        return CardData[c].type !== 3 &&
+          CardData[c].rarity === rarity;
+      });
+    }
     let card = cards[(Math.random() * cards.length) | 0];
     let retry = 3;
     // for unit card, draw again if user has it
