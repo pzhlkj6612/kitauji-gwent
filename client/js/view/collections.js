@@ -151,6 +151,7 @@ let Collections = Backbone.View.extend({
     if (!this.deckKey) return;
     let stats = this.deckStats(this.currentDeck);
     this.$el.html(this.template({
+      "factionAbility": i18n.getText(`faction_ability_${this.deckKey}`),
       "cardCollection": this.toCardModelList(this.collection, this.collectionTab),
       "cardInDeck": this.toCardModelList(this.currentDeck, this.deckTab),
       "collectionTab": i18n.getText(this.collectionTab),

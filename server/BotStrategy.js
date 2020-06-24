@@ -497,6 +497,10 @@ var BotStrategy = (function(){
     }
     r.isScoreLeading = function() {
       let state = this.bot.state;
+      if (state.ownSide.faction === Deck.FACTION.OATHS_FINALE &&
+          state.foeSide.faction !== Deck.FACTION.OATHS_FINALE) {
+        return state.ownSide.score >= state.foeSide.score;
+      }
       return state.ownSide.score > state.foeSide.score;
     }
     r.getAttackReward = function(cards, attackPower) {

@@ -73,7 +73,7 @@
     "ability_desc_tunning": "チューニング：自分側のデバフ（天気除く）を消す",
     "ability_desc_monaka": "チームもなか：自分側の一人の部員にお守りを贈り、演奏力＋２",
     "ability_desc_kasa": "傘差し：自分側の鎧塚みぞれのデバフを消し、演奏力＋５",
-    "ability_desc_medic": "復活：１名の退部卒業部員（ヒーロー除く）を復活させ、演奏に入る",
+    "ability_desc_medic": "復活：１名の退部/卒業部員（ヒーロー除く）を復活させ、演奏に入る",
     "ability_desc_morale": "士気：「北宇治ファイト！」を唱えて、同じフィールドにいるほかの部員の演奏力＋１",
     "ability_desc_muster": "召集：友達を召集し、一緒に演奏に入る",
     "ability_desc_bond": "絆：カップルなどが一緒にステージに上がると、演奏力が倍増する",
@@ -88,6 +88,15 @@
     "ability_desc_horn": "支援：同じフィールドにいるほかの部員の演奏力倍増",
     "ability_desc_horn_card": "指導者：同じフィールドにいる部員の演奏力倍増",
     "ability_desc_hero": "ヒーロー：演奏力がバフやデバフの影響を受けない",
+
+    "ability_desc_fog_leader": "「リズと青い鳥」第三楽章を演奏して、両方全体の金管楽器の演奏力を１にする",
+    "ability_desc_frost_leader": "サンフェスに出場して、両方全体の木管楽器の演奏力を１にする",
+    "ability_desc_ranged_horn_leader": "同じフィールドにいるほかの部員の演奏力倍増",
+    "ability_desc_emreis_leader": "敵の退部/卒業部員から部員を１人もらう",
+
+    "faction_ability_kumiko1": "Draw an extra card after a victorious round",
+    "faction_ability_kumiko1S2": "Keep one random unit card after each round on the battlefield",
+    "faction_ability_kitauji": "Win a round if it’s a draw",
 
     "tubakun": "チューバ君",
     "taibu": "退部届",

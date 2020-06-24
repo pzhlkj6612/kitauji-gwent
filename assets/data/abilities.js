@@ -418,7 +418,7 @@ module.exports = {
   },
   "fog_leader": {
     name: "",
-    description: "",
+    description: "ability_desc_fog_leader",
     onActivate: function(){
       var cards = this.deck.find("key", "daisangakushou");
       let card;
@@ -432,7 +432,7 @@ module.exports = {
   },
   "clear_weather_leader": {
     name: "",
-    description: "",
+    description: "ability_desc_clear",
     onActivate: function(){
       this.setWeather(5);
     }
@@ -453,7 +453,7 @@ module.exports = {
   },
   "frost_leader": {
     name: "",
-    description: "",
+    description: "ability_desc_frost_leader",
     onActivate: function(){
       var cards = this.deck.find("key", "sunfes")
       let card;
@@ -466,8 +466,8 @@ module.exports = {
     }
   },
   "ranged_horn_leader": {
-    name: "Francesca Findabair the Beautiful",
-    description: "Doubles the strength of all your Ranged Combat units (unless a Commander's Horn is also present on that row).",
+    name: "",
+    description: "ability_desc_ranged_horn_leader",
     onActivate: function(){
       this.setHorn("niiyama", 1);
     }
@@ -480,8 +480,8 @@ module.exports = {
     }
   },
   "emreis_leader4": {
-    name: "Emhyr vas Emreis the Relentless",
-    description: "Draw a card from your opponent's discard pile.",
+    name: "",
+    description: "ability_desc_emreis_leader",
     waitResponse: true,
     onActivate: function(card){
       var discard = this.foe.getDiscard();
