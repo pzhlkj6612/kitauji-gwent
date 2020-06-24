@@ -125,6 +125,7 @@
     "msg_choose_heal": "{0} chooses a card to heal.",
     "msg_choose_medic": "{0} chooses a card from discard pile.",
     "msg_played_spy": "{0} activated Spy! Draws +2 cards.",
+    "no_one": "No one ",
 
     "tubakun": "Decoy",
     "taibu": "Scorch",

@@ -369,7 +369,7 @@ let User = Backbone.Model.extend({
       let modal = new WinnerModal({model: new model({
         app: app,
         user: self,
-        winner: winner,
+        winner: winner || i18n.getText("no_one"),
         gameResult: data.gameResult,
         p1_1: p1Scores[0],
         p2_1: p2Scores[0],

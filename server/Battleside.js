@@ -885,7 +885,7 @@ Battleside = (function() {
       rndCard = this.getRandomCardOnField();
       if(rndCard) {
         rndCard.__lock = true;
-        this.sendNotification("msg_monsters_faction_triggered", [this.getName(), rndCard.getName()]);
+        this.sendNotification("msg_monsters_triggered", [this.getName(), rndCard.getName()]);
       }
       else {
         this.sendNotification("msg_monsters_not_triggered", [this.getName()]);
@@ -1051,11 +1051,11 @@ Battleside = (function() {
     return this._isReDrawing;
   }
 
-  r.sendNotificationTo = function(side, msg) {
-    this.battle.sendNotificationTo(side, msg);
+  r.sendNotificationTo = function(side, msg, values) {
+    this.battle.sendNotificationTo(side, msg, values);
   }
-  r.sendNotification = function(msg) {
-    this.battle.sendNotification(msg);
+  r.sendNotification = function(msg, values) {
+    this.battle.sendNotification(msg, values);
   }
 
   return Battleside;
