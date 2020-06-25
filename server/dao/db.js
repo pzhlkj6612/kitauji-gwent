@@ -2,6 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const Util = require("./util");
 const CardData = require("../../assets/data/cards");
 const Const = require("../Const");
+const Config = require('../../public/Config');
 
 const MONGODB_PORT = 27017;
 const DB_NAME = "mydb";
@@ -14,7 +15,7 @@ const TABLE_CONDITION = "condition";
 
 class DB {
   constructor() {
-    this.connectPromise = MongoClient.connect(`mongodb://localhost:${MONGODB_PORT}`).then((client) => {
+    this.connectPromise = MongoClient.connect(`mongodb://${Config.MONGODB_HOST}:${MONGODB_PORT}`).then((client) => {
       console.info("mongodb connected");
       this.client = client;
       this.db = client.db(DB_NAME);
@@ -309,8 +310,12 @@ class DB {
     return null;
   }
   
-  async updateProgress(username, questName, progress) {
+  async updateProgress(username, questName, progress, ifNotExist) {
     await this.connectPromise;
+    if (ifNotExist) {
+      let exist = await this.findProgressByUserQuest(username, questName);
+      if (exist) return;
+    }
     return await this.db.collection(TABLE_PROGRESS).updateOne({
       username,
       questName,

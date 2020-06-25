@@ -12,9 +12,20 @@ let Modal = require("./view/modal");
 let LuckyDraw = require("./view/lucky-draw");
 let I18n = require("./i18n");
 const ContestResultModal = require("./view/contest-result");
+const Config = require("../../public/Config");
 
 window.$ = $;
 window.i18n = new I18n("zh");
+
+$.get("/hosts", function(data) {
+  Config.SERVERS = data;
+});
+
+$.get("/version", function(version) {
+  if (Config.MAJOR_VERSION < Number(version)) {
+    $(".container").prepend('<div class="notification-left">检测到新版本，请下载！Please download latest version!</div>')
+  }
+});
 
 Handlebars.registerPartial("card", require("../templates/cards.handlebars"));
 Handlebars.registerPartial("cardCell", require("../templates/cardCell.handlebars"));
@@ -65,11 +76,11 @@ let App = Backbone.Router.extend({
       this.socket.off();
       this.socket.close();
     }
-    let hostname = Config.Server.hostname;
-    if (!hostname) {
-      hostname = location.hostname;
-    }
-    this.socket = socket("http://" + hostname + ":" + Config.Server.port);
+    let region = localStorage["region"] || "aws";
+    if (this.user) region = this.user.get("region");
+    let hostname = Config.SERVERS[region];
+    if (hostname === "localhost") hostname = location.hostname;
+    this.socket = socket("http://" + hostname + ":" + Config.WS_SERVER_PORT);
     var self = this;
     console.log(this.socket.connected);
     this.socket.on("connect", function(socket){
@@ -212,6 +223,7 @@ let User = Backbone.Model.extend({
     deck: "random",
     scenario: null,
     locale: "zh",
+    region: "aws",
     serverOffline: true
   },
   initialize: function(){
@@ -407,6 +419,7 @@ let User = Backbone.Model.extend({
 
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
+    this.set("region", localStorage["region"] || "aws");
     i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(data){
@@ -457,6 +470,13 @@ let User = Backbone.Model.extend({
     i18n.loadDict(locale, () => {
       this.get("app").getCurrentView().render();
     });
+  },
+  setRegion: function(region) {
+    this.set("region", region);
+    localStorage["region"] = region;
+    localStorage.removeItem("token");
+    localStorage.removeItem("connectionId");
+    this.get("app").initialize();
   },
   chooseSide: function(roomSide){
     this.get("app").send("response:chooseWhichSideBegins", {

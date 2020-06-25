@@ -326,14 +326,20 @@ var BotStrategy = (function(){
             reward = foeDebuff - ownDebuff;
           } else {
             let field = this.getFieldByWeather(card);
-            let foeScore = this.getScoreSum(this.getFieldCards(false, field).filter(c=>Util.canReplace(c)), c=>c.power);
-            let ownScore = this.getScoreSum(this.getFieldCards(true, field).filter(c=>Util.canReplace(c)), c=>c.power);
-            let handScore = this.getScoreSum(this.getHandCards(true, field).filter(c=>Util.canReplace(c)), c=>c._data.power);
-            // cheat!
-            let foeHandScore = this.getScoreSum(this.getHandCards(false, field).filter(c=>Util.canReplace(c)), c=>c._data.power);
-            realPower = Math.max(foeScore - ownScore, 0);
-            reward = foeScore - ownScore;
-            if (foeScore > ownScore) reward += (foeHandScore - handScore) * 0.2;
+            let weathers = state.ownFields.weather.cards;
+            if (weathers.some(w=>this.getFieldByWeather(w) === field)) {
+              // same weather already exist
+              reward = 0;
+            } else {
+              let foeScore = this.getScoreSum(this.getFieldCards(false, field).filter(c=>Util.canReplace(c)), c=>c.power);
+              let ownScore = this.getScoreSum(this.getFieldCards(true, field).filter(c=>Util.canReplace(c)), c=>c.power);
+              let handScore = this.getScoreSum(this.getHandCards(true, field).filter(c=>Util.canReplace(c)), c=>c._data.power);
+              // cheat!
+              let foeHandScore = this.getScoreSum(this.getHandCards(false, field).filter(c=>Util.canReplace(c)), c=>c._data.power);
+              realPower = Math.max(foeScore - ownScore, 0);
+              reward = foeScore - ownScore;
+              if (foeScore > ownScore) reward += (foeHandScore - handScore) * 0.2;
+            }
           }
         } else if (Util.isEmreisLeader4(card)) {
           let discard = state.foeSide.discard;

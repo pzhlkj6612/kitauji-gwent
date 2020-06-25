@@ -16,9 +16,11 @@ let Login = Backbone.View.extend({
   events: {
     "click .btn-login": "onLoginClick",
     "click .btn-signin": "onSignInClick",
+    "change #region": "setRegion",
   },
   render() {
     this.$el.html(this.template(this.user.attributes));
+    this.$el.find("#region").val(this.user.get("region")).attr("selected", true);
     return this;
   },
   renderStatus: function(data){
@@ -64,6 +66,11 @@ let Login = Backbone.View.extend({
       };
     }
     this.app.trigger("showInitialCards", data);
+  },
+  setRegion(e) {
+    let val = $(e.target).val();
+    this.$el.find("#region option[value='" + val + "']").attr("selected", "selected");
+    this.user.setRegion(val);
   },
 });
 

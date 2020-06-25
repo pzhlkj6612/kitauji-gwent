@@ -27,6 +27,9 @@
     "band_name": "Band Name",
     "band_name_hint": "e.g. Kitauji Wind Club",
     "initial_deck": "Initial Deck",
+    "region_local": "Server: Localhost",
+    "region_aws": "Server: Tokyo(Global)",
+    "region_aliyun": "Server: Hangzhou(China)",
 
     "initial_cards": "These are your initial cards! Check your deck for detail",
     "log_out": "Log Out",
@@ -74,7 +77,7 @@
     "game_over": "Match Over",
     "win_the_game": " wins the match!",
     "open_source": "This game is an open-source proejct, please visit ",
-    "one_more_game": "Play again",
+    "one_more_game": "Next",
 
     "ability_desc_taibu": "Quit: Select a 3rd grade member from your opponent's fields to destroy.",
     "ability_desc_attack": "Attack: Throw mouthpiece or handwashing fluid to reduce the strength of one of your opponent's card.",

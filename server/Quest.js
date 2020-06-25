@@ -34,7 +34,7 @@ async function updateQuestProgress(userModel, scenario, gameResult) {
     progress = [];
     // unlock next scenario
     if (result.success) {
-      await db.updateProgress(username, getNextScenario(scenario), []);
+      await db.updateProgress(username, getNextScenario(scenario), [], true);
     }
   }
   await db.updateProgress(username, scenario, progress);

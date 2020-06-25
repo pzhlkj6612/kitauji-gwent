@@ -1,4 +1,3 @@
-var argv = require('minimist')(process.argv.slice(2));
 var http = require("http");
 var express = require('express');
 var favicon = require('serve-favicon');
@@ -14,7 +13,6 @@ global.db = new DB();
 Cache.getInstance().initialize();
 
 global.Room = require("./Room");
-
 global.User = require("./User");
 
 var server = http.createServer(app);
@@ -30,9 +28,9 @@ global.io = require("socket.io")(server, {
   }
 });
 io.set('origins', '*:*');
-server.listen(Config.Server.port);
+server.listen(Config.WS_SERVER_PORT);
 
-console.info(`Please visit ${Config.Server.port} to start playing`);
+console.info(`Please visit localhost:${Config.WebServer.port} to start playing`);
 
 app.use(function(req, res, next) {
   res.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'");
@@ -45,6 +43,14 @@ app.use('/assets', express.static(__dirname + '/../assets'));
 app.use(favicon(path.join(__dirname, '/../assets/texture', 'favicon.ico')))
 
 app.listen(Config.WebServer.port);
+
+app.get("/version", function(req, res) {
+  res.send(String(Config.MAJOR_VERSION));
+});
+
+app.get("/hosts", function(req, res) {
+  res.json(Config.SERVERS);
+});
 
 var admin = io.of("/admin");
 

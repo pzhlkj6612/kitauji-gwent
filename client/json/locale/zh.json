@@ -17,7 +17,7 @@
     "idle_count": "空闲人数: ",
     "online": "在线",
     "download": "下载",
-    "standalone": "单机版",
+    "standalone": "本地版",
     "stable": "更稳定",
 
     "password": "密码",
@@ -27,6 +27,9 @@
     "band_name": "乐队名称",
     "band_name_hint": "例：北宇治高等学校",
     "initial_deck": "初始牌组",
+    "region_local": "服务器：本地",
+    "region_aws": "服务器：东京（国际服）",
+    "region_aliyun": "服务器：杭州（国服）",
 
     "initial_cards": "恭喜你获得以下初始牌组！请在“我的阵容”中查看",
     "log_out": "退出",
@@ -74,7 +77,7 @@
     "game_over": "比赛结束",
     "win_the_game": "赢得比赛！",
     "open_source": "本项目已开源，详情请见",
-    "one_more_game": "再来一局",
+    "one_more_game": "继续",
 
     "ability_desc_taibu": "退部: 指定对方一名三年级部员以备战高考为由直接退部。",
     "ability_desc_attack": "投掷: 投掷号嘴（或洗手液等），使指定对方一名部员吹奏能力降低。",

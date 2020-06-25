@@ -65,7 +65,8 @@ let ContestResultModal = Backbone.View.extend({
           name: school,
           price: i18n.getText(PRICE_LABEL[price]),
           className: PRICE_CLASSNAME[price],
-          isMe: school === this.user.get("userModel").bandName,
+          isMe: this.user.get("userModel") &&
+            school === this.user.get("userModel").bandName,
         });
       }
     }
