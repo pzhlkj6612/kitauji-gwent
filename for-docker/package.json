@@ -10,6 +10,8 @@
       "gulp-rename": "^1.2.2",
       "jquery-deferred": "^0.3.0",
       "minimist": "1.1.0",
+      "mongodb": "^3.5.9",
+      "redis-sorted-set": "^2.0.0",
       "serve-favicon": "^2.5.0",
       "serve-static": "1.8.0",
       "shortid": "^2.2.2",

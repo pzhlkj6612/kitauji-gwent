@@ -1,14 +1,21 @@
 
 var Config = {};
 
-Config.Server = {
-  "hostname": "ec2-13-113-243-171.ap-northeast-1.compute.amazonaws.com",
-  "port": 16918
-};
+Config.MAJOR_VERSION = 1;
+
+Config.WS_SERVER_PORT = 16918;
+
+Config.SERVERS = {
+  "aws": "ec2-13-113-243-171.ap-northeast-1.compute.amazonaws.com",
+  "aliyun": "121.196.61.18",
+  "local": "ec2-13-113-243-171.ap-northeast-1.compute.amazonaws.com",
+}
 
 Config.WebServer = {
   "port": 3000
 };
+
+Config.MONGODB_HOST = "172.17.0.1";
 
 Config.Gwent = {
   notification_duration: 4000

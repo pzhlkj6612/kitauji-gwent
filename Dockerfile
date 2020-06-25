@@ -14,7 +14,9 @@ COPY server ./server
 
 RUN npm run build
 
+COPY for-docker/Config.js ./public/
+
 EXPOSE 3000
 EXPOSE 16918
 
-CMD ["node", "server/server.js"]
+CMD ["node", "--harmony-async-await", "server/server.js"]

@@ -19,7 +19,7 @@ var rename = require("gulp-rename");
 
 
 gulp.task('browserify', function() {
-  browserify('./client/js/main.js', {standalone: "app", debug: true}) // set false when publish
+  browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
   .transform(handlebars).on("error", function(err) {
     console.log(err);
   })
