@@ -114,11 +114,10 @@ let Collections = Backbone.View.extend({
     cards.sort((a, b) => {
       let powerA = a._data.power + (String(a._data.ability).includes("hero") ? 100 : 0);
       let powerB = b._data.power + (String(b._data.ability).includes("hero") ? 100 : 0);
-      if (powerA > powerB) {
-        return -1;
-      } else if (powerA < powerB) {
-        return 1;
-      }
+      if (powerA > powerB) return -1;
+      else if (powerA < powerB) return 1;
+      if (a._data.type > b._data.type) return -1;
+      else if (a._data.type < b._data.type) return 1;
       return 0;
     });
     return cards;
