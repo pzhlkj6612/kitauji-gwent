@@ -75,6 +75,7 @@ let BattleView = Backbone.View.extend({
   onQuit: function() {
     this.user.get("app").send("request:quitGame");
     this.user.get("app").trigger("timer:cancel");
+    this.stopListening();
     this.user.get("app").initialize();
   },
   onClick: function(e){
@@ -328,6 +329,7 @@ let BattleView = Backbone.View.extend({
 
 
     this.app.send("activate:leader")
+    this.user.get("app").trigger("timer:cancel");
   },
   setUpBattleEvents: function(){
     let self = this;

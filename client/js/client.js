@@ -60,6 +60,9 @@ let App = Backbone.Router.extend({
   },
   initialize: function(){
     let self = this;
+    if (this.getCurrentView()) {
+      this.getCurrentView().stopListening();
+    }
     this.off();
     this.connect();
     if (this.user) {
