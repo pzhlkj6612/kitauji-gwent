@@ -40,6 +40,9 @@ class DB {
         if (err) throw err;
         console.log("condition table created!");
       });
+    }).catch(e => {
+      console.warn("Database not started. You can still connect to online servers");
+      console.warn("本地数据库没有启动，但仍然可以选择连接线上服务器。");
     });
   }
   
