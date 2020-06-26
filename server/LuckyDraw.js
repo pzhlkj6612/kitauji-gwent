@@ -190,14 +190,15 @@ class LuckyDraw {
     let cards = deck.data.filter(c => {
       return CardData[c].type !== 3 &&
         CardData[c].rarity === rarity &&
-        (Math.random() < 0.5 && !userDeck[c]);// partially keep duplicated card
+        !userDeck[c];
     });
     if (!cards.length) {
-      // ensure cards not empty
+      // user has all cards in this deck
       cards = deck.data.filter(c => {
         return CardData[c].type !== 3 &&
           CardData[c].rarity === rarity;
       });
+      return cards[(Math.random() * cards.length) | 0];
     }
     let card = cards[(Math.random() * cards.length) | 0];
     let retry = 3;
