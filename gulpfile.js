@@ -12,11 +12,18 @@ var sprity = require("sprity");
 var gulpif = require("gulp-if");
 var argv = require("minimist")(process.argv.slice(2));
 var rename = require("gulp-rename");
+var $ = gulpLoadPlugins();
 //livereload({start: true});
 
 //fast install
 //npm i --save-dev browserify vinyl-source-stream babelify gulp-livereload gulp gulp-sass
-
+const versionConfig = {
+  'value': '%MDS%',
+  'append': {
+    'key': 'v',
+    'to': ['css', 'js'],
+  },
+};
 
 gulp.task('browserify', function() {
   browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
@@ -77,6 +84,7 @@ gulp.task("watch", function() {
 
 gulp.task("index", function() {
   gulp.src("./client/index.html")
+  .pipe($.versionNumber(versionConfig))
   .pipe(gulp.dest("./public/"));
 
   gulp.src("./client/json/**")
