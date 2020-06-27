@@ -1,4 +1,5 @@
 var Const = require("./Const");
+var SchoolData = require("../assets/data/schools");
 
 function getNextScenario(scenario) {
   switch (scenario) {
@@ -29,7 +30,7 @@ async function updateQuestProgress(userModel, scenario, gameResult) {
     let wins = progress.filter(g=>g.isWin).length;
     result.success = (wins === gamesPerQuest);
     result.scenario = scenario;
-    result.report = generateQuestReport(userModel, progress, getUserPrice(wins, gamesPerQuest));
+    result.report = generateQuestReport(userModel, progress, scenario, getUserPrice(wins, gamesPerQuest));
     // reset current task progress
     progress = [];
     // unlock next scenario
@@ -65,7 +66,7 @@ const QUOTA = {
   [Const.PRICE_BRONZE]: 0.5,
 }
 
-function generateQuestReport(userModel, progress, userPrice) {
+function generateQuestReport(userModel, progress, scenario, userPrice) {
   let bandName = userModel.bandName;
 
   // sort schools by game results
@@ -88,6 +89,10 @@ function generateQuestReport(userModel, progress, userPrice) {
     }
     return 0;
   });
+  // put more schools
+  for (let school of SchoolData[scenario]) {
+    if (gameResults[school] == null) allSchools.push(school);
+  }
 
   // put schools into price slots
   let total = allSchools.length + 1;
