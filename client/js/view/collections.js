@@ -204,6 +204,7 @@ let Collections = Backbone.View.extend({
   setDeck: function(e) {
     let val = $(e.target).val();
     this.deckKey = val;
+    this.dirty = true;
     this.reset();
     this.render();
   },
