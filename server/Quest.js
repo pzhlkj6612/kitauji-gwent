@@ -36,6 +36,10 @@ async function updateQuestProgress(userModel, scenario, gameResult) {
     if (result.success) {
       await db.updateProgress(username, getNextScenario(scenario), [], true);
     }
+    // record user zenkoku gold
+    if (result.success && result.scenario === Const.SCENARIO_ZENKOKU) {
+      await db.recordZenkokuGold(username);
+    }
   }
   await db.updateProgress(username, scenario, progress);
   return result;

@@ -9,6 +9,7 @@ var Util = (function() {
       "currentDeck": user.currentDeck || user.initialDeck,
       "winCount": user.winCount || 0,
       "loseCount": user.loseCount || 0,
+      "zenkokuGold": 0,
     };
   }
 

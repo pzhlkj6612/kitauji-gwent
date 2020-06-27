@@ -104,6 +104,14 @@ class DB {
       $inc: update,
     });
   }
+
+  async recordZenkokuGold(username) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_USER);
+    return await table.updateOne({username}, {
+      $inc: {zenkokuGold: 1},
+    });
+  }
   
   // card
   

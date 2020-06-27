@@ -18,7 +18,7 @@ class Cache {
     let allUser = await db.getAllUser();
     for (let user of allUser) {
       if (!user.winCount) continue;
-      this.winRanking.set(user.username, user.winCount);
+      this.winRanking.set(user.username, -user.winCount);
     }
   }
 
@@ -41,7 +41,8 @@ class Cache {
   async recordUserWin(username, isWin) {
     await db.recordUserWin(username, isWin);
     if (isWin) {
-      this.winRanking.set(username, (this.winRanking.get(username) || 0) + 1);
+      // zset sort in ascent order, store winCount * -1 
+      this.winRanking.set(username, (this.winRanking.get(username) || 0) - 1);
     }
   }
 
@@ -51,7 +52,15 @@ class Cache {
 
   async getTopK(k) {
     let topKUsers = this.winRanking.range(0, k);
-    return await db.findUserByNames(topKUsers);
+    let userModels = await db.findUserByNames(topKUsers);
+    userModels.sort((a, b) => {
+      if (a.winCount > b.winCount) return -1;
+      else if (a.winCount < b.winCount) return 1;
+      if (a.loseCount < b.loseCount) return -1;
+      else if (a.loseCount > b.loseCount) return 1;
+      return 0;
+    });
+    return userModels;
   }
 }
 
