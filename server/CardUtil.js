@@ -1,3 +1,5 @@
+var CardData = require("../assets/data/cards");
+
 let Util = {};
 
 Util.canReplace = function(card) {
@@ -72,6 +74,18 @@ Util.isDecoy = function(card) {
 }
 Util.isEmreisLeader4 = function(card) {
   return card._data.ability === "emreis_leader4";
+}
+Util.getLimit = function(cardKey) {
+  let card = {
+    _data: CardData[cardKey],
+  };
+  if (Util.isHero(card) || Util.isSpy(card) || Util.isMedic(card)) {
+    return 1;
+  }
+  if (Util.isBond(card)) {
+    return 2;
+  }
+  return 999;
 }
 
 module.exports = Util;

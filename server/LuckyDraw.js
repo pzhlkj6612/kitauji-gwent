@@ -1,5 +1,6 @@
 var DeckData = require("../assets/data/deck");
 var CardData = require("../assets/data/cards");
+var Util = require("./CardUtil");
 var Const = require("./Const");
 var Cache = require("./dao/cache");
 
@@ -139,7 +140,7 @@ class LuckyDraw {
     let rarity = this.nextRarity_(scenario.weights, steps);
     let card = this.drawByRarity_(rarity, deckKey, userDeck);
     // card exist or number of card exceed its limit, try draw from other deck
-    if (CardData[card].limit && userDeck[card] > CardData[card].limit ||
+    if (userDeck[card] > Util.getLimit(card) ||
       userDeck[card] && Math.random() < 0.8) {
       if (this.countUserDeck_(userDeck) > DeckData[deckKey].length) {
         Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
@@ -176,7 +177,7 @@ class LuckyDraw {
     }
     if (times === 1) {
       let card = newCards[0];
-      if (CardData[card].limit && userDeck[card] > CardData[card].limit) {
+      if (userDeck[card] > Util.getLimit(card)) {
         return [];
       }
     }
