@@ -18,6 +18,7 @@ var lobbyList = [
 ];
 
 function Bgm(playList) {
+  let self = this;
   this.randomSong = function() {
     return this.playList[(Math.random() * this.playList.length) | 0];
   }
@@ -58,7 +59,28 @@ function Bgm(playList) {
     this.sound.pause();
   }
   this.setVolume = function(volume) {
+    if (this.playList === battleList) {
+      // battle bgm seems too loud comparing to others...
+      volume *= 0.75;
+    }
     this.sound.volume = volume * 1.0 / 100;
+  }
+  this.getVolume = function() {
+    return this.sound.volume * 100 | 0;
+  }
+  this.fadeOut = function(callback) {
+    let vol = this.getVolume();
+    let interval = 100; // 200ms interval
+    var intervalID = setInterval(function() {
+      if (vol > 0) {
+        vol -= 5;
+        this.setVolume(vol);
+      } else {
+        // Stop the setInterval when 0 is reached
+        clearInterval(intervalID);
+        callback && callback();
+      }
+    }.bind(this), interval);
   }
   this.setMode = function(mode, opt_force) {
     if (!opt_force && this.isPlaying) {
@@ -79,9 +101,19 @@ function Bgm(playList) {
     }
     if (this.playList === playList && this.isPlaying) return;
     this.playList = playList;
-    this.sound.src = "/assets/bgm/" + this.randomSong();
-    this.sound.load();
-    this.play();
+    if (this.isPlaying) {
+      let vol = this.getVolume();
+      this.fadeOut(function() {
+        self.sound.src = "/assets/bgm/" + self.randomSong();
+        self.sound.load();
+        self.play();
+        self.setVolume(vol);
+      });
+    } else {
+      this.sound.src = "/assets/bgm/" + this.randomSong();
+      this.sound.load();
+      this.play();
+    }
   }
 }
 
