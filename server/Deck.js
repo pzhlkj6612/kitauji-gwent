@@ -1,6 +1,7 @@
 var Card = require("./Card");
 /*var CardManager = require("./CardManager");*/
 var DeckData = require("../assets/data/deck");
+var CardData = require("../assets/data/cards");
 var _ = require("underscore");
 
 var Deck = (function(){
@@ -66,7 +67,8 @@ var Deck = (function(){
     let deck = [];
     let cardInDeck = customDeck.cardInDeck;
     for (let key of Object.keys(cardInDeck)) {
-      for (let i=0; i<cardInDeck[key]; i++) deck.push(key);
+      // if card has limit, can only add card up to that limit
+      for (let i=0; i<Math.min(CardData[key].limit || 999, cardInDeck[key]); i++) deck.push(key);
     }
     deck.push(customDeck.leader);
 

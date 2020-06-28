@@ -138,8 +138,9 @@ class LuckyDraw {
     let userDeck = await db.findCardsByUser(username, deckKey, true) || {};
     let rarity = this.nextRarity_(scenario.weights, steps);
     let card = this.drawByRarity_(rarity, deckKey, userDeck);
-    // card exist, try draw from other deck
-    if (userDeck[card] && Math.random() < 0.8) {
+    // card exist or number of card exceed its limit, try draw from other deck
+    if (CardData[card].limit && userDeck[card] > CardData[card].limit ||
+      userDeck[card] && Math.random() < 0.8) {
       if (this.countUserDeck_(userDeck) > DeckData[deckKey].length) {
         Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
       }
@@ -173,7 +174,12 @@ class LuckyDraw {
       newCards.push(card);
       userDeck[card] = userDeck[card] ? userDeck[card] + 1 : 1;
     }
-
+    if (times === 1) {
+      let card = newCards[0];
+      if (CardData[card].limit && userDeck[card] > CardData[card].limit) {
+        return [];
+      }
+    }
     await db.storeDrawStats(username, scenarioName, steps);
     return newCards;
   }

@@ -161,6 +161,7 @@ class DB {
   }
 
   async addCards(username, deck, cardList) {
+    if (!cardList || !cardList.length) return;
     await this.connectPromise;
     const table = this.db.collection(TABLE_CARD);
   
