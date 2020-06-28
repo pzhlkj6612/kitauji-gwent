@@ -21,12 +21,21 @@ const versionConfig = {
   'value': '%MDS%',
   'append': {
     'key': 'v',
-    'to': ['css', 'js'],
+    'to': [
+      {
+        'type'  : 'js',
+        'files': ['app.js', 'bgm.js', 'sound.js'] // Array [{String|Regex}] of explicit files to append to
+      },
+      {
+        'type'  : 'css',
+        'files': ['app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
+      }
+    ],
   },
 };
 
 gulp.task('browserify', function() {
-  browserify('./client/js/main.js', {standalone: "app", debug: true}) // set false when publish
+  browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
   .transform(handlebars).on("error", function(err) {
     console.log(err);
   })
