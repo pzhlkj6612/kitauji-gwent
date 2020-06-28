@@ -97,7 +97,7 @@ let BattleView = Backbone.View.extend({
       }
       return;
     }
-    if(!!this.user.get("setHorn")){
+    if(this.user.get("setHorn") != null && this.user.get("setHorn") !== false){
       if(id === this.user.get("setHorn")){
         this.user.set("setHorn", false);
         this.app.send("cancel:horn");
@@ -105,7 +105,7 @@ let BattleView = Backbone.View.extend({
       }
       return;
     }
-    if(!!this.user.get("waitForDecoy")){
+    if(this.user.get("waitForDecoy") != null && this.user.get("waitForDecoy") !== false){
       if(id === this.user.get("waitForDecoy")){
         this.user.set("waitForDecoy", false);
         this.app.send("cancel:decoy");
@@ -118,18 +118,18 @@ let BattleView = Backbone.View.extend({
       id: id
     });
     // if this is the last card, pass automatically
-    if (self.$el.find(".field-hand").find('.card').length === 1 &&
-      !$card.data("ability").includes("medic") &&
-      !$card.data("ability").includes("commanders_horn_card") &&
-      !$card.data("ability").includes("attack") &&
-      !$card.data("ability").includes("monaka") &&
-      !$card.data("ability").includes("taibu") &&
-      !$card.data("ability").includes("guard") &&
-      !$card.data("ability").includes("decoy")) {
-      setTimeout(function() {
-        self.onPassing();
-      }, 0);
-    }
+    // if (self.$el.find(".field-hand").find('.card').length === 1 &&
+    //   !$card.data("ability").includes("medic") &&
+    //   !$card.data("ability").includes("commanders_horn_card") &&
+    //   !$card.data("ability").includes("attack") &&
+    //   !$card.data("ability").includes("monaka") &&
+    //   !$card.data("ability").includes("taibu") &&
+    //   !$card.data("ability").includes("guard") &&
+    //   !$card.data("ability").includes("decoy")) {
+    //   setTimeout(function() {
+    //     self.onPassing();
+    //   }, 0);
+    // }
     let playCard = $(".play-card-animation");
     playCard.html($card.html());
     let type = $card.data("type");
@@ -213,7 +213,7 @@ let BattleView = Backbone.View.extend({
       });
       this.user.set("setAgile", false);
     }
-    if(this.user.get("setHorn")){
+    if(this.user.get("setHorn") != null && this.user.get("setHorn") !== false){
       let $field = $(e.target).closest(".active-field");
 
       //console.log($field);
@@ -254,12 +254,13 @@ let BattleView = Backbone.View.extend({
     if (self.waitForAnimation) {
       return;
     }
+    let isSetHorn = self.user.get("setHorn") != null && self.user.get("setHorn") !== false;
     this.$el.html(this.template({
       cards: self.handCards,
       active: {
-        close: self.user.get("setAgile") || self.user.get("setHorn"),
-        range: self.user.get("setAgile") || self.user.get("setHorn"),
-        siege: self.user.get("setHorn")
+        close: self.user.get("setAgile") || isSetHorn,
+        range: self.user.get("setAgile") || isSetHorn,
+        siege: isSetHorn
       },
       isWaiting: self.user.get("waiting")
     }));
@@ -297,11 +298,11 @@ let BattleView = Backbone.View.extend({
       let id = this.user.get("setAgile");
       this.$el.find("[data-id='" + id + "']").parent().addClass("activeCard");
     }
-    if(this.user.get("setHorn")){
+    if(this.user.get("setHorn") != null && this.user.get("setHorn") !== false){
       let id = this.user.get("setHorn");
       this.$el.find("[data-id='" + id + "']").addClass("activeCard");
     }
-    if(this.user.get("waitForDecoy")){
+    if(this.user.get("waitForDecoy") != null && this.user.get("waitForDecoy") !== false){
       let id = this.user.get("waitForDecoy");
       this.$el.find("[data-id='" + id + "']").addClass("activeCard");
     }
@@ -342,10 +343,10 @@ let BattleView = Backbone.View.extend({
         self.handCards.sort((a, b) => {
           let powerA = a._data.power + (String(a._data.ability).includes("hero") ? 100 : 0);
           let powerB = b._data.power + (String(b._data.ability).includes("hero") ? 100 : 0);
-          if (powerA > powerB) return -1;
-          else if (powerA < powerB) return 1;
-          if (a._data.type > b._data.type) return -1;
-          else if (a._data.type < b._data.type) return 1;
+          if (powerA > powerB) return 1;
+          else if (powerA < powerB) return -1;
+          if (a._data.type > b._data.type) return 1;
+          else if (a._data.type < b._data.type) return -1;
           return 0;
         });
         self.render();

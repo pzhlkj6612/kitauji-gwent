@@ -12,7 +12,7 @@ var sprity = require("sprity");
 var gulpif = require("gulp-if");
 var argv = require("minimist")(process.argv.slice(2));
 var rename = require("gulp-rename");
-var $ = gulpLoadPlugins();
+var version = require('gulp-version-number');
 //livereload({start: true});
 
 //fast install
@@ -26,7 +26,7 @@ const versionConfig = {
 };
 
 gulp.task('browserify', function() {
-  browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
+  browserify('./client/js/main.js', {standalone: "app", debug: true}) // set false when publish
   .transform(handlebars).on("error", function(err) {
     console.log(err);
   })
@@ -84,7 +84,7 @@ gulp.task("watch", function() {
 
 gulp.task("index", function() {
   gulp.src("./client/index.html")
-  .pipe($.versionNumber(versionConfig))
+  .pipe(version(versionConfig))
   .pipe(gulp.dest("./public/"));
 
   gulp.src("./client/json/**")
