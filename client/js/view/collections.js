@@ -34,7 +34,7 @@ let Collections = Backbone.View.extend({
     this.render();
   },
   reset: function() {
-    this.collection = this.collections[this.deckKey] || {};
+    this.collection = JSON.parse(JSON.stringify(this.collections[this.deckKey] || {}));
     let neutralCollection = this.collections["neutral"] || {};
     // add neutral cards to current collection
     for (let key of Object.keys(neutralCollection)) {
