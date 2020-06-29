@@ -66,7 +66,10 @@ function Bgm(playList) {
     this.sound.volume = volume * 1.0 / 100;
   }
   this.getVolume = function() {
-    return this.sound.volume * 100 | 0;
+    if (this.playList === battleList) {
+      return (this.sound.volume * 100 / 0.75) | 0;
+    }
+    return (this.sound.volume * 100) | 0;
   }
   this.fadeOut = function(callback) {
     let vol = this.getVolume();
