@@ -139,6 +139,7 @@ class LuckyDraw {
     let userDeck = await db.findCardsByUser(username, deckKey, true) || {};
     let rarity = this.nextRarity_(scenario.weights, steps);
     let card = this.drawByRarity_(rarity, deckKey, userDeck);
+    userDeck[card] = userDeck[card] ? userDeck[card] + 1 : 1;
     // card exist or number of card exceed its limit, try draw from other deck
     if (userDeck[card] > Util.getLimit(card) ||
       userDeck[card] && Math.random() < 0.8) {
