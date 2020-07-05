@@ -391,7 +391,8 @@ var BotStrategy = (function(){
           reward = Math.max(realPower + reward - card._data.power * 0.5, 0);
         } else if (Util.isLips(card)) {
           let cards = this.getFieldCards(false).filter(c=>Util.canReplace(c) && c._data.male);
-          reward = Math.max(realPower + cards.length * 2 - card._data.power * 0.5, 0);
+          if (!cards.length) reward = 1;
+          else reward = Math.max(realPower + cards.length * 2 - card._data.power * 0.5, 0);
         } else if (Util.isTunning(card)) {
           let weathers = state.ownFields.weather.cards.map(c=>this.getFieldByWeather(c));
           let negBoosts = this.getFieldCards(true).filter(c=>{

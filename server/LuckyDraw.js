@@ -142,7 +142,7 @@ class LuckyDraw {
     userDeck[card] = userDeck[card] ? userDeck[card] + 1 : 1;
     // card exist or number of card exceed its limit, try draw from other deck
     if (userDeck[card] > Util.getLimit(card) ||
-      userDeck[card] && Math.random() < 0.8) {
+      userDeck[card] > 1 && Math.random() < 0.8) {
       if (this.countUserDeck_(userDeck) > DeckData[deckKey].length) {
         Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
       }
