@@ -15,7 +15,12 @@ class Cache {
   }
 
   async initialize() {
-    let allUser = await db.getAllUser();
+    let allUser;
+    try {
+      allUser = await db.getAllUser();
+    } catch (e) {
+      return;
+    }
     for (let user of allUser) {
       if (!user.winCount && !user.loseCount) continue;
       this.winRanking.set(user.username, -user.winCount);
