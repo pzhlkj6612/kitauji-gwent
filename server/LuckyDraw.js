@@ -204,13 +204,10 @@ class LuckyDraw {
     let card = cards[(Math.random() * cards.length) | 0];
     let retry = 3;
     // for unit card, draw again if user has it
-    while (this.isUnitCard_(card) && userDeck[card] && retry > 0) {
+    while (userDeck[card] && retry > 0) {
       card = cards[(Math.random() * cards.length) | 0];
       // must skip duplicated bond/muster card
-      if (userDeck[card] && (
-        String(CardData[card].ability).includes("tight_bond") ||
-        String(CardData[card].ability).includes("muster")
-      )) {
+      if (userDeck[card] && userDeck[card] > Util.getLimit(card) && Math.random() > 0.5) {
         continue;
       }
       retry--;
