@@ -1,4 +1,5 @@
 let Backbone = require("backbone");
+let Notification = require("./view/notification");
 let CardData = require("../../../assets/data/cards");
 
 let Login = Backbone.View.extend({
@@ -89,6 +90,9 @@ let SignInModal = Backbone.Modal.extend({
       return;
     }
     if (!username.match(/^[a-zA-Z0-9]+$/)) {
+      new Notification({
+        msgKey: "username_validation",
+      }).render();
       return;
     }
     this.model.get("app").send("request:signin", {
