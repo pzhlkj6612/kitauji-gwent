@@ -1,5 +1,5 @@
 let Backbone = require("backbone");
-let Notification = require("./view/notification");
+let Notification = require("./notification");
 let CardData = require("../../../assets/data/cards");
 
 let Login = Backbone.View.extend({

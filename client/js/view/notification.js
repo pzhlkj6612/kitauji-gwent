@@ -1,5 +1,5 @@
 let Backbone = require("backbone");
-const Config = require("../../public/Config");
+const Config = require("../../../public/Config");
 
 let Notification = Backbone.View.extend({
   className: "notification",
