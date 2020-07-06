@@ -244,7 +244,15 @@ module.exports = {
   "tight_bond": {
     name: "tight_bond",
     description: "ability_desc_bond",
-    tightBond: true
+    tightBond: true,
+    onRemovedOrReplaced: function(card) {
+      // recalculate tight bond
+      var field = this.field[card.getType()];
+      field.get().forEach(function(_card){
+        if(!_card.hasAbility("tight_bond")) return;
+        this.setTightBond(_card);
+      }.bind(this))
+    }
   },
   "spy": {
     name: "spy",
