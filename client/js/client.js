@@ -80,7 +80,7 @@ let App = Backbone.Router.extend({
       this.socket.off();
       this.socket.close();
     }
-    let region = localStorage["region"] || "aws";
+    let region = localStorage["region"] || "aliyun";
     if (this.user) region = this.user.get("region");
     let hostname = Config.SERVERS[region];
     if (hostname === "localhost") hostname = location.hostname;
@@ -227,7 +227,7 @@ let User = Backbone.Model.extend({
     deck: "random",
     scenario: null,
     locale: "zh",
-    region: "aws",
+    region: "aliyun",
     serverOffline: true
   },
   initialize: function(){
@@ -423,7 +423,7 @@ let User = Backbone.Model.extend({
 
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
-    this.set("region", localStorage["region"] || "aws");
+    this.set("region", localStorage["region"] || "aliyun");
     i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(data){
