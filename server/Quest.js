@@ -91,6 +91,7 @@ function generateQuestReport(userModel, progress, scenario, userPrice) {
   });
   // put more schools
   for (let school of SchoolData[scenario]) {
+    if (allSchools.length >= 10) break;
     if (gameResults[school] == null) allSchools.push(school);
   }
 
