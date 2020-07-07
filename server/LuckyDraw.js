@@ -142,7 +142,7 @@ class LuckyDraw {
     userDeck[card] = userDeck[card] ? userDeck[card] + 1 : 1;
     // card exist or number of card exceed its limit, try draw from other deck
     if (userDeck[card] > Util.getLimit(card) ||
-      userDeck[card] > 1 && Math.random() < 0.8) {
+      this.isUnitCard_(card) && userDeck[card] > 1 && Math.random() < 0.8) {
       if (this.countUserDeck_(userDeck) > DeckData[deckKey].length) {
         Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
       }
@@ -205,6 +205,7 @@ class LuckyDraw {
     let retry = 3;
     // for unit card, draw again if user has it
     while (userDeck[card] && retry > 0) {
+      if (!this.isUnitCard_(card)) return card;
       card = cards[(Math.random() * cards.length) | 0];
       // must skip duplicated bond/muster card
       if (userDeck[card] && userDeck[card] > Util.getLimit(card) && Math.random() > 0.5) {
