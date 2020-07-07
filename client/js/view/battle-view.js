@@ -191,7 +191,7 @@ let BattleView = Backbone.View.extend({
       });
       this.user.set("chooseHeal", false);
     }
-    if(this.user.get("waitForDecoy")){
+    if(this.user.get("waitForDecoy") != null && this.user.get("waitForDecoy") !== false){
       let $card = $(e.target).closest(".card");
       if(!$card.length) return;
       let _id = $card.data("id");
