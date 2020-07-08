@@ -85,6 +85,9 @@ Util.getLimit = function(cardKey) {
   if (Util.isBond(card)) {
     return 2;
   }
+  if (Util.isMuster(card)) {
+    return 3;
+  }
   return 999;
 }
 
