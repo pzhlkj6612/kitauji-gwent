@@ -1,5 +1,6 @@
 let Backbone = require("backbone");
 let cardData = require("../../../assets/data/cards");
+let Util = require("../util");
 
 let LuckyDrawModal = Backbone.View.extend({
   template: require("../../templates/luckyDraw.handlebars"),
@@ -21,9 +22,22 @@ let LuckyDrawModal = Backbone.View.extend({
   },
   render() {
     let cardModel = this.toCardModel(this.card);
+    let text;
+    if (cardModel._data.faction !== "neutral") {
+      text = i18n.getText("lucky_draw_text", [
+        i18n.getText(Util.toFactionText(cardModel._data.faction)),
+        cardModel._data.name,
+        Util.toRarityText(cardModel._data.rarity),
+      ]);
+    } else {
+      text = i18n.getText("lucky_draw_text2", [
+        cardModel._data.name,
+        Util.toRarityText(cardModel._data.rarity),
+      ]);
+    }
     this.$el.html(this.template({
       card: cardModel,
-      text: i18n.getText("lucky_draw_text", [cardModel._data.name]),
+      text: text,
     }));
     setTimeout(() => {
       this.$el.find(".luckyDraw-background").addClass("visible");

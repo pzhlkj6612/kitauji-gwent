@@ -51,7 +51,8 @@
     "price_gold": "金奖",
     "price_silver": "银奖",
     "price_bronze": "铜奖",
-    "lucky_draw_text": "你获得了【{0}】！请在牌组中查看。",
+    "lucky_draw_text": "你获得了{0}的【{1}({2})】！请在牌组中查看。",
+    "lucky_draw_text2": "你获得了【{0}({1})】！请在牌组中查看。",
 
     "card_collection": "牌组",
     "card_in_deck": "当前阵容",
