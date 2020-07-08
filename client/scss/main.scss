@@ -284,6 +284,11 @@ $game-height: 800px;
   margin: 15px 0;
 }
 
+.info-deck {
+  margin-top: 0;
+  color: #666;
+}
+
 .button-pass-wrap {
   padding: 0;
   margin-right: 50px;
@@ -789,7 +794,7 @@ $game-height: 800px;
 .gwent-battle-inner {
   height: 800px;
   max-height: 100%;
-  width: 100%;
+  width: 1440px;
   display: flex;
 }
 

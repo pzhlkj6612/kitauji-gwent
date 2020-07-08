@@ -1,4 +1,5 @@
 let Backbone = require("backbone");
+const Util = require("../util");
 
 let SideView = Backbone.View.extend({
   el: ".container",
@@ -58,6 +59,7 @@ let SideView = Backbone.View.extend({
       passBtn: this.side === ".player" && !this.app.user.get("waiting"),
       timeLeft: this.timeLeft,
       danger: this.timeLeft < 10,
+      deck: i18n.getText(Util.toFactionText(d.faction)),
     })
 
     this.$info = this.$el.find(".game-info" + this.side).html(html);
