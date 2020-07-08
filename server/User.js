@@ -207,7 +207,7 @@ var User = (function(){
   /**
    * Record game state, etc.
    */
-  r.endGame = async function(isWin, foe) {
+  r.endGame = async function(isWin, faction, foe) {
     let result = {};
     if (!this._scenario) return result;
 
@@ -223,18 +223,18 @@ var User = (function(){
     result["questState"] = questState;
 
     // do lucky draw based on result
-    let newLeader = await this.luckyDrawLeaderAfterGame_(questState);
+    let newLeader = await this.luckyDrawLeaderAfterGame_(faction, questState);
     if (newLeader) {
       result["newCard"] = newLeader;
       console.info("user get new leader: ", newLeader);
     } else {
-      result["newCard"] = await this.luckyDrawAfterGame_(isWin, foe, questState);
+      result["newCard"] = await this.luckyDrawAfterGame_(isWin, faction, foe, questState);
       console.info("user get new card: ", result["newCard"]);
     }
     return result;
   }
 
-  r.luckyDrawLeaderAfterGame_ = async function(questState) {
+  r.luckyDrawLeaderAfterGame_ = async function(faction, questState) {
     // must complete kansai or zenkoku
     if (!questState.completed) return null;
     if (this._scenario !== Const.SCENARIO_KANSAI && this._scenario !== Const.SCENARIO_ZENKOKU) return null;
@@ -247,7 +247,7 @@ var User = (function(){
     return newLeader;
   }
 
-  r.luckyDrawAfterGame_ = async function(isWin, foe, questState) {
+  r.luckyDrawAfterGame_ = async function(isWin, deck, foe, questState) {
     if (!isWin && !questState.completed) return [];
     let scenario = this._scenario;
     let possibility = 0;
@@ -258,9 +258,8 @@ var User = (function(){
       scenario = Quest.getNextScenario(scenario);
     }
     if (Math.random() > possibility) return [];
-    let deck = this.userModel.initialDeck;
     if (await Cache.getInstance().getCondition(this.userModel.username, Const.COND_UNLOCK_ALL_DECK)) {
-      let {faction, cards} = await LuckyDraw.getInstance().drawPreferOtherDeck(1, scenario, this.userModel.username, deck);
+      let {faction, cards} = await LuckyDraw.getInstance().drawPreferOtherDeck(1, scenario, this.userModel.username, this.userModel.initialDeck);
       await db.addCards(this.userModel.username, faction, cards);
       return cards;
     }
@@ -437,7 +436,7 @@ var User = (function(){
     socket.on("request:quitGame", function() {
       if (self._rooms.length && self.getRoom().hasUser() > 1) {
         // quit game when other user still playing, record as lose
-        self.endGame(false, self._battleSide.foe.getUser());
+        self.endGame(false, self.userModel.initialDeck, self._battleSide.foe.getUser());
       }
       self.disconnect();
     })
