@@ -153,7 +153,7 @@ module.exports = {
       var field = this.field[card.getType()];
       var id = card.getID();
       field.get().forEach(function(_card){
-        if(_card.getName() === "铠冢霙") {
+        if(_card.getName() === "铠冢霙" && !_card.hasAbility("hero")) {
           _card.resetNegBoost();
           _card.setBoost(id, 5);
         }
