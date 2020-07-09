@@ -188,9 +188,10 @@ var Card = (function(){
     }
 
     if(doubles){ //tight bond
-      for(var i = 0; i < doubles; i++) {
-        res += res + this.getBasePower();
-      }
+      // for(var i = 0; i < doubles; i++) {
+      //   res += res + this.getBasePower();
+      // }
+      res = (res + this.getBasePower()) * doubles;
     }
 
     if(this._boost["commanders_horn"] || this._boost["commanders_horn_card"]){

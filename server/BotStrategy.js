@@ -550,7 +550,7 @@ var BotStrategy = (function(){
       if (Util.isBond(card)) {
         double += field.cards.filter(c=>Util.isBond(c, card._data.bondType)).length;
       }
-      return (rawPower + add) * (2 ** double);
+      return (rawPower + add) * (1 + double);
     }
     r.getFieldByWeather = function(card) {
       switch (card._data.ability) {
