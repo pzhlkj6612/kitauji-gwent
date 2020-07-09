@@ -7,10 +7,10 @@ let Login = Backbone.View.extend({
   initialize: function(options){
     this.user = options.user;
     this.app = options.app;
-    this.app.receive("update:playerOnline", this.renderStatus.bind(this));
     this.app.receive("response:login", this.onLoginResponse.bind(this));
     this.app.receive("response:signin", this.onSignInResponse.bind(this));
     this.listenTo(this.user, "change:serverOffline", this.render.bind(this));
+    this.listenTo(this.user, "change:serverStatus", this.renderStatus.bind(this));
     $(".gwent-battle").html(this.el);
     this.render();
   },
@@ -22,9 +22,11 @@ let Login = Backbone.View.extend({
   render() {
     this.$el.html(this.template(this.user.attributes));
     this.$el.find("#region").val(this.user.get("region")).attr("selected", true);
+    this.renderStatus();
     return this;
   },
-  renderStatus: function(data){
+  renderStatus: function(){
+    let data = this.user.get("serverStatus");
     this.$el.find(".nr-player-online").html(data.online);
     this.$el.find(".nr-player-idle").html(data.idle);
   },

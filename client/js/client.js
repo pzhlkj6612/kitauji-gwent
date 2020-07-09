@@ -228,6 +228,7 @@ let User = Backbone.Model.extend({
     scenario: null,
     locale: "zh",
     region: "aliyun",
+    serverStatus: {},
     serverOffline: true
   },
   initialize: function(){
@@ -244,6 +245,10 @@ let User = Backbone.Model.extend({
         app.lobbyRoute();
         self.setUserModel(data.model);
       }
+    });
+
+    app.receive("update:playerOnline", function(data) {
+      self.set("serverStatus", data);
     });
 
     app.receive("response:name", function(data){

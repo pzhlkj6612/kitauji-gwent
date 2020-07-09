@@ -19,16 +19,15 @@ let Lobby = Backbone.View.extend({
   initialize: function(options){
     this.user = options.user;
     this.app = options.app;
-    this.serverStatus = {};
     this.questProgress = {};
 
-    this.app.receive("update:playerOnline", this.renderStatus.bind(this));
     this.app.receive("response:ranking", this.onRankingResponse.bind(this));
     this.app.send("request:questProgress");
 
     this.listenTo(this.app.user, "change:serverOffline", this.render);
     this.listenTo(this.app.user, "change:userModel", this.render);
     this.listenTo(this.app.user, "change:questProgress", this.renderQuestProgress.bind(this));
+    this.listenTo(this.app.user, "change:serverStatus", this.renderStatus.bind(this));
 
     bgm.setMode("lobby");
     $(".gwent-battle").html(this.el);
@@ -51,7 +50,7 @@ let Lobby = Backbone.View.extend({
     this.$el.find("#deckChoice").val(this.user.get("deck")).attr("selected", true);
     $("#locale").val(this.user.get("locale")).attr("selected", true);
     this.renderKanban();
-    this.renderStatus(this.serverStatus);
+    this.renderStatus();
     this.renderQuestProgress(this.questProgress);
     return this;
   },
@@ -98,8 +97,8 @@ let Lobby = Backbone.View.extend({
     let name = $(e.target).val();
     this.app.trigger("changeBandName", name);
   },
-  renderStatus: function(data){
-    this.serverStatus = data;
+  renderStatus: function(){
+    let data = this.app.user.get("serverStatus");
     this.$el.find(".nr-player-online").html(data.online);
     this.$el.find(".nr-player-idle").html(data.idle);
   },
