@@ -102,11 +102,10 @@ var Matchmaker = (function(){
       queue = SPECIAL_ROOMS.find(room => {
         this._queueByRoom[room] && this._queueByRoom[room].length;
       });
+      // fall back to default queue if all special rooms are empty
+      if(!queue || !queue.length) queue = this._queue;
     }
-    // fall back to default queue if all special rooms are empty
-    if(!queue || !queue.length) {
-      queue = this._queue;
-    };
+    if(!queue || !queue.length) return null;
     var foe = queue.splice(0, 1)[0];
     foe._inQueue = false;
     return foe;
