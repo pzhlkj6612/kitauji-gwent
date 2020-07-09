@@ -41,6 +41,7 @@ var Matchmaker = (function(){
     if (opt_roomName) {
       queue = this._queueByRoom[opt_roomName];
     }
+    if (!queue) queue = this._queue;
     for(var i = 0; i < queue.length; i++) {
       var u = queue[i];
       if(u.getID() === user.getID()) {
