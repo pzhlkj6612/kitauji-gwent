@@ -51,7 +51,7 @@
     "price_gold": "Gold",
     "price_silver": "Silver",
     "price_bronze": "Bronze",
-    "lucky_draw_text": "You get {1}({2}) from {0}! Check your deck for detail.",
+    "lucky_draw_text": "You get {1}({2})! Check your deck for detail.({0})",
     "lucky_draw_text2": "You get {0}({1})! Check your deck for detail.",
 
     "card_collection": "Card Collection",
