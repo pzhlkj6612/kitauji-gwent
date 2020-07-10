@@ -105,7 +105,7 @@ var BotStrategy = (function(){
       let fields = [state.ownFields.close, state.ownFields.ranged, state.ownFields.siege];
       let maxFieldType = 0, maxBoost = 0;
       for (let i=0; i<fields.length; i++) {
-        let boost = this.getFieldBoostForHorn(fields[i]);
+        let boost = this.getFieldBoostForHorn(fields[i], i);
         if (boost > maxBoost) {
           maxBoost = boost;
           maxFieldType = i;
@@ -315,7 +315,7 @@ var BotStrategy = (function(){
           reward = Math.max(realPower - card._data.power * 0.4, 0);
         } else if (Util.isWeather(card)) { // weather card or leader
           // clear weather?
-          if (card._data.ability === "weather_clear" || card._data.ability === "clear_weather_leader") {
+          if (Util.isClearWeather(card)) {
             let weathers = state.ownFields.weather.cards;
             let foeDebuff = 0, ownDebuff = 0;
             weathers.map(w=>this.getFieldByWeather(w)).forEach(f=>{
@@ -359,7 +359,7 @@ var BotStrategy = (function(){
           let fields = [state.ownFields.close, state.ownFields.ranged, state.ownFields.siege];
           let maxBoost = 0;
           for (let i=0; i<fields.length; i++) {
-            let boost = this.getFieldBoostForHorn(fields[i]);
+            let boost = this.getFieldBoostForHorn(fields[i], i);
             if (boost > maxBoost) {
               maxBoost = boost;
             }
@@ -367,11 +367,11 @@ var BotStrategy = (function(){
           realPower = maxBoost;
           reward = maxBoost * 0.5;
         } else if (Util.isHorn(card)) {
-          realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, card._data.type));
+          realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, card._data.type), 1);
           reward = realPower * 0.5;
         } else if (Util.isHornLeader(card)) {
           if (card._data.ability === "ranged_horn_leader") {
-            realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, 1));
+            realPower = this.getFieldBoostForHorn(this.getField(state.ownFields, 1), 1);
           }
           reward = realPower * 0.5;
         } else if (Util.isAttack(card)) {
@@ -564,9 +564,14 @@ var BotStrategy = (function(){
           return 2;
       }
     }
-    r.getFieldBoostForHorn = function(field) {
+    r.getFieldBoostForHorn = function(field, fieldIdx) {
       if (field.cards.some(c=>Util.isHorn(c)) || field.horn) return 0;
-      return this.getScoreSum(field.cards.filter(c=>Util.canReplace(c)), c=>c.power);
+      let handScore = this.getScoreSum(this.getHandCards(false, fieldIdx).filter(c=>Util.canReplace(c)), c=>c._data.power);
+      let boost =  handScore * 0.2 + this.getScoreSum(field.cards.filter(c=>Util.canReplace(c)), c=>c.power);
+      if (this.getHandCards(true).some(c=>Util.isClearWeather(c))) {
+        return boost;
+      }
+      return boost;
     }
     r.getScoreSum = function(cards, getScore) {
       return cards.reduce((sum, c)=> sum + getScore(c), 0);

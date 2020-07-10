@@ -69,6 +69,10 @@ Util.isWeather = function(card) {
     card._data.ability === "fog_leader" ||
     card._data.ability === "frost_leader";
 }
+Util.isClearWeather = function(card) {
+  return Util.isWeather(card) &&
+    (card._data.ability === "weather_clear" || card._data.ability === "clear_weather_leader");
+}
 Util.isDecoy = function(card) {
   return card._data.ability === "decoy";
 }
