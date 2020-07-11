@@ -275,8 +275,8 @@ module.exports = {
   },
   "kabe_tomoe": {
     name: "加部友惠",
-    power: 2,
-    ability: "commanders_horn",
+    power: 0,
+    ability: "medic",
     img: "kabe_tomoe",
     faction: "kitauji",
     grade: 3,
@@ -388,6 +388,28 @@ module.exports = {
     rarity: 1,
     type: 1
   },
+  "takino_sayaka": {
+    name: "泷野沙耶香",
+    power: 4,
+    ability: "tight_bond",
+    bondType: "siblings",
+    img: "takino_sayaka",
+    faction: "kitauji",
+    rarity: 1,
+    grade: 3,
+    male: true,
+    type: 1
+  },
+  "takino_junichi": {
+    name: "泷野纯一",
+    power: 4,
+    ability: "tight_bond",
+    bondType: "siblings",
+    img: "takino_junichi",
+    faction: "kitauji",
+    rarity: 1,
+    type: 1
+  },
   "etou_kana": {
     name: "江藤香奈",
     power: 2,
@@ -478,6 +500,33 @@ module.exports = {
     faction: "kitauji",
     rarity: 2,
     type: 0
+  },
+  "ueda_hiyoko": {
+    name: "植田日和子",
+    power: 5,
+    ability: null,
+    img: "ueda_hiyoko",
+    faction: "kitauji",
+    rarity: 0,
+    type: 0
+  },
+  "fukui_sayaka": {
+    name: "福井沙耶香",
+    power: 4,
+    ability: null,
+    img: "fukui_sayaka",
+    faction: "kitauji",
+    rarity: 0,
+    type: 1
+  },
+  "yoshizawa_akiko": {
+    name: "吉泽秋子",
+    power: 4,
+    ability: null,
+    img: "yoshizawa_akiko",
+    faction: "kitauji",
+    rarity: 0,
+    type: 1
   },
   "kitayama_tairu": {
     name: "北山泰瑠",
@@ -585,6 +634,14 @@ module.exports = {
     power: -1,
     ability: "emreis_leader4",
     img: "tanaka_asuka",
+    faction: "neutral",
+    type: 3
+  },
+  "kasaki_nozomi_shiki": {
+    name: "伞木希美",
+    power: -1,
+    ability: "foltest_leader4",
+    img: "kasaki_nozomi",
     faction: "neutral",
     type: 3
   },
@@ -897,6 +954,42 @@ module.exports = {
     faction: "kumiko1",
     rarity: 2,
     type: 0
+  },
+  "ueda_hiyoko_1": {
+    name: "植田日和子",
+    power: 4,
+    ability: null,
+    img: "ueda_hiyoko",
+    faction: "kumiko1",
+    rarity: 0,
+    type: 0
+  },
+  "fukui_sayaka_1": {
+    name: "福井沙耶香",
+    power: 3,
+    ability: null,
+    img: "fukui_sayaka",
+    faction: "kumiko1",
+    rarity: 0,
+    type: 1
+  },
+  "yoshizawa_akiko_1": {
+    name: "吉泽秋子",
+    power: 3,
+    ability: null,
+    img: "yoshizawa_akiko",
+    faction: "kumiko1",
+    rarity: 0,
+    type: 1
+  },
+  "iwata_keina_1": {
+    name: "岩田慧菜",
+    power: 4,
+    ability: "medic",
+    img: "iwata_keina",
+    faction: "kumiko1",
+    rarity: 2,
+    type: 1
   },
   "tsukamoto_shuichi_1": {
     name: "冢本秀一",
@@ -1355,6 +1448,42 @@ module.exports = {
     faction: "kumiko1S2",
     rarity: 2,
     type: 0
+  },
+  "ueda_hiyoko_2": {
+    name: "植田日和子",
+    power: 4,
+    ability: null,
+    img: "ueda_hiyoko",
+    faction: "kumiko1S2",
+    rarity: 0,
+    type: 0
+  },
+  "fukui_sayaka_2": {
+    name: "福井沙耶香",
+    power: 3,
+    ability: null,
+    img: "fukui_sayaka",
+    faction: "kumiko1S2",
+    rarity: 0,
+    type: 1
+  },
+  "yoshizawa_akiko_2": {
+    name: "吉泽秋子",
+    power: 3,
+    ability: null,
+    img: "yoshizawa_akiko",
+    faction: "kumiko1S2",
+    rarity: 0,
+    type: 1
+  },
+  "iwata_keina_2": {
+    name: "岩田慧菜",
+    power: 4,
+    ability: "medic",
+    img: "iwata_keina",
+    faction: "kumiko1S2",
+    rarity: 2,
+    type: 1
   },
   "tsukamoto_shuichi_2": {
     name: "冢本秀一",
