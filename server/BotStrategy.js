@@ -273,7 +273,7 @@ var BotStrategy = (function(){
         if (Util.isMedic(card, true)) {
           // play medic if spies in discard
           let discard = state.ownSide.discard;
-          if (discard.length === 0) {
+          if (discard && discard.filter(c=>Util.canReplace(c)).length === 0) {
           } else if (discard.some(c=>Util.isSpy(c))) {
             reward = 100;
             if (Util.isHero(card)) reward--;

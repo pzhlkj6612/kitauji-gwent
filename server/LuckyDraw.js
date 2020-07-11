@@ -142,8 +142,8 @@ class LuckyDraw {
     userDeck[card] = userDeck[card] ? userDeck[card] + 1 : 1;
     // card exist or number of card exceed its limit, try draw from other deck
     if (userDeck[card] > Util.getLimit(card) ||
-      this.isUnitCard_(card) && userDeck[card] > 1 && Math.random() < 0.8) {
-      if (this.countUserDeck_(userDeck) > DeckData[deckKey].length) {
+      this.isUnitCard_(card) && userDeck[card] > 1 && Math.random() < 0.6) {
+      if (this.countUserDeck_(userDeck) > DeckData[deckKey].data.length) {
         Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
       }
       return await this.drawPreferOtherDeck(1, scenarioName, username, deckKey);
@@ -193,24 +193,22 @@ class LuckyDraw {
         CardData[c].rarity === rarity &&
         !userDeck[c];
     });
-    if (!cards.length) {
-      // user has all cards in this deck
-      cards = deck.data.filter(c => {
-        return CardData[c].type !== 3 &&
-          CardData[c].rarity === rarity;
-      });
+    if (cards.length) {
+      // user don't have these cards, just return random one
       return cards[(Math.random() * cards.length) | 0];
     }
+    // user has all cards in this deck
+    cards = deck.data.filter(c => {
+      return CardData[c].type !== 3 &&
+        CardData[c].rarity === rarity &&
+        userDeck[c] < Util.getLimit(c);
+    });
     let card = cards[(Math.random() * cards.length) | 0];
-    let retry = 3;
+    let retry = 2;
     // for unit card, draw again if user has it
     while (userDeck[card] && retry > 0) {
       if (!this.isUnitCard_(card)) return card;
       card = cards[(Math.random() * cards.length) | 0];
-      // must skip duplicated bond/muster card
-      if (userDeck[card] && userDeck[card] > Util.getLimit(card) && Math.random() > 0.5) {
-        continue;
-      }
       retry--;
     }
     return card;
