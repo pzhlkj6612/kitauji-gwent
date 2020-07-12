@@ -223,13 +223,17 @@ var User = (function(){
     result["questState"] = questState;
 
     // do lucky draw based on result
-    let newLeader = await this.luckyDrawLeaderAfterGame_(faction, questState);
-    if (newLeader) {
-      result["newCard"] = newLeader;
-      console.info("user get new leader: ", newLeader);
-    } else {
-      result["newCard"] = await this.luckyDrawAfterGame_(isWin, faction, foe, questState);
-      console.info("user get new card: ", result["newCard"]);
+    try {
+      let newLeader = await this.luckyDrawLeaderAfterGame_(faction, questState);
+      if (newLeader) {
+        result["newCard"] = newLeader;
+        console.info("user get new leader: ", newLeader);
+      } else {
+        result["newCard"] = await this.luckyDrawAfterGame_(isWin, faction, foe, questState);
+        console.info("user get new card: ", result["newCard"]);
+      }
+    } catch (e) {
+      console.warn(e);
     }
     return result;
   }
@@ -424,7 +428,7 @@ var User = (function(){
     })
 
     socket.on("set:customDeck", async function(data) {
-      if (!data) {
+      if (!data || !self.userModel) {
         return;
       }
       self.userModel.currentDeck = data.deck;
