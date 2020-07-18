@@ -18,4 +18,7 @@ module.exports = {
   ROOM_KYOTO: "room_kyoto",
   ROOM_KANSAI: "room_kansai",
   ROOM_ZENKOKU: "room_zenkoku",
+
+  // special faction for all skin
+  FACTION_SKIN: "skin",
 };

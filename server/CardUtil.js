@@ -79,6 +79,9 @@ Util.isDecoy = function(card) {
 Util.isEmreisLeader4 = function(card) {
   return card._data.ability === "emreis_leader4";
 }
+Util.isSkin = function(cardKey) {
+  return CardData[cardKey].skinOf != null;
+}
 Util.getLimit = function(cardKey) {
   let card = {
     _data: CardData[cardKey],

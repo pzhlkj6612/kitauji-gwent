@@ -28,7 +28,10 @@ const LEADERS = [
   "matsumoto_michie",
   "oumae_kumiko_shiki",
   "tanaka_asuka_shiki",
+  "kasaki_nozomi_shiki",
 ];
+
+const SKINS = DeckData["skin"].data;
 
 const SCENARIOS = {
   [Const.SCENARIO_KYOTO]: {
@@ -124,8 +127,13 @@ class LuckyDraw {
       faction = FACTION[(Math.random() * FACTION.length) | 0];
     } while (faction === initialDeck && retry-- > 0);
     let cards = await this.draw(1, scenarioName, username, faction);
-    if (!cards.length) {
-      // TODO: draw skin
+    let userSkin = await db.findCardsByUser(username, Const.FACTION_SKIN, true) || {};
+    if (!cards.length ||
+        userSkin[cards[0]] && Math.random() < 0.6) {
+      let skin = this.drawSkin(scenarioName, userSkin, faction);
+      if (skin) {
+        return skin;
+      }
     }
     return {
       faction,
@@ -224,16 +232,50 @@ class LuckyDraw {
     return count;
   }
 
+  toFixedRarity_(scenarioName) {
+    switch (scenarioName) {
+      case Const.SCENARIO_KYOTO:
+        return RARITY_R;
+      case Const.SCENARIO_KANSAI:
+        return RARITY_SR;
+      case Const.SCENARIO_ZENKOKU:
+      default:
+        return RARITY_SSR;
+    }
+  }
+
   drawLeader(faction, userLeaders) {
     if (userLeaders && Object.keys(userLeaders).length >= LEADERS.length) {
       // already have all leaders
       return null;
     }
-    let i = (Math.random() * LEADERS.length) | 0;
-    while (userLeaders[LEADERS[i]] || CardData[LEADERS[i]].faction !== faction) {
-      i = (i + 1) % LEADERS.length;
+    let unique = LEADERS.filter(c => !userLeaders[c]);
+    let candidates = unique.filter(c =>
+      (CardData[c].faction === 'neutral' || CardData[c].faction === faction));
+    if (!candidates.length) candidates = unique;
+    return candidates[(Math.random() * candidates.length) | 0];
+  }
+
+  drawSkin(scenarioName, userSkin, faction) {
+    let rarity = this.toFixedRarity_(scenarioName);
+    let factionSkin = SKINS.filter(c => 
+      CardData[c].faction === faction &&
+      CardData[c].rarity <= rarity &&
+      !userSkin[c]);
+    if (!factionSkin.length) {
+      factionSkin = SKINS.filter(c => 
+        CardData[c].rarity <= rarity &&
+        !userSkin[c]);
     }
-    return LEADERS[i];
+    if (!factionSkin.length) {
+      // already have all skins
+      return null;
+    }
+    let skin = factionSkin[(Math.random() * factionSkin.length) | 0];
+    return {
+      faction: Const.FACTION_SKIN,
+      cards: [skin],
+    };
   }
 }
 

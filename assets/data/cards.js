@@ -603,6 +603,7 @@ module.exports = {
     ability: "fog_leader",
     img: "taki_noboru",
     faction: "neutral",
+    rarity: 1,
     type: 3
   },
   "taki_chihiro": {
@@ -611,6 +612,7 @@ module.exports = {
     ability: "clear_weather_leader",
     img: "taki_chihiro",
     faction: "neutral",
+    rarity: 2,
     type: 3
   },
   "matsumoto_michie": {
@@ -619,6 +621,7 @@ module.exports = {
     ability: "frost_leader",
     img: "matsumoto_michie",
     faction: "neutral",
+    rarity: 1,
     type: 3
   },
   "oumae_kumiko_shiki": {
@@ -627,6 +630,7 @@ module.exports = {
     ability: "ranged_horn_leader",
     img: "oumae_kumiko_shiki",
     faction: "kitauji",
+    rarity: 3,
     type: 3
   },
   "tanaka_asuka_shiki": {
@@ -635,6 +639,7 @@ module.exports = {
     ability: "emreis_leader4",
     img: "tanaka_asuka_shiki",
     faction: "kumiko1",
+    rarity: 3,
     type: 3
   },
   "kasaki_nozomi_shiki": {
@@ -643,6 +648,7 @@ module.exports = {
     ability: "foltest_leader4",
     img: "kasaki_nozomi_shiki",
     faction: "kumiko1S2",
+    rarity: 3,
     type: 3
   },
 

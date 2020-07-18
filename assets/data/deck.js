@@ -58,7 +58,6 @@ module.exports = {
       "taki_chihiro",
       "matsumoto_michie",
       "oumae_kumiko_shiki",
-      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -109,6 +108,7 @@ module.exports = {
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
+      "oumae_kumiko_shiki",
       "oumae_kumiko_shiki",
 
       "sunfes",
@@ -220,7 +220,6 @@ module.exports = {
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
-      "oumae_kumiko_shiki",
       "tanaka_asuka_shiki",
 
       "sunfes",
@@ -274,7 +273,9 @@ module.exports = {
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
-      "kasaki_nozomi_shiki",
+      "tanaka_asuka_shiki",
+      "tanaka_asuka_shiki",
+      "tanaka_asuka_shiki",
 
       "sunfes",
       "wasure",
@@ -387,7 +388,7 @@ module.exports = {
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
-      "oumae_kumiko_shiki",
+      "kasaki_nozomi_shiki",
 
       "sunfes",
       "wasure",
@@ -438,8 +439,9 @@ module.exports = {
       "taki_noboru",
       "taki_chihiro",
       "matsumoto_michie",
-      "oumae_kumiko_shiki",
-      "tanaka_asuka_shiki",
+      "kasaki_nozomi_shiki",
+      "kasaki_nozomi_shiki",
+      "kasaki_nozomi_shiki",
 
       "sunfes",
       "wasure",
@@ -495,9 +497,10 @@ module.exports = {
     ]
   },
   // skin
-  "skin_liz": {
-    faction: "kitauji",
+  "skin": {
+    faction: "skin", // faction field not needed
     data: [
+      // kitauji
       "kenzaki_ririka_skin",
       "kabutodani_eru_skin",
       "koteyama_suruga_skin",
