@@ -84,7 +84,8 @@ var Deck = (function(){
     var deck = DeckData[deckKey] ? DeckData[deckKey] : DeckData["kitauji"];
 
     if(deckKey === "random"){
-      var decks = _.allKeys(DeckData);
+      // var decks = _.allKeys(DeckData);
+      var decks = Deck.NORMAL_FACTION;
       deck = DeckData[decks[(Math.random() * decks.length) | 0]];
     } else if(deckKey === "random_easy"){
       var decks = Deck.EASY_FACTION;

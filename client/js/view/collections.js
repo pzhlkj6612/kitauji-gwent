@@ -17,7 +17,7 @@ let Collections = Backbone.View.extend({
     this.app.send("request:userCollections");
     this.deckKey = "kitauji";
     this.collections = {};
-    this.leaderCollection = [];
+    this.leaderCollections = [];
     this.customDecks = {};
     this.dirty = false;
     this.chooseLeader = false;
@@ -28,7 +28,7 @@ let Collections = Backbone.View.extend({
   onUserCollectionsResponse: function(data) {
     this.deckKey = data.currentDeck;
     this.collections = data.collections || {};
-    this.leaderCollection = Object.keys(data.leaderCollection || {});
+    this.leaderCollections = Object.keys(data.leaderCollection || {});
     this.customDecks = data.customDecks || {};
     this.reset();
     this.render();
@@ -40,6 +40,9 @@ let Collections = Backbone.View.extend({
     for (let key of Object.keys(neutralCollection)) {
       this.addCardTo(this.collection, key, neutralCollection[key]);
     }
+    // only show neutral or current faction leaders
+    this.leaderCollection = this.leaderCollections
+      .filter(l => cardData[l].faction === 'neutral' || cardData[l].faction === this.deckKey);
     this.currentDeck = this.customDecks[this.deckKey] || {};
     this.currentLeader = this.currentDeck["leader"] || this.leaderCollection[0];
     this.currentDeck = this.currentDeck["cardInDeck"] || {};

@@ -117,13 +117,16 @@ class LuckyDraw {
     return result;
   }
 
-  async drawPreferOtherDeck(times, scenarioName, username, initialDeck) {
+  async drawPreferOtherDeck(scenarioName, username, initialDeck) {
     let faction;
     let retry = 2;
     do {
       faction = FACTION[(Math.random() * FACTION.length) | 0];
     } while (faction === initialDeck && retry-- > 0);
-    let cards = await this.draw(times, scenarioName, username, faction);
+    let cards = await this.draw(1, scenarioName, username, faction);
+    if (!cards.length) {
+      // TODO: draw skin
+    }
     return {
       faction,
       cards,
@@ -146,7 +149,7 @@ class LuckyDraw {
       if (this.countUserDeck_(userDeck) > DeckData[deckKey].data.length) {
         Cache.getInstance().setCondition(username, Const.COND_UNLOCK_ALL_DECK, true);
       }
-      return await this.drawPreferOtherDeck(1, scenarioName, username, deckKey);
+      return await this.drawPreferOtherDeck(scenarioName, username, deckKey);
     }
     try {
       await db.storeDrawStats(username, scenarioName, steps);
@@ -188,30 +191,25 @@ class LuckyDraw {
 
   drawByRarity_(rarity, deckKey, userDeck) {
     let deck = DeckData[deckKey];
-    let cards = deck.data.filter(c => {
+    let unique = deck.data.filter(c => {
       return CardData[c].type !== 3 &&
         CardData[c].rarity === rarity &&
         !userDeck[c];
     });
-    if (cards.length) {
+    if (unique.length) {
       // user don't have these cards, just return random one
-      return cards[(Math.random() * cards.length) | 0];
+      return unique[(Math.random() * unique.length) | 0];
     }
     // user has all cards in this deck
-    cards = deck.data.filter(c => {
+    let cards = deck.data.filter(c => {
       return CardData[c].type !== 3 &&
-        CardData[c].rarity === rarity &&
-        userDeck[c] < Util.getLimit(c);
+        CardData[c].rarity === rarity;
     });
-    let card = cards[(Math.random() * cards.length) | 0];
-    let retry = 2;
-    // for unit card, draw again if user has it
-    while (userDeck[card] && retry > 0) {
-      if (!this.isUnitCard_(card)) return card;
-      card = cards[(Math.random() * cards.length) | 0];
-      retry--;
+    let underLimit = cards.filter(c => userDeck[c] < Util.getLimit(c));
+    if (underLimit.length) {
+      return underLimit[(Math.random() * underLimit.length) | 0];
     }
-    return card;
+    return cards[(Math.random() * cards.length) | 0];
   }
 
   isUnitCard_(card) {
@@ -226,13 +224,13 @@ class LuckyDraw {
     return count;
   }
 
-  drawLeader(userLeaders) {
+  drawLeader(faction, userLeaders) {
     if (userLeaders && Object.keys(userLeaders).length >= LEADERS.length) {
       // already have all leaders
       return null;
     }
     let i = (Math.random() * LEADERS.length) | 0;
-    while (userLeaders[LEADERS[i]]) {
+    while (userLeaders[LEADERS[i]] || CardData[LEADERS[i]].faction !== faction) {
       i = (i + 1) % LEADERS.length;
     }
     return LEADERS[i];

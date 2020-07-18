@@ -244,7 +244,7 @@ var User = (function(){
     if (this._scenario !== Const.SCENARIO_KANSAI && this._scenario !== Const.SCENARIO_ZENKOKU) return null;
     if (Math.random() > 0.2) return null;
     let userLeaders = await db.findLeaderCardsByUser(this.userModel.username);
-    let newLeader = LuckyDraw.getInstance().drawLeader(userLeaders);
+    let newLeader = LuckyDraw.getInstance().drawLeader(faction, userLeaders);
     if (newLeader) {
       await db.addLeaderCards(this.userModel.username, [newLeader]);
     }
@@ -263,7 +263,7 @@ var User = (function(){
     }
     if (Math.random() > possibility) return [];
     if (await Cache.getInstance().getCondition(this.userModel.username, Const.COND_UNLOCK_ALL_DECK)) {
-      let {faction, cards} = await LuckyDraw.getInstance().drawPreferOtherDeck(1, scenario, this.userModel.username, this.userModel.initialDeck);
+      let {faction, cards} = await LuckyDraw.getInstance().drawPreferOtherDeck(scenario, this.userModel.username, this.userModel.initialDeck);
       await db.addCards(this.userModel.username, faction, cards);
       return cards;
     }
