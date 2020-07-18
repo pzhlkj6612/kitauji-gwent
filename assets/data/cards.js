@@ -625,25 +625,313 @@ module.exports = {
     name: "黄前久美子",
     power: -1,
     ability: "ranged_horn_leader",
-    img: "oumae_kumiko",
-    faction: "neutral",
+    img: "oumae_kumiko_shiki",
+    faction: "kitauji",
     type: 3
   },
   "tanaka_asuka_shiki": {
     name: "田中明日香",
     power: -1,
     ability: "emreis_leader4",
-    img: "tanaka_asuka",
-    faction: "neutral",
+    img: "tanaka_asuka_shiki",
+    faction: "kumiko1",
     type: 3
   },
   "kasaki_nozomi_shiki": {
     name: "伞木希美",
     power: -1,
     ability: "foltest_leader4",
-    img: "kasaki_nozomi",
-    faction: "neutral",
+    img: "kasaki_nozomi_shiki",
+    faction: "kumiko1S2",
     type: 3
+  },
+
+  // skin
+  "kenzaki_ririka_skin": {
+    skinOf: "kenzaki_ririka",
+    name: "剑崎梨梨花",
+    power: 4,
+    ability: "tight_bond",
+    bondType: "doubleReed",
+    img: "kenzaki_ririka_1",
+    faction: "kitauji",
+    rarity: 1,
+    type: 0
+  },
+  "kabutodani_eru_skin": {
+    skinOf: "kabutodani_eru",
+    name: "兜谷爱瑠",
+    power: 4,
+    ability: "tight_bond",
+    bondType: "doubleReed",
+    img: "kabutodani_eru_1",
+    faction: "kitauji",
+    rarity: 1,
+    type: 0
+  },
+  "koteyama_suruga_skin": {
+    skinOf: "koteyama_suruga",
+    name: "笼手山骏河",
+    power: 4,
+    ability: "tight_bond",
+    bondType: "doubleReed",
+    img: "koteyama_suruga_1",
+    faction: "kitauji",
+    rarity: 1,
+    type: 0
+  },
+  "yoroizuka_mizore_skin_1": {
+    skinOf: "yoroizuka_mizore",
+    name: "铠冢霙",
+    power: 15,
+    ability: "hero",
+    img: "yoroizuka_mizore_1",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "yoroizuka_mizore_skin_2": {
+    skinOf: "yoroizuka_mizore",
+    name: "铠冢霙",
+    power: 15,
+    ability: "hero",
+    img: "yoroizuka_mizore_2",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "yoroizuka_mizore_skin_3": {
+    skinOf: "yoroizuka_mizore",
+    name: "铠冢霙",
+    power: 15,
+    ability: "hero",
+    img: "yoroizuka_mizore_3",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "yoroizuka_mizore_skin_4": {
+    skinOf: "yoroizuka_mizore",
+    name: "铠冢霙",
+    power: 15,
+    ability: "hero",
+    img: "yoroizuka_mizore_4",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "kasaki_nozomi_skin_1": {
+    skinOf: "kasaki_nozomi",
+    name: "伞木希美",
+    power: 7,
+    ability: ["hero", "scorch"],
+    img: "kasaki_nozomi_1",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "kasaki_nozomi_skin_2": {
+    skinOf: "kasaki_nozomi",
+    name: "伞木希美",
+    power: 7,
+    ability: ["hero", "scorch"],
+    img: "kasaki_nozomi_2",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "kasaki_nozomi_skin_3": {
+    skinOf: "kasaki_nozomi",
+    name: "伞木希美",
+    power: 7,
+    ability: ["hero", "scorch"],
+    img: "kasaki_nozomi_3",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "kasaki_nozomi_skin_4": {
+    skinOf: "kasaki_nozomi",
+    name: "伞木希美",
+    power: 7,
+    ability: ["hero", "scorch"],
+    img: "kasaki_nozomi_4",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "kasaki_nozomi_skin_5": {
+    skinOf: "kasaki_nozomi",
+    name: "伞木希美",
+    power: 7,
+    ability: ["hero", "scorch"],
+    img: "kasaki_nozomi_5",
+    faction: "kitauji",
+    rarity: 3,
+    type: 0
+  },
+  "kousaka_reina_skin": {
+    skinOf: "kousaka_reina",
+    name: "高坂丽奈",
+    power: 10,
+    ability: ["hero", "attack"],
+    attackPower: 4,
+    img: "kousaka_reina_1",
+    faction: "kitauji",
+    rarity: 3,
+    type: 1
+  },
+  "oda_meiko_skin": {
+    skinOf: "oda_meiko",
+    name: "小田芽衣子",
+    power: 4,
+    ability: "muster",
+    musterType: "flute2",
+    img: "oda_meiko_1",
+    faction: "kitauji",
+    rarity: 1,
+    type: 0
+  },
+  "takahashi_sari_skin": {
+    skinOf: "takahashi_sari",
+    name: "高桥沙里",
+    power: 4,
+    ability: "muster",
+    musterType: "flute2",
+    img: "takahashi_sari_1",
+    faction: "kitauji",
+    rarity: 1,
+    type: 0
+  },
+  "nakano_tsubomi_skin": {
+    skinOf: "nakano_tsubomi",
+    name: "中野蕾实",
+    power: 4,
+    ability: "muster",
+    musterType: "flute2",
+    img: "nakano_tsubomi_1",
+    faction: "kitauji",
+    rarity: 1,
+    type: 0
+  },
+  "yoshikawa_yuko_skin_1": {
+    skinOf: "yoshikawa_yuko",
+    name: "吉川优子",
+    power: 7,
+    ability: ["hero", "morale_boost"],
+    img: "yoshikawa_yuko_1",
+    faction: "kitauji",
+    grade: 3,
+    rarity: 3,
+    type: 1
+  },
+  "yoshikawa_yuko_skin_2": {
+    skinOf: "yoshikawa_yuko",
+    name: "吉川优子",
+    power: 7,
+    ability: ["hero", "morale_boost"],
+    img: "yoshikawa_yuko_2",
+    faction: "kitauji",
+    grade: 3,
+    rarity: 3,
+    type: 1
+  },
+  "nakagawa_natsuki_skin": {
+    skinOf: "nakagawa_natsuki",
+    name: "中川夏纪",
+    power: 5,
+    ability: null,
+    img: "nakagawa_natsuki_1",
+    faction: "kitauji",
+    grade: 3,
+    rarity: 0,
+    type: 1
+  },
+  "etou_kana_skin": {
+    skinOf: "etou_kana",
+    name: "江藤香奈",
+    power: 2,
+    ability: "muster",
+    musterType: "flute1",
+    img: "etou_kana_1",
+    faction: "kitauji",
+    rarity: 0,
+    type: 0
+  },
+  "hiraishi_narumi_skin": {
+    skinOf: "hiraishi_narumi",
+    name: "平石成美",
+    power: 2,
+    ability: "muster",
+    musterType: "flute1",
+    img: "hiraishi_narumi_1",
+    faction: "kitauji",
+    rarity: 0,
+    type: 0
+  },
+  "yamane_tsumiki_skin": {
+    skinOf: "yamane_tsumiki",
+    name: "山根都美贵",
+    power: 2,
+    ability: "muster",
+    musterType: "flute1",
+    img: "yamane_tsumiki_1",
+    faction: "kitauji",
+    rarity: 0,
+    type: 0
+  },
+  "oumae_kumiko_skin_1": {
+    skinOf: "oumae_kumiko",
+    name: "黄前久美子",
+    power: 9,
+    ability: ["hero", "medic"],
+    img: "oumae_kumiko_1",
+    faction: "kitauji",
+    rarity: 3,
+    type: 1
+  },
+  "oumae_kumiko_skin_2": {
+    skinOf: "oumae_kumiko",
+    name: "黄前久美子",
+    power: 9,
+    ability: ["hero", "medic"],
+    img: "oumae_kumiko_2",
+    faction: "kitauji",
+    rarity: 3,
+    type: 1
+  },
+  "takahisa_chieri_skin": {
+    skinOf: "takahisa_chieri",
+    name: "高久智惠理",
+    power: 5,
+    ability: "tight_bond",
+    bondType: "bg",
+    img: "takahisa_chieri_1",
+    faction: "kitauji",
+    rarity: 2,
+    type: 0
+  },
+  "ono_miyoko_skin": {
+    skinOf: "ono_miyoko",
+    name: "大野美代子",
+    power: 7,
+    ability: null,
+    img: "ono_miyoko_1",
+    faction: "kitauji",
+    grade: 3,
+    rarity: 1,
+    type: 2
+  },
+  "inoue_shirabe_skin": {
+    skinOf: "inoue_shirabe",
+    name: "井上调",
+    power: 7,
+    ability: null,
+    img: "inoue_shirabe_1",
+    faction: "kitauji",
+    grade: 3,
+    rarity: 1,
+    type: 0
   },
 
   // kumiko I(S1)

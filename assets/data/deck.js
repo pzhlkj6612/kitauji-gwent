@@ -494,4 +494,37 @@ module.exports = {
       "niiyama",
     ]
   },
+  // skin
+  "skin_liz": {
+    faction: "kitauji",
+    data: [
+      "kenzaki_ririka_skin",
+      "kabutodani_eru_skin",
+      "koteyama_suruga_skin",
+      "yoroizuka_mizore_skin_1",
+      "yoroizuka_mizore_skin_2",
+      "yoroizuka_mizore_skin_3",
+      "yoroizuka_mizore_skin_4",
+      "kasaki_nozomi_skin_1",
+      "kasaki_nozomi_skin_2",
+      "kasaki_nozomi_skin_3",
+      "kasaki_nozomi_skin_4",
+      "kasaki_nozomi_skin_5",
+      "kousaka_reina_skin",
+      "oda_meiko_skin",
+      "takahashi_sari_skin",
+      "nakano_tsubomi_skin",
+      "yoshikawa_yuko_skin_1",
+      "yoshikawa_yuko_skin_2",
+      "nakagawa_natsuki_skin",
+      "etou_kana_skin",
+      "hiraishi_narumi_skin",
+      "yamane_tsumiki_skin",
+      "oumae_kumiko_skin_1",
+      "oumae_kumiko_skin_2",
+      "takahisa_chieri_skin",
+      "ono_miyoko_skin",
+      "inoue_shirabe_skin",
+    ]
+  }
 }
