@@ -297,8 +297,9 @@ $game-height: 800px;
 }
 
   .button-pass {
-    top: 50%;
-    transform: translate(0, -50%);
+    margin-top: 40px;
+    // top: 50%;
+    // transform: translate(0, -50%);
     border: 0;
     padding: 5px 10px;
     text-transform: uppercase;
@@ -652,16 +653,19 @@ $game-height: 800px;
 .field-close {
   display: flex;
   justify-content: center;
+  padding: 0;
 }
 
 .field-range {
   display: flex;
   justify-content: center;
+  padding: 0;
 }
 
 .field-siege {
   display: flex;
   justify-content: center;
+  padding: 0;
 }
 
 .playcard-banner {

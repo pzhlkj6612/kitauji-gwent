@@ -117,7 +117,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-close"), 8);
+    this.battleView.calculateMargin($field.find(".field-close"), 9);
   },
   highlightCards_: function(cards) {
     if (this.side === ".foe") {
@@ -171,7 +171,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-range"), 8);
+    this.battleView.calculateMargin($field.find(".field-range"), 9);
   },
   renderSiegeField: function(){
     if(!this.field.siege) return;
@@ -206,7 +206,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-siege"), 8);
+    this.battleView.calculateMargin($field.find(".field-siege"), 9);
   },
   renderPlayCardAnimation: function() {
     let placedCard = this.infoData.placedCard;

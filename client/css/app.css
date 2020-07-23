@@ -1045,7 +1045,7 @@ nav a.active {
     width: 126px;
     height: 233px;
     position: relative;
-    padding: 4px;
+    padding: 4px 0;
 }
 
 .card-wrap-big {
