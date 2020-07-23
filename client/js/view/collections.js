@@ -2,6 +2,13 @@ let Backbone = require("backbone");
 
 let cardData = require("../../../assets/data/cards");
 let abilityData = require("../../../assets/data/abilities");
+let Const = require("../const");
+
+const TAB = {
+  DECK: "deck",
+  SKIN: "skin",
+  FEE: "fee",
+}
 
 let Collections = Backbone.View.extend({
   defaults: {
@@ -15,8 +22,10 @@ let Collections = Backbone.View.extend({
     this.app = options.app;
     this.app.receive("response:userCollections", this.onUserCollectionsResponse.bind(this));
     this.app.send("request:userCollections");
+    this.tab = TAB.DECK;
     this.deckKey = "kitauji";
     this.collections = {};
+    this.skins = {};
     this.leaderCollections = [];
     this.customDecks = {};
     this.dirty = false;
@@ -28,6 +37,7 @@ let Collections = Backbone.View.extend({
   onUserCollectionsResponse: function(data) {
     this.deckKey = data.currentDeck;
     this.collections = data.collections || {};
+    this.skins = Object.keys(this.collections[Const.FACTION_SKIN] || {});
     this.leaderCollections = Object.keys(data.leaderCollection || {});
     this.customDecks = data.customDecks || {};
     this.reset();
@@ -45,6 +55,9 @@ let Collections = Backbone.View.extend({
       .filter(l => cardData[l].faction === 'neutral' || cardData[l].faction === this.deckKey);
     this.currentDeck = this.customDecks[this.deckKey] || {};
     this.currentLeader = this.currentDeck["leader"] || this.leaderCollection[0];
+    this.currentSkinMapping = this.currentDeck["skinMapping"] || {};
+    // skins to choose from for a card
+    this.currentSkinCollection = [];
     this.currentDeck = this.currentDeck["cardInDeck"] || {};
     for (let key of Object.keys(this.currentDeck)) {
       this.removeCardFrom(this.collection, key, this.currentDeck[key]);
@@ -60,10 +73,12 @@ let Collections = Backbone.View.extend({
     "click .card-filters.card-in-deck": "switchDeckTab",
     "click .deck-confirm": "confirmDeck",
     "click .leader-field": "onLeaderClick",
-    "click .leader-collection>.card-cell": "chooseLeader",
+    "click .leader-collection": "chooseLeader",
+    "click .skin-selector": "chooseSkin",
     "mouseover .card-cell": "onMouseover",
     "mouseleave .card-cell": "onMouseleave",
     "click .button-quit": "onQuit",
+    "click #navigation": "switchTab",
   },
   toLeaderList: function(deck) {
     return deck.filter(key => cardData[key].type === 3);
@@ -92,8 +107,12 @@ let Collections = Backbone.View.extend({
       cards[key] = opt_count;
     }
   },
-  toCardModel: function(key, count) {
+  toCardModel: function(key, count, noMapping) {
     if (!key) return null;
+    // if skin is used, show skin
+    if (!noMapping && this.currentSkinMapping[key]) {
+      key = this.currentSkinMapping[key];
+    }
     return {
       _key: key,
       _data: cardData[key],
@@ -105,6 +124,13 @@ let Collections = Backbone.View.extend({
     let cards = [];
     for (let leader of leaderList) {
       cards.push(this.toCardModel(leader));
+    }
+    return cards;
+  },
+  toSkinModelList: function(skinList) {
+    let cards = [];
+    for (let skin of skinList) {
+      cards.push(this.toCardModel(skin, 1, true));
     }
     return cards;
   },
@@ -167,6 +193,7 @@ let Collections = Backbone.View.extend({
       "cardCollection": this.toCardModelList(this.collection, this.collectionTab),
       "cardInDeck": this.toCardModelList(this.currentDeck, this.deckTab),
       "leaderCollection": this.toLeaderCardModelList(this.leaderCollection),
+      "skinCollection": this.toSkinModelList(this.currentSkinCollection),
       "collectionTab": i18n.getText(this.collectionTab),
       "deckTab": i18n.getText(this.deckTab),
       "leader": this.toCardModel(this.currentLeader),
@@ -177,6 +204,7 @@ let Collections = Backbone.View.extend({
     this.$el.find(`.card-collections .filter-icon[data-type="${this.collectionTab}"]`).addClass("active");
     this.$el.find(`.card-in-deck .filter-icon[data-type="${this.deckTab}"]`).addClass("active");
     this.$el.find(`#deckChoice option[value='${this.deckKey}']`).attr("selected", "selected");
+    this.$el.find(`#navigation .btn-${this.tab}-page`).addClass("active");
     return this;
   },
   renderCardDesc: function($el) {
@@ -215,6 +243,11 @@ let Collections = Backbone.View.extend({
     if (!$card.length) return;
     playSound("card1");
     let key = $card.data("key");
+    key = cardData[key].skinOf || key;
+    if (this.tab === TAB.SKIN) {
+      this.openSkinSelector(key);
+      return;
+    }
     this.removeCardFrom(this.collection, key, 1);
     this.addCardTo(this.currentDeck, key);
     let scrolls = this.rememberScroll();
@@ -227,6 +260,11 @@ let Collections = Backbone.View.extend({
     if (!$card.length) return;
     playSound("card1");
     let key = $card.data("key");
+    key = cardData[key].skinOf || key;
+    if (this.tab === TAB.SKIN) {
+      this.openSkinSelector(key);
+      return;
+    }
     this.removeCardFrom(this.currentDeck, key, 1);
     this.addCardTo(this.collection, key);
     let scrolls = this.rememberScroll();
@@ -261,6 +299,18 @@ let Collections = Backbone.View.extend({
     this.deckTab = $tab.data("type");
     this.render();
   },
+  switchTab: function(e) {
+    let $tab = $(e.target).closest("button");
+    if (!$tab.length) return;
+    if ($tab.hasClass("btn-deck-page")) {
+      this.tab = TAB.DECK;
+    } else if ($tab.hasClass("btn-skin-page")) {
+      this.tab = TAB.SKIN;
+    } else if ($tab.hasClass("btn-fee-page")) {
+      this.tab = TAB.FEE;
+    }
+    this.render();
+  },
   onMouseover: function(e) {
     let $card = $(e.target).closest(".card-cell");
     if (!$card.length) return;
@@ -277,6 +327,7 @@ let Collections = Backbone.View.extend({
       deck: this.deckKey,
       cardInDeck: this.currentDeck,
       leader: this.currentLeader,
+      skinMapping: this.currentSkinMapping,
     }
     if (this.dirty) {
       this.app.send("set:customDeck", customDeck);
@@ -291,12 +342,39 @@ let Collections = Backbone.View.extend({
   },
   chooseLeader: function(e) {
     let $card = $(e.target).closest(".card-cell");
-    if (!$card.length) return;
+    if (!$card.length) {
+      this.$el.find(".leader-collection").addClass("hidden");
+      return;
+    }
     this.currentLeader = $card.data("key");
     this.dirty = true;
     this.render();
     this.$el.find(".leader-collection").addClass("hidden");
+  },
+  openSkinSelector(card) {
+    this.currentSkinCollection = [card].concat(this.skins
+      .filter(skin => cardData[skin].skinOf === card));
+    this.render();
+    this.$el.find(".skin-selector").removeClass("hidden");
+  },
+  chooseSkin: function(e) {
+    let $card = $(e.target).closest(".card-cell");
+    if (!$card.length) {
+      this.$el.find(".skin-selector").addClass("hidden");
+      return;
+    }
+    let key = $card.data("key");
+    if (!cardData[key].skinOf) {
+      // if this is the default skin
+      delete this.currentSkinMapping[key];
+    } else {
+      this.currentSkinMapping[cardData[key].skinOf] = key;
+    }
+    this.dirty = true;
+    this.render();
+    this.$el.find(".skin-selector").addClass("hidden");
   }
+  
 });
 
 module.exports = Collections;

@@ -127,10 +127,10 @@ class LuckyDraw {
       faction = FACTION[(Math.random() * FACTION.length) | 0];
     } while (faction === initialDeck && retry-- > 0);
     let cards = await this.draw(1, scenarioName, username, faction);
-    let userSkin = await db.findCardsByUser(username, Const.FACTION_SKIN, true) || {};
+    let userDeck = await db.findCardsByUser(username, faction, true) || {};
     if (!cards.length ||
-        userSkin[cards[0]] && Math.random() < 0.6) {
-      let skin = this.drawSkin(scenarioName, userSkin, faction);
+        userDeck[cards[0]] && Math.random() < 0.6) {
+      let skin = await this.drawSkin(scenarioName, username, faction);
       if (skin) {
         return skin;
       }
@@ -256,7 +256,8 @@ class LuckyDraw {
     return candidates[(Math.random() * candidates.length) | 0];
   }
 
-  drawSkin(scenarioName, userSkin, faction) {
+  async drawSkin(scenarioName, username, faction) {
+    let userSkin = await db.findCardsByUser(username, Const.FACTION_SKIN, true) || {};
     let rarity = this.toFixedRarity_(scenarioName);
     let factionSkin = SKINS.filter(c => 
       CardData[c].faction === faction &&

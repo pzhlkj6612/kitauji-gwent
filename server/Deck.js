@@ -66,9 +66,13 @@ var Deck = (function(){
   r.setCustomDeck = function(customDeck) {
     let deck = [];
     let cardInDeck = customDeck.cardInDeck;
+    let skinMapping = customDeck.skinMapping || {};
     for (let key of Object.keys(cardInDeck)) {
       // if card has limit, can only add card up to that limit
-      for (let i=0; i<Math.min(Util.getLimit(key), cardInDeck[key]); i++) deck.push(key);
+      for (let i=0; i<Math.min(Util.getLimit(key), cardInDeck[key]); i++) {
+        if (skinMapping[key]) key = skinMapping[key];
+        deck.push(key);
+      }
     }
     deck.push(customDeck.leader);
 

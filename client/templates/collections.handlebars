@@ -1,7 +1,12 @@
 <button class="btn btn-danger button-quit">Quit</button>
 <div class="gwent-collections">
-  <div class="leader-collection hidden">
+  <div class="leader-collection selector-modal hidden">
     {{#each leaderCollection}}
+      {{>cardCell this}}
+    {{/each}}
+  </div>
+  <div class="skin-selector selector-modal hidden">
+    {{#each skinCollection}}
       {{>cardCell this}}
     {{/each}}
   </div>
@@ -24,6 +29,13 @@
     </div>
   </div>
   <div class="collections-middle">
+    <div>
+      <div id="navigation" class="btn-group" role="group">
+        <button type="button" class="btn btn-default btn-deck-page">{{i18n "card_collection"}}</button>
+        <button type="button" class="btn btn-default btn-skin-page">皮肤</button>
+        <button type="button" class="btn btn-default btn-fee-page">部费</button>
+      </div>
+    </div>
     <div  class="deck-choice">
       <select id="deckChoice" selected="selected">
         <option value="kumiko1">{{i18n "deck_ku1"}}</option>
@@ -32,7 +44,7 @@
       </select>
     </div>
     <p>{{factionAbility}}</p>
-    <h4>{{i18n "conductor"}}</h4>
+    {{!-- <h4>{{i18n "conductor"}}</h4> --}}
     <div class="leader-field">
       {{>cardCell leader}}
     </div>
