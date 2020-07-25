@@ -24,6 +24,7 @@ var Card = (function(){
     this._data.key = key;
     this._boost = {};
     this._forcedPower = -1;
+    this._forcePowerBy = {};
     //this._init();
   };
   var r = Card.prototype;
@@ -38,6 +39,7 @@ var Card = (function(){
   r._owner = null;
   r._boost = null;
   r._forcedPower = null;
+  r._forcePowerBy = null;
   r._disabled = null;
   r._changedType = null;
   //Card.__id = 0;
@@ -73,6 +75,12 @@ var Card = (function(){
     if(this._forcedPower > -1){
       base = this._forcedPower > this._data.power ? this._data.power : this._forcedPower;
     }
+    for (let key in this._forcePowerBy) {
+      let forcePower = this._forcePowerBy[key];
+      if (forcePower > -1) {
+        base = forcePower > this._data.power ? this._data.power : forcePower;
+      }
+    }
     return base;
   }
 
@@ -95,6 +103,10 @@ var Card = (function(){
   }
   r.setForcedPower = function(nr){
     this._forcedPower = nr;
+    this.getBoost(); //recalculate
+  }
+  r.setForcePowerBy = function(nr, key) {
+    this._forcePowerBy[key] = nr;
     this.getBoost(); //recalculate
   }
   r.getRawAbility = function(){
@@ -172,6 +184,7 @@ var Card = (function(){
         this._boost[key] = 0;
       }
     }
+    this._forcePowerBy = {};
     this.getBoost();
   }
 
@@ -221,6 +234,7 @@ var Card = (function(){
   r.reset = function(){
     this._changedType = null;
     this._forcedPower = -1;
+    this._forcePowerBy = {};
     this._boost = {};
     this.boost = 0;
   }

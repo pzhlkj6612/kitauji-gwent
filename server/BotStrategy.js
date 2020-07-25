@@ -187,7 +187,6 @@ var BotStrategy = (function(){
         return [this.bot.playCardCommand(card)].concat(this.generateForChooseHeal(card));
       } else if (String(card._data.ability).includes("medic")) {
         let cards = this.generateForMedic(card);
-        console.info("generated command for medic: ", cards);
         return cards;
       } else {
         return [this.bot.playCardCommand(card)];
@@ -305,7 +304,9 @@ var BotStrategy = (function(){
         } else if (Util.isScorch(card, true)) {
           let foeHighestCards = this.getHighestCards(this.getFieldCards(false));
           let ownHighestCards = this.getHighestCards(this.getFieldCards(true));
-          if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
+          if (foeHighestCards[0] && ownHighestCards[0] && foeHighestCards[0] < ownHighestCards[0]) {
+            // don't scorch yourself!
+          } if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
             let scorchPower = this.getScoreSum(foeHighestCards, c=>c.power);
             realPower = scorchPower;
             if (scorchPower >= 10) reward = 100;

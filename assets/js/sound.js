@@ -14,6 +14,7 @@ var sounds = {
     },
     "heal": {
       url: "assets/se/heal.mp3",
+      volume: .5,
     },
     "heal1": {
       url: "assets/se/heal1.mp3",

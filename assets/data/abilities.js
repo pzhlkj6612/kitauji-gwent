@@ -66,7 +66,7 @@ module.exports = {
       cards.forEach(function(_card){
         // no male are hero, so
         if (_card.isMale()) {
-          _card.setBoost("lips", - (_card.getBasePower() - 1));
+          _card.setForcePowerBy(1, "lips");
           if (_card.getPower(true) <= 0) {
             var removed = self.foe.field[_card.getType()].removeCard(_card);
             self.foe.addToDiscard(removed, true);
