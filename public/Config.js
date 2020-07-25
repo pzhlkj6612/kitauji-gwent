@@ -1,7 +1,7 @@
 
 var Config = {};
 
-Config.MAJOR_VERSION = 1;
+Config.MAJOR_VERSION = 2;
 
 Config.WS_SERVER_PORT = 16918;
 

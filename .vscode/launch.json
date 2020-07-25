@@ -7,8 +7,9 @@
       {
         "type": "node",
         "request": "launch",
+        "runtimeVersion": "11.1.0",
         "name": "Launch Program",
-        "runtimeArgs": ["--harmony-async-await"],
+        // "runtimeArgs": ["--harmony-async-await"],
         "program": "${file}"
       }
     ]

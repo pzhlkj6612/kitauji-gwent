@@ -13,6 +13,9 @@ var gulpif = require("gulp-if");
 var argv = require("minimist")(process.argv.slice(2));
 var rename = require("gulp-rename");
 var version = require('gulp-version-number');
+var buffer = require('vinyl-buffer');
+var uglify = require('gulp-uglify');
+var gutil = require('gulp-util');
 //livereload({start: true});
 
 //fast install
@@ -46,6 +49,9 @@ gulp.task('browserify', function() {
   .pipe(source('app.js').on("error", function(err) {
     console.log(err);
   }))
+  .pipe(buffer())
+  .pipe(uglify())
+  .on('error', gutil.log)
   .pipe(gulp.dest('./public/build/').on("error", function(err) {
     console.log(err);
   }));
@@ -87,6 +93,7 @@ gulp.task("watch", function() {
   gulp.watch("./client/templates/*", ["browserify"]);
   gulp.watch("./client/scss/*", ["sass"]);
   gulp.watch("./client/*.html", ["index"]);
+  gulp.watch("./client/json/**", ["index"]);
   gulp.watch("./test/src/*", ["unit tests"]);
 })
 
