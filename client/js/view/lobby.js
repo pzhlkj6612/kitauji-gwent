@@ -39,6 +39,7 @@ let Lobby = Backbone.View.extend({
     "click #startMatchmaking": "startMatchmaking",
     "click #startMatchmakingWithBot": "startMatchmakingWithBot",
     "click .btnCollection": "goToCollection",
+    "click .btnLuckyDraw": "goToLuckyDraw",
     "click .btnContest": "onQuestClick",
     "click #logout": "logout",
     "click #ranking": "onRankingClick",
@@ -68,6 +69,9 @@ let Lobby = Backbone.View.extend({
   },
   goToCollection: function() {
     this.app.collectionsRoute();
+  },
+  goToLuckyDraw: function() {
+    this.app.luckyDrawRoute();
   },
   logout: function() {
     this.user.logout();

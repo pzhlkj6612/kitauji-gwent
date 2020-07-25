@@ -148,6 +148,10 @@
     @extend .ability-md-muster;
     @extend .ability-md;
   }
+  .btn-luckyDraw {
+    @extend .ability-md-monaka;
+    @extend .ability-md;
+  }
   .btn-startMatchWithBot {
     @extend .ability-md-guard;
     @extend .ability-md;

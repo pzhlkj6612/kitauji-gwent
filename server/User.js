@@ -504,6 +504,7 @@ var User = (function(){
       await db.updateWallet(self.userModel.username, price, true);
       let {faction, cards} = await LuckyDraw.getInstance()
         .drawSingleAvoidDuplicate(scenario, self.userModel.username, self.userModel.initialDeck);
+      console.info("user get new card: ", cards);
       await db.addCards(self.userModel.username, faction, cards);
       socket.emit("response:luckyDraw", {
         newCard: cards,

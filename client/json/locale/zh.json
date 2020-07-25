@@ -43,6 +43,7 @@
     "win_count": "胜场",
     "lose_count": "负场",
     "my_deck": "我的阵容",
+    "lucky_draw": "招新",
     "practice": "练习",
     "contest": "大赛",
     "reset_quest": "关卡已重置：{0}",
@@ -75,6 +76,9 @@
     "total_skins": "皮肤总数",
     "sell_title": "要卖出多少【{0}】?",
     "confirm": "确认",
+
+    "fee_not_enough": "没有足够的部费",
+    "empty_draw": "什么也没有抽到",
 
     "discard_members": "的退部/毕业成员",
     "close": "关闭",

@@ -43,6 +43,7 @@
     "win_count": "Win Count",
     "lose_count": "Lose Count",
     "my_deck": "My Deck",
+    "lucky_draw": "Lucky Draw",
     "practice": "Practice",
     "contest": "Contest",
     "reset_quest": "Quest is reset: {0}",
@@ -75,6 +76,9 @@
     "total_skins": "Total Skins",
     "sell_title": "要卖出多少【{0}】?",
     "confirm": "Confirm",
+
+    "fee_not_enough": "The fee is not enough.",
+    "empty_draw": "You get nothing. Please try again.",
 
     "discard_members": "'s quitted/graduated members",
     "close": "Close",

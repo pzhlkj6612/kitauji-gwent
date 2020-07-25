@@ -1,0 +1,47 @@
+
+<div class="lobby luckyDrawLobby">
+  <div class="lobby-header">
+    <button class="btn btn-danger quit">Quit</button>
+    &nbsp;&nbsp;
+    <a id="wallet">{{i18n "fee"}}: {{userModel.wallet}}</a>
+  </div>
+  <div class="lobby-main">
+    <div class="col-xs-12 lobby-panel">
+      <div class="panel-row luckyDraw-panel-row">
+        <div class="panel-btn btnContest" data-scenario="kyoto">
+          <div class="quest-progress">
+            <span class="progress-text"></span>
+          </div>
+          <div class="draw-price">
+            ${{kyotoPrice}}
+          </div>
+          <div class="btn-text">{{i18n "scenario_kyoto"}}</div>
+          <div class="btn-background btn-kyoto">
+          </div>
+        </div>
+        <div class="panel-btn btnContest" data-scenario="kansai">
+          <div class="quest-progress">
+            <span class="progress-text"></span>
+          </div>
+          <div class="draw-price">
+            ${{kansaiPrice}}
+          </div>
+          <div class="btn-text">{{i18n "scenario_kansai"}}</div>
+          <div class="btn-background btn-kansai">
+          </div>
+        </div>
+        <div class="panel-btn btnContest" data-scenario="zenkoku">
+          <div class="quest-progress">
+            <span class="progress-text"></span>
+          </div>
+          <div class="draw-price">
+            ${{zenkokuPrice}}
+          </div>
+          <div class="btn-text">{{i18n "scenario_zenkoku"}}</div>
+          <div class="btn-background btn-zenkoku">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
