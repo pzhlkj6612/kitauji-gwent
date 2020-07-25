@@ -216,16 +216,26 @@ var Battle = (function(){
   }
 
   r.gameOver = async function(winner){
+    let p1Scores = this.p1.getScores();
+    let p2Scores = this.p2.getScores();
+    let p1Total = p1Scores.reduce((sum,s)=>sum+s, 0);
+    let p2Total = p2Scores.reduce((sum,s)=>sum+s, 0);
     let data = {
       winner: winner ? winner.getName() : null,
-      p1Scores: this.p1.getScores(),
-      p2Scores: this.p2.getScores(),
+      p1Scores,
+      p2Scores,
     };
-    let result1 = await this._user1.endGame(!winner || winner === this.p1, this.p1.deck.getFaction(), this._user2);
-    data.gameResult = result1;
+    data.gameResult = await this._user1.endGame({
+      isWin: winner === this.p1,
+      score: p1Total,
+      foeScore: p2Total,
+    }, this.p1.deck.getFaction(), this._user2);
     this.p1.send("gameover", data, true);
-    let result2 = await this._user2.endGame(!winner || winner === this.p2, this.p2.deck.getFaction(), this._user1);
-    data.gameResult = result2;
+    data.gameResult = await this._user2.endGame({
+      isWin: winner === this.p2,
+      score: p2Total,
+      foeScore: p1Total,
+    }, this.p2.deck.getFaction(), this._user1);
     this.p2.send("gameover", data, true);
 
     this._user1.disconnect();

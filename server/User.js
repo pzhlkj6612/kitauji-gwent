@@ -207,18 +207,18 @@ var User = (function(){
   /**
    * Record game state, etc.
    */
-  r.endGame = async function(isWin, faction, foe) {
+  r.endGame = async function(gameState, faction, foe) {
     let result = {};
     if (!this._scenario) return result;
 
     if (!foe.isBot()) {
-      await Cache.getInstance().recordUserWin(this.userModel.username, isWin);
+      await Cache.getInstance().recordUserWin(this.userModel.username, gameState.isWin);
     }
 
     // update quest progress
     let questState = await Quest.updateQuestProgress(this.userModel, this._scenario, {
       foeName: foe.getName(),
-      isWin,
+      isWin: gameState.isWin,
     });
     result["questState"] = questState;
 
@@ -228,9 +228,19 @@ var User = (function(){
       if (newLeader) {
         result["newCard"] = newLeader;
         console.info("user get new leader: ", newLeader);
-      } else {
-        result["newCard"] = await this.luckyDrawAfterGame_(isWin, faction, foe, questState);
+        return result;
+      }
+      let newCard = await this.luckyDrawAfterGame_(gameState.isWin, faction, foe, questState);
+      if (newCard && newCard.length) {
+        result["newCard"] = newCard;
         console.info("user get new card: ", result["newCard"]);
+        return result;
+      }
+      let coins = await this.getCoinAfterGame_(gameState);
+      if (coins) {
+        result["coins"] = coins;
+        console.info("user get coins: ", coins);
+        return result;
       }
     } catch (e) {
       console.warn(e);
@@ -270,6 +280,14 @@ var User = (function(){
     let {faction, cards} = await LuckyDraw.getInstance().drawSingleAvoidDuplicate(scenario, this.userModel.username, deck);
     await db.addCards(this.userModel.username, faction, cards);
     return cards;
+  }
+
+  r.getCoinAfterGame_ = async function(gameState) {
+    let coins = LuckyDraw.getInstance().calculateCoin(gameState, this._scenario);
+    if (coins) {
+      await db.updateWallet(this.userModel.username, coins);
+    }
+    return coins;
   }
 
   r._events = function() {
@@ -318,6 +336,8 @@ var User = (function(){
       // give initial leader card
       await db.addLeaderCards(data.username, [Const.DEFAULT_LEADER]);
       cards.push(Const.DEFAULT_LEADER);
+      // give initial coins
+      await db.updateWallet(data.username, 50);
       // set default deck
       await db.storeCustomDeckByList(data.username, data.initialDeck, cards);
       // start first quest
@@ -440,9 +460,46 @@ var User = (function(){
     socket.on("request:quitGame", function() {
       if (self._rooms.length && self.getRoom().hasUser() > 1) {
         // quit game when other user still playing, record as lose
-        self.endGame(false, self.userModel.initialDeck, self._battleSide.foe.getUser());
+        self.endGame({
+          isWin: false,
+          score: 0,
+          foeScore: 1,
+        }, self.userModel.initialDeck, self._battleSide.foe.getUser());
       }
       self.disconnect();
+    })
+
+    socket.on("request:sell", async function(data) {
+      let {faction, card, amount} = data;
+      let ok = await db.addCards(this.userModel.username, faction, card, amount);
+      if (ok) {
+        let coins = LuckyDraw.getInstance().calculatePrice(card, amount);
+        console.info("user get coins: ", coins);
+        await db.updateWallet(this.userModel.username, coins);
+      }
+    })
+
+    socket.on("request:luckyDraw", async function(data) {
+      let {scenario} = data;
+      let price = LuckyDraw.getInstance().getPriceForLuckyDraw(scenario);
+      if (price > this.userModel.wallet) {
+        socket.emit("response:luckyDraw", {
+          newCard: [],
+        });
+        return;
+      }
+      await db.updateWallet(this.userModel.username, price, true);
+      let {faction, cards} = await LuckyDraw.getInstance()
+        .drawSingleAvoidDuplicate(scenario, this.userModel.username, this.userModel.initialDeck);
+      await db.addCards(this.userModel.username, faction, cards);
+      socket.emit("response:luckyDraw", {
+        newCard: cards,
+      });
+    });
+
+    socket.on("request:resetQuest", async function(data) {
+      let {scenario} = data;
+      await db.updateProgress(this.userModel.username, scenario, []);
     })
   }
 

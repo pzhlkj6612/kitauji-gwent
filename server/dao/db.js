@@ -41,8 +41,8 @@ class DB {
         console.log("condition table created!");
       });
     }).catch(e => {
-      console.warn("Database not started. You can still connect to online servers");
-      console.warn("本地数据库没有启动，但仍然可以选择连接线上服务器。");
+      console.warn("Database not started. But you can still connect to online servers");
+      console.warn("本地未安装数据库，请忽略报错并在游戏中选择线上服务器。>_<");
     });
   }
   
@@ -111,11 +111,25 @@ class DB {
   async recordZenkokuGold(username) {
     await this.connectPromise;
     const table = this.db.collection(TABLE_USER);
+    let zenkokuGold = await table.findOne({username}).zenkokuGold || 0;
+    zenkokuGold += 1;
     return await table.updateOne({username}, {
-      $inc: {zenkokuGold: 1},
+      $set: {zenkokuGold},
     });
   }
-  
+
+  async updateWallet(username, coins, isSpend) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_USER);
+    let wallet = await table.findOne({username}).wallet || 0;
+    wallet = isSpend ? (wallet - coins) : (wallet + coins);
+    return await table.updateOne({username}, {
+      $set: {
+        wallet
+      },
+    });
+  }
+
   // card
   
   async findAllCardsByUser(username) {
@@ -170,16 +184,19 @@ class DB {
   
     let cardMap = await this.findCardsByUser(username, deck) || {};
     let neutralCardMap = await this.findCardsByUser(username, Const.NEUTRAL_DECK) || {};
+    let updateNeutral = false, updateDeck = false;
     for (let key of cardList) {
       if (CardData[key].faction === Const.NEUTRAL_DECK) {
+        updateNeutral = true;
         if (neutralCardMap[key]) neutralCardMap[key]++;
         else neutralCardMap[key] = 1;
       } else {
+        updateDeck = true;
         if (cardMap[key]) cardMap[key]++;
         else cardMap[key] = 1;
       }
     }
-    if (Object.keys(cardMap).length) {
+    if (Object.keys(cardMap).length && updateDeck) {
       await table.updateOne({username, deck}, {
         $set: {
           cards: cardMap,
@@ -188,7 +205,7 @@ class DB {
         upsert: true,
       });
     }
-    if (Object.keys(neutralCardMap).length) {
+    if (Object.keys(neutralCardMap).length && updateNeutral) {
       await table.updateOne({
         username,
         deck: Const.NEUTRAL_DECK,
@@ -200,6 +217,46 @@ class DB {
         upsert: true,
       });
     }
+  };
+
+  async removeCard(username, deck, key, amount) {
+    await this.connectPromise;
+    const table = this.db.collection(TABLE_CARD);
+
+    let cardMap = await this.findCardsByUser(username, deck) || {};
+    let neutralCardMap = await this.findCardsByUser(username, Const.NEUTRAL_DECK) || {};
+    let updateNeutral = false, updateDeck = false;
+    if (CardData[key].faction === Const.NEUTRAL_DECK) {
+      updateNeutral = true;
+      if (!neutralCardMap[key] || neutralCardMap[key] <= amount) return false;
+      else neutralCardMap[key] -= amount;
+    } else {
+      updateDeck = true;
+      if (!cardMap[key] || cardMap[key] <= amount) return false;
+      else cardMap[key] -= amount;
+    }
+    if (Object.keys(cardMap).length && updateDeck) {
+      await table.updateOne({username, deck}, {
+        $set: {
+          cards: cardMap,
+        }
+      }, {
+        upsert: true,
+      });
+    }
+    if (Object.keys(neutralCardMap).length && updateNeutral) {
+      await table.updateOne({
+        username,
+        deck: Const.NEUTRAL_DECK,
+      }, {
+        $set: {
+          cards: neutralCardMap,
+        }
+      }, {
+        upsert: true,
+      });
+    }
+    return true;
   };
 
   async addLeaderCards(username, cardList) {

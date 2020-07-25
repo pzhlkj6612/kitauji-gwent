@@ -10,6 +10,7 @@ var Util = (function() {
       "winCount": user.winCount || 0,
       "loseCount": user.loseCount || 0,
       "zenkokuGold": 0,
+      "wallet": 0,
     };
   }
 

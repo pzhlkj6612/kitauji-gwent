@@ -1,5 +1,6 @@
 var DeckData = require("../assets/data/deck");
 var CardData = require("../assets/data/cards");
+var PriceData = require("../assets/data/prices");
 var Util = require("./CardUtil");
 var Const = require("./Const");
 var Cache = require("./dao/cache");
@@ -36,7 +37,7 @@ const SKINS = DeckData["skin"].data;
 const SCENARIOS = {
   [Const.SCENARIO_KYOTO]: {
     name: Const.SCENARIO_KYOTO,
-    weights: [50, 30, 10, 2],
+    weights: [50, 30, 10, 0],
   },
   [Const.SCENARIO_KANSAI]: {
     name: Const.SCENARIO_KANSAI,
@@ -277,6 +278,39 @@ class LuckyDraw {
       faction: Const.FACTION_SKIN,
       cards: [skin],
     };
+  }
+
+  calculateCoin(gameState, scenarioName) {
+    let max = this.getMaxCoinByScenario_(scenarioName);
+    if (gameState.score > gameState.foeScore) {
+      return max;
+    }
+    let diff = gameState.foeScore - gameState.score;
+    return Math.floor(Math.pow(1 - diff / gameState.foeScore * 1.0, 2) * max);
+  }
+
+  getMaxCoinByScenario_(scenarioName) {
+    switch (scenarioName) {
+      case Const.SCENARIO_KYOTO:
+        return 20;
+      case Const.SCENARIO_KANSAI:
+        return 30;
+      case Const.SCENARIO_ZENKOKU:
+      default:
+        return 50;
+    }
+  }
+
+  calculatePrice(card, amount) {
+    let price = PriceData.PRICE_BY_CARD[card];
+    if (!price) {
+      price = PriceData.PRICE_BY_RARITY[CardData[card].rarity];
+    }
+    return price * amount;
+  }
+
+  getPriceForLuckyDraw(scenarioName) {
+    return PriceData.LUCKY_DRAW_PRICE[scenarioName];
   }
 }
 
