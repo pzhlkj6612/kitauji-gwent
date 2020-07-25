@@ -845,6 +845,32 @@ Battleside = (function() {
     side.addToDiscard(removeCards, true);
   }
 
+  r.scorchGraduates = function(card) {
+    var cards = this.getFieldCards();
+    cards = cards.concat(this.foe.getFieldCards());
+    var self = this;
+
+    this.battle.sendNotification("msg_played", [this.getName(), card.getName()]);
+
+    let highest = cards.reduce(function(max, card) {
+      if(card.hasAbility("hero") || card.getGrade() !== 3) return max;
+      return card.getPower() > max ? card.getPower() : max;
+    }, 0);
+    let res = cards.filter(function(card) {
+      if(card.hasAbility("hero") || card.getGrade() !== 3) return false;
+      return card.getPower() === highest;
+    });
+
+    res.forEach(function(card) {
+      var side = self;
+      if(self.foe.field[card.getType()].isOnField(card)) {
+        side = self.foe;
+      }
+      var removed = side.field[card.getType()].removeCard(card);
+      side.addToDiscard(removed, true);
+    });
+  }
+
   r.scorch = function(card) {/*
     var side = this.foe;
     var field = side.field[Card.TYPE.CLOSE_COMBAT];

@@ -105,6 +105,7 @@
     "ability_desc_decoy": "チューバ君：ステージにいる部員と入れ替わり、後でまた出場できるようにする",
     "ability_desc_scorch_card": "退部届：ステージにいる部員の中で演奏力が一番高い部員を退部させる",
     "ability_desc_scorch": "傘刺し：敵の木管楽器部員の中で演奏力が一番高い部員を退部させる（敵の木管全体の演奏力が１０を超える場合）",
+    "ability_desc_scorch_graduates": "恭喜毕业: 令对方实力最强的三年级成员提前毕业。",
     "ability_desc_horn": "支援：同じフィールドにいるほかの部員の演奏力倍増",
     "ability_desc_horn_card": "指導者：同じフィールドにいる部員の演奏力倍増",
     "ability_desc_hero": "ヒーロー：演奏力がバフやデバフの影響を受けない",

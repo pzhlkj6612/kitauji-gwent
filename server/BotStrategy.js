@@ -301,9 +301,15 @@ var BotStrategy = (function(){
             if (scorchPower >= 8) reward = 100;
             else reward = scorchPower + 1;
           }
-        } else if (Util.isScorch(card, true)) {
-          let foeHighestCards = this.getHighestCards(this.getFieldCards(false));
-          let ownHighestCards = this.getHighestCards(this.getFieldCards(true));
+        } else if (Util.isScorch(card, true) || Util.isScorchLeader(card)) {
+          let foeCards = this.getFieldCards(false);
+          let ownCards = this.getFieldCards(true);
+          if (Util.isScorchLeader(card)) {
+            foeCards = foeCards.filter(c=>c.grade===3);
+            ownCards = ownCards.filter(c=>c.grade===3);
+          }
+          let foeHighestCards = this.getHighestCards(foeCards);
+          let ownHighestCards = this.getHighestCards(ownCards);
           if (foeHighestCards[0] && ownHighestCards[0] && foeHighestCards[0] < ownHighestCards[0]) {
             // don't scorch yourself!
           } if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {

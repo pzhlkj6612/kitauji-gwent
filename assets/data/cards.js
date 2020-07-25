@@ -645,7 +645,7 @@ module.exports = {
   "kasaki_nozomi_shiki": {
     name: "伞木希美",
     power: -1,
-    ability: "foltest_leader4",
+    ability: "scorch_leader",
     img: "kasaki_nozomi_shiki",
     faction: "kumiko1S2",
     rarity: 3,

@@ -105,6 +105,7 @@
     "ability_desc_decoy": "Decoy: Swap with a card on the battlefield to return it to your hand.",
     "ability_desc_scorch_card": "Scorch: Discard after playing. Kills the strongest card(s) in the battlefield.",
     "ability_desc_scorch": "Scorch: Destroy your enemy's strongest woodwind instrument unit(s) if the combined strength of all of his or her woodwind unit(s) is 10 or more.",
+    "ability_desc_scorch_graduates": "Graduation: Destroy the strongest 3rd grade members in the battlefield.",
     "ability_desc_horn": "Commander's Horn: Doubles the strength of all unit cards in a row. Except this card.",
     "ability_desc_horn_card": "Commander's Horn: Doubles the strength of all unit cards in a row. Limited to 1 per row.",
     "ability_desc_hero": "Hero: Not affected by special cards, weather cards or abilities.",

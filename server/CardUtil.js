@@ -20,6 +20,9 @@ Util.isScorch = function(card, isScorchCard) {
   if (isScorchCard) return card._data.ability === "scorch_card";
   return card._data.ability !== "scorch_card" && String(card._data.ability).includes("scorch");
 }
+Util.isScorchLeader = function(card) {
+  return card._data.ability === "scorch_leader";
+}
 Util.isMedic = function(card, includeHero) {
   return card._data.ability === "medic" ||
     (includeHero && String(card._data.ability).includes("medic"));

@@ -452,11 +452,11 @@ module.exports = {
       this.setHorn("hashimoto", 2);
     }
   },
-  "foltest_leader4": {
-    name: "",
-    description: "",
-    onActivate: function(){
-      //scorch siege
+  "scorch_leader": {
+    name: "scorch",
+    description: "ability_desc_scorch_graduates",
+    onActivate: function(card){
+      this.scorchGraduates(card);
     }
   },
   "frost_leader": {

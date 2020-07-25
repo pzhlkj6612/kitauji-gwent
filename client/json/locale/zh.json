@@ -105,6 +105,7 @@
     "ability_desc_decoy": "大号君: 换下场上一名部员，使其可以继续参加后面的比赛。",
     "ability_desc_scorch_card": "退部申请书: 令场上双方部员中实力最强的部员直接退部。",
     "ability_desc_scorch": "伞击: 令对方实力最强的木管成员退部（仅当对方木管总吹奏实力大于10）。",
+    "ability_desc_scorch_graduates": "恭喜毕业: 令对方实力最强的三年级成员提前毕业。",
     "ability_desc_horn": "支援: 使同一行内除自己之外的部员吹奏实力翻倍。",
     "ability_desc_horn_card": "指导老师: 使同一行内所有部员吹奏实力翻倍。",
     "ability_desc_hero": "天王: 吹奏实力不受其他因素影响。",
