@@ -21,6 +21,10 @@ var sounds = {
     "win": {
       url: "assets/se/win.mp3",
     },
+    "coin": {
+      url: "assets/se/coin.mp3",
+      volume: .3,
+    },
   };
   
   

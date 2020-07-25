@@ -2,6 +2,7 @@ let Backbone = require("backbone");
 
 let cardData = require("../../../assets/data/cards");
 let abilityData = require("../../../assets/data/abilities");
+let priceData = require("../../../assets/data/prices");
 let Const = require("../const");
 
 const TAB = {
@@ -25,7 +26,7 @@ let Collections = Backbone.View.extend({
     this.tab = TAB.DECK;
     this.deckKey = "kitauji";
     this.collections = {};
-    this.skins = {};
+    this.skins = [];
     this.leaderCollections = [];
     this.customDecks = {};
     this.dirty = false;
@@ -88,7 +89,7 @@ let Collections = Backbone.View.extend({
     for (let key of deck) {
       // skip leader
       if (cardData[key].type === 3) continue;
-      this.addCardTo(cards, key);
+      this.addCardTo(cards, key, 1);
     }
     return cards;
   },
@@ -100,7 +101,7 @@ let Collections = Backbone.View.extend({
     }
   },
   addCardTo: function(cards, key, opt_count) {
-    opt_count = opt_count || 1;
+    if (!opt_count) return;
     if (cards[key]) {
       cards[key] += opt_count;
     } else {
@@ -113,11 +114,15 @@ let Collections = Backbone.View.extend({
     if (!noMapping && this.currentSkinMapping[key]) {
       key = this.currentSkinMapping[key];
     }
+    let showPrice = this.tab === TAB.FEE &&
+      cardData[key].type !== 3;
     return {
       _key: key,
       _data: cardData[key],
       _count: count || 1,
       _showCount: count ? count > 1 : false,
+      _price: this.getCardPrice(key),
+      _showPrice: showPrice,
     };
   },
   toLeaderCardModelList: function(leaderList) {
@@ -134,10 +139,29 @@ let Collections = Backbone.View.extend({
     }
     return cards;
   },
+  toCardSkinMap: function() {
+    let result = {};
+    for (let skin of this.skins) {
+      let skinOf = cardData[skin].skinOf;
+      if (result[skinOf]) {
+        result[skinOf].push(skin);
+      } else {
+        result[skinOf] = [skin];
+      }
+    }
+    return result;
+  },
   toCardModelList: function(collection, tab) {
     let cards = [];
-    for (let key of Object.keys(collection)) {
+    let keys = Object.keys(collection);
+    if (this.tab === TAB.SKIN) {
+      // in skin tab, only show card with skin
+      let skinMap = this.toCardSkinMap();
+      keys = keys.filter(key => skinMap[key]);
+    }
+    for (let key of keys) {
       if (this.shouldSkipInTab(key, tab)) continue;
+      if (!collection[key]) continue;
       cards.push(this.toCardModel(key, collection[key]));
     }
     cards.sort((a, b) => {
@@ -183,6 +207,8 @@ let Collections = Backbone.View.extend({
       specialCardCnt: total - unitCardCnt,
       totalStrength: totalStrength,
       heroCardCnt: heroCardCnt,
+      totalSkin: this.skins.length,
+      totalFee: this.user.get("userModel").wallet || 0,
     };
   },
   render: function(){
@@ -191,7 +217,7 @@ let Collections = Backbone.View.extend({
     this.$el.html(this.template({
       "factionAbility": i18n.getText(`faction_ability_${this.deckKey}`),
       "cardCollection": this.toCardModelList(this.collection, this.collectionTab),
-      "cardInDeck": this.toCardModelList(this.currentDeck, this.deckTab),
+      "cardInDeck": this.tab === TAB.FEE ? [] : this.toCardModelList(this.currentDeck, this.deckTab),
       "leaderCollection": this.toLeaderCardModelList(this.leaderCollection),
       "skinCollection": this.toSkinModelList(this.currentSkinCollection),
       "collectionTab": i18n.getText(this.collectionTab),
@@ -199,6 +225,9 @@ let Collections = Backbone.View.extend({
       "leader": this.toCardModel(this.currentLeader),
       "specialExceed": stats.specialCardCnt > 10,
       "disabled": stats.total < 10 || stats.specialCardCnt > 10,
+      "isSkinTab": this.tab === TAB.SKIN,
+      "isDeckTab": this.tab === TAB.DECK,
+      "isFeeTab": this.tab === TAB.FEE,
       "stats": stats,
     }));
     this.$el.find(`.card-collections .filter-icon[data-type="${this.collectionTab}"]`).addClass("active");
@@ -248,8 +277,22 @@ let Collections = Backbone.View.extend({
       this.openSkinSelector(key);
       return;
     }
+    if (this.tab === TAB.FEE) {
+      let model = Backbone.Model.extend({});
+      let modal = new SellModal({model: new model({
+        app: this.app,
+        user: this.user,
+        title: i18n.getText("sell_title", [cardData[key].name]),
+        faction: this.deckKey,
+        card: key,
+        price: this.getCardPrice(key),
+        max: this.collection[key],
+      })});
+      $(".container").prepend(modal.render().el);
+      return;
+    }
     this.removeCardFrom(this.collection, key, 1);
-    this.addCardTo(this.currentDeck, key);
+    this.addCardTo(this.currentDeck, key, 1);
     let scrolls = this.rememberScroll();
     this.render();
     this.restoreScroll(scrolls);
@@ -265,8 +308,9 @@ let Collections = Backbone.View.extend({
       this.openSkinSelector(key);
       return;
     }
+    if (this.tab === TAB.FEE) return;
     this.removeCardFrom(this.currentDeck, key, 1);
-    this.addCardTo(this.collection, key);
+    this.addCardTo(this.collection, key, 1);
     let scrolls = this.rememberScroll();
     this.render();
     this.restoreScroll(scrolls);
@@ -309,6 +353,7 @@ let Collections = Backbone.View.extend({
     } else if ($tab.hasClass("btn-fee-page")) {
       this.tab = TAB.FEE;
     }
+    this.reset();
     this.render();
   },
   onMouseover: function(e) {
@@ -373,6 +418,38 @@ let Collections = Backbone.View.extend({
     this.dirty = true;
     this.render();
     this.$el.find(".skin-selector").addClass("hidden");
+  },
+  getCardPrice: function(card) {
+    return priceData.PRICE_BY_CARD[card] ||
+      priceData.PRICE_BY_RARITY[cardData[card].rarity];
+  },
+});
+
+let SellModal = Backbone.Modal.extend({
+  template: require("../../templates/modal.sell.handlebars"),
+  events: {
+    "click #btnConfirm": "onBtnClick",
+    "input #amount": "onAmountChange",
+  },
+  onAmountChange: function() {
+    let amount = Number(this.$el.find("#amount").val());
+    if (amount > this.model.get("max")) {
+      amount = this.model.get("max");
+      this.$el.find("#amount").val(this.model.get("max"));
+    }
+    this.$el.find("#price").val(amount * this.model.get("price"));
+  },
+  onBtnClick: function() {
+    let amount = this.$el.find("#amount").val();
+    let price = this.$el.find("#price").val();
+    this.model.get("app").send("request:sell", {
+      faction: this.model.get("faction"),
+      card: this.model.get("card"),
+      amount: Number(amount),
+    });
+    this.model.get("user").get("userModel").wallet += Number(price);
+    playSound("coin");
+    this.remove();
   }
   
 });

@@ -57,6 +57,8 @@
     "lucky_draw_coin_text": "你获得了【部费】x{0}！(部费可用于抽卡)",
 
     "card_collection": "牌组",
+    "skin": "皮肤",
+    "fee": "部费",
     "card_in_deck": "当前阵容",
     "empty_hint": "从牌组中选择",
     "all_cards": "全部",
@@ -70,6 +72,8 @@
     "special_cards": "道具卡",
     "total_strength": "吹奏实力",
     "hero_cards": "英雄牌",
+    "total_skins": "皮肤总数",
+    "sell_title": "要卖出多少【{0}】?",
     "confirm": "确认",
 
     "discard_members": "的退部/毕业成员",

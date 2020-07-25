@@ -299,6 +299,26 @@ var User = (function(){
     return progress;
   }
 
+  r.getUserCollections_ = async function() {
+    let response = {
+      currentDeck: this.userModel.currentDeck,
+      collections: {},
+      leaderCollection: {},
+      customDecks: {},
+    };
+    let allDecks = await db.findAllCardsByUser(this.userModel.username);
+    for (let deck of allDecks) {
+      if (deck.isCustomDeck || deck.isLeaderCard) continue;
+      response.collections[deck.deck] = deck.cards;
+    }
+    response.leaderCollection = await db.findLeaderCardsByUser(this.userModel.username);
+    let customDecks = await db.loadAllCustomDeck(this.userModel.username);
+    for (let deck of customDecks) {
+      response.customDecks[deck.deck] = deck.customDeck;
+    }
+    return response;
+  }
+
   r._events = function() {
     var socket = this.socket;
     var self = this;
@@ -368,22 +388,7 @@ var User = (function(){
     });
 
     socket.on("request:userCollections", async function() {
-      let response = {
-        currentDeck: self.userModel.currentDeck,
-        collections: {},
-        leaderCollection: {},
-        customDecks: {},
-      };
-      let allDecks = await db.findAllCardsByUser(self.userModel.username);
-      for (let deck of allDecks) {
-        if (deck.isCustomDeck || deck.isLeaderCard) continue;
-        response.collections[deck.deck] = deck.cards;
-      }
-      response.leaderCollection = await db.findLeaderCardsByUser(self.userModel.username);
-      let customDecks = await db.loadAllCustomDeck(self.userModel.username);
-      for (let deck of customDecks) {
-        response.customDecks[deck.deck] = deck.customDeck;
-      }
+      let response = await self.getUserCollections_();
       socket.emit("response:userCollections", response);
     });
 
@@ -476,11 +481,14 @@ var User = (function(){
 
     socket.on("request:sell", async function(data) {
       let {faction, card, amount} = data;
-      let ok = await db.addCards(self.userModel.username, faction, card, amount);
+      let ok = await db.removeCard(self.userModel.username, faction, card, amount);
       if (ok) {
         let coins = LuckyDraw.getInstance().calculatePrice(card, amount);
         console.info("user get coins: ", coins);
         await db.updateWallet(self.userModel.username, coins);
+        self.userModel.wallet += coins;
+        let response = await self.getUserCollections_();
+        socket.emit("response:userCollections", response);
       }
     })
 

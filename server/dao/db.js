@@ -121,7 +121,8 @@ class DB {
   async updateWallet(username, coins, isSpend) {
     await this.connectPromise;
     const table = this.db.collection(TABLE_USER);
-    let wallet = await table.findOne({username}).wallet || 0;
+    let exist = await table.findOne({username});
+    let wallet = exist.wallet || 0;
     wallet = isSpend ? (wallet - coins) : (wallet + coins);
     return await table.updateOne({username}, {
       $set: {
@@ -228,11 +229,11 @@ class DB {
     let updateNeutral = false, updateDeck = false;
     if (CardData[key].faction === Const.NEUTRAL_DECK) {
       updateNeutral = true;
-      if (!neutralCardMap[key] || neutralCardMap[key] <= amount) return false;
+      if (!neutralCardMap[key] || neutralCardMap[key] < amount) return false;
       else neutralCardMap[key] -= amount;
     } else {
       updateDeck = true;
-      if (!cardMap[key] || cardMap[key] <= amount) return false;
+      if (!cardMap[key] || cardMap[key] < amount) return false;
       else cardMap[key] -= amount;
     }
     if (Object.keys(cardMap).length && updateDeck) {

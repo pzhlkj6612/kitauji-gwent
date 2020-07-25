@@ -6,6 +6,11 @@
       <span class="count-text">x{{_count}}</span>
     </div>
     {{/if}}
+    {{#if _showPrice}}
+    <div class="card-price">
+      ${{_price}}
+    </div>
+    {{/if}}
   <div class="card-animation"></div>
   <i class="card-{{#if large}}lg{{else}}md{{/if}}-{{_data.faction}} card-{{#if large}}lg{{else}}md{{/if}}-{{_data.faction}}-{{_data.img}}"></i>
   <div class="shadow"></div>

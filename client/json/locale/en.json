@@ -58,6 +58,8 @@
 
     "card_collection": "Card Collection",
     "card_in_deck": "Cards in Deck",
+    "skin": "Skin",
+    "fee": "Fee",
     "empty_hint": "Select from card collection",
     "all_cards": "All Cards",
     "woodwind": "Woodwind",
@@ -70,6 +72,8 @@
     "special_cards": "Special Cards",
     "total_strength": "Total Unit Strength",
     "hero_cards": "Hero Cards",
+    "total_skins": "Total Skins",
+    "sell_title": "要卖出多少【{0}】?",
     "confirm": "Confirm",
 
     "discard_members": "'s quitted/graduated members",

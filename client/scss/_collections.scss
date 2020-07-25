@@ -179,7 +179,8 @@
   .card-count {
     position: absolute;
     z-index: 11;
-    right: 0px;
+    right: 2px;
+    top: 2px;
     width: 50px;
     height: 32px;
     background: #00000030;
@@ -199,6 +200,21 @@
       font-size: 18px;
       font-weight: bold;
     }
+  }
+
+  .card-price {
+    position: absolute;
+    z-index: 11;
+    bottom: 2px;
+    right: 2px;
+    padding: 0 5px;
+    border-radius: 0 0 5px 0;
+    height: 32px;
+    line-height: 32px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: goldenrod;
   }
 
   .ability-desc {

@@ -32,8 +32,8 @@
     <div>
       <div id="navigation" class="btn-group" role="group">
         <button type="button" class="btn btn-default btn-deck-page">{{i18n "card_collection"}}</button>
-        <button type="button" class="btn btn-default btn-skin-page">皮肤</button>
-        <button type="button" class="btn btn-default btn-fee-page">部费</button>
+        <button type="button" class="btn btn-default btn-skin-page">{{i18n "skin"}}</button>
+        <button type="button" class="btn btn-default btn-fee-page">{{i18n "fee"}}</button>
       </div>
     </div>
     <div  class="deck-choice">
@@ -49,6 +49,19 @@
       {{>cardCell leader}}
     </div>
     <div class="deck-stats">
+      {{#if isSkinTab}}
+      <div>
+        <h4>{{i18n "total_skins"}}</h4>
+        <span>{{stats.totalSkin}}</span>
+      </div>
+      {{/if}}
+      {{#if isFeeTab}}
+      <div>
+        <h4>{{i18n "fee"}}</h4>
+        <span>${{stats.totalFee}}</span>
+      </div>
+      {{/if}}
+      {{#if isDeckTab}}
       <div>
         <h4>{{i18n "total_cards"}}</h4>
         <span>{{stats.total}}</span>
@@ -69,6 +82,7 @@
         <h4>{{i18n "hero_cards"}}</h4>
         <span>{{stats.heroCardCnt}}</span>
       </div>
+      {{/if}}
     </div>
     <div class="bottom">
       <div class="wrap-btn-action btn-register-action deck-confirm{{#if disabled}} disabled{{/if}}">

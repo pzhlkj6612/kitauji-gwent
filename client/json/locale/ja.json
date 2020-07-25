@@ -58,6 +58,8 @@
 
     "card_collection": "カードコレクション",
     "card_in_deck": "編成",
+    "skin": "皮肤",
+    "fee": "部费",
     "empty_hint": "デッキから選ぶ",
     "all_cards": "全部",
     "woodwind": "木管楽器",
@@ -70,6 +72,8 @@
     "special_cards": "魔法カード",
     "total_strength": "演奏力",
     "hero_cards": "ヒーロー",
+    "total_skins": "皮肤总数",
+    "sell_title": "要卖出多少【{0}】?",
     "confirm": "確認",
 
     "discard_members": "の退部/卒業部員",
