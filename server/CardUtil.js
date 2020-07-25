@@ -3,7 +3,11 @@ var CardData = require("../assets/data/cards");
 let Util = {};
 
 Util.canReplace = function(card) {
-  return !(this.isHero(card) || card._data.ability === "decoy" || card._data.ability === "scorch_card");
+  return !(this.isHero(card) ||
+    this.isWeather(card) ||
+    this.isDecoy(card) ||
+    card._data.ability === "scorch_card" ||
+    card._data.ability === "commanders_horn_card");
 }
 Util.isSpy = function(card, includeHero) {
   return card._data.ability === "spy" ||

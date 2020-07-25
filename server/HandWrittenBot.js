@@ -99,7 +99,7 @@ var HandWrittenBot = (function(){
           break;
         case "set:waiting":
           if (!data.waiting) {
-            setTimeout(() => this.play(), this.state.foeSide.passing ? 2000 : 1000);
+            setTimeout(() => this.play(), this.state.foeSide.passing ? 1500 : 1000);
           }
           break;
         case "set:passing":
