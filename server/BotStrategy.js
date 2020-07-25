@@ -269,7 +269,6 @@ var BotStrategy = (function(){
       for (let i=0; i<cards.length; i++) {
         let card = cards[i];
         let realPower = this.getRealPower(card);
-        realPowers[i] = realPower;
         let reward = 0;
         if (Util.isMedic(card, true)) {
           // play medic if spies in discard
@@ -424,6 +423,7 @@ var BotStrategy = (function(){
         } else {
           reward = Math.max(realPower - card._data.power * 0.5, 0);
         }
+        realPowers[i] = realPower;
         // console.warn("reward of ", card._data.name, " is ", reward);
         if (reward > maxReward) {
           maxReward = reward;
@@ -460,7 +460,9 @@ var BotStrategy = (function(){
           return null;
         }
         let realPower = realPowers[maxCardIdx];
-        if (state.ownSide.score - state.foeSide.score + realPower > 20 + (state.ownSide.hand-5)*1.5 && state.ownSide.hand < state.foeSide.hand) {
+        if (state.ownSide.score - state.foeSide.score + realPower > 20 + (state.ownSide.hand-5)*1.5 &&
+          state.ownSide.hand < state.foeSide.hand &&
+          state.foeSide.lives > 1) {
           console.warn("pass due to large leading and too few cards at hand");
           return null;
         }
@@ -496,8 +498,8 @@ var BotStrategy = (function(){
         console.warn("pass due to reward too small");
         return null;
       }
-      if (this.isScoreLeading() && state.foeSide.passing) {
-        console.warn("pass due to foe passing and we lead");
+      if (this.isScoreLeading() && state.foeSide.passing && state.foeSide.lives > 1) {
+        console.warn("pass due to foe passing and we lead, and not the last round");
         return null;
       }
       // console.warn("selected ", cards[maxCardIdx]);
