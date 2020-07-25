@@ -109,6 +109,7 @@
     "ability_desc_horn": "Commander's Horn: Doubles the strength of all unit cards in a row. Except this card.",
     "ability_desc_horn_card": "Commander's Horn: Doubles the strength of all unit cards in a row. Limited to 1 per row.",
     "ability_desc_hero": "Hero: Not affected by special cards, weather cards or abilities.",
+    "related_card": "Related cards: ",
 
     "ability_desc_fog_leader": "Pick a Fog card from your deck and play it immediately",
     "ability_desc_frost_leader": "Pick a Frost card from your deck and play it immediately",

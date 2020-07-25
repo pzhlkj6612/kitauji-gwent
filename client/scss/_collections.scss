@@ -92,6 +92,16 @@
     flex-direction: column;
     margin-top: 10px;
 
+    .btn-page {
+      background: none;
+      color: white;
+    }
+
+    .btn-page.active {
+      background: white;
+      color: black;
+    }
+
     .deck-choice {
       display: flex;
       justify-content: center;
@@ -224,6 +234,14 @@
     position: absolute;
     bottom: 0;
     z-index: 11;
-    background: #10101091;
+    background: #101010bb;
+    border-radius: 0 0 2px 2px;
+
+    .related-card {
+      color: red,
+    }
+    .related-card.owned {
+      color: green;
+    }
   }
 }

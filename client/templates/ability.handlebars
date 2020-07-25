@@ -3,4 +3,11 @@
   {{#each abilities as |val key|}}
     <p>{{val}}</p>
   {{/each}}
+  {{#if hasRelatedCards}}
+  <p>{{i18n "related_card"}}
+    {{#each relatedCards as |val key|}}
+    <span class="related-card {{#if val.owned}}owned{{/if}}">{{val.name}}&nbsp;</span>
+    {{/each}}
+  </p>
+  {{/if}}
 </div>

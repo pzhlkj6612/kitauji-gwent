@@ -104,7 +104,10 @@ module.exports = {
           .map(c=>c.getID()),
       }, true);
       this.sendNotificationTo(this.foe, "msg_choose_attack", [this.getName()]);
-    }
+    },
+    getRelatedCards: function(card) {
+      return ["nakaseko_kaori"];
+    },
   },
   "tunning": {
     name: "tunning",
@@ -158,7 +161,10 @@ module.exports = {
           _card.setBoost(id, 5);
         }
       });
-    }
+    },
+    getRelatedCards: function(card) {
+      return ["yoroizuka_mizore_2"];
+    },
   },
   "medic": {
     name: "medic",
@@ -239,7 +245,11 @@ module.exports = {
           suppress: "muster"
         });
       })
-    }
+    },
+    getRelatedCards: function(card, cardData, deck) {
+      return deck.data.filter(c =>
+        c !== card && cardData[c].musterType === cardData[card].musterType);
+    },
   },
   "tight_bond": {
     name: "tight_bond",
@@ -252,7 +262,11 @@ module.exports = {
         if(!_card.hasAbility("tight_bond")) return;
         this.setTightBond(_card);
       }.bind(this))
-    }
+    },
+    getRelatedCards: function(card, cardData, deck) {
+      return deck.data.filter(c => 
+        c !== card && cardData[c].bondType === cardData[card].bondType);
+    },
   },
   "spy": {
     name: "spy",

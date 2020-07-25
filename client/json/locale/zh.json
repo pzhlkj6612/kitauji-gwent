@@ -16,7 +16,7 @@
     "online_count": "在线人数: ",
     "idle_count": "空闲人数: ",
     "online": "在线",
-    "download": "下载",
+    "download": "推荐使用Chrome浏览器。下载",
     "standalone": "本地版",
     "stable": "更稳定",
 
@@ -109,6 +109,7 @@
     "ability_desc_horn": "支援: 使同一行内除自己之外的部员吹奏实力翻倍。",
     "ability_desc_horn_card": "指导老师: 使同一行内所有部员吹奏实力翻倍。",
     "ability_desc_hero": "天王: 吹奏实力不受其他因素影响。",
+    "related_card": "相关卡牌: ",
 
     "ability_desc_fog_leader": "演奏《利兹与青鸟》第三乐章，令双方所有铜管乐器吹奏能力降为1。",
     "ability_desc_frost_leader": "参加SunFes，令双方所有木管乐器吹奏能力降为1。",

@@ -1,6 +1,7 @@
 let Backbone = require("backbone");
 
 let cardData = require("../../../assets/data/cards");
+let deckData = require("../../../assets/data/deck");
 let abilityData = require("../../../assets/data/abilities");
 let priceData = require("../../../assets/data/prices");
 let Const = require("../const");
@@ -248,9 +249,20 @@ let Collections = Backbone.View.extend({
       abilities = [card.ability];
     }
 
+    let relatedCards = [];
     abilities = abilities.map((ability) => {
+      if (abilityData[ability].getRelatedCards) {
+        relatedCards = relatedCards.concat(
+          abilityData[ability].getRelatedCards(key, cardData, deckData[card.faction]));
+      }
       return i18n.getText(abilityData[ability].description);
     })
+    relatedCards = relatedCards.map(c => {
+      return {
+        owned: !!(this.collections[cardData[c].faction][c]),
+        name: cardData[c].name,
+      }
+    });
     // name is zh by default.
     if (i18n.hasText(key)) {
       card.name = i18n.getText(key);
@@ -258,6 +270,8 @@ let Collections = Backbone.View.extend({
     $el.append(this.abilityDescTemplate({
       name: card.name,
       abilities: abilities,
+      relatedCards: relatedCards,
+      hasRelatedCards: relatedCards.length > 0,
     }));
   },
   setDeck: function(e) {

@@ -3,6 +3,7 @@ let Modal = require("./modal");
 let SideView = require("./side-view");
 
 let cardData = require("../../../assets/data/cards");
+let deckData = require("../../../assets/data/deck");
 let abilityData = require("../../../assets/data/abilities");
 
 let BattleView = Backbone.View.extend({
@@ -547,20 +548,31 @@ let Preview = Backbone.View.extend({
       this.abilities.push(this.card.ability);
     }
 
+    let relatedCards = [];
     this.abilities = this.abilities.map((ability) =>{
+      if (abilityData[ability].getRelatedCards) {
+        relatedCards = relatedCards.concat(
+          abilityData[ability].getRelatedCards(opt.key, cardData, deckData[this.card.faction]));
+      }
       return i18n.getText(abilityData[ability].description);
     })
+    this.relatedCards = relatedCards.map(c => {
+      return {
+        owned: true,
+        name: cardData[c].name,
+      }
+    });
     // name is zh by default.
     if (i18n.hasText(opt.key)) {
       this.card.name = i18n.getText(opt.key);
     }
-
-    "lol";
   },
   render: function(){
     let html = this.template({
       card: this.card,
       abilities: this.abilities,
+      relatedCards: this.relatedCards,
+      hasRelatedCards: this.relatedCards.length > 0,
       size: this.size,
       previewB: this.previewB
     })
