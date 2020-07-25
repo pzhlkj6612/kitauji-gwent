@@ -187,16 +187,14 @@ var Card = (function(){
       res += this._boost[key];
     }
 
-    if(doubles){ //tight bond
-      // for(var i = 0; i < doubles; i++) {
-      //   res += res + this.getBasePower();
-      // }
-      res = (res + this.getBasePower()) * doubles;
-    }
+    let basePower = this.getBasePower();
+
+    res = (res + basePower) * (1 + doubles);
 
     if(this._boost["commanders_horn"] || this._boost["commanders_horn_card"]){
-      res += res + this.getBasePower();
+      res *= 2;
     }
+    res -= basePower;
 
     this.boost = res;
     return res;

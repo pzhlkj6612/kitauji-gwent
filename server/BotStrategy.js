@@ -543,9 +543,7 @@ var BotStrategy = (function(){
       let add = 0;
       let double = 0;
       let field = this.getField(isFoe ? state.foeFields : state.ownFields, card._data.type);
-      if (field.horn || field.cards.some(c=>c._data.ability === "commanders_horn_card")) {
-        double++;
-      }
+
       if (card._data.name === "铠冢霙" && field.cards.some(c=>Util.isKasa(c))) {
         add += 5;
       }
@@ -553,7 +551,11 @@ var BotStrategy = (function(){
       if (Util.isBond(card)) {
         double += field.cards.filter(c=>Util.isBond(c, card._data.bondType)).length;
       }
-      return (rawPower + add) * (1 + double);
+      let res = (rawPower + add) * (1 + double);
+      if (field.horn || field.cards.some(c=>c._data.ability === "commanders_horn_card")) {
+        res *= 2;
+      }
+      return res;
     }
     r.getFieldByWeather = function(card) {
       switch (card._data.ability) {
