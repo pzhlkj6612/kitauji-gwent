@@ -35,6 +35,8 @@ function Bgm(playList) {
     var self = this;
     if(localStorage.getItem('volume') == 'off') {
       $('.music-icon').removeClass('active');
+      $('.music-icon').removeClass('glyphicon-volume-up');
+      $('.music-icon').addClass('glyphicon-volume-off');
       return;
     }
     if(localStorage.getItem('volumeValue') != null) {
@@ -152,10 +154,14 @@ $('.music-icon').on('click', function() {
   if($(this).hasClass('active')) {
     localStorage.setItem('volume', 'off');
     $(this).removeClass('active');
+    $(this).removeClass('glyphicon-volume-up');
+    $(this).addClass('glyphicon-volume-off');
     bgm.stop();
   } else {
     localStorage.setItem('volume', 'on');
     $(this).addClass('active');
+    $(this).addClass('glyphicon-volume-up');
+    $(this).removeClass('glyphicon-volume-off');
     bgm.play();
   }
 });

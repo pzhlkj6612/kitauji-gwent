@@ -38,7 +38,7 @@ let Lobby = Backbone.View.extend({
     "click #startMatchmaking": "startMatchmaking",
     "click #startMatchmakingWithBot": "startMatchmakingWithBot",
     "click .btnCollection": "goToCollection",
-    "click .btnContest": "openMatchModal",
+    "click .btnContest": "onQuestClick",
     "click #logout": "logout",
     "click #ranking": "onRankingClick",
     "blur .name-input": "changeName",
@@ -74,10 +74,16 @@ let Lobby = Backbone.View.extend({
   onRankingClick: function() {
     this.app.send("request:ranking");
   },
-  openMatchModal: function(e) {
+  onQuestClick: function(e) {
     let $btn = $(e.target).closest(".btnContest");
     if ($btn.hasClass("disabled")) return;
     let scenario = $btn.data("scenario");
+    // if the reset button is clicked
+    let $reset = $(e.target).closest(".quest-reset");
+    if ($reset.length) {
+      this.app.send("request:resetQuest", {scenario: scenario});
+      return;
+    }
     let title = i18n.getText("scenario_" + scenario);
     let model = Backbone.Model.extend({});
     let modal = new StartMatchModal({model: new model({
@@ -120,6 +126,11 @@ let Lobby = Backbone.View.extend({
       if (!btn.length) continue;
       btn.removeClass("disabled");
       btn.find(".progress-text").html(`${this.questProgress[task]}/5`);
+      if (this.questProgress[task] > 0) {
+        btn.find(".quest-reset").removeClass("hidden");
+      } else {
+        btn.find(".quest-reset").addClass("hidden");
+      }
     }
   },
   renderKanban: function() {

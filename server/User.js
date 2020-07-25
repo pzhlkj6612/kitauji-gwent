@@ -290,6 +290,15 @@ var User = (function(){
     return coins;
   }
 
+  r.getQuestProgress_ = async function() {
+    let tasks = await db.findProgressByUser(this.userModel.username);
+    let progress = {};
+    for (let task of tasks) {
+      progress[task.questName] = task.progress.length;
+    }
+    return progress;
+  }
+
   r._events = function() {
     var socket = this.socket;
     var self = this;
@@ -354,11 +363,7 @@ var User = (function(){
     });
 
     socket.on("request:questProgress", async function() {
-      let tasks = await db.findProgressByUser(self.userModel.username);
-      let progress = {};
-      for (let task of tasks) {
-        progress[task.questName] = task.progress.length;
-      }
+      let progress = await self.getQuestProgress_();
       socket.emit("response:questProgress", progress);
     });
 
@@ -471,27 +476,27 @@ var User = (function(){
 
     socket.on("request:sell", async function(data) {
       let {faction, card, amount} = data;
-      let ok = await db.addCards(this.userModel.username, faction, card, amount);
+      let ok = await db.addCards(self.userModel.username, faction, card, amount);
       if (ok) {
         let coins = LuckyDraw.getInstance().calculatePrice(card, amount);
         console.info("user get coins: ", coins);
-        await db.updateWallet(this.userModel.username, coins);
+        await db.updateWallet(self.userModel.username, coins);
       }
     })
 
     socket.on("request:luckyDraw", async function(data) {
       let {scenario} = data;
       let price = LuckyDraw.getInstance().getPriceForLuckyDraw(scenario);
-      if (price > this.userModel.wallet) {
+      if (price > self.userModel.wallet) {
         socket.emit("response:luckyDraw", {
           newCard: [],
         });
         return;
       }
-      await db.updateWallet(this.userModel.username, price, true);
+      await db.updateWallet(self.userModel.username, price, true);
       let {faction, cards} = await LuckyDraw.getInstance()
-        .drawSingleAvoidDuplicate(scenario, this.userModel.username, this.userModel.initialDeck);
-      await db.addCards(this.userModel.username, faction, cards);
+        .drawSingleAvoidDuplicate(scenario, self.userModel.username, self.userModel.initialDeck);
+      await db.addCards(self.userModel.username, faction, cards);
       socket.emit("response:luckyDraw", {
         newCard: cards,
       });
@@ -499,7 +504,9 @@ var User = (function(){
 
     socket.on("request:resetQuest", async function(data) {
       let {scenario} = data;
-      await db.updateProgress(this.userModel.username, scenario, []);
+      await db.updateProgress(self.userModel.username, scenario, []);
+      let progress = await self.getQuestProgress_();
+      socket.emit("response:questProgress", progress);
     })
   }
 

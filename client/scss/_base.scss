@@ -119,22 +119,16 @@ body {
 }
 
 .music-icon {
-  background: url(../../assets/texture/music-mute.png) no-repeat;
-  background-size: contain;
   float: right;
   width: 32px;
-  height: 32px;
+  font-size: 24px;
+  line-height: 32px;
   opacity: .8;
   cursor: pointer;
   transition: all .2s ease-in-out 0s;
 
   &:hover {
     opacity: 1;
-  }
-
-  &.active {
-    background: url(../../assets/texture/music.png) no-repeat;
-    background-size: contain;
   }
 }
 

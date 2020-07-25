@@ -214,6 +214,24 @@
   }
 }
 
+.quest-reset {
+  position: absolute;
+  z-index: 11;
+  right: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  background: #00000030;
+  cursor: pointer;
+
+  .btn-reset {
+    font-size: 16px;
+    line-height: 24px;
+    position: absolute;
+    right: 4px;
+  }
+}
+
 .lobby-footer {
   background: #ffffffc9;
   width: 100%;
