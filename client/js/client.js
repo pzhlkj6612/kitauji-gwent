@@ -265,6 +265,7 @@ let User = Backbone.Model.extend({
       //console.log("opponent found!");
       self.set("roomSide", data.side);
       self.set("roomFoeSide", data.foeSide);
+      self.set("withBot", data.withBot);
       /*
             self.set("channel:battle", app.socket.subscribe(self.get("room")));*/
       //app.navigate("battle", {trigger: true});
@@ -279,13 +280,14 @@ let User = Backbone.Model.extend({
     app.receive("room:rejoin", function(data) {
       self.set("roomSide", data.side);
       self.set("roomFoeSide", data.foeSide);
+      self.set("withBot", data.withBot);
       self.set("room", data.roomId);
       app.battleRoute();
     })
 
     app.receive("set:waiting", function(data){
       let waiting = data.waiting;
-      if (!waiting) {
+      if (!waiting && !self.get("withBot")) {
         app.trigger("timer:start");
       }
       self.set("waiting", waiting);

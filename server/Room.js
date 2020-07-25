@@ -69,6 +69,7 @@ var Room = (function(){
       side: side,
       foeSide: foeSide,
       roomId: this.getID(),
+      withBot: this._users[1-i].isBot(),
     });
     if (this._battle) {
       var battleSide = this._battle.getBattleSide(side);
@@ -81,8 +82,16 @@ var Room = (function(){
 
   r.initBattle = function(){
     this._battle = Battle(this._id, this._users[0], this._users[1], io);
-    this._users[0].send("init:battle", {side: "p1", foeSide: "p2"});
-    this._users[1].send("init:battle", {side: "p2", foeSide: "p1"});
+    this._users[0].send("init:battle", {
+      side: "p1",
+      foeSide: "p2",
+      withBot: this._users[1].isBot(),
+    });
+    this._users[1].send("init:battle", {
+      side: "p2",
+      foeSide: "p1",
+      withBot: this._users[0].isBot(),
+    });
   }
 
   r.setReady = function(user, b){

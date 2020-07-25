@@ -2,7 +2,7 @@
   {{>card leader}}
   {{#if passBtn}}
   <div class="button-pass-wrap">
-    <div class="countdown-timer {{#if danger}}countdown-timer-danger{{/if}}">
+    <div class="countdown-timer {{#if hideTimer}}hidden{{/if}} {{#if danger}}countdown-timer-danger{{/if}}">
       {{timeLeft}}
     </div>
     <button class="btn btn-warning button-pass">Pass</button>

@@ -57,6 +57,7 @@ let SideView = Backbone.View.extend({
       data: d,
       leader: l,
       passBtn: this.side === ".player" && !this.app.user.get("waiting"),
+      hideTimer: this.app.user.get("withBot"),
       timeLeft: this.timeLeft,
       danger: this.timeLeft < 10,
       deck: i18n.getText(Util.toFactionText(d.faction)),

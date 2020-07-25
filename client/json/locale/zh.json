@@ -45,6 +45,7 @@
     "my_deck": "我的阵容",
     "practice": "练习",
     "contest": "大赛",
+    "reset_quest": "关卡已重置：{0}",
 
     "result_of": "{0}结果发表",
     "price_representative": "金奖（代表）",

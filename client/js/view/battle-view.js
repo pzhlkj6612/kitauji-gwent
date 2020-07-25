@@ -262,7 +262,9 @@ let BattleView = Backbone.View.extend({
         range: self.user.get("setAgile") || isSetHorn,
         siege: isSetHorn
       },
-      isWaiting: self.user.get("waiting")
+      isWaiting: self.user.get("waiting"),
+      playerRemained: self.yourSide ? self.yourSide.infoData.deck : 0,
+      foeRemained: self.otherSide ? self.otherSide.infoData.deck : 0,
     }));
     if(!(this.otherSide && this.yourSide)) return;
     this.otherSide.render();

@@ -555,7 +555,11 @@ $game-height: 800px;
 }
 
 .field-deck {
-  margin: 60px 20px 40px 20px;
+  margin: 60px 20px 40px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .discard-skull {
@@ -566,6 +570,10 @@ $game-height: 800px;
 .icon-deck {
   background: url("../../assets/texture/card_icon.png") no-repeat;
   margin: 13px auto 0 auto;
+}
+
+.deck-remained {
+  color: white;
 }
 
 .card-preview {

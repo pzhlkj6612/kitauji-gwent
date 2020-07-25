@@ -1,5 +1,6 @@
 let Backbone = require("backbone");
 let Modal = require("./modal");
+let Notification = require("./notification");
 
 const KANBAN_CHARACTERS = [
   "kanban-kumiko",
@@ -80,11 +81,15 @@ let Lobby = Backbone.View.extend({
     let scenario = $btn.data("scenario");
     // if the reset button is clicked
     let $reset = $(e.target).closest(".quest-reset");
+    let title = i18n.getText("scenario_" + scenario);
     if ($reset.length) {
       this.app.send("request:resetQuest", {scenario: scenario});
+      new Notification({
+        msgKey: "reset_quest",
+        values: [title],
+      }).render();
       return;
     }
-    let title = i18n.getText("scenario_" + scenario);
     let model = Backbone.Model.extend({});
     let modal = new StartMatchModal({model: new model({
       app: this.app,

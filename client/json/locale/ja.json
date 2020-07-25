@@ -45,6 +45,7 @@
     "my_deck": "編成",
     "practice": "練習",
     "contest": "コンクール",
+    "reset_quest": "关卡已重置：{0}",
 
     "result_of": "{0}結果発表",
     "price_representative": "金賞(代表)",

@@ -165,6 +165,9 @@
   .quest-progress {
     display: none;
   }
+  .quest-reset {
+    display: none;
+  }
 }
 
 .disabled:hover,
@@ -225,6 +228,7 @@
   cursor: pointer;
 
   .btn-reset {
+    color: white !important;
     font-size: 16px;
     line-height: 24px;
     position: absolute;
