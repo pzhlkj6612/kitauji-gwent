@@ -72,7 +72,11 @@ let App = Backbone.Router.extend({
     this.user = new User({app: this});
 
     /*Backbone.history.start();*/
-    this.loginRoute();
+    if (localStorage["token"]) {
+      this.lobbyRoute();
+    } else {
+      this.loginRoute();
+    }
   },
   connect: function(){
     if (this.socket) {
@@ -200,13 +204,13 @@ let WinnerModal = Modal.extend({
         user: this.model.get("user"),
         gameResult: gameResult,
       });
-      $("body").prepend(contestReport.render().el);
-    } else if (gameResult.newCard && gameResult.newCard.length) {
+      $(".container").prepend(contestReport.render().el);
+    } else if (gameResult.newCard && gameResult.newCard.length || gameResult.coins) {
       let luckyDraw = new LuckyDraw({
         app: this.model.get("app"),
-        card: gameResult.newCard,
+        gameResult,
       });
-      $("body").prepend(luckyDraw.render().el);
+      $(".container").prepend(luckyDraw.render().el);
     } else {
       this.model.get("app").initialize();
     }
@@ -241,8 +245,9 @@ let User = Backbone.Model.extend({
     // this.listenTo(this.attributes, "change:room", this.subscribeRoom);
     app.receive("user:init", function(data) {
       localStorage["connectionId"] = data.connId;
-      if (!data.needLogin) {
-        app.lobbyRoute();
+      if (data.needLogin) {
+        app.loginRoute();
+      } else {
         self.setUserModel(data.model);
       }
     });
@@ -406,7 +411,7 @@ let User = Backbone.Model.extend({
         p1_win_3: p1Scores[2] > 0 && p1Scores[2] >= p2Scores[2],
         p2_win_3: p2Scores[2] > 0 && p1Scores[2] <= p2Scores[2],
       })});
-      $("body").prepend(modal.render().el);
+      $(".container").prepend(modal.render().el);
     })
     app.receive("request:chooseWhichSideBegins", function(){
       self.set("chooseSide", true);
@@ -429,7 +434,9 @@ let User = Backbone.Model.extend({
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
     this.set("region", localStorage["region"] || "aliyun");
-    i18n.loadDict(this.get("locale"));
+    i18n.loadDict(this.get("locale"), () => {
+      this.get("app").getCurrentView().render();
+    });
   },
   startMatchmakingWithBot: function(data){
     data = data || {};

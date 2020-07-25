@@ -8,17 +8,23 @@
 @import "luckyDraw";
 @import "contestResult";
 
+::-webkit-scrollbar {
+  display: none;
+}
 
 $height: 600px;
 $game-height: 800px;
 
 .container {
-  width: 100%;
-  height: 100%;
+  width: 1440px;
+  height: 796px;
   min-width: 970px;
   max-width: unset;
   background: rgba(5,5,5,0.25);
-  margin-bottom: 150px;
+  @media(min-height: 796px) {
+    transform: translate(0, -50%);
+    top: 50%;
+  }
   //margin-top: 65px;
 }
 .board {

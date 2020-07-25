@@ -9,19 +9,24 @@ let LuckyDrawModal = Backbone.View.extend({
   },
   initialize: function(options) {
     this.app = options.app;
-    this.card = options.card;
+    this.card = options.gameResult.newCard;
+    this.coins = options.gameResult.coins;
   },
   close: function() {
-    this.$el.find(".luckyDraw-background").removeClass("visible");
-    this.$el.find(".card-container").removeClass("visible");
-    this.$el.find(".dialog").removeClass("visible");
+    this.$el.find(".luckyDraw-background").removeClass("anim-visible");
+    this.$el.find(".card-container").removeClass("anim-visible");
+    this.$el.find(".dialog").removeClass("anim-visible");
     setTimeout(() => {
       this.remove();
       this.app.initialize();
     }, 1000);
   },
   render() {
-    let cardModel = this.toCardModel(this.card);
+    if (this.coins) {
+      return this.renderCoins();
+    }
+    let cardModel = this.toCardModel(this.card)
+    ;
     let text;
     if (cardModel._data.faction !== "neutral") {
       text = i18n.getText("lucky_draw_text", [
@@ -39,13 +44,26 @@ let LuckyDrawModal = Backbone.View.extend({
       card: cardModel,
       text: text,
     }));
+    this.renderAnimation();
+    return this;
+  },
+  renderAnimation: function() {
     setTimeout(() => {
-      this.$el.find(".luckyDraw-background").addClass("visible");
+      this.$el.find(".luckyDraw-background").addClass("anim-visible");
       setTimeout(() => {
-        this.$el.find(".card-container").addClass("visible");
-        this.$el.find(".dialog").addClass("visible");
+        this.$el.find(".card-container").addClass("anim-visible");
+        this.$el.find(".dialog").addClass("anim-visible");
       }, 1000);
     }, 500);
+  },
+  renderCoins: function() {
+    let text = i18n.getText("lucky_draw_coin_text", [
+      this.coins,
+    ]);
+    this.$el.html(this.template({
+      text: text,
+    }));
+    this.renderAnimation();
     return this;
   },
   toCardModel: function(key, count) {

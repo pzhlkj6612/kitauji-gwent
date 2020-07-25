@@ -32,6 +32,7 @@ let Lobby = Backbone.View.extend({
     bgm.setMode("lobby");
     $(".gwent-battle").html(this.el);
     this.render();
+    this.fadeIn();
   },
   events: {
     "click #startMatchmaking": "startMatchmaking",
@@ -44,6 +45,16 @@ let Lobby = Backbone.View.extend({
     "blur .room-name-input": "changeRoomName",
     "change #deckChoice": "setDeck",
     "click .note": "debugNote"
+  },
+  fadeIn: function() {
+    $(".overlay").remove();
+    $("body").prepend('<div class="overlay"/>');
+    setTimeout(() => {
+      $(".overlay").addClass("anim-invisible");
+    }, 0);
+    setTimeout(() => {
+      $(".overlay").addClass("hidden");
+    }, 1000);
   },
   render: function(){
     this.$el.html(this.template(this.user.attributes));

@@ -158,9 +158,9 @@ let BattleView = Backbone.View.extend({
       this.render();
     }
     if(key === "pool" || key === "daikichiyama") {
-      $('.sunray-animation').removeClass("invisible");
+      $('.sunray-animation').removeClass("hidden");
       setTimeout(() => {
-        $('.sunray-animation').addClass("invisible");
+        $('.sunray-animation').addClass("hidden");
       }, 500);
     }
   },

@@ -102,7 +102,7 @@ body {
 }
 
 .setting-container {
-  position: fixed;
+  position: absolute;
   top: 0;
   right: 0;
   transition: all .2s ease-in-out 0s;
@@ -162,4 +162,12 @@ body {
   float: left;
   margin: 0 15px 0 0;
   text-align: center;
+}
+
+.anim-visible {
+  opacity: 1 !important;
+}
+
+.anim-invisible {
+  opacity: 0 !important;
 }

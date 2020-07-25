@@ -32,12 +32,13 @@ let ContestResultModal = Backbone.View.extend({
     this.$el.find(".dialog").removeClass("visible");
     setTimeout(() => {
       this.remove();
-      if (this.gameResult.newCard && this.gameResult.newCard.length) {
+      if (this.gameResult.newCard && this.gameResult.newCard.length ||
+        this.gameResult.coins) {
         let luckyDraw = new LuckyDraw({
           app: this.app,
-          card: this.gameResult.newCard,
+          gameResult: this.gameResult,
         });
-        $("body").prepend(luckyDraw.render().el);
+        $(".container").prepend(luckyDraw.render().el);
       } else {
         this.app.initialize();
       }

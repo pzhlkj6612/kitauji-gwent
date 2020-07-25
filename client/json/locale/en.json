@@ -53,6 +53,7 @@
     "price_bronze": "Bronze",
     "lucky_draw_text": "You get {1}({2})! Check your deck for detail.({0})",
     "lucky_draw_text2": "You get {0}({1})! Check your deck for detail.",
+    "lucky_draw_coin_text": "你获得了【部费】x{0}！(部费可用于抽卡)",
 
     "card_collection": "Card Collection",
     "card_in_deck": "Cards in Deck",
