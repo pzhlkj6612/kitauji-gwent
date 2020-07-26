@@ -124,11 +124,15 @@ class DB {
     let exist = await table.findOne({username});
     let wallet = exist.wallet || 0;
     wallet = isSpend ? (wallet - coins) : (wallet + coins);
-    return await table.updateOne({username}, {
+    if (wallet < 0) {
+      return false;
+    }
+    await table.updateOne({username}, {
       $set: {
         wallet
       },
     });
+    return true;
   }
 
   // card

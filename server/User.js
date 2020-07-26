@@ -65,6 +65,7 @@ var User = (function(){
   r.loadUserModel = async function(username) {
     try {
       this.userModel = await db.findUserByName(username);
+      this.userModel.wallet = this.userModel.wallet || 0;
     } catch (e) {
       console.warn(e);
     }
@@ -499,13 +500,15 @@ var User = (function(){
     socket.on("request:luckyDraw", async function(data) {
       let {scenario} = data;
       let price = LuckyDraw.getInstance().getPriceForLuckyDraw(scenario);
-      if (price > self.userModel.wallet) {
-        socket.emit("response:luckyDraw", {
-          newCard: [],
-        });
+      if (price > (self.userModel.wallet || 0)) {
+        socket.emit("response:luckyDraw", {});
         return;
       }
-      await db.updateWallet(self.userModel.username, price, true);
+      let ok = await db.updateWallet(self.userModel.username, price, true);
+      if (!ok) {
+        socket.emit("response:luckyDraw", {});
+        return;
+      }
       let {faction, cards} = await LuckyDraw.getInstance()
         .drawSingleAvoidDuplicate(scenario, self.userModel.username, self.userModel.initialDeck);
       console.info("user get new card: ", cards);
