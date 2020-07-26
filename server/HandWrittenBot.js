@@ -3,6 +3,8 @@ var Deck = require("./Deck");
 var Const = require("./Const");
 var Util = require("./CardUtil");
 var SchoolData = require("../assets/data/schools");
+var DeckData = require("../assets/data/deck");
+var CardData = require("../assets/data/cards");
 
 var HandWrittenBot = (function(){
     var SocketStub = function(bot){
@@ -44,7 +46,16 @@ var HandWrittenBot = (function(){
           this.generateName(["kansai"]);
           break;
         case Const.SCENARIO_ZENKOKU:
-          this.setDeck("random_advanced");
+          if (this.shouldPlayMirrorMode(user)) {
+            try {
+              this.setMirrorDeck(user.getDeck());
+            } catch (e) {
+              console.warn(e);
+              this.setDeck("random_advanced");
+            }
+          } else {
+            this.setDeck("random_advanced");
+          }
           this.generateName(["zenkoku"]);
           break;
         default:
@@ -299,6 +310,70 @@ var HandWrittenBot = (function(){
       //console.log("set deck: ", deck);
       this._deck = deck;
     }
+
+    r.shouldPlayMirrorMode = function(user) {
+      let zenkokuGold = user.getUserModel().zenkokuGold || 0;
+      if (zenkokuGold < Const.MIRROR_MODE_THRESHOLD || typeof user.getDeck() === "object") {
+        return false;
+      }
+      let cardInDeck = user.getDeck().cardInDeck;
+      for (let key of Object.keys(cardInDeck)) {
+        if (cardInDeck[key] > 1) return true;
+      }
+      return false;
+    }
+
+    r.setMirrorDeck = function(userDeck) {
+      userDeck = userDeck.cardInDeck;
+      let faction = Deck.NORMAL_FACTION[(Math.random() * Deck.NORMAL_FACTION.length) | 0];
+      let botDeck = {};
+      let cpMapping = {};
+      let byRarity = {};
+      let leaders = [];
+      for (let card of DeckData[faction].data) {
+        let rarity = CardData[card].rarity;
+        let type = CardData[card].type;
+        if (type === 3) {
+          leaders.push(card);
+        } else if (type !== 4 && type !== 5) {
+          byRarity[rarity] = byRarity[rarity] || {};
+          byRarity[rarity][card] = 1;
+        }
+      }
+      for (let key of Object.keys(userDeck)) {
+        let bondType = CardData[key].bondType;
+        let musterType = CardData[key].musterType;
+        let rarity = CardData[key].rarity;
+        let candidates = Object.keys(byRarity[rarity]);
+        if (!candidates.length) continue;
+        let botCard;
+        if (bondType) {
+          let bondCandidates = candidates.filter(c=>!!(CardData[c].bondType));
+          if (cpMapping[bondType]) {
+            bondCandidates = candidates.filter(c=>CardData[c].bondType === cpMapping[bondType]);
+          }
+          botCard = this.randomGet_(bondCandidates);
+          cpMapping[bondType] = CardData[botCard].bondType;
+        } else if (musterType) {
+          let musterCandidates = candidates.filter(c=>!!(CardData[c].musterType));
+          if (cpMapping[musterType]) {
+            musterCandidates = candidates.filter(c=>CardData[c].musterType === cpMapping[musterType]);
+          }
+          botCard = this.randomGet_(musterCandidates);
+          cpMapping[musterType] = CardData[botCard].musterType;
+        } else if (type === 4 || type === 5) {
+          botCard = key;
+        } else if (type !== 3) {
+          botCard = this.randomGet_(candidates);
+          delete byRarity[rarity][botCard];
+        }
+        botDeck[botCard] = userDeck[key];
+      }
+      this.setDeck({
+        cardInDeck: botDeck,
+        leader: this.randomGet_(leaders),
+      });
+    }
   
     r.getDeck = function() {
       return this._deck;
@@ -325,6 +400,10 @@ var HandWrittenBot = (function(){
     }
 
     r.endGame = function() {
+    }
+
+    r.randomGet_ = function(arr) {
+      return arr[(Math.random() * arr.length) | 0];
     }
 
     return HandWrittenBot;

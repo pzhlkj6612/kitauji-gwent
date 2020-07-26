@@ -142,6 +142,10 @@ var User = (function(){
     return this._scenario;
   }
 
+  r.getUserModel = function() {
+    return this.userModel;
+  }
+
   r.addRoom = function(room) {
     this._rooms.push(room);
   }
