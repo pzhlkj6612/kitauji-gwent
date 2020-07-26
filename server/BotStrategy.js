@@ -312,6 +312,7 @@ var BotStrategy = (function(){
           let ownHighestCards = this.getHighestCards(ownCards);
           if (foeHighestCards[0] && ownHighestCards[0] && foeHighestCards[0] < ownHighestCards[0]) {
             // don't scorch yourself!
+            reward = -1;
           } if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
             let scorchPower = this.getScoreSum(foeHighestCards, c=>c.power);
             realPower = scorchPower;
