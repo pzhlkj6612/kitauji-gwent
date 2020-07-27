@@ -79,18 +79,23 @@ var BotStrategy = (function(){
         return [this.bot.playCardCommand(card), 
           this.bot.decoyReplaceWithCommand(this.getMax(medics))];
       }
+      let reusable = fieldCards.filter(c=>Util.isReusable(c));
+      if (reusable.length > 0) {
+        return [this.bot.playCardCommand(card),
+          this.bot.decoyReplaceWithCommand(this.getMax(reusable, c=>-c.diff))];
+      }
       // if foe passing and we lead, keep leading after replace
       let lead = state.ownSide.score - state.foeSide.score;
       if (lead > 0 && state.foeSide.passing) {
-        let toReplace = null;
-        fieldCards.filter(c=>Util.canReplace(c)).forEach(c=>{
-          if (Util.isBond(c)||Util.isHorn(c)) return;
-          if (c.power >= lead) return;
-          if (!toReplace || c.power > toReplace.power) toReplace = c;
+        let toReplace = fieldCards.filter(c=>Util.canReplace(c)).filter(c=>{
+          if (Util.isBond(c)||Util.isHorn(c)) return false;
+          if (c.power >= lead) return false;
         });
-        if (toReplace) {
+        if (toReplace.length > 0) {
           return [this.bot.playCardCommand(card), 
-            this.bot.decoyReplaceWithCommand(toReplace)];
+            this.bot.decoyReplaceWithCommand(this.getMax(toReplace, c=>-c.diff))];
+        } else {
+          return [];
         }
       }
       let normal = fieldCards.filter(c=>Util.canReplace(c));
@@ -123,7 +128,7 @@ var BotStrategy = (function(){
           let selected = this.getMax(medics);
           let remained = currentDiscards.filter(c => c._id !== selected._id);
           return [this.bot.medicChooseCardCommand(selected)].concat(selectMedic(remained));
-        } else if (spies.length > 0) {
+        } else if (spies.length > 0 && state.ownSide.deck >= 2) {
           return [this.bot.medicChooseCardCommand(this.getMin(spies))];
         } else if (normals.length > 0) {
           let card = this.getMaxPossibility(normals);
@@ -155,7 +160,7 @@ var BotStrategy = (function(){
         let normals = foeDiscard.filter(c=>Util.canReplace(c));
         if (medics.length) {
           commands.push(this.bot.playEmreisLeader4Command(this.getMax(medics)));
-        } else if (spies.length) {
+        } else if (spies.length && state.ownSide.deck >= 2) {
           commands.push(this.bot.playEmreisLeader4Command(this.getMin(spies)));
         } else if (normals.length) {
           commands.push(this.bot.playEmreisLeader4Command(this.getMax(normals)));
@@ -196,7 +201,7 @@ var BotStrategy = (function(){
       let state = this.bot.state;
       // play spies if exist
       let spies = state.ownHand.filter(c => Util.isSpy(c, true));
-      if (spies.length > 0) {
+      if (spies.length > 0 && state.ownSide.deck >= 2) {
         return this.getMin(spies);
       }
       let cards = [].concat(state.ownHand);
@@ -273,15 +278,19 @@ var BotStrategy = (function(){
           // play medic if spies in discard
           let discard = state.ownSide.discard;
           if (discard && discard.filter(c=>Util.canReplace(c)).length === 0) {
-          } else if (discard.some(c=>Util.isSpy(c))) {
+          } else if (discard.some(c=>Util.isSpy(c)) && state.ownSide.deck >= 2) {
             reward = 100;
             if (Util.isHero(card)) reward--;
+          } else if (this.getFieldCards(true).some(c=>Util.isSpy(c)) &&
+            state.ownSide.lives > 1) {
+            reward = -1; // spy on own field, leave it for next round
           } else {
             reward = 1;
           }
         } else if (Util.isDecoy(card)) {
           // play decoy if spies or medic on own field
-          if (this.getFieldCards(true).some(c=>Util.isSpy(c))) {
+          if (this.getFieldCards(true).some(c=>Util.isSpy(c))
+            && state.ownSide.deck >= 2) {
             reward = 100;
           }
           // cheat!
@@ -296,10 +305,11 @@ var BotStrategy = (function(){
         } else if (Util.isScorch(card)) {
           let foeClose = state.foeFields.close;
           if (foeClose.score > 10) {
-            let scorchPower = this.getScoreSum(this.getHighestCards(foeClose.cards), c=>c.power);
+            let highest = this.getHighestCards(foeClose.cards);
+            let scorchPower = this.getScoreSum(highest, c=>c.power);
             realPower += scorchPower;
-            if (scorchPower >= 8) reward = 100;
-            else reward = scorchPower + 1;
+            if (highest[0].power >= 10) reward = 100;
+            else reward = scorchPower * 0.2;
           }
         } else if (Util.isScorch(card, true) || Util.isScorchLeader(card)) {
           let foeCards = this.getFieldCards(false);
@@ -313,10 +323,10 @@ var BotStrategy = (function(){
           if (foeHighestCards[0] && ownHighestCards[0] && foeHighestCards[0] < ownHighestCards[0]) {
             // don't scorch yourself!
             reward = -1;
-          } if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
+          } else if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
             let scorchPower = this.getScoreSum(foeHighestCards, c=>c.power);
             realPower = scorchPower;
-            if (scorchPower >= 10) reward = 100;
+            if (foeHighestCards[0].power >= 10) reward = 100;
             else reward = scorchPower * 0.2;
           }
         } else if (Util.isBond(card)) {
@@ -461,7 +471,7 @@ var BotStrategy = (function(){
           if (state.foeSide.lives === 1 &&
               state.ownHand.some(c=>c._data.ability === "decoy") &&
               this.getFieldCards(true).some(c=>Util.canReplace(c)) &&
-              this.getFieldCards(false).every(c=>!Util.isSpy(c))) {
+              this.getHandCards(false).every(c=>!Util.isSpy(c))) {
               return state.ownHand.find(c=>c._data.ability === "decoy");
           }
           console.warn("pass due to foe leading too large");

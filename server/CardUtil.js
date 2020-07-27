@@ -83,6 +83,11 @@ Util.isClearWeather = function(card) {
 Util.isDecoy = function(card) {
   return card._data.ability === "decoy";
 }
+Util.isReusable = function(card) {
+  return Util.canReplace(card) && (
+    Util.isTaibu(card) || Util.isMonaka(card)
+  );
+}
 Util.isEmreisLeader4 = function(card) {
   return card._data.ability === "emreis_leader4";
 }

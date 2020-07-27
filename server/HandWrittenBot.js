@@ -5,6 +5,7 @@ var Util = require("./CardUtil");
 var SchoolData = require("../assets/data/schools");
 var DeckData = require("../assets/data/deck");
 var CardData = require("../assets/data/cards");
+const Card = require("./Card");
 
 var HandWrittenBot = (function(){
     var SocketStub = function(bot){
@@ -313,7 +314,7 @@ var HandWrittenBot = (function(){
 
     r.shouldPlayMirrorMode = function(user) {
       let zenkokuGold = user.getUserModel().zenkokuGold || 0;
-      if (zenkokuGold < Const.MIRROR_MODE_THRESHOLD || typeof user.getDeck() === "object") {
+      if (zenkokuGold < Const.MIRROR_MODE_THRESHOLD || typeof user.getDeck() !== "object") {
         return false;
       }
       let cardInDeck = user.getDeck().cardInDeck;
@@ -330,12 +331,15 @@ var HandWrittenBot = (function(){
       let cpMapping = {};
       let byRarity = {};
       let leaders = [];
+      let special = [];
       for (let card of DeckData[faction].data) {
         let rarity = CardData[card].rarity;
         let type = CardData[card].type;
         if (type === 3) {
           leaders.push(card);
-        } else if (type !== 4 && type !== 5) {
+        } else if (type === 4 || type === 5) {
+          special.push(card);
+        } else {
           byRarity[rarity] = byRarity[rarity] || {};
           byRarity[rarity][card] = 1;
         }
@@ -344,6 +348,7 @@ var HandWrittenBot = (function(){
         let bondType = CardData[key].bondType;
         let musterType = CardData[key].musterType;
         let rarity = CardData[key].rarity;
+        let type = CardData[key].type;
         let candidates = Object.keys(byRarity[rarity]);
         if (!candidates.length) continue;
         let botCard;
@@ -365,13 +370,27 @@ var HandWrittenBot = (function(){
           botCard = key;
         } else if (type !== 3) {
           botCard = this.randomGet_(candidates);
-          delete byRarity[rarity][botCard];
+          if (!CardData[botCard].bondType && !CardData[botCard].musterType) {
+            delete byRarity[rarity][botCard];
+          }
         }
-        botDeck[botCard] = userDeck[key];
+        botDeck[botCard] = (botDeck[botCard] || 0) + userDeck[key];
+      }
+      for (let key of Object.keys(byRarity[2])) {
+        if (!botDeck[key] && (
+          CardData[key].ability==="spy" || CardData[key].ability==="medic"
+        )) botDeck[key] = 1;
+      }
+      for (let key of Object.keys(byRarity[3])) {
+        if (!botDeck[key]) botDeck[key] = 1;
+      }
+      for (let key of special) {
+        if (!botDeck[key]) botDeck[key] = 1;
       }
       this.setDeck({
         cardInDeck: botDeck,
-        leader: this.randomGet_(leaders),
+        leader: leaders.filter(c=>CardData[c].rarity>2)[0] ||
+          this.randomGet_(leaders),
       });
     }
   

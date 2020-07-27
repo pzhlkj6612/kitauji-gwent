@@ -65,11 +65,11 @@ var User = (function(){
   r.loadUserModel = async function(username) {
     try {
       this.userModel = await db.findUserByName(username);
-      this.userModel.wallet = this.userModel.wallet || 0;
     } catch (e) {
       console.warn(e);
     }
     if (!this.userModel) return;
+    this.userModel.wallet = this.userModel.wallet || 0;
     this._deck = await db.loadCustomDeck(username, this.userModel.currentDeck);
   }
 
