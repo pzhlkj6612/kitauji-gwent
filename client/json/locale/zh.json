@@ -16,7 +16,7 @@
     "online_count": "在线人数: ",
     "idle_count": "空闲人数: ",
     "online": "在线",
-    "download": "推荐使用Chrome浏览器。下载",
+    "download": "推荐使用IE以外的浏览器，如Chrome浏览器。下载",
     "standalone": "本地版",
     "stable": "更稳定",
 
@@ -109,7 +109,7 @@
     "ability_desc_decoy": "大号君: 换下场上一名部员，使其可以继续参加后面的比赛。",
     "ability_desc_scorch_card": "退部申请书: 令场上双方部员中实力最强的部员直接退部。",
     "ability_desc_scorch": "伞击: 令对方实力最强的木管成员退部（仅当对方木管总吹奏实力大于10）。",
-    "ability_desc_scorch_graduates": "恭喜毕业: 令对方实力最强的三年级成员提前毕业。",
+    "ability_desc_scorch_graduates": "恭喜毕业: 令场上双方部员中实力最强的三年级部员提前毕业。",
     "ability_desc_horn": "支援: 使同一行内除自己之外的部员吹奏实力翻倍。",
     "ability_desc_horn_card": "指导老师: 使同一行内所有部员吹奏实力翻倍。",
     "ability_desc_hero": "天王: 吹奏实力不受其他因素影响。",
@@ -120,7 +120,7 @@
     "ability_desc_ranged_horn_leader": "使铜管乐器部员吹奏实力翻倍(不能与支援叠加)。",
     "ability_desc_emreis_leader": "从对方退部/毕业部员中获得一名部员。",
 
-    "faction_ability_kumiko1": "每赢得一轮可以获得一名部员",
+    "faction_ability_kumiko1": "每赢得一轮可以再抽一张牌",
     "faction_ability_kumiko1S2": "每轮结束后随机一名部员留在场上",
     "faction_ability_kitauji": "比分相同时算本方胜利",
 

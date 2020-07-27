@@ -50,7 +50,7 @@ let Lobby = Backbone.View.extend({
   },
   fadeIn: function() {
     $(".overlay").remove();
-    $("body").prepend('<div class="overlay"/>');
+    $(".container").prepend('<div class="overlay row"/>');
     setTimeout(() => {
       $(".overlay").addClass("anim-invisible");
     }, 0);
