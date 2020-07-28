@@ -661,6 +661,7 @@ module.exports = {
     bondType: "doubleReed",
     img: "kenzaki_ririka_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 1,
     type: 0
   },
@@ -672,6 +673,7 @@ module.exports = {
     bondType: "doubleReed",
     img: "kabutodani_eru_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 1,
     type: 0
   },
@@ -683,6 +685,7 @@ module.exports = {
     bondType: "doubleReed",
     img: "koteyama_suruga_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 1,
     type: 0
   },
@@ -693,6 +696,7 @@ module.exports = {
     ability: "hero",
     img: "yoroizuka_mizore_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -703,6 +707,7 @@ module.exports = {
     ability: "hero",
     img: "yoroizuka_mizore_2",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -713,6 +718,7 @@ module.exports = {
     ability: "hero",
     img: "yoroizuka_mizore_3",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -723,6 +729,7 @@ module.exports = {
     ability: "hero",
     img: "yoroizuka_mizore_4",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -733,6 +740,7 @@ module.exports = {
     ability: ["hero", "scorch"],
     img: "kasaki_nozomi_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -743,6 +751,7 @@ module.exports = {
     ability: ["hero", "scorch"],
     img: "kasaki_nozomi_2",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -753,6 +762,7 @@ module.exports = {
     ability: ["hero", "scorch"],
     img: "kasaki_nozomi_3",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -763,6 +773,7 @@ module.exports = {
     ability: ["hero", "scorch"],
     img: "kasaki_nozomi_4",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -773,6 +784,7 @@ module.exports = {
     ability: ["hero", "scorch"],
     img: "kasaki_nozomi_5",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 0
   },
@@ -784,6 +796,7 @@ module.exports = {
     attackPower: 4,
     img: "kousaka_reina_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 1
   },
@@ -795,6 +808,7 @@ module.exports = {
     musterType: "flute2",
     img: "oda_meiko_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 1,
     type: 0
   },
@@ -806,6 +820,7 @@ module.exports = {
     musterType: "flute2",
     img: "takahashi_sari_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 1,
     type: 0
   },
@@ -817,6 +832,7 @@ module.exports = {
     musterType: "flute2",
     img: "nakano_tsubomi_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 1,
     type: 0
   },
@@ -827,6 +843,7 @@ module.exports = {
     ability: ["hero", "morale_boost"],
     img: "yoshikawa_yuko_1",
     faction: "kitauji",
+    skinFaction: "liz",
     grade: 3,
     rarity: 3,
     type: 1
@@ -838,6 +855,7 @@ module.exports = {
     ability: ["hero", "morale_boost"],
     img: "yoshikawa_yuko_2",
     faction: "kitauji",
+    skinFaction: "liz",
     grade: 3,
     rarity: 3,
     type: 1
@@ -849,6 +867,7 @@ module.exports = {
     ability: null,
     img: "nakagawa_natsuki_1",
     faction: "kitauji",
+    skinFaction: "liz",
     grade: 3,
     rarity: 0,
     type: 1
@@ -861,6 +880,7 @@ module.exports = {
     musterType: "flute1",
     img: "etou_kana_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 0,
     type: 0
   },
@@ -872,6 +892,7 @@ module.exports = {
     musterType: "flute1",
     img: "hiraishi_narumi_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 0,
     type: 0
   },
@@ -883,6 +904,7 @@ module.exports = {
     musterType: "flute1",
     img: "yamane_tsumiki_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 0,
     type: 0
   },
@@ -893,6 +915,7 @@ module.exports = {
     ability: ["hero", "medic"],
     img: "oumae_kumiko_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 1
   },
@@ -903,6 +926,7 @@ module.exports = {
     ability: ["hero", "medic"],
     img: "oumae_kumiko_2",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 3,
     type: 1
   },
@@ -914,6 +938,7 @@ module.exports = {
     bondType: "bg",
     img: "takahisa_chieri_1",
     faction: "kitauji",
+    skinFaction: "liz",
     rarity: 2,
     type: 0
   },
@@ -924,6 +949,7 @@ module.exports = {
     ability: null,
     img: "ono_miyoko_1",
     faction: "kitauji",
+    skinFaction: "liz",
     grade: 3,
     rarity: 1,
     type: 2
@@ -935,6 +961,7 @@ module.exports = {
     ability: null,
     img: "inoue_shirabe_1",
     faction: "kitauji",
+    skinFaction: "liz",
     grade: 3,
     rarity: 1,
     type: 0

@@ -572,7 +572,7 @@ let Preview = Backbone.View.extend({
       card: this.card,
       abilities: this.abilities,
       relatedCards: this.relatedCards,
-      hasRelatedCards: this.relatedCards.length > 0,
+      hasRelatedCards: this.relatedCards && this.relatedCards.length,
       size: this.size,
       previewB: this.previewB
     })
