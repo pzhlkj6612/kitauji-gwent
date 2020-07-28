@@ -324,6 +324,26 @@ var User = (function(){
     return response;
   }
 
+  r.testData_ = async function(data) {
+      // give initial 12 cards
+      let cards = await LuckyDraw.getInstance().draw(80, Const.SCENARIO_ZENKOKU, data.username, "kitauji", true);
+      await db.addCards(data.username, "kitauji", cards);
+      cards = await LuckyDraw.getInstance().draw(80, Const.SCENARIO_ZENKOKU, data.username, "kumiko1", true);
+      await db.addCards(data.username, "kumiko1", cards);
+      cards = await LuckyDraw.getInstance().draw(80, Const.SCENARIO_ZENKOKU, data.username, "kumiko1S2", true);
+      await db.addCards(data.username, "kumiko1S2", cards);
+      // give initial leader card
+      await db.addLeaderCards(data.username, [Const.DEFAULT_LEADER]);
+      cards.push(Const.DEFAULT_LEADER);
+      // give initial coins
+      await db.updateWallet(data.username, 10000);
+      // set default deck
+      await db.storeCustomDeckByList(data.username, data.initialDeck, cards);
+      // start first quest
+      await db.updateProgress(data.username, Const.SCENARIO_ZENKOKU, []);
+
+  }
+
   r._events = function() {
     var socket = this.socket;
     var self = this;
