@@ -365,10 +365,11 @@ var HandWrittenBot = (function(){
             musterCandidates = candidates.filter(c=>CardData[c].musterType === cpMapping[musterType]);
           }
           botCard = this.randomGet_(musterCandidates);
-          cpMapping[musterType] = CardData[botCard].musterType;
+          if (botCard) cpMapping[musterType] = CardData[botCard].musterType;
         } else if (type === 4 || type === 5) {
           botCard = key;
-        } else if (type !== 3) {
+        }
+        if (!botCard) {
           botCard = this.randomGet_(candidates);
           if (!CardData[botCard].bondType && !CardData[botCard].musterType) {
             delete byRarity[rarity][botCard];
