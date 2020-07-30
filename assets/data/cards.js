@@ -1472,6 +1472,146 @@ module.exports = {
     type: 0
   },
 
+  // skin(sunfes)
+  "gotou_takuya_sunfes": {
+    skinOf: "gotou_takuya_1",
+    skinFaction: "sunfes",
+    name: "后藤卓也",
+    power: 5,
+    ability: "tight_bond",
+    bondType: "tuba",
+    img: "gotou_takuya",
+    faction: "kumiko1",
+    male: true,
+    rarity: 2,
+    type: 1
+  },
+
+  "iwata_keina_sunfes": {
+    skinOf: "iwata_keina_1",
+    skinFaction: "sunfes",
+    name: "岩田慧菜",
+    power: 4,
+    ability: "medic",
+    img: "iwata_keina",
+    faction: "kumiko1",
+    rarity: 2,
+    type: 1
+  },
+
+  "kase_maina_sunfes": {
+    skinOf: "kase_maina",
+    skinFaction: "sunfes",
+    name: "加濑まいな",
+    power: 5,
+    ability: "tight_bond",
+    bondType: "no_eye",
+    img: "kase_maina",
+    faction: "kumiko1",
+    grade: 3,
+    rarity: 2,
+    type: 0
+  },
+
+  "kawashima_sapphire_sunfes": {
+    skinOf: "kawashima_sapphire_1",
+    skinFaction: "sunfes",
+    name: "川岛绿辉",
+    power: 10,
+    ability: "hero",
+    img: "kawashima_sapphire",
+    faction: "kumiko1",
+    rarity: 3,
+    type: 2
+  },
+
+  "kousaka_reina_sunfes": {
+    skinOf: "kousaka_reina_1",
+    skinFaction: "sunfes",
+    name: "高坂丽奈",
+    power: 10,
+    ability: "hero",
+    img: "kousaka_reina",
+    faction: "kumiko1",
+    rarity: 3,
+    type: 1
+  },
+
+  "nagase_riko_sunfes": {
+    skinOf: "nagase_riko_1",
+    skinFaction: "sunfes",
+    name: "长濑梨子",
+    power: 5,
+    ability: "tight_bond",
+    bondType: "tuba",
+    img: "nagase_riko",
+    faction: "kumiko1",
+    rarity: 2,
+    type: 1
+  },
+
+  "nakagawa_natsuki_sunfes": {
+    skinOf: "nakagawa_natsuki_1",
+    skinFaction: "sunfes",
+    name: "中川夏纪",
+    power: 2,
+    ability: "monaka",
+    img: "nakagawa_natsuki",
+    faction: "kumiko1",
+    rarity: 1,
+    type: 1
+  },
+
+  "nakaseko_kaori_sunfes": {
+    skinOf: "nakaseko_kaori",
+    skinFaction: "sunfes",
+    name: "中世古香织",
+    power: 7,
+    ability: ["hero", "medic"],
+    img: "nakaseko_kaori",
+    faction: "kumiko1",
+    grade: 3,
+    rarity: 3,
+    type: 1
+  },
+
+  "ogasawara_haruka_sunfes": {
+    skinOf: "ogasawara_haruka",
+    skinFaction: "sunfes",
+    name: "小笠原晴香",
+    power: 7,
+    ability: ["hero", "morale_boost"],
+    img: "ogasawara_haruka",
+    faction: "kumiko1",
+    grade: 3,
+    rarity: 3,
+    type: 0
+  },
+
+  "oumae_kumiko_sunfes": {
+    skinOf: "oumae_kumiko_1",
+    skinFaction: "sunfes",
+    name: "黄前久美子",
+    power: 5,
+    ability: null,
+    img: "oumae_kumiko",
+    faction: "kumiko1",
+    rarity: 0,
+    type: 1
+  },
+
+  "takahisa_chieri_sunfes": {
+    skinOf: "takahisa_chieri_1",
+    skinFaction: "sunfes",
+    name: "高久智惠理",
+    power: 5,
+    ability: "tight_bond",
+    bondType: "no_eye",
+    img: "takahisa_chieri",
+    faction: "kumiko1",
+    rarity: 2,
+    type: 0
+  },
   // kumiko I(S2)
   "souga_yoriko_2": {
     name: "杂贺赖子",

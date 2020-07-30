@@ -5,6 +5,7 @@ public
 test/spec
 assets/cards/*
 assets/bgm/*
+assets/original_cards/sunfes/*
 client/scss/_cards.scss
 
 /site/.idea

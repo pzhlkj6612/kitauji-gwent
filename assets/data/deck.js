@@ -528,6 +528,17 @@ module.exports = {
       "takahisa_chieri_skin",
       "ono_miyoko_skin",
       "inoue_shirabe_skin",
+      //kumiko1(sunfes)
+      "gotou_takuya_sunfes",
+      "iwata_keina_sunfes",
+      "kase_maina_sunfes",
+      "kawashima_sapphire_sunfes",
+      "kousaka_reina_sunfes",
+      "nagase_riko_sunfes",
+      "nakagawa_natsuki_sunfes",
+      "nakaseko_kaori_sunfes",
+      "ogasawara_haruka_sunfes",
+      "oumae_kumiko_sunfes",
     ]
   }
 }
