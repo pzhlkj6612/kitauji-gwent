@@ -28,6 +28,18 @@ $game-height: 800px;
   }
   //margin-top: 65px;
 }
+
+@media(min-height: 796px) {
+.container.introjs-fixParent {
+    transform: translate(0, -50%) !important;
+    top: 50%;
+  }
+}
+
+.intro-highlight {
+  background-color: #ffffff30 !important;
+}
+
 .board {
   height: $game-height;
   padding-top: 2px;
@@ -405,7 +417,7 @@ $game-height: 800px;
 }
 
 .sunray-animation {
-  background: url("/assets/texture/board_weather_sunrays.png");
+  display: none;
   position: fixed;
   left: 0;
   top: 0;
@@ -414,6 +426,11 @@ $game-height: 800px;
   z-index: 11;
   transform-origin: top left;
   -webkit-animation: rotation 1s infinite linear;
+}
+
+.sunray-animation-visible {
+  display: block;
+  background: url("/assets/texture/board_weather_sunrays.png");
 }
 
 @-webkit-keyframes rotation {

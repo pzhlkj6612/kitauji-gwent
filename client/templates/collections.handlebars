@@ -10,7 +10,7 @@
       {{>cardCell this}}
     {{/each}}
   </div>
-  <div class="collections-side">
+  <div class="collections-side" data-step="2" data-intro="不需要上场比赛的卡牌可以放到这边">
     <div class="side-title">
         <h4>{{i18n "card_collection"}}</h4>
         <h5>{{collectionTab}}</h5>
@@ -36,7 +36,7 @@
         <button type="button" class="btn btn-default btn-page btn-fee-page">{{i18n "fee"}}</button>
       </div>
     </div>
-    <div  class="deck-choice">
+    <div  class="deck-choice" data-step="3" data-intro="这里可以切换至其他牌组">
       <select id="deckChoice" selected="selected">
         <option value="kumiko1">{{i18n "deck_ku1"}}</option>
         <option value="kumiko1S2">{{i18n "deck_ku1S2"}}</option>
@@ -45,7 +45,7 @@
     </div>
     <p>{{factionAbility}}</p>
     {{!-- <h4>{{i18n "conductor"}}</h4> --}}
-    <div class="leader-field">
+    <div class="leader-field" data-step="4" data-intro="当你拥有更多指挥牌后，可以在这里替换">
       {{>cardCell leader}}
     </div>
     <div class="deck-stats">
@@ -85,12 +85,13 @@
       {{/if}}
     </div>
     <div class="bottom">
-      <div class="wrap-btn-action btn-register-action deck-confirm{{#if disabled}} disabled{{/if}}">
+      <div class="wrap-btn-action btn-register-action deck-confirm{{#if disabled}} disabled{{/if}}"
+        data-step="5" data-intro="最后别忘了点这里保存当前阵容">
         <input type="submit" value="{{i18n "confirm"}}" class="btn-action">
       </div>
     </div>
   </div>
-  <div class="collections-side">
+  <div class="collections-side" data-step="1" data-intro="这边是当前可以上场比赛的阵容">
     <div class="side-title">
         <h4>{{i18n "card_in_deck"}}</h4>
         <h5>{{deckTab}}</h5>

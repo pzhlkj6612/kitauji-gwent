@@ -159,9 +159,9 @@ let BattleView = Backbone.View.extend({
       this.render();
     }
     if(key === "pool" || key === "daikichiyama") {
-      $('.sunray-animation').removeClass("hidden");
+      $('.sunray-animation').addClass("sunray-animation-visible");
       setTimeout(() => {
-        $('.sunray-animation').addClass("hidden");
+        $('.sunray-animation').removeClass("sunray-animation-visible");
       }, 500);
     }
   },
@@ -429,6 +429,21 @@ let BattleView = Backbone.View.extend({
       }
     })
 
+    app.on("reDrawFinished", function() {
+      self.waitForAnimation = true;
+      setTimeout(() => {
+        introJs()
+          .setOption('showStepNumbers', false)
+          .setOption('disableInteraction', true)
+          .setOption('highlightClass', 'intro-highlight')
+          .onexit(() => {
+            self.waitForAnimation = false;
+            self.render();
+          })
+          .start();
+      }, 500);
+    })
+
   },
   calculateMargin: function($container, minSize){
     minSize = typeof minSize === "number" && minSize >= 0 ? minSize : 6;
@@ -501,6 +516,7 @@ let ReDrawModal = Modal.extend({
   cancel: function(){
     if(!this.model.get("isReDrawing")) return;
     this.model.get("app").send("redraw:close_client");
+    this.model.get("app").trigger("reDrawFinished");
     this.model.set("isReDrawing", false);
   }
 });

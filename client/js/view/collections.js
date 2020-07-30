@@ -44,6 +44,13 @@ let Collections = Backbone.View.extend({
     this.customDecks = data.customDecks || {};
     this.reset();
     this.render();
+    setTimeout(() => {
+      introJs()
+        .setOption('showStepNumbers', false)
+        .setOption('disableInteraction', true)
+        .setOption('highlightClass', 'intro-highlight')
+        .start();
+    }, 1000);
   },
   reset: function() {
     this.collection = JSON.parse(JSON.stringify(this.collections[this.deckKey] || {}));

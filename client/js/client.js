@@ -19,11 +19,11 @@ const Config = require("../../public/Config");
 window.$ = $;
 window.i18n = new I18n("zh");
 
-$.get("/hosts", function(data) {
+$.get(Config.DOMAIN + "/hosts", function(data) {
   Config.SERVERS = data;
 });
 
-$.get("/version", function(version) {
+$.get(Config.DOMAIN + "/version", function(version) {
   if (Config.MAJOR_VERSION < Number(version)) {
     $(".container").prepend('<div class="notification-left">检测到新版本，请下载！Please download latest version!</div>')
   }
@@ -235,6 +235,14 @@ let WinnerModal = Modal.extend({
 
 let InitialCardsModal = Modal.extend({
   template: require("../templates/modal.initialCards.handlebars"),
+  cancel: function() {
+    setTimeout(() => {
+      introJs()
+        .setOption('showStepNumbers', false)
+        .setOption('disableInteraction', true)
+        .start();
+    }, 500);
+  }
 });
 
 let User = Backbone.Model.extend({

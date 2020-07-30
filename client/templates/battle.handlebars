@@ -14,7 +14,7 @@
       <div class="col-xs-12 field field-weather">
         field
       </div>
-      <div class="col-xs-12 game-info game-info-player player">
+      <div class="col-xs-12 game-info game-info-player player" data-step="3" data-intro="左边的指挥牌也可以发动技能。点击放弃出牌按钮后，本轮将不能再出牌">
       </div>
     </div>
     <div class="middle-side">
@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="col-xs-12 mid-line"></div>
-        <div class="col-xs-12 battleside battleside-player player">
+        <div class="col-xs-12 battleside battleside-player player" data-step="2" data-intro="双方阵地分为木管，铜管，打击乐三排。卡牌打出后会被放在对应的位置上。">
           <div class="field">
             <div class="large-field-counter">0</div>
             <div class="field-horn field-horn-close">
@@ -56,7 +56,7 @@
           </div>
         </div>
         <div class="col-xs-12 field field-hand {{#if isWaiting}}{{else}}active{{/if}}">
-          <div class="handcard-wrap">
+          <div class="handcard-wrap" data-step="1" data-intro="这些是你的手牌">
             {{#each cards as |val key|}}
               {{>card val}}
             {{/each}}
@@ -78,7 +78,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-12 right-side-inner right-side-player player">
+      <div class="col-xs-12 right-side-inner right-side-player player" data-step="4" data-intro="每轮结束后，场上卡牌会被放入弃牌堆">
         <div>
           <div class="col-xs-4 field-discard field-single">
             <i class="discard-skull"></i>
