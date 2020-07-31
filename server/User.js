@@ -296,8 +296,9 @@ var User = (function(){
   }
 
   r.getQuestProgress_ = async function() {
-    let tasks = await db.findProgressByUser(this.userModel.username);
     let progress = {};
+    if (!this.userModel) return progress;
+    let tasks = await db.findProgressByUser(this.userModel.username);
     for (let task of tasks) {
       progress[task.questName] = task.progress.length;
     }

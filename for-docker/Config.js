@@ -1,9 +1,11 @@
 
 var Config = {};
 
-Config.MAJOR_VERSION = 1;
+Config.MAJOR_VERSION = 2;
 
 Config.WS_SERVER_PORT = 16918;
+
+Config.DOMAIN = "http://kitauji-gwent.club";
 
 Config.SERVERS = {
   "aws": "ec2-13-113-243-171.ap-northeast-1.compute.amazonaws.com",

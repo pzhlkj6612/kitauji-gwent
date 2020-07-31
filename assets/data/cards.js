@@ -1600,6 +1600,19 @@ module.exports = {
     type: 1
   },
 
+  "tanaka_asuka_sunfes": {
+    skinOf: "tanaka_asuka",
+    skinFaction: "sunfes",
+    name: "田中明日香",
+    power: 10,
+    ability: ["hero", "morale_boost"],
+    img: "tanaka_asuka",
+    faction: "kumiko1",
+    grade: 3,
+    rarity: 3,
+    type: 1
+  },
+
   "takahisa_chieri_sunfes": {
     skinOf: "takahisa_chieri_1",
     skinFaction: "sunfes",
