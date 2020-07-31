@@ -430,6 +430,10 @@ let BattleView = Backbone.View.extend({
     })
 
     app.on("reDrawFinished", function() {
+      if (localStorage.getItem("skipBattleGuide") || !self.user.get("withBot")) {
+        return;
+      }
+      localStorage.setItem("skipBattleGuide", true);
       self.waitForAnimation = true;
       setTimeout(() => {
         introJs()

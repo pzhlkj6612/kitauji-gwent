@@ -44,13 +44,7 @@ let Collections = Backbone.View.extend({
     this.customDecks = data.customDecks || {};
     this.reset();
     this.render();
-    setTimeout(() => {
-      introJs()
-        .setOption('showStepNumbers', false)
-        .setOption('disableInteraction', true)
-        .setOption('highlightClass', 'intro-highlight')
-        .start();
-    }, 1000);
+    this.showGuide();
   },
   reset: function() {
     this.collection = JSON.parse(JSON.stringify(this.collections[this.deckKey] || {}));
@@ -444,6 +438,19 @@ let Collections = Backbone.View.extend({
     return priceData.PRICE_BY_CARD[card] ||
       priceData.PRICE_BY_RARITY[cardData[card].rarity];
   },
+  showGuide: function() {
+    if (localStorage.getItem("skipCollectionGuide")) {
+      return;
+    }
+    localStorage.setItem("skipCollectionGuide", true);
+    setTimeout(() => {
+      introJs()
+        .setOption('showStepNumbers', false)
+        .setOption('disableInteraction', true)
+        .setOption('highlightClass', 'intro-highlight')
+        .start();
+    }, 1000);
+  }
 });
 
 let SellModal = Backbone.Modal.extend({
