@@ -2,7 +2,11 @@
   <div class="card{{#if _disabled}} disabled{{/if}}" data-key="{{_key}}" data-id="{{_id}}"
     data-type="{{_data.type}}" data-ability="{{_data.ability}}">
     <div class="card-animation"></div>
-    <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}-{{_data.img}}"></i>
+    {{#if _data.skinFaction}}
+      <i class="card-md-{{_data.skinFaction}} card-md-{{_data.skinFaction}}-{{_data.img}}"></i>
+    {{else}}
+      <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}-{{_data.img}}"></i>
+    {{/if}}
     <div class="shadow"></div>
     <div class="overlay-card"></div>
   </div>
