@@ -314,13 +314,14 @@ var BotStrategy = (function(){
         } else if (Util.isScorch(card, true) || Util.isScorchLeader(card)) {
           let foeCards = this.getFieldCards(false);
           let ownCards = this.getFieldCards(true);
+          reward = -1;
           if (Util.isScorchLeader(card)) {
             foeCards = foeCards.filter(c=>c.grade===3);
             ownCards = ownCards.filter(c=>c.grade===3);
           }
           let foeHighestCards = this.getHighestCards(foeCards);
           let ownHighestCards = this.getHighestCards(ownCards);
-          if (foeHighestCards[0] && ownHighestCards[0] && foeHighestCards[0] < ownHighestCards[0]) {
+          if ((foeHighestCards[0] || 0) <= (ownHighestCards[0] || 0)) {
             // don't scorch yourself!
             reward = -1;
           } else if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
@@ -331,6 +332,9 @@ var BotStrategy = (function(){
           }
         } else if (Util.isBond(card)) {
           reward = Math.max(realPower - card._data.power * 0.4, 0);
+          if (!this.isScoreLeading(realPower) && state.foeSide.passing) {
+            reward *= Util.getSameBondType(card, cards);
+          }
         } else if (Util.isWeather(card)) { // weather card or leader
           // clear weather?
           if (Util.isClearWeather(card)) {
@@ -467,7 +471,7 @@ var BotStrategy = (function(){
             return null;
           }
         }
-        if (state.foeSide.score - state.ownSide.score > handPower * 1.0 / state.foeSide.lives) {
+        if (state.foeSide.score - state.ownSide.score > handPower * 1.5 / state.foeSide.lives) {
           if (state.foeSide.lives === 1 &&
               state.ownHand.some(c=>c._data.ability === "decoy") &&
               this.getFieldCards(true).some(c=>Util.canReplace(c)) &&
@@ -508,7 +512,9 @@ var BotStrategy = (function(){
         let diff = state.foeSide.score - state.ownSide.score;
         let index = -1;
         realPowers.forEach((p,i)=>{
-          if (p>diff && p<realPowers[index]) index = i;
+          if (p>diff && p<realPowers[index] &&
+            !(Util.isBond(cards[index]) && Util.getSameBondType(cards[index], cards) > 1))
+            index = i;
         });
         if (index >= 0) return cards[index];
       }
@@ -523,13 +529,14 @@ var BotStrategy = (function(){
       // console.warn("selected ", cards[maxCardIdx]);
       return cards[maxCardIdx];
     }
-    r.isScoreLeading = function() {
+    r.isScoreLeading = function(opt_extra) {
+      opt_extra = opt_extra || 0; // useful when calculate leading after play a card
       let state = this.bot.state;
       if (state.ownSide.faction === Deck.FACTION.OATHS_FINALE &&
           state.foeSide.faction !== Deck.FACTION.OATHS_FINALE) {
-        return state.ownSide.score >= state.foeSide.score;
+        return state.ownSide.score + opt_extra >= state.foeSide.score;
       }
-      return state.ownSide.score > state.foeSide.score;
+      return state.ownSide.score + opt_extra > state.foeSide.score;
     }
     r.getAttackReward = function(cards, attackPower) {
       cards = cards.filter(c=>Util.canReplace(c));

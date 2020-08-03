@@ -88,6 +88,9 @@ Util.isReusable = function(card) {
     Util.isTaibu(card) || Util.isMonaka(card)
   );
 }
+Util.getSameBondType = function(card, cards) {
+  return cards.filter(c=>c._data.bondType === card._data.bondType).length;
+}
 Util.isEmreisLeader4 = function(card) {
   return card._data.ability === "emreis_leader4";
 }

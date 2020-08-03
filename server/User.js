@@ -338,8 +338,6 @@ var User = (function(){
       cards.push(Const.DEFAULT_LEADER);
       // give initial coins
       await db.updateWallet(data.username, 10000);
-      // set default deck
-      await db.storeCustomDeckByList(data.username, data.initialDeck, cards);
       // start first quest
       await db.updateProgress(data.username, Const.SCENARIO_ZENKOKU, []);
 
@@ -397,6 +395,7 @@ var User = (function(){
       await db.storeCustomDeckByList(data.username, data.initialDeck, cards);
       // start first quest
       await db.updateProgress(data.username, Const.SCENARIO_KYOTO, []);
+      // await self.testData_(data);
 
       await self.loadUserModel(data.username);
 
