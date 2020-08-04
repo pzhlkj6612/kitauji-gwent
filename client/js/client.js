@@ -240,6 +240,7 @@ let InitialCardsModal = Modal.extend({
       introJs()
         .setOption('showStepNumbers', false)
         .setOption('disableInteraction', true)
+        .setOption('highlightClass', 'intro-highlight')
         .start();
     }, 500);
   }
