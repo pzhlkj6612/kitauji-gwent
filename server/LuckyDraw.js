@@ -132,7 +132,8 @@ class LuckyDraw {
     if (!cards.length ||
         userDeck[cards[0]] && Math.random() < 0.6) {
       let skin = await this.drawSkin(scenarioName, username, faction);
-      if (skin) {
+      // user should have the original card before getting skin
+      if (skin && userDeck[CardData[skin.cards[0]].skinOf]) {
         return skin;
       }
     }
@@ -264,11 +265,6 @@ class LuckyDraw {
       CardData[c].faction === faction &&
       CardData[c].rarity <= rarity &&
       !userSkin[c]);
-    if (!factionSkin.length) {
-      factionSkin = SKINS.filter(c => 
-        CardData[c].rarity <= rarity &&
-        !userSkin[c]);
-    }
     if (!factionSkin.length) {
       // already have all skins
       return null;

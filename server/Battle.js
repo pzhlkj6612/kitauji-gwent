@@ -34,6 +34,7 @@ var Battle = (function(){
   r._user1 = null;
   r._user2 = null;
   r._started = false;
+  r._ended = false;
   r.turn = 0;
 
   r.cm = null;
@@ -238,6 +239,7 @@ var Battle = (function(){
     }, this.p2.deck.getFaction(), this._user1);
     this.p2.send("gameover", data, true);
 
+    this._ended = true;
     this._user1.disconnect();
     this._user2.disconnect();
   }
@@ -436,6 +438,10 @@ var Battle = (function(){
   }
 
   r.userLeft = function(sideName){
+    if (this._ended) {
+      // don't send user left when game is end
+      return;
+    }
     var side = this[sideName];
 
 
