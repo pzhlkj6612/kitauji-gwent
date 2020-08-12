@@ -366,7 +366,7 @@ var HandWrittenBot = (function(){
           botCard = key;
         }
         if (!botCard && CardData[key].rarity >= 2) {
-          candidates = candidates.filter(c=>userDeck[key] <= Util.getLimit(c));
+          candidates = candidates.filter(c=>(botDeck[botCard] || 0) + userDeck[key] <= this.getMirrorModeLimit_(c));
           botCard = this.randomGet_(candidates);
           if (!CardData[botCard].bondType) {
             delete byRarity[rarity][botCard];
@@ -394,6 +394,17 @@ var HandWrittenBot = (function(){
           this.randomGet_(leaders),
         deck: faction,
       });
+    }
+
+    r.getMirrorModeLimit_ = function(key) {
+      let card = {
+        _data: CardData[key],
+      };
+      // set limit of weak skill to 1
+      if (Util.isHorn(card) || Util.isTunning(card) || Util.isLips(card)) {
+        return 1;
+      }
+      return Util.getLimit(key);
     }
   
     r.getDeck = function() {
