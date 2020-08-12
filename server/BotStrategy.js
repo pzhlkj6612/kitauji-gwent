@@ -308,8 +308,7 @@ var BotStrategy = (function(){
             let highest = this.getHighestCards(foeClose.cards);
             let scorchPower = this.getScoreSum(highest, c=>c.power);
             realPower += scorchPower;
-            if (highest[0] && highest[0].power >= 10) reward = 100;
-            else reward = scorchPower * 0.2;
+            reward = scorchPower * 0.2;
           }
         } else if (Util.isScorch(card, true) || Util.isScorchLeader(card)) {
           let foeCards = this.getFieldCards(false);
@@ -321,14 +320,14 @@ var BotStrategy = (function(){
           }
           let foeHighestCards = this.getHighestCards(foeCards);
           let ownHighestCards = this.getHighestCards(ownCards);
-          if ((foeHighestCards[0] || 0) <= (ownHighestCards[0] || 0)) {
+          if (((foeHighestCards[0] || {}).power || 0) <=
+            ((ownHighestCards[0] || {}).power || 0)) {
             // don't scorch yourself!
             reward = -1;
           } else if (foeHighestCards.reduce((_,c)=>c.power,0) > ownHighestCards.reduce((_,c)=>c.power,0)) {
             let scorchPower = this.getScoreSum(foeHighestCards, c=>c.power);
             realPower = scorchPower;
-            if (foeHighestCards[0] && foeHighestCards[0].power >= 10) reward = 100;
-            else reward = scorchPower * 0.2;
+            reward = scorchPower * 0.2;
           }
         } else if (Util.isBond(card)) {
           reward = Math.max(realPower - card._data.power * 0.4, 0);

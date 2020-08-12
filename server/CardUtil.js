@@ -18,7 +18,9 @@ Util.isHero = function(card) {
 }
 Util.isScorch = function(card, isScorchCard) {
   if (isScorchCard) return card._data.ability === "scorch_card";
-  return card._data.ability !== "scorch_card" && String(card._data.ability).includes("scorch");
+  return card._data.ability !== "scorch_card" &&
+    !Util.isScorchLeader(card) &&
+    String(card._data.ability).includes("scorch");
 }
 Util.isScorchLeader = function(card) {
   return card._data.ability === "scorch_leader";

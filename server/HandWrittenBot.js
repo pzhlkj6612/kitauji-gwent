@@ -346,36 +346,35 @@ var HandWrittenBot = (function(){
       }
       for (let key of Object.keys(userDeck)) {
         let bondType = CardData[key].bondType;
-        let musterType = CardData[key].musterType;
         let rarity = CardData[key].rarity;
         let type = CardData[key].type;
         let candidates = Object.keys(byRarity[rarity]);
         if (!candidates.length) continue;
         let botCard;
         if (bondType) {
-          let bondCandidates = candidates.filter(c=>!!(CardData[c].bondType));
+          let bondCandidates;
           if (cpMapping[bondType]) {
-            bondCandidates = candidates.filter(c=>CardData[c].bondType === cpMapping[bondType]);
+            bondCandidates = candidates.filter(c=>CardData[c].bondType === cpMapping[bondType] && !botDeck[c]);
+          } else {
+            bondCandidates = candidates.filter(c=>!!(CardData[c].bondType) && !botDeck[c]);
           }
-          botCard = this.randomGet_(bondCandidates);
-          cpMapping[bondType] = CardData[botCard].bondType;
-        } else if (musterType) {
-          let musterCandidates = candidates.filter(c=>!!(CardData[c].musterType));
-          if (cpMapping[musterType]) {
-            musterCandidates = candidates.filter(c=>CardData[c].musterType === cpMapping[musterType]);
+          if (bondCandidates.length) {
+            botCard = this.randomGet_(bondCandidates);
+            cpMapping[bondType] = CardData[botCard].bondType;
           }
-          botCard = this.randomGet_(musterCandidates);
-          if (botCard) cpMapping[musterType] = CardData[botCard].musterType;
         } else if (type === 4 || type === 5) {
           botCard = key;
         }
-        if (!botCard) {
+        if (!botCard && CardData[key].rarity >= 2) {
+          candidates = candidates.filter(c=>userDeck[key] <= Util.getLimit(c));
           botCard = this.randomGet_(candidates);
-          if (!CardData[botCard].bondType && !CardData[botCard].musterType) {
+          if (!CardData[botCard].bondType) {
             delete byRarity[rarity][botCard];
           }
         }
-        botDeck[botCard] = (botDeck[botCard] || 0) + userDeck[key];
+        if (botCard) {
+          botDeck[botCard] = (botDeck[botCard] || 0) + userDeck[key];
+        }
       }
       for (let key of Object.keys(byRarity[2])) {
         if (!botDeck[key] && (
@@ -388,10 +387,12 @@ var HandWrittenBot = (function(){
       for (let key of special) {
         if (!botDeck[key]) botDeck[key] = 1;
       }
+      console.info(botDeck);
       this.setDeck({
         cardInDeck: botDeck,
         leader: leaders.filter(c=>CardData[c].rarity>2)[0] ||
           this.randomGet_(leaders),
+        deck: faction,
       });
     }
   
