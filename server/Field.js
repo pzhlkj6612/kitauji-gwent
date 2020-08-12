@@ -156,6 +156,7 @@ var Field = (function() {
           self.side.off(event, card.getUidEvents(event));
         }
       }
+      res.push(_cards.splice(self.getPosition(card), 1)[0]);
       let abilities = card.getAbility();
       if (abilities) {
         if(!Array.isArray(abilities)) {
@@ -167,7 +168,6 @@ var Field = (function() {
           }
         });
       }
-      res.push(_cards.splice(self.getPosition(card), 1)[0]);
     })
 
     return res;
