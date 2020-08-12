@@ -16,6 +16,7 @@
     "online_count": "Online player: ",
     "idle_count": "Idle player: ",
     "online": "Online",
+    "browser_hint": "Modern browsers except IE(i.e. Chrome) are recommended",
     "download": "Download",
     "standalone": "standalone version",
     "stable": "for stable experience",

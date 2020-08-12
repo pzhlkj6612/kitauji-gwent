@@ -16,7 +16,8 @@
     "online_count": "在线人数: ",
     "idle_count": "空闲人数: ",
     "online": "在线",
-    "download": "推荐使用IE以外的浏览器，如Chrome浏览器。下载",
+    "browser_hint": "推荐使用IE以外的浏览器，如Chrome浏览器",
+    "download": "下载",
     "standalone": "本地版",
     "stable": "更稳定",
 

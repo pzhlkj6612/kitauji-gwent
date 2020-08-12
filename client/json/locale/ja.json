@@ -16,6 +16,7 @@
     "online_count": "オンラインユーザー: ",
     "idle_count": "アイドルユーザー: ",
     "online": "オンライン",
+    "browser_hint": "Modern browsers except IE(i.e. Chrome) are recommended",
     "download": "Download",
     "standalone": "standalone version",
     "stable": "for stable experience",
