@@ -120,7 +120,7 @@ var HandWrittenBot = (function(){
           }
           break;
         case "gameover":
-          this.disconnect();
+          // this.disconnect();
           break;
         default:
           break;
@@ -354,9 +354,9 @@ var HandWrittenBot = (function(){
         if (bondType) {
           let bondCandidates;
           if (cpMapping[bondType]) {
-            bondCandidates = candidates.filter(c=>CardData[c].bondType === cpMapping[bondType] && !botDeck[c]);
+            bondCandidates = candidates.filter(c=>CardData[c].bondType === cpMapping[bondType]);
           } else {
-            bondCandidates = candidates.filter(c=>!!(CardData[c].bondType) && !botDeck[c]);
+            bondCandidates = candidates.filter(c=>!!(CardData[c].bondType));
           }
           if (bondCandidates.length) {
             botCard = this.randomGet_(bondCandidates);
@@ -393,6 +393,7 @@ var HandWrittenBot = (function(){
         leader: leaders.filter(c=>CardData[c].rarity>2)[0] ||
           this.randomGet_(leaders),
         deck: faction,
+        isBot: true,
       });
     }
 
