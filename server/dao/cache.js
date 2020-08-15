@@ -23,7 +23,7 @@ class Cache {
     }
     for (let user of allUser) {
       if (!user.winCount && !user.loseCount) continue;
-      this.winRanking.set(user.username, - (user.winCount << 2 - user.loseCount));
+      this.winRanking.set(user.username, -user.winCount);
     }
   }
 
@@ -47,9 +47,9 @@ class Cache {
     await db.recordUserWin(username, isWin);
     if (isWin) {
       // zset sort in ascent order, store winCount * -1 
-      this.winRanking.set(username, (this.winRanking.get(username) || 0) - (1 << 2));
+      this.winRanking.set(username, (this.winRanking.get(username) || 0) - 1);
     } else {
-      this.winRanking.set(username, (this.winRanking.get(username) || 0) + 1);
+      // this.winRanking.set(username, (this.winRanking.get(username) || 0) + 1);
     }
   }
 
