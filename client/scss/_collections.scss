@@ -235,7 +235,8 @@
     bottom: 0;
     z-index: 11;
     background: #101010bb;
-    border-radius: 0 0 2px 2px;
+    filter:progid:DXImageTransform.Microsoft.Gradient(startColorstr=#7F000000,endColorstr=#7F000000);
+    border-radius: 0 0 5px 5px;
 
     .related-card {
       color: red,
