@@ -290,10 +290,10 @@ class LuckyDraw {
       case Const.SCENARIO_KYOTO:
         return 20;
       case Const.SCENARIO_KANSAI:
-        return 30;
+        return 40;
       case Const.SCENARIO_ZENKOKU:
       default:
-        return 50;
+        return 80;
     }
   }
 

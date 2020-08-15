@@ -886,12 +886,12 @@ Battleside = (function() {
     this.battle.sendNotification("msg_played", [this.getName(), card.getName()]);
 
     cards.forEach(function(card) {
-      if(noHeroes && card.hasAbility("hero")) return;
+      if(noHeroes && card.hasAbility("hero") || card.hasAbility("decoy")) return;
       highest = card.getPower() > highest ? card.getPower() : highest;
     })
 
     cards.forEach(function(card) {
-      if(noHeroes && card.hasAbility("hero")) return;
+      if(noHeroes && card.hasAbility("hero") || card.hasAbility("decoy")) return;
       if(card.getPower() === highest) res.push(card);
     });
 

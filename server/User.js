@@ -493,7 +493,7 @@ var User = (function(){
     })
 
     socket.on("request:quitGame", function() {
-      if (self._rooms.length && self.getRoom().hasUser() > 1) {
+      if (self._rooms.length && self.getRoom().hasUser() > 1 && self._battleSide) {
         // quit game when other user still playing, record as lose
         self.endGame({
           isWin: false,

@@ -35,6 +35,9 @@ console.info(`请访问 http://localhost:${Config.WebServer.port} 开始游戏`)
 
 app.use(function(req, res, next) {
   res.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", true);
   return next();
 });
 
