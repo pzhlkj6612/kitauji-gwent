@@ -122,7 +122,7 @@ class DB {
     await this.connectPromise;
     const table = this.db.collection(TABLE_USER);
     let exist = await table.findOne({username});
-    let wallet = exist.wallet || 0;
+    let wallet = Math.max(0, exist.wallet || 0);
     wallet = isSpend ? (wallet - coins) : (wallet + coins);
     if (wallet < 0) {
       return false;
