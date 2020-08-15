@@ -315,8 +315,8 @@ var BotStrategy = (function(){
           let ownCards = this.getFieldCards(true);
           reward = -1;
           if (Util.isScorchLeader(card)) {
-            foeCards = foeCards.filter(c=>c.grade===3);
-            ownCards = ownCards.filter(c=>c.grade===3);
+            foeCards = foeCards.filter(c=>c._data.grade===3);
+            ownCards = ownCards.filter(c=>c._data.grade===3);
           }
           let foeHighestCards = this.getHighestCards(foeCards);
           let ownHighestCards = this.getHighestCards(ownCards);
