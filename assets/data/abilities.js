@@ -440,7 +440,7 @@ module.exports = {
   },
   "fog_leader": {
     name: "",
-    description: "ability_desc_fog_leader",
+    description: "ability_desc_fog",
     onActivate: function(){
       var cards = this.deck.find("key", "daisangakushou");
       let card;
@@ -475,7 +475,7 @@ module.exports = {
   },
   "frost_leader": {
     name: "",
-    description: "ability_desc_frost_leader",
+    description: "ability_desc_frost",
     onActivate: function(){
       var cards = this.deck.find("key", "sunfes")
       let card;

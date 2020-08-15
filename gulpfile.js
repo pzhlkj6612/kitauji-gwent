@@ -199,7 +199,6 @@ gulp.task("effect sprites", function() {
     name: "abilities",
     margin: 0
   })
-  .pipe(imagesConvert({targetType: 'jpg'}))
   .pipe(imagemin())
   .pipe(gulpif(function (file) {
     return file.path.match(".*\\.png$") != null;

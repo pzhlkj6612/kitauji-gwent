@@ -115,9 +115,9 @@
     "ability_desc_horn_card": "Commander's Horn: Doubles the strength of all unit cards in a row. Limited to 1 per row.",
     "ability_desc_hero": "Hero: Not affected by special cards, weather cards or abilities.",
     "related_card": "Related cards: ",
+    "attack_power": "Attack Power: ",
+    "grade": "Grade: ",
 
-    "ability_desc_fog_leader": "Pick a Fog card from your deck and play it immediately",
-    "ability_desc_frost_leader": "Pick a Frost card from your deck and play it immediately",
     "ability_desc_ranged_horn_leader": "Doubles the strength of all your brasswind units (unless a Commander's Horn is also present on that row).",
     "ability_desc_emreis_leader": "Draw a card from your opponent's discard pile.",
 

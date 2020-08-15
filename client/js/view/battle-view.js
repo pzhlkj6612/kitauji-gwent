@@ -586,6 +586,8 @@ let Preview = Backbone.View.extend({
     if (i18n.hasText(opt.key)) {
       this.card.name = i18n.getText(opt.key);
     }
+    this.attackPower = this.card.attackPower || 0;
+    this.grade = this.card.grade || 0;
   },
   render: function(){
     let html = this.template({
@@ -593,6 +595,10 @@ let Preview = Backbone.View.extend({
       abilities: this.abilities,
       relatedCards: this.relatedCards,
       hasRelatedCards: this.relatedCards && this.relatedCards.length,
+      attackPower: this.attackPower,
+      hasAttackPower: this.attackPower > 0,
+      grade: this.grade,
+      hasGrade: this.grade > 0,
       size: this.size,
       previewB: this.previewB
     })

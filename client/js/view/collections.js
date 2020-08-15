@@ -251,6 +251,8 @@ let Collections = Backbone.View.extend({
     }
 
     let relatedCards = [];
+    let attackPower = card.attackPower || 0;
+    let grade = card.grade || 0;
     abilities = abilities.map((ability) => {
       if (abilityData[ability].getRelatedCards) {
         relatedCards = relatedCards.concat(
@@ -273,6 +275,10 @@ let Collections = Backbone.View.extend({
       abilities: abilities,
       relatedCards: relatedCards,
       hasRelatedCards: relatedCards.length > 0,
+      attackPower: attackPower,
+      hasAttackPower: attackPower > 0,
+      grade: grade,
+      hasGrade: grade > 0,
     }));
   },
   setDeck: function(e) {

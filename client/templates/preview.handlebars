@@ -8,6 +8,16 @@
   {{#each abilities as |val key|}}
     <p>{{val}}</p>
   {{/each}}
+  {{#if hasAttackPower}}
+  <p>{{i18n "attack_power"}}
+    <span>{{attackPower}}</span>
+  </p>
+  {{/if}}
+  {{#if hasGrade}}
+  <p>{{i18n "grade"}}
+    <span>{{grade}}</span>
+  </p>
+  {{/if}}
   {{#if hasRelatedCards}}
   <p>{{i18n "related_card"}}
     {{#each relatedCards as |val key|}}

@@ -19,27 +19,6 @@ class DB {
       console.info("mongodb connected");
       this.client = client;
       this.db = client.db(DB_NAME);
-  
-      this.db.createCollection(TABLE_USER, function(err) {
-        if (err) throw err;
-        console.log("user table created!");
-      });
-      this.db.createCollection(TABLE_CARD, function(err) {
-        if (err) throw err;
-        console.log("card table created!");
-      });
-      this.db.createCollection(TABLE_DRAW_STATS, function(err) {
-        if (err) throw err;
-        console.log("draw stats table created!");
-      });
-      this.db.createCollection(TABLE_PROGRESS, function(err) {
-        if (err) throw err;
-        console.log("progress table created!");
-      });
-      this.db.createCollection(TABLE_CONDITION, function(err) {
-        if (err) throw err;
-        console.log("condition table created!");
-      });
     }).catch(e => {
       console.warn("Database not started. But you can still connect to online servers");
       console.warn("本地未安装数据库，请忽略报错并在游戏中选择线上服务器。>_<");

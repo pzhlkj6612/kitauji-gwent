@@ -123,7 +123,7 @@ class LuckyDraw {
 
   async drawPreferOtherDeck(scenarioName, username, initialDeck) {
     let faction;
-    let retry = 2;
+    let retry = 0;
     do {
       faction = FACTION[(Math.random() * FACTION.length) | 0];
     } while (faction === initialDeck && retry-- > 0);
@@ -213,7 +213,7 @@ class LuckyDraw {
     // user has all cards in this deck
     let cards = deck.data.filter(c => {
       return CardData[c].type !== 3 &&
-        CardData[c].rarity === rarity;
+        (CardData[c].rarity === rarity || CardData[c].rarity === rarity - 1);
     });
     let underLimit = cards.filter(c => userDeck[c] < Util.getLimit(c));
     if (underLimit.length) {

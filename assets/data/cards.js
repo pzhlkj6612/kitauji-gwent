@@ -365,7 +365,6 @@ module.exports = {
     ability: ["hero", "morale_boost"],
     img: "yoshikawa_yuko",
     faction: "kitauji",
-    grade: 3,
     rarity: 3,
     type: 1
   },
@@ -844,7 +843,6 @@ module.exports = {
     img: "yoshikawa_yuko_1",
     faction: "kitauji",
     skinFaction: "liz",
-    grade: 3,
     rarity: 3,
     type: 1
   },
@@ -856,7 +854,6 @@ module.exports = {
     img: "yoshikawa_yuko_2",
     faction: "kitauji",
     skinFaction: "liz",
-    grade: 3,
     rarity: 3,
     type: 1
   },
