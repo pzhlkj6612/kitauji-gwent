@@ -1,6 +1,7 @@
 let Backbone = require("backbone");
 let Handlebars = require('handlebars/runtime').default;
 let $ = require("jquery");
+let zh = require("../json/locale/zh.json");
 
 let i18n = Backbone.Model.extend({
   initialize: function(locale) {
@@ -23,6 +24,11 @@ let i18n = Backbone.Model.extend({
   loadDict: function(locale, opt_callback) {
     var t = this;
     t.locale = locale;
+    if (locale === 'zh') {
+      t.dict = zh;
+      opt_callback && opt_callback();
+      return;
+    }
     $.get("/public/json/locale/" + locale + ".json", function(data) {
       t.dict = data;
       opt_callback && opt_callback();

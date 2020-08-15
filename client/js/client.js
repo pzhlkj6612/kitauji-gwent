@@ -458,9 +458,7 @@ let User = Backbone.Model.extend({
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
     this.set("region", localStorage["region"] || "aliyun");
-    i18n.loadDict(this.get("locale"), () => {
-      this.get("app").getCurrentView().render();
-    });
+    i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(data){
     data = data || {};
@@ -507,9 +505,9 @@ let User = Backbone.Model.extend({
     let locale = $(e.target).val();
     this.set("locale", locale);
     localStorage["locale"] = locale;
-    i18n.loadDict(locale, () => {
+    i18n.loadDict(locale, function() {
       this.get("app").getCurrentView().render();
-    });
+    }.bind(this));
   },
   setRegion: function(region) {
     this.set("region", region);
