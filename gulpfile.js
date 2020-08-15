@@ -7,6 +7,7 @@ var livereload = require("gulp-livereload");
 var sass = require("gulp-sass");
 var handlebars = require("browserify-handlebars");
 var imagemin = require('gulp-imagemin');
+var imagesConvert = require('gulp-images-convert');
 var gm = require("gulp-gm");
 var sprity = require("sprity");
 var gulpif = require("gulp-if");
@@ -170,6 +171,7 @@ gulp.task("generate sprites", ["resize lg"], function() {
     margin: 0
     //template: "./client/scss/_cards.hbs"
   })
+  .pipe(imagesConvert({targetType: 'jpg'}))
   .pipe(imagemin())
   .pipe(gulpif(function (file) {
     return file.path.match(".*\\.png$") != null;
@@ -197,6 +199,7 @@ gulp.task("effect sprites", function() {
     name: "abilities",
     margin: 0
   })
+  .pipe(imagesConvert({targetType: 'jpg'}))
   .pipe(imagemin())
   .pipe(gulpif(function (file) {
     return file.path.match(".*\\.png$") != null;
