@@ -266,7 +266,6 @@ var BotStrategy = (function(){
      * @param {boolean} useAdvanceStrategy consider lives, store, etc.
      */
     r.getMaxPossibility = function(cards, useAdvanceStrategy) {
-      // console.warn("start calculating rewards");
       let state = this.bot.state;
       let realPowers = [];
       let maxReward = -100, maxCardIdx = 0;
@@ -466,7 +465,7 @@ var BotStrategy = (function(){
           if (state.foeSide.passing && state.foeSide.score - state.ownSide.score < 2) {
             // foe pass and score is close, try with low reward to win this round
           } else {
-            console.warn("pass due to reward too small");
+            // console.warn("pass due to reward too small");
             return null;
           }
         }
@@ -477,20 +476,20 @@ var BotStrategy = (function(){
               this.getHandCards(false).every(c=>!Util.isSpy(c))) {
               return state.ownHand.find(c=>c._data.ability === "decoy");
           }
-          console.warn("pass due to foe leading too large");
+          // console.warn("pass due to foe leading too large");
           return null;
         }
         let realPower = realPowers[maxCardIdx];
         if (state.ownSide.score - state.foeSide.score + realPower > 20 + (state.ownSide.hand-5)*1.5 &&
           state.ownSide.hand < state.foeSide.hand &&
           state.foeSide.lives > 1) {
-          console.warn("pass due to large leading and too few cards at hand");
+          // console.warn("pass due to large leading and too few cards at hand");
           return null;
         }
       } else if (state.foeSide.lives > 1) {
         // 1:2
         if (state.ownSide.score - state.foeSide.score > foeHandPower) {
-          console.warn(`pass due to large leading(foeHandPower=${foeHandPower})`);
+          // console.warn(`pass due to large leading(foeHandPower=${foeHandPower})`);
           return null;
         }
         if (state.ownSide.score > state.foeSide.score) {
@@ -501,13 +500,13 @@ var BotStrategy = (function(){
             }
           }
           if (handPower < foeHandPower * 0.3) {
-            console.warn("pass due to too few cards at hand");
+            // console.warn("pass due to too few cards at hand");
             return null;
           }
         }
       }
       if (!this.isScoreLeading() && state.foeSide.passing) {
-        console.warn("foe passing and lead, should play the smallest card which make us lead");
+        // console.warn("foe passing and lead, should play the smallest card which make us lead");
         let diff = state.foeSide.score - state.ownSide.score;
         let index = -1;
         realPowers.forEach((p,i)=>{
@@ -518,11 +517,11 @@ var BotStrategy = (function(){
         if (index >= 0) return cards[index];
       }
       if (maxReward < 0) {
-        console.warn("pass due to reward too small");
+        // console.warn("pass due to reward too small");
         return null;
       }
       if (this.isScoreLeading() && state.foeSide.passing && state.foeSide.lives > 1) {
-        console.warn("pass due to foe passing and we lead, and not the last round");
+        // console.warn("pass due to foe passing and we lead, and not the last round");
         return null;
       }
       // console.warn("selected ", cards[maxCardIdx]);

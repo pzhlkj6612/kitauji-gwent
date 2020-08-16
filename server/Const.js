@@ -22,5 +22,5 @@ module.exports = {
   // special faction for all skin
   FACTION_SKIN: "skin",
 
-  MIRROR_MODE_THRESHOLD: 3,
+  MIRROR_MODE_THRESHOLD: 1,
 };

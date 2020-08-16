@@ -202,7 +202,7 @@ var User = (function(){
     matchmaking.removeFromQueue(this, this._roomName);
 
     this.leaveRoom();
-    console.log("user ", this.getName(), " disconnected");
+    // console.log("user ", this.getName(), " disconnected");
   }
 
   r.setBattleSide = function(battleSide) {
@@ -232,19 +232,19 @@ var User = (function(){
       let newLeader = await this.luckyDrawLeaderAfterGame_(faction, questState);
       if (newLeader) {
         result["newCard"] = newLeader;
-        console.info("user get new leader: ", newLeader);
+        // console.info("user get new leader: ", newLeader);
         return result;
       }
       let newCard = await this.luckyDrawAfterGame_(gameState.isWin, faction, foe, questState);
       if (newCard && newCard.length) {
         result["newCard"] = newCard;
-        console.info("user get new card: ", result["newCard"]);
+        // console.info("user get new card: ", result["newCard"]);
         return result;
       }
       let coins = await this.getCoinAfterGame_(gameState);
       if (coins) {
         result["coins"] = coins;
-        console.info("user get coins: ", coins);
+        // console.info("user get coins: ", coins);
         return result;
       }
     } catch (e) {
@@ -509,7 +509,6 @@ var User = (function(){
       let ok = await db.removeCard(self.userModel.username, faction, card, amount);
       if (ok) {
         let coins = LuckyDraw.getInstance().calculatePrice(card, amount);
-        console.info("user get coins: ", coins);
         await db.updateWallet(self.userModel.username, coins);
         self.userModel.wallet += coins;
         let response = await self.getUserCollections_();
@@ -531,7 +530,6 @@ var User = (function(){
       }
       let {faction, cards} = await LuckyDraw.getInstance()
         .drawSingleAvoidDuplicate(scenario, self.userModel.username, self.userModel.initialDeck);
-      console.info("user get new card: ", cards);
       await db.addCards(self.userModel.username, faction, cards);
       socket.emit("response:luckyDraw", {
         newCard: cards,

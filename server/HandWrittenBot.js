@@ -164,7 +164,7 @@ var HandWrittenBot = (function(){
         }
         return 0;
       });
-      console.warn("bot redraw ", cards[0]._data.name);
+      // console.warn("bot redraw ", cards[0]._data.name);
       this.socket.trigger("redraw:reDrawCard", {
         cardID: cards[0]._id,
       });

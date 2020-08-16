@@ -75,7 +75,6 @@ io.on("connection", function(socket) { //global connection
     }
     if (!user) {
       connections.add(user = User(socket, data.token));
-      console.log("new user ", user.getName());
     }
 
     socket.on("disconnect", function() {
