@@ -327,6 +327,12 @@ var BotStrategy = (function(){
             let scorchPower = this.getScoreSum(foeHighestCards, c=>c.power);
             realPower = scorchPower;
             reward = scorchPower * 0.2;
+            if (Util.isScorchLeader(card)) {
+              reward *= 2;
+            }
+            if (foeHighestCards[0] && foeHighestCards[0].power >= 10 && Math.random() < 0.2) {
+              reward = 100;
+            }
           }
         } else if (Util.isBond(card)) {
           reward = Math.max(realPower - card._data.power * 0.4, 0);
