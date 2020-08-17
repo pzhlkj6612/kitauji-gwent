@@ -90,7 +90,8 @@ class DB {
   async recordZenkokuGold(username) {
     await this.connectPromise;
     const table = this.db.collection(TABLE_USER);
-    let zenkokuGold = await table.findOne({username}).zenkokuGold || 0;
+    let user = await table.findOne({username});
+    let zenkokuGold = user.zenkokuGold || 0;
     zenkokuGold += 1;
     return await table.updateOne({username}, {
       $set: {zenkokuGold},
