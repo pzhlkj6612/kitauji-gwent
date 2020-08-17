@@ -395,8 +395,6 @@ module.exports = {
     img: "takino_sayaka",
     faction: "kitauji",
     rarity: 1,
-    grade: 3,
-    male: true,
     type: 1
   },
   "takino_junichi": {
@@ -407,6 +405,8 @@ module.exports = {
     img: "takino_junichi",
     faction: "kitauji",
     rarity: 1,
+    grade: 3,
+    male: true,
     type: 1
   },
   "etou_kana": {
