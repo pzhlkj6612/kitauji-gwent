@@ -70,8 +70,9 @@ var Deck = (function(){
     for (let key of Object.keys(cardInDeck)) {
       let limit = customDeck.isBot ? 999 : Util.getLimit(key);
       // if card has limit, can only add card up to that limit
-      for (let i=0; i<Math.min(limit, cardInDeck[key]); i++) {
-        if (skinMapping[key]) key = skinMapping[key];
+      limit = Math.min(limit, cardInDeck[key]);
+      if (skinMapping[key]) key = skinMapping[key];
+      for (let i=0; i<limit; i++) {
         deck.push(key);
       }
     }

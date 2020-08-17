@@ -239,7 +239,7 @@ let Collections = Backbone.View.extend({
     return this;
   },
   renderCardDesc: function($el) {
-    let key = $el.data("key");
+    let key = this.getOriginalCard($el.data("key"));
     let card = cardData[key];
     if(!card) return;
 
@@ -292,8 +292,7 @@ let Collections = Backbone.View.extend({
     let $card = $(e.target).closest(".card-cell");
     if (!$card.length) return;
     playSound("card1");
-    let key = $card.data("key");
-    key = cardData[key].skinOf || key;
+    let key = this.getOriginalCard($card.data("key"));
     if (this.tab === TAB.SKIN) {
       this.openSkinSelector(key);
       return;
@@ -323,8 +322,7 @@ let Collections = Backbone.View.extend({
     let $card = $(e.target).closest(".card-cell");
     if (!$card.length) return;
     playSound("card1");
-    let key = $card.data("key");
-    key = cardData[key].skinOf || key;
+    let key = this.getOriginalCard($card.data("key"));
     if (this.tab === TAB.SKIN) {
       this.openSkinSelector(key);
       return;
@@ -439,6 +437,12 @@ let Collections = Backbone.View.extend({
     this.dirty = true;
     this.render();
     this.$el.find(".skin-selector").addClass("hidden");
+  },
+  /**
+   * Get the original card of a skin, or itself if it's not a skin.
+   */
+  getOriginalCard: function(card) {
+    return (cardData[card] && cardData[card].skinOf) || card;
   },
   getCardPrice: function(card) {
     return priceData.PRICE_BY_CARD[card] ||
