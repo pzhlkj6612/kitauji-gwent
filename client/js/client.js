@@ -371,6 +371,7 @@ let User = Backbone.Model.extend({
     })
 
     app.receive("redraw:close", function(){
+      app.trigger("reDrawFinished");
       self.set("isReDrawing", false);
     })
 
