@@ -131,7 +131,7 @@ var BotStrategy = (function(){
         } else if (spies.length > 0 && state.ownSide.deck >= 2) {
           return [this.bot.medicChooseCardCommand(this.getMin(spies))];
         } else if (normals.length > 0) {
-          let card = this.getMaxPossibility(normals);
+          let card = this.getMaxPossibility(normals, {fromDiscard: true});
           if (!card) card = this.getMax(normals);
           let commands = [this.bot.medicChooseCardCommand(card)];
           if (Util.isAttack(card)) {
@@ -208,7 +208,7 @@ var BotStrategy = (function(){
       if (!state.ownLeader._disabled) {
         cards.push(state.ownLeader);
       }
-      return this.getMaxPossibility(cards, true);
+      return this.getMaxPossibility(cards, {useAdvanceStrategy: true});
     }
     r.getMin = function(cards) {
       let minCard = cards[0];
@@ -263,9 +263,12 @@ var BotStrategy = (function(){
     }
     /**
      * @param {Array} cards 
-     * @param {boolean} useAdvanceStrategy consider lives, store, etc.
+     * @param {Object} options
+     * - useAdvanceStrategy: consider lives, store, etc.
+     * - fromDiscard: is playing card from discard or not
      */
-    r.getMaxPossibility = function(cards, useAdvanceStrategy) {
+    r.getMaxPossibility = function(cards, options) {
+      let {useAdvanceStrategy, fromDiscard} = (options || {});
       let state = this.bot.state;
       let realPowers = [];
       let maxReward = -100, maxCardIdx = 0;
@@ -443,7 +446,7 @@ var BotStrategy = (function(){
         } else if (Util.isHero(card)) {
           // play hero in later rounds
           reward = realPower * 0.5 * (2 - state.ownSide.lives);
-        } else if (Util.isMuster(card)) {
+        } else if (Util.isMuster(card) && !fromDiscard) {
           realPower *= 3;
           reward = Math.max(realPower - card._data.power * 1.5, 0);
         } else {
