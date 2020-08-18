@@ -15,6 +15,7 @@ let Notification = require("./view/notification");
 let I18n = require("./i18n");
 const ContestResultModal = require("./view/contest-result");
 const Config = require("../../public/Config");
+const util = require("./util");
 
 window.$ = $;
 window.i18n = new I18n("zh");
@@ -237,11 +238,7 @@ let InitialCardsModal = Modal.extend({
   template: require("../templates/modal.initialCards.handlebars"),
   cancel: function() {
     setTimeout(() => {
-      introJs()
-        .setOption('showStepNumbers', false)
-        .setOption('disableInteraction', true)
-        .setOption('highlightClass', 'intro-highlight')
-        .start();
+      util.showIntro();
     }, 500);
   }
 });
@@ -371,8 +368,8 @@ let User = Backbone.Model.extend({
     })
 
     app.receive("redraw:close", function(){
-      app.trigger("reDrawFinished");
       self.set("isReDrawing", false);
+      app.trigger("reDrawFinished");
     })
 
     app.receive("update:info", function(data){

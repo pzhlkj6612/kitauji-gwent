@@ -439,6 +439,7 @@ let BattleView = Backbone.View.extend({
         introJs()
           .setOption('showStepNumbers', false)
           .setOption('disableInteraction', true)
+          .setOption('exitOnOverlayClick', false)
           .setOption('highlightClass', 'intro-highlight')
           .onexit(() => {
             self.waitForAnimation = false;

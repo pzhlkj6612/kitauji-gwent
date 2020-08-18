@@ -5,6 +5,7 @@ let deckData = require("../../../assets/data/deck");
 let abilityData = require("../../../assets/data/abilities");
 let priceData = require("../../../assets/data/prices");
 let Const = require("../const");
+let Util = require("../util");
 
 const TAB = {
   DECK: "deck",
@@ -454,11 +455,7 @@ let Collections = Backbone.View.extend({
     }
     localStorage.setItem("skipCollectionGuide", true);
     setTimeout(() => {
-      introJs()
-        .setOption('showStepNumbers', false)
-        .setOption('disableInteraction', true)
-        .setOption('highlightClass', 'intro-highlight')
-        .start();
+      Util.showIntro();
     }, 1000);
   }
 });

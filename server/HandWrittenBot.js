@@ -389,7 +389,7 @@ var HandWrittenBot = (function(){
       for (let key of special) {
         if (!botDeck[key]) botDeck[key] = 1;
       }
-      console.info(botDeck);
+      // console.info(botDeck);
       this.setDeck({
         cardInDeck: botDeck,
         leader: leaders.filter(c=>CardData[c].rarity>2)[0] ||

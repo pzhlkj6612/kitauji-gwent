@@ -147,10 +147,22 @@ let Lobby = Backbone.View.extend({
     this.$el.find(".kanban").addClass(character);
   },
   onRankingResponse: function(response) {
+    let userModel = this.app.user.get("userModel");
+    let ranking = response.ranking;
+    let hasMe = false;
+    ranking.forEach(r => {
+      if (r.username === userModel.username) {
+        hasMe = true;
+        r.isMe = true;
+      }
+    });
+    let me = JSON.parse(JSON.stringify(userModel));
+    me.rank = response.myRank == null ? "+∞" : response.myRank + 1;
     let model = Backbone.Model.extend({});
     let modal = new RankingModal({model: new model({
-      myRank: response.myRank == null ? "+∞" : response.myRank + 1,
-      ranking: response.ranking,
+      ranking,
+      noMe: !hasMe,
+      me: me,
     })});
     this.$el.prepend(modal.render().el);
   },

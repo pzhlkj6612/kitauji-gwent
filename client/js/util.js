@@ -25,7 +25,17 @@ function toRarityText(rarity) {
   }
 }
 
+function showIntro() {
+  introJs()
+    .setOption('showStepNumbers', false)
+    .setOption('disableInteraction', true)
+    .setOption('exitOnOverlayClick', false)
+    .setOption('highlightClass', 'intro-highlight')
+    .start();
+}
+
 module.exports = {
   toFactionText,
   toRarityText,
+  showIntro,
 };
