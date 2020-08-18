@@ -162,6 +162,11 @@ let StartMatchModal = Modal.extend({
     "click #startMatchmakingWithBot2": "startMatchWithBot",
     "click #startMatchmaking2": "startMatch"
   },
+  cancel: function() {
+    this.model.get("app").send("request:matchmaking", {
+      cancel: true,
+    });
+  },
   startMatchWithBot: function(e) {
     this.model.get("app").trigger("startMatchmakingWithBot", {
       scenario: this.model.get("scenario"),

@@ -222,6 +222,8 @@ var HandWrittenBot = (function(){
       return {
         event: "emreis_leader4:chooseCardFromDiscard",
         cardID: card && card._id,
+        name: card._data.name,
+        isBot: true,
       };
     }
     r.playPassCommand = function() {
@@ -368,7 +370,7 @@ var HandWrittenBot = (function(){
         if (!botCard && CardData[key].rarity >= 2) {
           candidates = candidates.filter(c=>(botDeck[botCard] || 0) + userDeck[key] <= this.getMirrorModeLimit_(c));
           botCard = this.randomGet_(candidates);
-          if (!CardData[botCard].bondType) {
+          if (botCard && !CardData[botCard].bondType) {
             delete byRarity[rarity][botCard];
           }
         }

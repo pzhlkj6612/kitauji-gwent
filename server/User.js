@@ -444,6 +444,7 @@ var User = (function(){
       // socket.emit("response:name", {name: self.getName()});
     })
 
+    // deprecated
     socket.on("request:matchmaking:bot", function(data) {
       if (self.getRoom()) return;
       if(self._inQueue) {
@@ -457,6 +458,10 @@ var User = (function(){
       if (self.getRoom()) return;
       if(self._inQueue) {
         matchmaking.removeFromQueue(self, self._roomName);
+      }
+      if (data.cancel) {
+        // just cancel previous match request
+        return;
       }
       self._roomName = data.roomName;
       self._scenario = data.scenario;
@@ -473,6 +478,10 @@ var User = (function(){
             self._roomName = Const.ROOM_KYOTO;
             break;
         }
+      }
+      if (data.bot) {
+        matchmaking.findBotOpponent(self);
+        return;
       }
       matchmaking.findOpponent(self, self._roomName);
     });

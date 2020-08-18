@@ -181,7 +181,7 @@ Battleside = (function() {
       var cardID = data.cardID;
       var card = self.foe.getCardFromDiscard(cardID);
       if(card === -1) {
-        console.log("emreis_leader4:chooseCardFromDiscard | unknown card: ", card);
+        console.log("emreis_leader4:chooseCardFromDiscard | unknown card: ", data);
         self.sendNotificationTo(self, "Possible bug occured: unknown card was chosen by playing nilfgaardian leader ability.");
         self.endTurn();
         return;

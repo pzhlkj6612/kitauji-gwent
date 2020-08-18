@@ -464,8 +464,9 @@ let User = Backbone.Model.extend({
   startMatchmakingWithBot: function(data){
     data = data || {};
     this.set("scenario", data.scenario);
-    this.get("app").send("request:matchmaking:bot", {
+    this.get("app").send("request:matchmaking", {
       scenario: data.scenario,
+      bot: true,
     });
   },
   startMatchmaking: function(data){
