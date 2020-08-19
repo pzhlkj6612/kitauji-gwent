@@ -396,7 +396,6 @@ let User = Backbone.Model.extend({
 
     app.receive("new:round", function() {
       app.trigger("new:round");
-      playSound("smash");
     });
 
     app.receive("gameover", function(data){

@@ -9,10 +9,11 @@ let abilityData = require("../../../assets/data/abilities");
 let BattleView = Backbone.View.extend({
   template: require("../../templates/battle.handlebars"),
   initialize: function(options){
-    let self = this;
     let user = this.user = options.user;
-    let app = this.app = options.app;
-    let yourSide, otherSide;
+    this.app = options.app;
+    this.isReplay = options.isReplay || false;
+    this.isRecording = options.isRecording || !this.isReplay;
+    this.gameRecords = [];
     this.waitForAnimation = false;
     this.animatedCards = {};
 
@@ -67,6 +68,7 @@ let BattleView = Backbone.View.extend({
     "click .field-leader>.card-wrap": "clickLeader"
   },
   onPassing: function(){
+    if (this.isReplay) return;
     if(this.user.get("passing")) return;
     if(this.user.get("waiting")) return;
     this.user.set("passing", true);
@@ -80,6 +82,7 @@ let BattleView = Backbone.View.extend({
     this.user.get("app").initialize();
   },
   onClick: function(e){
+    if (this.isReplay) return;
     if(!!this.user.get("waiting")) return;
     if(!!this.user.get("passing")) return;
 
@@ -325,6 +328,7 @@ let BattleView = Backbone.View.extend({
     }*/
   },
   clickLeader: function(e){
+    if (this.isReplay) return;
     let $card = $(e.target).closest(".field-leader");
     if(!$card.parent().hasClass("player")) return;
     if($card.find(".card").hasClass("disabled")) return;
@@ -341,6 +345,7 @@ let BattleView = Backbone.View.extend({
     let app = user.get("app");
 
     app.on("update:hand", function(data){
+      self.recordGameEvent("update:hand", data);
       if(user.get("roomSide") == data._roomSide){
         self.handCards = data.cards;
         self.handCards.sort((a, b) => {
@@ -356,9 +361,12 @@ let BattleView = Backbone.View.extend({
       }
     })
     app.on("new:round", function() {
+      self.recordGameEvent("new:round");
+      playSound("smash");
       self.animatedCards = {};
     })
     app.on("update:info", function(data){
+      self.recordGameEvent("update:info", data);
       let _side = data._roomSide;
       let infoData = data.info;
       let leader = data.leader;
@@ -414,6 +422,7 @@ let BattleView = Backbone.View.extend({
     })
 
     app.on("update:fields", function(data){
+      self.recordGameEvent("update:fields", data);
       let _side = data._roomSide;
 
       let side = self.yourSide;
@@ -449,6 +458,11 @@ let BattleView = Backbone.View.extend({
       }, 500);
     })
 
+  },
+  recordGameEvent: function(event, data) {
+    if (this.isRecording) {
+      this.gameRecords.push({event, data});
+    }
   },
   calculateMargin: function($container, minSize){
     minSize = typeof minSize === "number" && minSize >= 0 ? minSize : 6;
