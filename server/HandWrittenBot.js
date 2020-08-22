@@ -222,7 +222,7 @@ var HandWrittenBot = (function(){
       return {
         event: "emreis_leader4:chooseCardFromDiscard",
         cardID: card && card._id,
-        name: card._data.name,
+        name: card && card._data.name,
         isBot: true,
       };
     }

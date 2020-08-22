@@ -372,7 +372,7 @@ var BotStrategy = (function(){
           }
         } else if (Util.isEmreisLeader4(card)) {
           let discard = state.foeSide.discard;
-          if (!discard || !discard.length) {
+          if (!discard || discard.filter(c=>Util.canReplace(c)).length === 0) {
             reward = -1;
           } else if (discard.some(c=>Util.canReplace(c) && (Util.isSpy(c) || Util.isMedic(c)))) {
             reward = 100;
