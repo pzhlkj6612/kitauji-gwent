@@ -25,19 +25,25 @@ let LuckyDrawModal = Backbone.View.extend({
     if (this.coins) {
       return this.renderCoins();
     }
-    let cardModel = this.toCardModel(this.card)
-    ;
+    let cardModel = this.toCardModel(this.card);
+    let rarityText = Util.toRarityText(cardModel._data.rarity);
+    let factionText = i18n.getText(Util.toFactionText(cardModel._data.faction));
     let text;
-    if (cardModel._data.faction !== "neutral") {
+    if (cardModel._data.skinOf) {
+      text = i18n.getText("lucky_draw_skin_text", [
+        factionText, cardModel._data.name, rarityText,
+      ]);
+    } else if (cardModel._data.type === 3) {
+      text = i18n.getText("lucky_draw_leader_text", [
+        factionText, cardModel._data.name, rarityText,
+      ]);
+    } else if (cardModel._data.faction !== "neutral") {
       text = i18n.getText("lucky_draw_text", [
-        i18n.getText(Util.toFactionText(cardModel._data.faction)),
-        cardModel._data.name,
-        Util.toRarityText(cardModel._data.rarity),
+        factionText, cardModel._data.name, rarityText,
       ]);
     } else {
       text = i18n.getText("lucky_draw_text2", [
-        cardModel._data.name,
-        Util.toRarityText(cardModel._data.rarity),
+        cardModel._data.name, rarityText,
       ]);
     }
     this.$el.html(this.template({

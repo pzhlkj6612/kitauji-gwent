@@ -54,8 +54,10 @@
     "price_gold": "金奖",
     "price_silver": "银奖",
     "price_bronze": "铜奖",
-    "lucky_draw_text": "【{1}({2})】对你的吹奏部很感兴趣，请求加入！可在“我的阵容”中查看。({0})",
-    "lucky_draw_text2": "你获得了【{0}({1})】！请在牌组中查看。",
+    "lucky_draw_text": "【{1}({2})】对你的吹奏部很感兴趣，请求加入！可在“我的阵容”中查看。【{0}】",
+    "lucky_draw_text2": "你获得了【{0}({1})】！请在“我的阵容”中查看。",
+    "lucky_draw_leader_text": "你获得了指挥牌【{1}({2})】！请在“我的阵容”中查看。【{0}】",
+    "lucky_draw_skin_text": "你获得了皮肤【{1}({2})】！请在“我的阵容”中的皮肤管理页面查看。【{0}】",
     "lucky_draw_coin_text": "你获得了【部费】x{0}！(部费可用于抽卡)",
 
     "card_collection": "牌组",
