@@ -129,6 +129,12 @@ var HandWrittenBot = (function(){
 
     r.updateInfo = function(data) {
       let state = this.state;
+      data.cards.forEach(c=>Util.uncompress(c));
+      data.info.discard && data.info.discard.forEach(c=>Util.uncompress(c));
+      data.close && data.close.cards.forEach(c=>Util.uncompress(c));
+      data.ranged && data.ranged.cards.forEach(c=>Util.uncompress(c));
+      data.siege && data.siege.cards.forEach(c=>Util.uncompress(c));
+      data.weather && data.weather.cards.forEach(c=>Util.uncompress(c));
       if (data._roomSide === state.ownSideN) {
         state.ownLeader = data.leader;
         state.ownSide = data.info;

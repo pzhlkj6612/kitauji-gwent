@@ -45,9 +45,11 @@
     "lose_count": "負け",
     "my_deck": "編成",
     "lucky_draw": "Lucky Draw",
+    "replay": "Game Replay",
     "practice": "練習",
     "contest": "コンクール",
     "reset_quest": "关卡已重置：{0}",
+    "invalid_game_record": "Invalid game record file",
 
     "result_of": "{0}結果発表",
     "price_representative": "金賞(代表)",
@@ -82,6 +84,10 @@
 
     "fee_not_enough": "部費が足りないです",
     "empty_draw": "新入部員が見つからなかった",
+
+    "switch_player": "Switch",
+    "pass": "Pass",
+    "passed": "Passed",
 
     "discard_members": "の退部/卒業部員",
     "close": "閉じる",

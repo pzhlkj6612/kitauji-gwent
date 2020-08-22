@@ -1,6 +1,7 @@
 let Backbone = require("backbone");
 let Modal = require("./modal");
 let Notification = require("./notification");
+const util = require("../util");
 
 const KANBAN_CHARACTERS = [
   "kanban-kumiko",
@@ -40,6 +41,8 @@ let Lobby = Backbone.View.extend({
     "click #startMatchmakingWithBot": "startMatchmakingWithBot",
     "click .btnCollection": "goToCollection",
     "click .btnLuckyDraw": "goToLuckyDraw",
+    "click .btnReplay": "onReplayClick",
+    "change #gameReplayFile": "openReplay",
     "click .btnContest": "onQuestClick",
     "click #logout": "logout",
     "click #ranking": "onRankingClick",
@@ -72,6 +75,33 @@ let Lobby = Backbone.View.extend({
   },
   goToLuckyDraw: function() {
     this.app.luckyDrawRoute();
+  },
+  onReplayClick: function() {
+    this.$el.find("#gameReplayFile").click();
+  },
+  openReplay: function(e) {
+    let fileList = e.target.files;
+    if (!fileList || !fileList.length) return;
+    let file = fileList[0];
+    let reader = new FileReader();
+    reader.addEventListener('load', (event) => {
+      let json = event.target.result;
+      let valid = false;
+      try {
+        let data = JSON.parse(json);
+        if (util.validateGameRecords(data)) {
+          valid = true;
+          this.user.initBattle(data);
+        }
+      } catch (e) {
+      }
+      if (!valid) {
+        new Notification({
+          msgKey: "invalid_game_record",
+        }).render();
+      }
+    });
+    reader.readAsText(file);
   },
   logout: function() {
     this.user.logout();

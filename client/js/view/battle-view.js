@@ -1,7 +1,11 @@
 let Backbone = require("backbone");
 let Modal = require("./modal");
 let SideView = require("./side-view");
+let LuckyDraw = require("./lucky-draw");
+let Notification = require("./notification");
+let ContestResultModal = require("./contest-result");
 
+const util = require("../util");
 let cardData = require("../../../assets/data/cards");
 let deckData = require("../../../assets/data/deck");
 let abilityData = require("../../../assets/data/abilities");
@@ -13,7 +17,7 @@ let BattleView = Backbone.View.extend({
     this.app = options.app;
     this.isReplay = options.isReplay || false;
     this.isRecording = options.isRecording || !this.isReplay;
-    this.gameRecords = [];
+    this.gameRecords = options.gameRecords || [];
     this.waitForAnimation = false;
     this.animatedCards = {};
 
@@ -35,7 +39,7 @@ let BattleView = Backbone.View.extend({
 
     //$(window).on("resize", this.calculateMargin.bind(this, this.$hand));
 
-    let interval = setInterval(function(){
+    let interval = !this.isReplay && setInterval(function(){
       if(!user.get("room")) return;
       this.setUpBattleEvents();
       this.app.send("request:gameLoaded", {_roomID: user.get("room")});
@@ -55,6 +59,10 @@ let BattleView = Backbone.View.extend({
     this.yourSide = new SideView({side: ".player", app: this.app, battleView: this});
     this.otherSide = new SideView({side: ".foe", app: this.app, battleView: this});
 
+    if (this.isReplay) {
+      this.setUpBattleEvents();
+      this.startReplay();
+    }
   },
   events: {
     "mouseover .card": "onMouseover",
@@ -63,6 +71,7 @@ let BattleView = Backbone.View.extend({
     "click .battleside.player": "onClickFieldCard",
     "click .battleside.foe": "onClickFoeFieldCard",
     "click .button-pass": "onPassing",
+    "click .button-switch": "onSwitchPlayer",
     "click .button-quit": "onQuit",
     "click .field-discard": "openDiscard",
     "click .field-leader>.card-wrap": "clickLeader"
@@ -74,6 +83,27 @@ let BattleView = Backbone.View.extend({
     this.user.set("passing", true);
     this.user.get("app").send("set:passing");
     this.user.get("app").trigger("timer:cancel");
+  },
+  onSwitchPlayer: function() {
+    if (!this.isReplay) return;
+    // switch side name
+    let roomSide = this.user.get("roomSide");
+    let roomFoeSide = this.user.get("roomFoeSide");
+    this.user.set("roomSide", roomFoeSide);
+    this.user.set("roomFoeSide", roomSide);
+    // switch side data
+    let infoData = this.yourSide.infoData;
+    let leader = this.yourSide.leader;
+    let field = this.yourSide.field;
+    this.yourSide.infoData = this.otherSide.infoData;
+    this.yourSide.leader = this.otherSide.leader;
+    this.yourSide.field = this.otherSide.field;
+    this.yourSide.isPlayerSide = !this.yourSide.isPlayerSide;
+    this.otherSide.infoData = infoData;
+    this.otherSide.leader = leader;
+    this.otherSide.field = field;
+    this.otherSide.isPlayerSide = !this.otherSide.isPlayerSide;
+    this.render();
   },
   onQuit: function() {
     this.user.get("app").send("request:quitGame");
@@ -346,6 +376,7 @@ let BattleView = Backbone.View.extend({
 
     app.on("update:hand", function(data){
       self.recordGameEvent("update:hand", data);
+      data.cards.forEach(c=>util.uncompress(c));
       if(user.get("roomSide") == data._roomSide){
         self.handCards = data.cards;
         self.handCards.sort((a, b) => {
@@ -367,6 +398,9 @@ let BattleView = Backbone.View.extend({
     })
     app.on("update:info", function(data){
       self.recordGameEvent("update:info", data);
+
+      data.info.discard && data.info.discard.forEach(c=>util.uncompress(c));
+
       let _side = data._roomSide;
       let infoData = data.info;
       let leader = data.leader;
@@ -423,6 +457,12 @@ let BattleView = Backbone.View.extend({
 
     app.on("update:fields", function(data){
       self.recordGameEvent("update:fields", data);
+
+      data.close && data.close.cards.forEach(c=>util.uncompress(c));
+      data.ranged && data.ranged.cards.forEach(c=>util.uncompress(c));
+      data.siege && data.siege.cards.forEach(c=>util.uncompress(c));
+      data.weather && data.weather.cards.forEach(c=>util.uncompress(c));
+
       let _side = data._roomSide;
 
       let side = self.yourSide;
@@ -458,11 +498,110 @@ let BattleView = Backbone.View.extend({
       }, 500);
     })
 
+    app.on("set:waiting", function(data) {
+      self.recordGameEvent("set:waiting", data);
+      let waiting = data.waiting;
+      if (!waiting && !self.user.get("withBot")) {
+        app.trigger("timer:start");
+      }
+      self.user.set("waiting", waiting);
+    });
+
+    app.on("set:passing", function(data) {
+      self.recordGameEvent("set:passing", data);
+      self.user.set("passing", data.passing);
+    });
+
+    app.on("notification", function(data) {
+      self.recordGameEvent("notification", data);
+      if (self.isReplay) {
+        new Notification(data).render();
+      }
+    });
+
+    app.on("gameover", function(data) {
+      self.recordGameEvent("gameover", data);
+
+      let winner = data.winner;
+      if (winner === self.user.get("name")) {
+        playSound("win");
+      } else {
+        playSound("smash");
+      }
+      let p1Scores = data.p1Scores;
+      let p2Scores = data.p2Scores;
+      p1Scores[2] = p1Scores[2] || 0;
+      p2Scores[2] = p2Scores[2] || 0;
+
+      let json = self.toGameRecordJson(self.gameRecords);
+      let blob = new Blob([json], {type: "application/json"});
+      let downloadUrl = URL.createObjectURL(blob);
+      let downloadName = new Date().toLocaleString() + ".kumiko";
+
+      let model = Backbone.Model.extend({});
+      let modal = new WinnerModal({model: new model({
+        app: app,
+        user: self.user,
+        winner: winner || i18n.getText("no_one"),
+        gameResult: data.gameResult,
+        p1_1: p1Scores[0],
+        p2_1: p2Scores[0],
+        p1_win_1: p1Scores[0] >= p2Scores[0],
+        p2_win_1: p1Scores[0] <= p2Scores[0],
+        p1_2: p1Scores[1],
+        p2_2: p2Scores[1],
+        p1_win_2: p1Scores[1] >= p2Scores[1],
+        p2_win_2: p1Scores[1] <= p2Scores[1],
+        p1_3: p1Scores[2],
+        p2_3: p2Scores[2],
+        p1_win_3: p1Scores[2] > 0 && p1Scores[2] >= p2Scores[2],
+        p2_win_3: p2Scores[2] > 0 && p1Scores[2] <= p2Scores[2],
+        downloadUrl,
+        downloadName,
+      })});
+      $(".container").prepend(modal.render().el);
+    })
+
   },
   recordGameEvent: function(event, data) {
     if (this.isRecording) {
-      this.gameRecords.push({event, data});
+      let copy = !data ? data : JSON.parse(JSON.stringify(data));
+      if (event === "gameover") {
+        delete copy.gameResult;
+      }
+      this.gameRecords.push({
+        event,
+        data: copy,
+        timestamp: new Date().getTime(),
+      });
     }
+  },
+  toGameRecordJson: function(gameRecords) {
+    let result = {
+      version: "1.0.0",
+      gameRecords: gameRecords,
+      side: this.user.get("roomSide"),
+      foeSide: this.user.get("roomFoeSide"),
+      withBot: this.user.get("withBot"),
+    }
+    return JSON.stringify(result, null, 2);
+  },
+  startReplay: function() {
+    let self = this;
+    let step = 0;
+    let lastTimestamp;
+    function next() {
+      if (step >= self.gameRecords.length) return;
+      let record = self.gameRecords[step];
+      if (!lastTimestamp) lastTimestamp = record.timestamp;
+      setTimeout(function() {
+        self.app.trigger(record.event, record.data);
+        lastTimestamp = record.timestamp;
+        step++;
+        next();
+      }, record.timestamp - lastTimestamp);
+    }
+    next();
   },
   calculateMargin: function($container, minSize){
     minSize = typeof minSize === "number" && minSize >= 0 ? minSize : 6;
@@ -561,6 +700,39 @@ let ChooseSideModal = Modal.extend({
     //this.model.set("chosenSide", this.model.get("roomFoeSide"));
     this.model.chooseSide(this.model.get("roomFoeSide"));
     this.remove();
+  }
+});
+
+let WinnerModal = Modal.extend({
+  template: require("../../templates/modal.winner.handlebars"),
+  events: {
+    "click .startMatchmaking": "onBtnClick",
+    "click .downloadGameRecord": "onDownloadClick",
+  },
+  onBtnClick: function(e) {
+    this.remove();
+    let gameResult = this.model.get("gameResult") || {};
+    if (gameResult.questState && gameResult.questState.completed) {
+      let contestReport = new ContestResultModal({
+        app: this.model.get("app"),
+        user: this.model.get("user"),
+        gameResult: gameResult,
+      });
+      $(".container").prepend(contestReport.render().el);
+    } else if (gameResult.newCard && gameResult.newCard.length || gameResult.coins) {
+      let luckyDraw = new LuckyDraw({
+        app: this.model.get("app"),
+        gameResult,
+      });
+      $(".container").prepend(luckyDraw.render().el);
+    } else {
+      this.model.get("app").initialize();
+    }
+  },
+  onDownloadClick: function() {
+  },
+  beforeCancel: function() {
+    return false;
   }
 });
 

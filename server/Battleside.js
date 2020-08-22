@@ -1,10 +1,10 @@
-var DeckData = require("../assets/data/deck");
 var Deck = require("./Deck");
 var Hand = require("./Hand");
 var Card = require("./Card");
 var Field = require("./Field");
 var _ = require("underscore");
 var Promise = require("jquery-deferred");
+const Util = require("./CardUtil");
 
 
 var Battleside;
@@ -401,7 +401,7 @@ Battleside = (function() {
       hand: this.hand.length(),
       deck: this.deck.length(),
       faction: this.deck.getFaction(),
-      discard: this.getDiscard(false),
+      discard: this.getDiscard(false).map(c=>Util.compress(c)),
       scorched: this.getScorched(false),
       placedCard: this.getPlacedCard(false),
       healed: this._healed,

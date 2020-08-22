@@ -17,6 +17,10 @@
     background: #cc889a;
   }
 
+  .btnReplay {
+    background: #e2492f;
+  }
+
   .status-offline {
     color: red;
   }
@@ -47,6 +51,11 @@
         <div class="panel-btn panel-btn-sm btnLuckyDraw">
           <div class="btn-text">{{i18n "lucky_draw"}}</div>
           <div class="btn-background-partial btn-luckyDraw"></div>
+        </div>
+        <input type="file" id="gameReplayFile" accept=".kumiko" style="display:none">
+        <div class="panel-btn panel-btn-sm btnReplay">
+          <div class="btn-text">{{i18n "replay"}}</div>
+          <div class="btn-background-partial btn-replay"></div>
         </div>
       </div>
       <p class="subtitle">{{i18n "practice"}}</p>

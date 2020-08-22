@@ -1,3 +1,4 @@
+let CardData = require("../../assets/data/cards");
 
 function toFactionText(faction) {
   switch (faction) {
@@ -34,8 +35,31 @@ function showIntro() {
     .start();
 }
 
+function compress(card) {
+  if (card) delete card._data;
+  return card;
+}
+
+function uncompress(card) {
+  if (card && card._key && !card._data) {
+    card._data = CardData[card._key];
+  }
+  return card;
+}
+
+function validateGameRecords(data) {
+  if (!data.version ||
+    !data.gameRecords)  {
+    return false;
+  }
+  return true;
+}
+
 module.exports = {
   toFactionText,
   toRarityText,
   showIntro,
+  compress,
+  uncompress,
+  validateGameRecords,
 };

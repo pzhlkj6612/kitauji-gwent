@@ -4,6 +4,7 @@ var Deck = require("./Deck");
 var shortid = require("shortid");
 var Promise = require("jquery-deferred");
 var CardManager = require("./CardManager");
+const Util = require("./CardUtil");
 
 
 var Battle = (function(){
@@ -261,7 +262,7 @@ var Battle = (function(){
       info: p.getInfo(),
       leader: p.field[Card.TYPE.LEADER].get()[0],
       // update:hand
-      cards: p.hand.getCards(),
+      cards: p.hand.getCards().map(c=>Util.compress(c)),
       // update:fields
       close: p.field[Card.TYPE.CLOSE_COMBAT].getInfo(),
       ranged: p.field[Card.TYPE.RANGED].getInfo(),

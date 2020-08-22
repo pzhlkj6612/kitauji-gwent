@@ -45,9 +45,11 @@
     "lose_count": "Lose Count",
     "my_deck": "My Deck",
     "lucky_draw": "Lucky Draw",
+    "replay": "Game Replay",
     "practice": "Practice",
     "contest": "Contest",
     "reset_quest": "Quest is reset: {0}",
+    "invalid_game_record": "Invalid game record file",
 
     "result_of": "Result of {0}",
     "price_representative": "Gold (Representative)",
@@ -82,6 +84,10 @@
 
     "fee_not_enough": "The fee is not enough.",
     "empty_draw": "You get nothing. Please try again.",
+
+    "switch_player": "Switch",
+    "pass": "Pass",
+    "passed": "Passed",
 
     "discard_members": "'s quitted/graduated members",
     "close": "Close",

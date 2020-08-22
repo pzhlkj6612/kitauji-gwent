@@ -99,6 +99,22 @@ Util.isEmreisLeader4 = function(card) {
 Util.isSkin = function(cardKey) {
   return CardData[cardKey].skinOf != null;
 }
+/**
+ * Called during data transmission
+ */
+Util.compress = function(card) {
+  if (!card) return card;
+  let copy = JSON.parse(JSON.stringify(card));
+  delete copy._data;
+  delete copy._uidEvents;
+  return copy;
+}
+Util.uncompress = function(card) {
+  if (card && card._key && !card._data) {
+    card._data = CardData[card._key];
+  }
+  return card;
+}
 Util.getLimit = function(cardKey) {
   let card = {
     _data: CardData[cardKey],

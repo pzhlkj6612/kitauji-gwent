@@ -5,13 +5,18 @@
     <div class="countdown-timer {{#if hideTimer}}hidden{{/if}} {{#if danger}}countdown-timer-danger{{/if}}">
       {{timeLeft}}
     </div>
-    <button class="btn btn-warning button-pass">Pass</button>
+    <button class="btn btn-warning button-pass">{{i18n "pass"}}</button>
+  </div>
+  {{/if}}
+  {{#if switchBtn}}
+  <div class="button-pass-wrap">
+    <button class="btn btn-success button-switch">{{i18n "switch_player"}}</button>
   </div>
   {{/if}}
 </div>
 <div class="col-xs-12 info-inner {{#if passBtn}}active-field{{/if}}">
   <div class="col-xs-8 info-name">{{data.name}}</div>
-  <div class="col-xs-4 passing">{{#if data.passing}}Passed{{/if}}</div>
+  <div class="col-xs-4 passing">{{#if data.passing}}{{i18n "passed"}}{{/if}}</div>
   <h5 class="col-xs-12 info-deck">{{deck}}</h5>
   <div class="col-xs-12">
     <div class="col-xs-2 info-title"></div>

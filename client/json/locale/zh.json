@@ -45,9 +45,11 @@
     "lose_count": "负场",
     "my_deck": "我的阵容",
     "lucky_draw": "招新",
+    "replay": "游戏回放",
     "practice": "练习",
     "contest": "大赛",
     "reset_quest": "关卡已重置：{0}",
+    "invalid_game_record": "游戏记录文件格式不正确",
 
     "result_of": "{0}结果发表",
     "price_representative": "金奖（代表）",
@@ -82,6 +84,10 @@
 
     "fee_not_enough": "没有足够的部费",
     "empty_draw": "什么也没有抽到",
+
+    "switch_player": "切换视角",
+    "pass": "放弃跟牌",
+    "passed": "放弃跟牌",
 
     "discard_members": "的退部/毕业成员",
     "close": "关闭",

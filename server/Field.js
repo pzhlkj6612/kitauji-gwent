@@ -1,4 +1,5 @@
 var _ = require("underscore");
+const Util = require("./CardUtil");
 
 var Field = (function() {
   var Field = function(side, hasHornField) {
@@ -176,7 +177,7 @@ var Field = (function() {
   r.getInfo = function() {
     var self = this;
     return {
-      cards: self._cards,
+      cards: self._cards.map(c=>Util.compress(c)),
       horn: self.getHorn(),
       score: self._score
     }

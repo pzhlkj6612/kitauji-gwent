@@ -10,10 +10,8 @@ let LuckyDrawLobbyView = require("./view/lucky-draw-lobby");
 let LoginView = require("./view/login");
 let BattleView = require("./view/battle-view");
 let Modal = require("./view/modal");
-let LuckyDraw = require("./view/lucky-draw");
 let Notification = require("./view/notification");
 let I18n = require("./i18n");
-const ContestResultModal = require("./view/contest-result");
 const Config = require("../../public/Config");
 const util = require("./util");
 
@@ -153,7 +151,7 @@ let App = Backbone.Router.extend({
       user: this.user
     });
   },
-  battleRoute: function(){
+  battleRoute: function(gameRecords){
     if(this.currentView){
       this.currentView.remove();
       if (!$(".gwent-battle").length) {
@@ -162,7 +160,9 @@ let App = Backbone.Router.extend({
     }
     this.currentView = new BattleView({
       app: this,
-      user: this.user
+      user: this.user,
+      isReplay: !!gameRecords,
+      gameRecords: gameRecords,
     });
   },
   collectionsRoute: function() {
@@ -201,36 +201,6 @@ let App = Backbone.Router.extend({
     }
 
     return res;
-  }
-});
-
-let WinnerModal = Modal.extend({
-  template: require("../templates/modal.winner.handlebars"),
-  events: {
-    "click .startMatchmaking": "onBtnClick"
-  },
-  onBtnClick: function(e) {
-    this.remove();
-    let gameResult = this.model.get("gameResult");
-    if (gameResult.questState && gameResult.questState.completed) {
-      let contestReport = new ContestResultModal({
-        app: this.model.get("app"),
-        user: this.model.get("user"),
-        gameResult: gameResult,
-      });
-      $(".container").prepend(contestReport.render().el);
-    } else if (gameResult.newCard && gameResult.newCard.length || gameResult.coins) {
-      let luckyDraw = new LuckyDraw({
-        app: this.model.get("app"),
-        gameResult,
-      });
-      $(".container").prepend(luckyDraw.render().el);
-    } else {
-      this.model.get("app").initialize();
-    }
-  },
-  beforeCancel: function() {
-    return false;
   }
 });
 
@@ -297,24 +267,15 @@ let User = Backbone.Model.extend({
     })
 
     app.receive("room:rejoin", function(data) {
-      self.set("roomSide", data.side);
-      self.set("roomFoeSide", data.foeSide);
-      self.set("withBot", data.withBot);
-      self.set("room", data.roomId);
-      app.battleRoute();
+      self.initBattle(data);
     })
 
     app.receive("set:waiting", function(data){
-      let waiting = data.waiting;
-      if (!waiting && !self.get("withBot")) {
-        app.trigger("timer:start");
-      }
-      self.set("waiting", waiting);
+      app.trigger("set:waiting", data);
     })
 
     app.receive("set:passing", function(data){
-      let passing = data.passing;
-      self.set("passing", passing);
+      app.trigger("set:passing", data);
     })
 
     app.receive("foe:left", function(){
@@ -399,40 +360,9 @@ let User = Backbone.Model.extend({
     });
 
     app.receive("gameover", function(data){
-      let winner = data.winner;
-      if (winner === self.get("name")) {
-        playSound("win");
-      } else {
-        playSound("smash");
-      }
+      app.trigger("gameover", data);
       localStorage.removeItem("connectionId");
       app.trigger("timer:cancel"); // cancel existing timer
-      //console.log("gameover");
-      let p1Scores = data.p1Scores;
-      let p2Scores = data.p2Scores;
-      p1Scores[2] = p1Scores[2] || 0;
-      p2Scores[2] = p2Scores[2] || 0;
-
-      let model = Backbone.Model.extend({});
-      let modal = new WinnerModal({model: new model({
-        app: app,
-        user: self,
-        winner: winner || i18n.getText("no_one"),
-        gameResult: data.gameResult,
-        p1_1: p1Scores[0],
-        p2_1: p2Scores[0],
-        p1_win_1: p1Scores[0] >= p2Scores[0],
-        p2_win_1: p1Scores[0] <= p2Scores[0],
-        p1_2: p1Scores[1],
-        p2_2: p2Scores[1],
-        p1_win_2: p1Scores[1] >= p2Scores[1],
-        p2_win_2: p1Scores[1] <= p2Scores[1],
-        p1_3: p1Scores[2],
-        p2_3: p2Scores[2],
-        p1_win_3: p1Scores[2] > 0 && p1Scores[2] >= p2Scores[2],
-        p2_win_3: p2Scores[2] > 0 && p1Scores[2] <= p2Scores[2],
-      })});
-      $(".container").prepend(modal.render().el);
     })
     app.receive("request:chooseWhichSideBegins", function(){
       self.set("chooseSide", true);
@@ -449,6 +379,7 @@ let User = Backbone.Model.extend({
     $("#locale").change(this.setLocale.bind(this));
 
     app.receive("notification", function(data){
+      app.trigger("notification", data);
       new Notification(data).render();
     })
 
@@ -523,6 +454,13 @@ let User = Backbone.Model.extend({
     this.set("initialCards", cards);
     let modal = new InitialCardsModal({model: this});
     this.get("app").getCurrentView().$el.prepend(modal.render().el);
+  },
+  initBattle: function(data) {
+    this.set("roomSide", data.side);
+    this.set("roomFoeSide", data.foeSide);
+    this.set("withBot", data.withBot);
+    this.set("room", data.roomId);
+    this.get("app").battleRoute(data.gameRecords);
   },
   logout: function() {
     localStorage.removeItem("token");

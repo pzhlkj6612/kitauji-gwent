@@ -17,6 +17,10 @@ let SideView = Backbone.View.extend({
     this.field = this.field || {};
     this.countDownTimer = null;
     this.timeLeft = 30; // 30 seconds by default
+    /**
+     * Can be changed when switch player during replay.
+     */
+    this.isPlayerSide = (this.side === ".player");
 
     this.app.on("timer:start", function() {
       if (self.side === ".foe") return;
@@ -56,7 +60,10 @@ let SideView = Backbone.View.extend({
     let html = this.templateInfo({
       data: d,
       leader: l,
-      passBtn: this.side === ".player" && !this.app.user.get("waiting"),
+      passBtn: this.side === ".player" &&
+        (this.isPlayerSide && !this.app.user.get("waiting") ||
+        !this.isPlayerSide && this.app.user.get("waiting")),
+      switchBtn: this.battleView.isReplay && this.side !== ".player",
       hideTimer: this.app.user.get("withBot"),
       timeLeft: this.timeLeft,
       danger: this.timeLeft < 10,
@@ -76,11 +83,11 @@ let SideView = Backbone.View.extend({
 
 
     $infoInner.addClass("active-field");
-    if(this.app.user.get("waiting") && this.side === ".player"){
+    if(this.app.user.get("waiting") && this.isPlayerSide){
       this.$info.addClass("removeBackground");
       $infoInner.removeClass("active-field");
     }
-    if(!this.app.user.get("waiting") && this.side === ".foe"){
+    if(!this.app.user.get("waiting") && !this.isPlayerSide){
       this.$info.addClass("removeBackground");
       $infoInner.removeClass("active-field");
     }

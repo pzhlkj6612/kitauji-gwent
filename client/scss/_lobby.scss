@@ -153,6 +153,10 @@
     @extend .ability-md-monaka;
     @extend .ability-md;
   }
+  .btn-replay {
+    @extend .ability-md-spy;
+    @extend .ability-md;
+  }
   .btn-startMatchWithBot {
     @extend .ability-md-guard;
     @extend .ability-md;
