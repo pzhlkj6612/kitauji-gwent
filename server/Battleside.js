@@ -98,7 +98,14 @@ Battleside = (function() {
 
       var ability = leaderCard.getAbility();
 
-      ability.onActivate.apply(self, [leaderCard]);
+      try {
+        ability.onActivate.apply(self, [leaderCard]);
+      } catch (e) {
+        console.warn(e);
+        self.update();
+        self.turn();
+        return;
+      }
       leaderCard.setDisabled(true);
       self.battle.sendNotification("msg_leader_activated", [self.getName(), leaderCard.getName()]);
       self.update();
@@ -119,7 +126,13 @@ Battleside = (function() {
         self.turn();
       }
 
-      self.playCard(card);
+      try {
+        self.playCard(card);
+      } catch (e) {
+        console.warn(e);
+        self.update();
+        self.turn();
+      }
     })
     this.receive("decoy:replaceWith", function(data) {
       if(self._isWaiting) return;
@@ -1042,6 +1055,10 @@ Battleside = (function() {
       if(!left) return;
       left--;
       var card = self.hand.remove(id)[0];
+      if (!card) {
+        console.warn("card undefined in redraw phase: ", data, self.hand.getCards());
+        return;
+      }
 
       self.deck.add(card);
       self.deck.shuffle();
