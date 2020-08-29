@@ -24,6 +24,7 @@ let Lobby = Backbone.View.extend({
     this.questProgress = {};
 
     this.app.receive("response:ranking", this.onRankingResponse.bind(this));
+    this.app.receive("response:updateUserInfo", this.onUserInfoResponse.bind(this));
     this.app.send("request:questProgress");
 
     this.listenTo(this.app.user, "change:serverOffline", this.render);
@@ -44,6 +45,7 @@ let Lobby = Backbone.View.extend({
     "click .btnReplay": "onReplayClick",
     "change #gameReplayFile": "openReplay",
     "click .btnContest": "onQuestClick",
+    "click #username": "onUserClick",
     "click #logout": "logout",
     "click #ranking": "onRankingClick",
     "blur .name-input": "changeName",
@@ -196,6 +198,16 @@ let Lobby = Backbone.View.extend({
     })});
     this.$el.prepend(modal.render().el);
   },
+  onUserClick: function() {
+    let modal = new UserInfoModal({model: this.app.user});
+    this.$el.prepend(modal.render().el);
+  },
+  onUserInfoResponse: function(response) {
+    if (response.user) {
+      this.app.user.set("userModel", response.user);
+    }
+    this.app.getCurrentView().render();
+  }
 });
 
 let StartMatchModal = Modal.extend({
@@ -226,6 +238,25 @@ let StartMatchModal = Modal.extend({
 
 let RankingModal = Modal.extend({
   template: require("../../templates/modal.ranking.handlebars"),
+});
+
+let UserInfoModal = Modal.extend({
+  template: require("../../templates/modal.user.handlebars"),
+  events: {
+    "click #btnSave": "saveUserInfo",
+  },
+  initialize: function() {
+    setTimeout(() => {
+      this.$el.find("#initialDeck").val(this.model.get("userModel").initialDeck);
+    }, 0);
+  },
+  saveUserInfo: function() {
+    let bandName = this.$el.find("#bandName").val();
+    if (!bandName || !bandName.length) return;
+    this.model.get("app").send("request:updateUserInfo", {
+      bandName,
+    });
+  }
 });
 
 module.exports = Lobby;

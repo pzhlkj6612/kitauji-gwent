@@ -437,11 +437,13 @@ var User = (function(){
       socket.emit("response:ranking", result);
     });
 
-    socket.on("request:name", function(data){
-      // if(data && data.name){
-      //   self.setName(data.name);
-      // }
-      // socket.emit("response:name", {name: self.getName()});
+    socket.on("request:updateUserInfo", async function(data){
+      if(!data){
+        return;
+      }
+      self.userModel.bandName = data.bandName;
+      await db.updateUser(self.userModel);
+      socket.emit("response:updateUserInfo", {user: self.userModel});
     })
 
     // deprecated
