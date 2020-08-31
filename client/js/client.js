@@ -6,6 +6,7 @@ let $ = require("jquery");
 
 let Lobby = require("./view/lobby");
 let CollectionsView = require("./view/collections");
+let RoomView = require("./view/room");
 let LuckyDrawLobbyView = require("./view/lucky-draw-lobby");
 let LoginView = require("./view/login");
 let BattleView = require("./view/battle-view");
@@ -126,38 +127,21 @@ let App = Backbone.Router.extend({
     return this.currentView;
   },
   loginRoute: function(){
-    if(this.currentView){
-      this.currentView.remove();
-      if (!$(".gwent-battle").length) {
-        $(".notifications").after('<div class="gwent-battle"></div>');
-      }
-      $(".notification-left").remove();
-    }
+    this.removeCurrentView_();
     this.currentView = new LoginView({
       app: this,
       user: this.user
     });
   },
   lobbyRoute: function(){
-    if(this.currentView){
-      this.currentView.remove();
-      if (!$(".gwent-battle").length) {
-        $(".notifications").after('<div class="gwent-battle"></div>');
-      }
-      $(".notification-left").remove();
-    }
+    this.removeCurrentView_();
     this.currentView = new Lobby({
       app: this,
       user: this.user
     });
   },
   battleRoute: function(gameRecords){
-    if(this.currentView){
-      this.currentView.remove();
-      if (!$(".gwent-battle").length) {
-        $(".notifications").after('<div class="gwent-battle"></div>');
-      }
-    }
+    this.removeCurrentView_();
     this.currentView = new BattleView({
       app: this,
       user: this.user,
@@ -166,24 +150,29 @@ let App = Backbone.Router.extend({
     });
   },
   collectionsRoute: function() {
-    if(this.currentView){
-      this.currentView.remove();
-      if (!$(".gwent-battle").length) {
-        $(".notifications").after('<div class="gwent-battle"></div>');
-      }
-    }
+    this.removeCurrentView_();
     this.currentView = new CollectionsView({
       app: this,
       user: this.user
     });
   },
-  luckyDrawRoute: function() {
+  roomRoute: function() {
+    this.removeCurrentView_();
+    this.currentView = new RoomView({
+      app: this,
+      user: this.user
+    });
+  },
+  removeCurrentView_: function() {
     if(this.currentView){
       this.currentView.remove();
       if (!$(".gwent-battle").length) {
         $(".notifications").after('<div class="gwent-battle"></div>');
       }
     }
+  },
+  luckyDrawRoute: function() {
+    this.removeCurrentView_();
     this.currentView = new LuckyDrawLobbyView({
       app: this,
       user: this.user

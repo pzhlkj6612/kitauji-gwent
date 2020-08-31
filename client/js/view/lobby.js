@@ -135,9 +135,10 @@ let Lobby = Backbone.View.extend({
     this.$el.prepend(modal.render().el);
   },
   startMatchmaking: function(){
-    this.$el.find(".image-gif-loader").show();
-    let roomName = this.$el.find(".room-name-input").val();
-    this.app.trigger("startMatchmaking", {roomName});
+    // this.$el.find(".image-gif-loader").show();
+    // let roomName = this.$el.find(".room-name-input").val();
+    // this.app.trigger("startMatchmaking", {roomName});
+    this.app.roomRoute();
   },
   startMatchmakingWithBot: function(){
     this.app.trigger("startMatchmakingWithBot");
