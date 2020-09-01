@@ -508,6 +508,10 @@ var User = (function(){
 
     socket.on("request:gameLoaded", function(data){
       //console.log(data);
+      if (!connections.roomCollection[data._roomID]) {
+        console.warn("user left before game loaded: ", data);
+        return;
+      }
       connections.roomCollection[data._roomID].setReady(self);
     })
 

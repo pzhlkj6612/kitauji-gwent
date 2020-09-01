@@ -68,6 +68,10 @@ var Deck = (function(){
     let cardInDeck = customDeck.cardInDeck;
     let skinMapping = customDeck.skinMapping || {};
     for (let key of Object.keys(cardInDeck)) {
+      if (!key) {
+        console.warn("found null card in custom deck: ", customDeck);
+        continue;
+      }
       let limit = customDeck.isBot ? 999 : Util.getLimit(key);
       // if card has limit, can only add card up to that limit
       limit = Math.min(limit, cardInDeck[key]);
@@ -76,7 +80,11 @@ var Deck = (function(){
         deck.push(key);
       }
     }
-    deck.push(customDeck.leader);
+    if (!customDeck.leader) {
+      console.warn("found null leader in custom deck: ", customDeck);
+    } else {
+      deck.push(customDeck.leader);
+    }
 
     this._deck = deck;
     this._faction = customDeck.deck;

@@ -69,11 +69,15 @@ var Room = (function(){
       side: side,
       foeSide: foeSide,
       roomId: this.getID(),
-      withBot: this._users[1-i].isBot(),
+      withBot: this._users[1-i] && this._users[1-i].isBot(),
     });
     if (this._battle) {
       var battleSide = this._battle.getBattleSide(side);
-      if (battleSide.isReDrawing()) {
+      // may rejoin before battle init...
+      if (!battleSide) {
+        console.warn("user rejoin before battle init: ", user.getUserModel());
+      }
+      if (battleSide && battleSide.isReDrawing()) {
         battleSide.finishReDraw();
       }
       this._battle.userReconnect(side);
