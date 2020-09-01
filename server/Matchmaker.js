@@ -1,3 +1,4 @@
+var shortid = require("shortid");
 var HandWrittenBot = require("./HandWrittenBot");
 var Const = require("./Const");
 
@@ -11,6 +12,37 @@ const SPECIAL_ROOMS = [
   Const.ROOM_ZENKOKU,
 ];
 
+const NAME_PREFIX = [
+  "京都府立",
+  "宇治市立",
+];
+const NAME_NUM_PREFIX = [
+  "第一",
+  "第二",
+  "第三",
+];
+const NAME_NUM_SUFFIX = [
+  "儿童公园",
+  "人民医院",
+  "综合活动中心",
+];
+const NAME_SUFFIX = [
+  "文化会馆",
+  "陆上竞技场",
+];
+
+let ROOM_NAMES = [];
+for (let prefix of NAME_PREFIX) {
+  for (let numPrefix of NAME_NUM_PREFIX) {
+    for (let numSuffix of NAME_NUM_SUFFIX) {
+      ROOM_NAMES.push(prefix + numPrefix + numSuffix);
+    }
+  }
+  for (let nameSuffix of NAME_SUFFIX) {
+    ROOM_NAMES.push(prefix + nameSuffix);
+  }
+}
+
 var Matchmaker = (function(){
   var Matchmaker = function(){
     if(!(this instanceof Matchmaker)){
@@ -23,7 +55,7 @@ var Matchmaker = (function(){
     this._connections = connections;
     this._queue = [];
     this._queueByRoom = {};
-
+    this._userRooms = {};
   };
   var r = Matchmaker.prototype;
   /**
@@ -81,6 +113,23 @@ var Matchmaker = (function(){
     this._getInQueue(user, opt_roomName);
   }
 
+  r.makeRoom = function(user, data) {
+    let id = shortid.generate();
+    let room = {
+      id,
+      roomName: data.roomName || this._generateRoomName(),
+      creator: user.getUserModel().username,
+      createAt: new Date().getTime(),
+    };
+    this._userRooms[id] = room;
+    this.findOpponent(user, id);
+    return id;
+  }
+
+  r.getRooms = function() {
+    return this._userRooms;
+  }
+
   r._getInQueue = function(user, opt_roomName){
     if (opt_roomName) {
       this._queueByRoom[opt_roomName] = this._queueByRoom[opt_roomName] || [];
@@ -112,6 +161,9 @@ var Matchmaker = (function(){
     return foe;
   }
 
+  r._generateRoomName = function() {
+    return ROOM_NAMES[(Math.random() * ROOM_NAMES.length) | 0];
+  }
 
   return Matchmaker;
 })();

@@ -8,46 +8,24 @@
   <table class="table table-striped table-hover-custom table-dark">
   <thead>
     <tr>
-      <th scope="col">#</th>
       <th scope="col">Room Name</th>
       <th scope="col">Capacity</th>
       <th scope="col">Player</th>
     </tr>
   </thead>
   <tbody>
+    {{#each rooms}}
+    <tr class="one-room">
+      <td>{{this.roomName}}</td>
+      <td>{{this.playerNum}}/2</td>
+      <td>{{this.players}}</td>
+    </tr>
+    {{/each}}
     <tr>
       <th scope="row">1</th>
       <td>Mark</td>
       <td>Otto</td>
       <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
     </tr>
   </tbody>
   </table>

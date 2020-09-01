@@ -488,6 +488,20 @@ var User = (function(){
       matchmaking.findOpponent(self, self._roomName);
     });
 
+    socket.on("request:makeRoom", function(data) {
+      if (self.getRoom()) return;
+      if(self._inQueue) {
+        matchmaking.removeFromQueue(self, self._roomName);
+      }
+      let roomKey = matchmaking.makeRoom(self, data);
+      self._roomName = roomKey;
+      socket.emit("response:rooms", matchmaking.getRooms());
+    });
+
+    socket.on("request:rooms", function() {
+      socket.emit("response:rooms", matchmaking.getRooms());
+    });
+
     socket.on("request:gameLoaded", function(data){
       //console.log(data);
       connections.roomCollection[data._roomID].setReady(self);
