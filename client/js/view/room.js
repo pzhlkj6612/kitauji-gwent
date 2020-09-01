@@ -10,6 +10,7 @@ let Room = Backbone.View.extend({
     this.app = options.app;
     this._roomList = [];
     this.app.receive("response:rooms", this.onRoomsResponse.bind(this));
+    this.app.send("request:rooms");
     // this.app.send("request:userCollections");
     $(".gwent-battle").html(this.el);
     this.render();
@@ -35,8 +36,14 @@ let Room = Backbone.View.extend({
     })});
     $(".container").prepend(modal.render().el);
   },
-  onRoomClick: function() {
-    //TODO: join room
+  onRoomClick: function(e) {
+    let tr = $(e.target).closest(".one-room");
+    if (!tr || !tr.length) return;
+    let roomId = tr.data("id");
+    this.app.send("request:matchmaking", {
+      roomName: roomId,
+    });
+    this.app.send("request:rooms");
   },
   onRoomsResponse: function(rooms) {
     this._roomList = [];
@@ -44,6 +51,10 @@ let Room = Backbone.View.extend({
       this._roomList.push(rooms[key]);
     }
     this._roomList.sort((a, b) => b.createAt - a.createAt);
+    let index = 1;
+    for (let room of this._roomList) {
+      room.index = index++;
+    }
     this.render();
   },
 });

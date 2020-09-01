@@ -8,6 +8,7 @@
   <table class="table table-striped table-hover-custom table-dark">
   <thead>
     <tr>
+      <th scope="col">#</th>
       <th scope="col">Room Name</th>
       <th scope="col">Capacity</th>
       <th scope="col">Player</th>
@@ -15,18 +16,13 @@
   </thead>
   <tbody>
     {{#each rooms}}
-    <tr class="one-room">
+    <tr class="one-room" data-id="{{this.id}}">
+      <th scope="col">{{this.index}}</th>
       <td>{{this.roomName}}</td>
       <td>{{this.playerNum}}/2</td>
       <td>{{this.players}}</td>
     </tr>
     {{/each}}
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
   </tbody>
   </table>
 </div>

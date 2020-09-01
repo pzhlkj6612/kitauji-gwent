@@ -127,6 +127,13 @@ var Matchmaker = (function(){
   }
 
   r.getRooms = function() {
+    for (let key of Object.keys(this._userRooms)) {
+      let users = this._queueByRoom[key] || [];
+      this._userRooms[key].playerNum = users.length;
+      this._userRooms[key].players = users.map(user => {
+        return user.getUserModel().bandName;
+      }).join(", ");
+    }
     return this._userRooms;
   }
 
