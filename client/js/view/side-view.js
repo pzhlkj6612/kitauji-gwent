@@ -1,5 +1,6 @@
 let Backbone = require("backbone");
 const Util = require("../util");
+const funDeck = require("../../../assets/data/fun-deck");
 
 let SideView = Backbone.View.extend({
   el: ".container",
@@ -57,6 +58,10 @@ let SideView = Backbone.View.extend({
   renderInfo: function(){
     let d = this.infoData;
     let l = this.leader;
+    let deckName = i18n.getText(Util.toFactionText(d.faction));
+    if (d.funDeck && funDeck[d.funDeck]) {
+      deckName = `${funDeck[d.funDeck].name}（${deckName}）`
+    }
     let html = this.templateInfo({
       data: d,
       leader: l,
@@ -67,7 +72,7 @@ let SideView = Backbone.View.extend({
       hideTimer: this.app.user.get("withBot"),
       timeLeft: this.timeLeft,
       danger: this.timeLeft < 10,
-      deck: i18n.getText(Util.toFactionText(d.faction)),
+      deck: deckName,
     })
 
     this.$info = this.$el.find(".game-info" + this.side).html(html);

@@ -7,7 +7,6 @@
     "deck_ku2": "Deck: Oath's Finale",
     "deck_ku2_all_star": "Deck: Oath's Finale All-Star",
     "deck_custom": "Customize...",
-    "room_name": "Room(optional)",
     "username": "User Name",
     "bot": "Play with AI",
     "matching": "Search Opponent",
@@ -50,6 +49,15 @@
     "contest": "Contest",
     "reset_quest": "Quest is reset: {0}",
     "invalid_game_record": "Invalid game record file",
+
+    "make_room": "Create",
+    "capacity": "Capacity",
+    "players": "Players",
+    "room_name": "Room",
+    "optional": "Optional",
+    "game_mode": "Game Mode",
+    "defaultMode": "自选曲",
+    "funMode": "指定曲",
 
     "result_of": "Result of {0}",
     "price_representative": "Gold (Representative)",

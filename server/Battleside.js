@@ -414,6 +414,7 @@ Battleside = (function() {
       hand: this.hand.length(),
       deck: this.deck.length(),
       faction: this.deck.getFaction(),
+      funDeck: this.deck.getFunDeck(),
       discard: this.getDiscard(false).filter(c=>Util.canReplace(c)).map(c=>Util.compress(c)),
       scorched: this.getScorched(false),
       placedCard: this.getPlacedCard(false),

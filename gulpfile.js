@@ -90,11 +90,12 @@ gulp.task("unit tests", function() {
 
 gulp.task("watch", function() {
   if(argv.production) return;
+  gulp.watch("./assets/data/*", ["browserify"]);
   gulp.watch("./client/js/**", ["browserify"]);
-  gulp.watch("./client/templates/*", ["browserify"]);
+  gulp.watch("./client/templates/**", ["browserify"]);
   gulp.watch("./client/scss/*", ["sass"]);
   gulp.watch("./client/*.html", ["index"]);
-  gulp.watch("./client/json/**", ["index"]);
+  gulp.watch("./client/json/**", ["index", "browserify"]);
   gulp.watch("./test/src/*", ["unit tests"]);
 })
 

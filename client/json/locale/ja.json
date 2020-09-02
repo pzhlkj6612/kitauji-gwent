@@ -7,7 +7,6 @@
     "deck_ku2": "デッキ: 「誓いのフィナーレ」",
     "deck_ku2_all_star": "デッキ: 「誓いのフィナーレ」殿堂入り",
     "deck_custom": "カスタマイズ...",
-    "room_name": "ルーム（オプショナル）",
     "username": "ユーザー名",
     "bot": "ボットと対戦",
     "matching": "プレイヤーを探す",
@@ -50,6 +49,15 @@
     "contest": "コンクール",
     "reset_quest": "关卡已重置：{0}",
     "invalid_game_record": "Invalid game record file",
+
+    "make_room": "ルームを作る",
+    "capacity": "人数",
+    "players": "プレイヤー",
+    "room_name": "ルーム",
+    "optional": "オプショナル",
+    "game_mode": "モード",
+    "defaultMode": "自由曲",
+    "funMode": "課題曲",
 
     "result_of": "{0}結果発表",
     "price_representative": "金賞(代表)",

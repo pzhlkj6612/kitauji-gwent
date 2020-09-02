@@ -7,7 +7,6 @@
     "deck_ku2": "牌组: 久二年",
     "deck_ku2_all_star": "牌组: 久二年全明星",
     "deck_custom": "自定义...",
-    "room_name": "房间名（可不填）",
     "username": "用户名",
     "bot": "人机对战",
     "matching": "匹配对手",
@@ -50,6 +49,15 @@
     "contest": "大赛",
     "reset_quest": "关卡已重置：{0}",
     "invalid_game_record": "游戏记录文件格式不正确",
+
+    "make_room": "创建房间",
+    "capacity": "人数",
+    "players": "玩家",
+    "room_name": "房间名",
+    "optional": "可不填",
+    "game_mode": "游戏模式",
+    "defaultMode": "自选曲",
+    "funMode": "指定曲",
 
     "result_of": "{0}结果发表",
     "price_representative": "金奖（代表）",

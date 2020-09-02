@@ -36,6 +36,7 @@ var Deck = (function(){
   r._owner = null;
   r._originalDeck = null;
   r._faction = null;
+  r._funDeck = null;
 
   r.side = null;
 
@@ -119,6 +120,9 @@ var Deck = (function(){
     this._originalDeck = deck.data.slice();
     this._deck = deck.data.slice();
     this._faction = deck.faction;
+    if (FunDeckData[deckKey]) {
+      this._funDeck = deckKey;
+    }
 
     this._loadCards();
     this.shuffle();
@@ -126,6 +130,10 @@ var Deck = (function(){
 
   r.getFaction = function(){
     return this._faction;
+  }
+
+  r.getFunDeck = function() {
+    return this._funDeck;
   }
 
   r.getLength = function(){

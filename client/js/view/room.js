@@ -50,7 +50,12 @@ let Room = Backbone.View.extend({
   onRoomsResponse: function(rooms) {
     this._roomList = [];
     for (let key of Object.keys(rooms)) {
-      this._roomList.push(rooms[key]);
+      let room = rooms[key];
+      room.modeStr = i18n.getText(room.mode);
+      if (room.deck) {
+        room.modeStr += `(${funDecks[room.deck].name})`;
+      }
+      this._roomList.push(room);
     }
     this._roomList.sort((a, b) => b.createAt - a.createAt);
     let index = 1;

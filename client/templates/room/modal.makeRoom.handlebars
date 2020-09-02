@@ -4,37 +4,38 @@
   }
 </style>
 <div class="bbm-modal__topbar">
-  <h3 class="bbm-modal__title">创建房间</h3>
+  <h3 class="bbm-modal__title">{{i18n "make_room"}}</h3>
 </div>
 <div class="bbm-modal__section small-cards-modal">
   <form class="form-horizontal">
     <div class="form-group">
-      <label for="roomName" class="col-sm-2 control-label">房间名</label>
+      <label for="roomName" class="col-sm-2 control-label">{{i18n "room_name"}}</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="roomName" placeholder="可不填">
+        <input type="text" class="form-control" id="roomName" placeholder="{{i18n "optional"}}">
       </div>
     </div>
     {{!-- TOOD: room mode --}}
     <div class="form-group">
-      <label for="roomName" class="col-sm-2 control-label">游戏模式</label>
+      <label for="roomName" class="col-sm-2 control-label">{{i18n "game_mode"}}</label>
       <div class="col-sm-10">
         <div class="radio">
         <label>
           <input type="radio" name="mode" id="defaultMode" value="defaultMode" checked>
-          普通模式
+          {{i18n "defaultMode"}}
         </label>
       </div>
       <div class="radio">
         <label>
           <input type="radio" name="mode" id="funMode" value="funMode">
-          趣味模式
+          {{i18n "funMode"}}
         </label>
       </div>
       </div>
     </div>
     <div class="form-group">
-      <div class="col-sm-offset-2">
-        <select id="funDeck" class="form-control">
+      <label for="funDeck" class="col-sm-2 control-label"></label>
+      <div class="col-sm-10">
+        <select name="funDeck" id="funDeck" class="form-control">
           {{#each funDecks}}
             <option value="{{this.key}}">{{this.name}}</option>
           {{/each}}

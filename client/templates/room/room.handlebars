@@ -2,16 +2,17 @@
 <div class="room-container">
   <div class="panel panel-dark">
   <div class="panel-heading">
-    <button class="btn btn-success button-create">Create</button>
+    <button class="btn btn-success button-create">{{i18n "make_room"}}</button>
   </div>
   <!-- Table -->
   <table class="table table-striped table-hover-custom table-dark">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Room Name</th>
-      <th scope="col">Capacity</th>
-      <th scope="col">Player</th>
+      <th scope="col">{{i18n "room_name"}}</th>
+      <th scope="col">{{i18n "game_mode"}}</th>
+      <th scope="col">{{i18n "capacity"}}</th>
+      <th scope="col">{{i18n "players"}}</th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +20,7 @@
     <tr class="one-room" data-id="{{this.id}}">
       <th scope="col">{{this.index}}</th>
       <td>{{this.roomName}}</td>
+      <td>{{this.modeStr}}</td>
       <td>{{this.playerNum}}/2</td>
       <td>{{this.players}}</td>
     </tr>
