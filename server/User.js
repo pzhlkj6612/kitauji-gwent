@@ -488,6 +488,10 @@ var User = (function(){
       matchmaking.findOpponent(self, self._roomName);
     });
 
+    socket.on("request:joinRoom", function(data) {
+      //TODO: join room, set deck if needed
+    });
+
     socket.on("request:makeRoom", function(data) {
       if (self.getRoom()) return;
       if(self._inQueue) {

@@ -240,19 +240,7 @@ let User = Backbone.Model.extend({
     });
 
     app.receive("init:battle", function(data){
-      //console.log("opponent found!");
-      self.set("roomSide", data.side);
-      self.set("roomFoeSide", data.foeSide);
-      self.set("withBot", data.withBot);
-      /*
-            self.set("channel:battle", app.socket.subscribe(self.get("room")));*/
-      //app.navigate("battle", {trigger: true});
-      app.battleRoute();
-    })
-
-    app.receive("response:joinRoom", function(roomID){
-      self.set("room", roomID);
-      //console.log("room id", self.get("room"));
+      self.initBattle(data);
     })
 
     app.receive("room:rejoin", function(data) {

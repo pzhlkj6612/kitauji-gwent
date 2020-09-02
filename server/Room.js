@@ -41,7 +41,7 @@ var Room = (function(){
     this._users.push(user);
     user.addRoom(this);
     user.socket.join(this.getID());
-    user.send("response:joinRoom", this.getID());
+    // user.send("response:joinRoom", this.getID());
 
     if(!this.isOpen()){
       this.initBattle();
@@ -85,11 +85,13 @@ var Room = (function(){
     this._users[0].send("init:battle", {
       side: "p1",
       foeSide: "p2",
+      roomId: this.getID(),
       withBot: this._users[1].isBot(),
     });
     this._users[1].send("init:battle", {
       side: "p2",
       foeSide: "p1",
+      roomId: this.getID(),
       withBot: this._users[0].isBot(),
     });
   }

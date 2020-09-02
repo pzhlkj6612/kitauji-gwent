@@ -68,6 +68,7 @@ let MakeRoomModal = Backbone.Modal.extend({
     let roomName = this.$el.find("#roomName").val();
     this.model.get("app").send("request:makeRoom", {
       roomName,
+      //TODO: other room properties
     });
     this.remove();
   }

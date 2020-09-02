@@ -39,13 +39,6 @@ let BattleView = Backbone.View.extend({
 
     //$(window).on("resize", this.calculateMargin.bind(this, this.$hand));
 
-    let interval = !this.isReplay && setInterval(function(){
-      if(!user.get("room")) return;
-      this.setUpBattleEvents();
-      this.app.send("request:gameLoaded", {_roomID: user.get("room")});
-      clearInterval(interval);
-    }.bind(this), 10);
-
     if (user.get("scenario") && (
       user.get("questProgress")[user.get("scenario")] === 4
     )) {
@@ -59,10 +52,19 @@ let BattleView = Backbone.View.extend({
     this.yourSide = new SideView({side: ".player", app: this.app, battleView: this});
     this.otherSide = new SideView({side: ".foe", app: this.app, battleView: this});
 
+    this.setUpBattleEvents();
+
     if (this.isReplay) {
-      this.setUpBattleEvents();
       this.startReplay();
+      return;
     }
+
+    if(!user.get("room")) {
+      new Notification({msgKey: "游戏初始化错误：房间id为空"}).render();
+      return;
+    }
+    //TODO: send gameLoaded when user press READY button
+    this.app.send("request:gameLoaded", {_roomID: user.get("room")});
   },
   events: {
     "mouseover .card": "onMouseover",

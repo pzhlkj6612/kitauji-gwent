@@ -118,6 +118,7 @@ var Matchmaker = (function(){
     let room = {
       id,
       roomName: data.roomName || this._generateRoomName(),
+      //TODO: other room properties
       creator: user.getUserModel().username,
       createAt: new Date().getTime(),
     };
