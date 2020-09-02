@@ -118,13 +118,18 @@ var Matchmaker = (function(){
     let room = {
       id,
       roomName: data.roomName || this._generateRoomName(),
-      //TODO: other room properties
+      mode: data.mode || Const.DEFAULT_MODE,
+      deck: data.deck || Const.DEFAULT_FUN_DECK,
       creator: user.getUserModel().username,
       createAt: new Date().getTime(),
     };
     this._userRooms[id] = room;
     this.findOpponent(user, id);
     return id;
+  }
+
+  r.getRoomById = function(id) {
+    return this._userRooms[id];
   }
 
   r.getRooms = function() {

@@ -136,6 +136,10 @@ var User = (function(){
   }
 
   r.getDeck = function() {
+    let room = matchmaking.getRoomById(this._roomName);
+    if (room && room.deck) {
+      return room.deck;
+    }
     return this._deck;
   }
 

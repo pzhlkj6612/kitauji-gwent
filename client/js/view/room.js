@@ -2,6 +2,7 @@ let Backbone = require("backbone");
 
 let Const = require("../const");
 let Util = require("../util");
+let funDecks = require("../../../assets/data/fun-deck");
 
 let Room = Backbone.View.extend({
   template: require("../../templates/room/room.handlebars"),
@@ -33,6 +34,7 @@ let Room = Backbone.View.extend({
     let model = Backbone.Model.extend({});
     let modal = new MakeRoomModal({model: new model({
       app: this.app,
+      funDecks: this.getFunDeckList(),
     })});
     $(".container").prepend(modal.render().el);
   },
@@ -57,6 +59,16 @@ let Room = Backbone.View.extend({
     }
     this.render();
   },
+  getFunDeckList: function() {
+    let list = [];
+    for (let key of Object.keys(funDecks)) {
+      list.push({
+        key,
+        name: funDecks[key].name,
+      });
+    }
+    return list;
+  },
 });
 
 let MakeRoomModal = Backbone.Modal.extend({
@@ -66,9 +78,13 @@ let MakeRoomModal = Backbone.Modal.extend({
   },
   onBtnClick: function() {
     let roomName = this.$el.find("#roomName").val();
+    //TODO: how to select element by name?
+    let mode = this.$el.find("#mode").val();
+    let deck = this.$el.find("#funDeck").val();
     this.model.get("app").send("request:makeRoom", {
       roomName,
-      //TODO: other room properties
+      mode,
+      deck,
     });
     this.remove();
   }

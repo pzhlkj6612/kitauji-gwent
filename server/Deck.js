@@ -1,6 +1,7 @@
 var Card = require("./Card");
 /*var CardManager = require("./CardManager");*/
 var DeckData = require("../assets/data/deck");
+let FunDeckData = require("../assets/data/fun-deck-detail");
 var Util = require("./CardUtil");
 var _ = require("underscore");
 
@@ -95,7 +96,10 @@ var Deck = (function(){
   }
 
   r.setDeck = function(deckKey){
-    var deck = DeckData[deckKey] ? DeckData[deckKey] : DeckData["kitauji"];
+    var deck = DeckData[deckKey] || FunDeckData[deckKey];
+    if (!deck) {
+      deck = DeckData["kitauji"];
+    }
 
     if(deckKey === "random"){
       // var decks = _.allKeys(DeckData);

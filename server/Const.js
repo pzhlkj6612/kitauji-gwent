@@ -23,4 +23,9 @@ module.exports = {
   FACTION_SKIN: "skin",
 
   MIRROR_MODE_THRESHOLD: 1,
+
+  // game mode
+  DEFAULT_MODE: "defaultMode",
+  FUN_MODE: "funMode",
+  DEFAULT_FUN_DECK: "minami",
 };
