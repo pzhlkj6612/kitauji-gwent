@@ -38,7 +38,7 @@ let Lobby = Backbone.View.extend({
     this.fadeIn();
   },
   events: {
-    "click #startMatchmaking": "startMatchmaking",
+    "click #playerSquare": "playerSquare",
     "click #startMatchmakingWithBot": "startMatchmakingWithBot",
     "click .btnCollection": "goToCollection",
     "click .btnLuckyDraw": "goToLuckyDraw",
@@ -134,10 +134,7 @@ let Lobby = Backbone.View.extend({
     })});
     this.$el.prepend(modal.render().el);
   },
-  startMatchmaking: function(){
-    // this.$el.find(".image-gif-loader").show();
-    // let roomName = this.$el.find(".room-name-input").val();
-    // this.app.trigger("startMatchmaking", {roomName});
+  playerSquare: function(){
     this.app.roomRoute();
   },
   startMatchmakingWithBot: function(){

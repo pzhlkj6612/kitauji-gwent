@@ -10,9 +10,9 @@ let Room = Backbone.View.extend({
     this.user = options.user;
     this.app = options.app;
     this._roomList = [];
+    this.listenTo(this.user, "change:serverStatus", this.renderStatus.bind(this));
     this.app.receive("response:rooms", this.onRoomsResponse.bind(this));
     this.app.send("request:rooms");
-    // this.app.send("request:userCollections");
     $(".gwent-battle").html(this.el);
     this.render();
   },
@@ -26,7 +26,13 @@ let Room = Backbone.View.extend({
     this.$el.html(this.template({
       rooms: this._roomList,
     }));
+    this.renderStatus();
     return this;
+  },
+  renderStatus: function() {
+    let data = this.user.get("serverStatus");
+    this.$el.find(".nr-player-online").html(data.online);
+    this.$el.find(".nr-player-idle").html(data.idle);
   },
   close: function() {
     this.app.send("request:matchmaking", {

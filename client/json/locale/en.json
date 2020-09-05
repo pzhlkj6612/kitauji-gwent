@@ -46,6 +46,7 @@
     "lucky_draw": "Lucky Draw",
     "replay": "Game Replay",
     "practice": "Practice",
+    "player_square": "Players' Square",
     "contest": "Contest",
     "reset_quest": "Quest is reset: {0}",
     "invalid_game_record": "Invalid game record file",

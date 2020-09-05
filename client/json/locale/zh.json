@@ -46,6 +46,7 @@
     "lucky_draw": "招新",
     "replay": "游戏回放",
     "practice": "练习",
+    "player_square": "玩家广场",
     "contest": "大赛",
     "reset_quest": "关卡已重置：{0}",
     "invalid_game_record": "游戏记录文件格式不正确",
