@@ -1,10 +1,11 @@
 var shortid = require("shortid");
 var Battle = require("./Battle");
+const Const = require("./Const");
 
 var Room = (function(){
-  var Room = function(){
+  var Room = function(opt_roomKey){
     if(!(this instanceof Room)){
-      return (new Room());
+      return (new Room(opt_roomKey));
     }
     /**
      * constructor here
@@ -12,6 +13,7 @@ var Room = (function(){
 
     var self = this;
     this._id = shortid.generate();
+    this._roomKey = opt_roomKey;
     this._users = [];
     this._ready = {};
     //this.socket = scServer.global;
@@ -144,6 +146,9 @@ var Room = (function(){
 
     if(!this.hasUser()) {
       connections.roomCollection[this.getID()] = null;
+      matchmaking.updateRoom(this._roomKey, {
+        status: Const.ROOM_STATE_IDLE,
+      });
     } else {
       let foe = this._users[0];
       if (foe.isBot()) {

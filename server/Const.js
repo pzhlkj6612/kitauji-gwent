@@ -19,6 +19,11 @@ module.exports = {
   ROOM_KANSAI: "room_kansai",
   ROOM_ZENKOKU: "room_zenkoku",
 
+  // room
+  USER_ROOM_MAX: 20,
+  ROOM_STATE_IDLE: "idle",
+  ROOM_STATE_PLAYING: "playing",
+
   // special faction for all skin
   FACTION_SKIN: "skin",
 

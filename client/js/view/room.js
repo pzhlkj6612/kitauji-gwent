@@ -19,7 +19,8 @@ let Room = Backbone.View.extend({
   events: {
     "click .button-quit": "close",
     "click .button-create": "makeRoom",
-    "click .one-room": "onRoomClick",
+    "click .button-refresh": "refresh",
+    "click .one-room .button-join": "onRoomClick",
   },
   render: function() {
     this.$el.html(this.template({
@@ -28,13 +29,20 @@ let Room = Backbone.View.extend({
     return this;
   },
   close: function() {
+    this.app.send("request:matchmaking", {
+      cancel: true,
+    });
     this.app.lobbyRoute();
+  },
+  refresh: function() {
+    this.app.send("request:rooms");
   },
   makeRoom: function() {
     let model = Backbone.Model.extend({});
     let modal = new MakeRoomModal({model: new model({
       app: this.app,
       funDecks: this.getFunDeckList(),
+      initialDeckDesc: (funDecks["minami"] || {}).description,
     })});
     $(".container").prepend(modal.render().el);
   },
@@ -55,9 +63,11 @@ let Room = Backbone.View.extend({
       if (room.deck) {
         room.modeStr += `(${funDecks[room.deck].name})`;
       }
+      room.isMe = (room.players || []).includes(this.user.get("userModel").username);
+      room.playing = room.status === Const.ROOM_STATE_PLAYING;
       this._roomList.push(room);
     }
-    this._roomList.sort((a, b) => b.createAt - a.createAt);
+    this._roomList.sort((a, b) => b.updateAt - a.updateAt);
     let index = 1;
     for (let room of this._roomList) {
       room.index = index++;
@@ -80,11 +90,23 @@ let MakeRoomModal = Backbone.Modal.extend({
   template: require("../../templates/room/modal.makeRoom.handlebars"),
   events: {
     "click #btnConfirm": "onBtnClick",
+    "change [name=mode]": "onModeChange",
+    "change #funDeck": "onDeckChange",
+  },
+  onModeChange: function(e) {
+    if ($(e.target).val() === "funMode") {
+      $("#funDeck").parent().removeClass("hidden");
+    } else {
+      $("#funDeck").parent().addClass("hidden");
+    }
+  },
+  onDeckChange: function(e) {
+    let deck = $(e.target).val();
+    $("#funDeckDesc").text((funDecks[deck] || {}).description);
   },
   onBtnClick: function() {
     let roomName = this.$el.find("#roomName").val();
-    //TODO: how to select element by name?
-    let mode = this.$el.find("#mode").val();
+    let mode = this.$el.find("input[name=mode]:checked").val();
     let deck = this.$el.find("#funDeck").val();
     this.model.get("app").send("request:makeRoom", {
       roomName,

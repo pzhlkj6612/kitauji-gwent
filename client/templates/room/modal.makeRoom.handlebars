@@ -2,6 +2,9 @@
   .bbm-modal__section {
     color: white;
   }
+  .help-block {
+    margin-bottom: 0;
+  }
 </style>
 <div class="bbm-modal__topbar">
   <h3 class="bbm-modal__title">{{i18n "make_room"}}</h3>
@@ -22,24 +25,27 @@
         <label>
           <input type="radio" name="mode" id="defaultMode" value="defaultMode" checked>
           {{i18n "defaultMode"}}
+          <span class="help-block">{{i18n "default_mode_desc"}}</span>
         </label>
       </div>
       <div class="radio">
         <label>
           <input type="radio" name="mode" id="funMode" value="funMode">
           {{i18n "funMode"}}
+          <span class="help-block">{{i18n "fun_mode_desc"}}</span>
         </label>
       </div>
       </div>
     </div>
     <div class="form-group">
       <label for="funDeck" class="col-sm-2 control-label"></label>
-      <div class="col-sm-10">
+      <div class="col-sm-10 hidden">
         <select name="funDeck" id="funDeck" class="form-control">
           {{#each funDecks}}
             <option value="{{this.key}}">{{this.name}}</option>
           {{/each}}
         </select>
+        <span id="funDeckDesc" class="help-block">{{initialDeckDesc}}</span>
       </div>
     </div>
     <div class="form-group">

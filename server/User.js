@@ -33,7 +33,7 @@ var User = (function(){
   r._id = null;
   r._name = null;
   r._rooms = null;
-  r._roomName = null;
+  r._roomKey = null;
   r._scenario = null;
   r._inQueue = false;
   r.socket = null;
@@ -136,8 +136,8 @@ var User = (function(){
   }
 
   r.getDeck = function() {
-    let room = matchmaking.getRoomById(this._roomName);
-    if (room && room.deck) {
+    let room = matchmaking.getRoomById(this._roomKey);
+    if (room && room.mode === Const.FUN_MODE && room.deck) {
       return room.deck;
     }
     return this._deck;
@@ -203,7 +203,7 @@ var User = (function(){
 
   r.disconnect = function() {
     connections.remove(this);
-    matchmaking.removeFromQueue(this, this._roomName);
+    matchmaking.removeFromQueue(this, this._roomKey);
 
     this.leaveRoom();
     // console.log("user ", this.getName(), " disconnected");
@@ -450,38 +450,28 @@ var User = (function(){
       socket.emit("response:updateUserInfo", {user: self.userModel});
     })
 
-    // deprecated
-    socket.on("request:matchmaking:bot", function(data) {
-      if (self.getRoom()) return;
-      if(self._inQueue) {
-        matchmaking.removeFromQueue(self, self._roomName);
-      }
-      self._scenario = data.scenario;
-      matchmaking.findBotOpponent(self);
-    });
-
     socket.on("request:matchmaking", function(data) {
       if (self.getRoom()) return;
       if(self._inQueue) {
-        matchmaking.removeFromQueue(self, self._roomName);
+        matchmaking.removeFromQueue(self, self._roomKey);
       }
       if (data.cancel) {
         // just cancel previous match request
         return;
       }
-      self._roomName = data.roomName;
+      self._roomKey = data.roomName;
       self._scenario = data.scenario;
       if (self._scenario) {
         switch (self._scenario) {
           case Const.ROOM_KANSAI:
-            self._roomName = Const.ROOM_KANSAI;
+            self._roomKey = Const.ROOM_KANSAI;
             break;
           case Const.ROOM_ZENKOKU:
-            self._roomName = Const.ROOM_ZENKOKU;
+            self._roomKey = Const.ROOM_ZENKOKU;
             break;
           case Const.SCENARIO_KYOTO:
           default:
-            self._roomName = Const.ROOM_KYOTO;
+            self._roomKey = Const.ROOM_KYOTO;
             break;
         }
       }
@@ -489,7 +479,7 @@ var User = (function(){
         matchmaking.findBotOpponent(self);
         return;
       }
-      matchmaking.findOpponent(self, self._roomName);
+      matchmaking.findOpponent(self, self._roomKey);
     });
 
     socket.on("request:joinRoom", function(data) {
@@ -499,10 +489,10 @@ var User = (function(){
     socket.on("request:makeRoom", function(data) {
       if (self.getRoom()) return;
       if(self._inQueue) {
-        matchmaking.removeFromQueue(self, self._roomName);
+        matchmaking.removeFromQueue(self, self._roomKey);
       }
       let roomKey = matchmaking.makeRoom(self, data);
-      self._roomName = roomKey;
+      self._roomKey = roomKey;
       socket.emit("response:rooms", matchmaking.getRooms());
     });
 

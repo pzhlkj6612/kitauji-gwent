@@ -14,4 +14,7 @@ module.exports = {
 
   // special faction for all skin
   FACTION_SKIN: "skin",
+
+  ROOM_STATE_IDLE: "idle",
+  ROOM_STATE_PLAYING: "playing",
 };

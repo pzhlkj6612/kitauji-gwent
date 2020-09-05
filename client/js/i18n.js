@@ -26,7 +26,9 @@ let i18n = Backbone.Model.extend({
     t.locale = locale;
     if (locale === 'zh') {
       t.dict = zh;
-      opt_callback && opt_callback();
+      setTimeout(() => {
+        opt_callback && opt_callback();
+      }, 0);
       return;
     }
     $.get("/public/json/locale/" + locale + ".json", function(data) {

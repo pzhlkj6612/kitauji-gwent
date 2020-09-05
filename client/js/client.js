@@ -19,7 +19,7 @@ const util = require("./util");
 window.$ = $;
 window.i18n = new I18n("zh");
 
-$.get(Config.DOMAIN + "/hosts", function(data) {
+$.get("/hosts", function(data) {
   Config.SERVERS = data;
 });
 

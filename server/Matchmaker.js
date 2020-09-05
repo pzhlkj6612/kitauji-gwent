@@ -1,6 +1,7 @@
 var shortid = require("shortid");
 var HandWrittenBot = require("./HandWrittenBot");
 var Const = require("./Const");
+const { ROOM_STATE_PLAYING } = require("./Const");
 
 /**
  * Special logic for these room:
@@ -68,10 +69,10 @@ var Matchmaker = (function(){
   r._queueByRoom = null;
   r._connections = null;
 
-  r.removeFromQueue = function(user, opt_roomName){
+  r.removeFromQueue = function(user, opt_roomKey){
     let queue = this._queue;
-    if (opt_roomName) {
-      queue = this._queueByRoom[opt_roomName];
+    if (opt_roomKey) {
+      queue = this._queueByRoom[opt_roomKey];
     }
     if (!queue) queue = this._queue;
     for(var i = 0; i < queue.length; i++) {
@@ -94,14 +95,19 @@ var Matchmaker = (function(){
     return room;
   }
 
-  r.findOpponent = function(user, opt_roomName){
+  r.findOpponent = function(user, opt_roomKey){
     var c = connections;
 
-    var found = this._checkForOpponent(opt_roomName);
+    var found = this._checkForOpponent(opt_roomKey);
 
     if(found){
-
-      var room = Room();
+      if (this._userRooms[opt_roomKey]) {
+        this.updateRoom(opt_roomKey, {
+          status: Const.ROOM_STATE_PLAYING,
+        });
+        this._updateRoomPlayers(opt_roomKey, [found, user]);
+      }
+      var room = Room(opt_roomKey);
       c.roomCollection[room.getID()] = room;
       room.join(user);
       room.join(found);
@@ -110,20 +116,23 @@ var Matchmaker = (function(){
       return room;
     }
 
-    this._getInQueue(user, opt_roomName);
+    this._getInQueue(user, opt_roomKey);
   }
 
   r.makeRoom = function(user, data) {
     let id = shortid.generate();
+    let mode = data.mode || Const.DEFAULT_MODE;
     let room = {
       id,
       roomName: data.roomName || this._generateRoomName(),
-      mode: data.mode || Const.DEFAULT_MODE,
-      deck: data.deck || Const.DEFAULT_FUN_DECK,
+      mode: mode,
+      deck: mode === Const.FUN_MODE ? (data.deck || Const.DEFAULT_FUN_DECK) : null,
+      status: Const.ROOM_STATE_IDLE,
       creator: user.getUserModel().username,
-      createAt: new Date().getTime(),
+      updateAt: new Date().getTime(),
     };
     this._userRooms[id] = room;
+    this._evictOldestRoom();
     this.findOpponent(user, id);
     return id;
   }
@@ -134,20 +143,53 @@ var Matchmaker = (function(){
 
   r.getRooms = function() {
     for (let key of Object.keys(this._userRooms)) {
-      let users = this._queueByRoom[key] || [];
-      this._userRooms[key].playerNum = users.length;
-      this._userRooms[key].players = users.map(user => {
-        let model = user.getUserModel();
-        return `${model.bandName}(${model.username})`;
-      }).join(", ");
+      let userRoom = this._userRooms[key];
+      if (userRoom.status === Const.ROOM_STATE_PLAYING) continue;
+      this._updateRoomPlayers(key, this._queueByRoom[key] || []);
     }
     return this._userRooms;
   }
 
-  r._getInQueue = function(user, opt_roomName){
-    if (opt_roomName) {
-      this._queueByRoom[opt_roomName] = this._queueByRoom[opt_roomName] || [];
-      this._queueByRoom[opt_roomName].push(user);
+  r.updateRoom = function(roomId, data) {
+    let room = this._userRooms[roomId];
+    if (!room) return;
+    room.updateAt = new Date().getTime();
+    room.status = data.status || room.status;
+  }
+
+  r._updateRoomPlayers = function(roomId, users) {
+    let room = this._userRooms[roomId];
+    if (!room) return;
+    room.playerNum = users.length;
+    room.players = users.map(user => user.getUserModel().username);
+    room.playerStr = users.map(user => {
+      let model = user.getUserModel();
+      return `${model.bandName}(${model.username})`;
+    }).join(", ");
+
+  }
+
+  r._evictOldestRoom = function() {
+    if (Object.keys(this._userRooms).length <= Const.USER_ROOM_MAX) {
+      return;
+    }
+    let oldest;
+    for (let key of Object.keys(this._userRooms)) {
+      let room = this._userRooms[key];
+      if (room.status === ROOM_STATE_PLAYING) continue;
+      if (!oldest || room.updateAt < this._userRooms[oldest].updateAt) {
+        oldest = key;
+      }
+    }
+    if (oldest) {
+      delete this._userRooms[oldest];
+    }
+  }
+
+  r._getInQueue = function(user, opt_roomKey){
+    if (opt_roomKey) {
+      this._queueByRoom[opt_roomKey] = this._queueByRoom[opt_roomKey] || [];
+      this._queueByRoom[opt_roomKey].push(user);
       user._inQueue = true;
       return;
     }
@@ -157,12 +199,12 @@ var Matchmaker = (function(){
   }
 
 
-  r._checkForOpponent = function(opt_roomName){
+  r._checkForOpponent = function(opt_roomKey){
     let queue = this._queue;
-    if (opt_roomName) {
-      queue = this._queueByRoom[opt_roomName];
+    if (opt_roomKey) {
+      queue = this._queueByRoom[opt_roomKey];
     }
-    if ((!queue || !queue.length) && SPECIAL_ROOMS.includes(opt_roomName)) {
+    if ((!queue || !queue.length) && SPECIAL_ROOMS.includes(opt_roomKey)) {
       queue = SPECIAL_ROOMS.find(room => {
         this._queueByRoom[room] && this._queueByRoom[room].length;
       });

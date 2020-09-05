@@ -2,10 +2,16 @@
 <div class="room-container">
   <div class="panel panel-dark">
   <div class="panel-heading">
-    <button class="btn btn-success button-create">{{i18n "make_room"}}</button>
+    <button class="btn btn-success button-create">
+      <span class="glyphicon glyphicon-plus"></span>
+      {{i18n "make_room"}}
+    </button>
+    <button class="btn btn-default button-refresh">
+      <span class="glyphicon glyphicon-refresh"></span>
+    </button>
   </div>
   <!-- Table -->
-  <table class="table table-striped table-hover-custom table-dark">
+  <table class="table table-striped table-hover-custom table-dark room-list">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -13,16 +19,30 @@
       <th scope="col">{{i18n "game_mode"}}</th>
       <th scope="col">{{i18n "capacity"}}</th>
       <th scope="col">{{i18n "players"}}</th>
+      <th scope="col">{{i18n "status"}}</th>
     </tr>
   </thead>
   <tbody>
     {{#each rooms}}
-    <tr class="one-room" data-id="{{this.id}}">
+    <tr class="one-room {{#if this.isMe}}isMe{{/if}}" data-id="{{this.id}}">
       <th scope="col">{{this.index}}</th>
       <td>{{this.roomName}}</td>
       <td>{{this.modeStr}}</td>
       <td>{{this.playerNum}}/2</td>
-      <td>{{this.players}}</td>
+      <td style="min-width: 100px;">{{this.playerStr}}</td>
+      <td>
+        {{#if this.playing}}
+          <span>{{i18n "status_playing"}}</span>
+        {{else}}
+          {{#if this.isMe}}
+          <span>{{i18n "status_waiting"}}</span>
+          {{else}}
+          <button class="btn btn-sm btn-success button-join">
+            {{i18n "join_room"}}
+          </button>
+          {{/if}}
+        {{/if}}
+      </td>
     </tr>
     {{/each}}
   </tbody>
