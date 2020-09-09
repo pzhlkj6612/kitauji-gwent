@@ -33,4 +33,9 @@ module.exports = {
   DEFAULT_MODE: "defaultMode",
   FUN_MODE: "funMode",
   DEFAULT_FUN_DECK: "minami",
+
+  // competition
+  COMP_STATE_NOT_STARTED: 1,
+  COMP_STATE_STARTED: 2,
+  COMP_STATE_ENDED: 3,
 };

@@ -13,6 +13,8 @@ const TABLE_DRAW_STATS = "draw_stats";
 const TABLE_PROGRESS = "progress";
 const TABLE_CONDITION = "condition";
 
+let instance_;
+
 class DB {
   constructor() {
     this.connectPromise = MongoClient.connect(`mongodb://${Config.MONGODB_HOST}:${MONGODB_PORT}`).then((client) => {
@@ -24,7 +26,12 @@ class DB {
       console.warn("本地未安装数据库，请忽略报错并在游戏中选择线上服务器。>_<");
     });
   }
-  
+
+  static getInstance() {
+    if (!instance_) instance_ = new DB();
+    return instance_;
+  }
+
   // user
   
   async addUser(user) {

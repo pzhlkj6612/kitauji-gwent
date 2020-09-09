@@ -1,7 +1,6 @@
 var shortid = require("shortid");
 var HandWrittenBot = require("./HandWrittenBot");
 var Const = require("./Const");
-const { ROOM_STATE_PLAYING } = require("./Const");
 
 /**
  * Special logic for these room:
@@ -176,7 +175,7 @@ var Matchmaker = (function(){
     let oldest;
     for (let key of Object.keys(this._userRooms)) {
       let room = this._userRooms[key];
-      if (room.status === ROOM_STATE_PLAYING) continue;
+      if (room.status === Const.ROOM_STATE_PLAYING) continue;
       if (!oldest || room.updateAt < this._userRooms[oldest].updateAt) {
         oldest = key;
       }

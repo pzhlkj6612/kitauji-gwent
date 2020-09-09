@@ -9,7 +9,7 @@ var Cache = require("./dao/cache");
 
 global.connections = require("./Connections")();
 global.matchmaking = require("./Matchmaker")();
-global.db = new DB();
+global.db = DB.getInstance();
 Cache.getInstance().initialize();
 
 global.Room = require("./Room");
