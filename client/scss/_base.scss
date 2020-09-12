@@ -167,9 +167,11 @@ body {
 }
 
 .panel-dark {
+  color: white;
   border-color: transparent;
   background-color: #212529f6;
-  .panel-heading {
+  .panel-heading,.panel-footer {
+    background-color: unset;
     border-color: #32383e;
     .btn {
       margin-left: 10px;

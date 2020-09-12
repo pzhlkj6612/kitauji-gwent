@@ -165,6 +165,10 @@
     @extend .ability-md-bond;
     @extend .ability-md;
   }
+  .btn-competition {
+    @extend .ability-md-horn;
+    @extend .ability-md;
+  }
 }
 
 .disabled {

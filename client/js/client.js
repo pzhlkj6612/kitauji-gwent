@@ -7,6 +7,7 @@ let $ = require("jquery");
 let Lobby = require("./view/lobby");
 let CollectionsView = require("./view/collections");
 let RoomView = require("./view/room");
+let CompetitionView = require("./view/competition");
 let LuckyDrawLobbyView = require("./view/lucky-draw-lobby");
 let LoginView = require("./view/login");
 let BattleView = require("./view/battle-view");
@@ -162,6 +163,10 @@ let App = Backbone.Router.extend({
       app: this,
       user: this.user
     });
+  },
+  competitionRoute: function() {
+    this.removeCurrentView_();
+    this.currentView = new CompetitionView(this);
   },
   removeCurrentView_: function() {
     if(this.currentView){

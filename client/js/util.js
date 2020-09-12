@@ -1,4 +1,5 @@
 let CardData = require("../../assets/data/cards");
+let funDecks = require("../../assets/data/fun-deck");
 
 function toFactionText(faction) {
   switch (faction) {
@@ -55,6 +56,17 @@ function validateGameRecords(data) {
   return true;
 }
 
+function getFunDeckList() {
+  let list = [];
+  for (let key of Object.keys(funDecks)) {
+    list.push({
+      key,
+      name: funDecks[key].name,
+    });
+  }
+  return list;
+}
+
 module.exports = {
   toFactionText,
   toRarityText,
@@ -62,4 +74,5 @@ module.exports = {
   compress,
   uncompress,
   validateGameRecords,
+  getFunDeckList,
 };

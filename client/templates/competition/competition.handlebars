@@ -1,0 +1,74 @@
+<button class="btn btn-danger button-quit">Quit</button>
+<div class="comp-container">
+  <div class="panel-container">
+    <div class="panel panel-dark">
+    <div class="panel-heading panel-heading-reverse">
+      <button class="btn btn-success button-create">
+        <span class="glyphicon glyphicon-plus"></span>
+        {{i18n "make_comp"}}
+      </button>
+      <button class="btn btn-default button-refresh">
+        <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+    </div>
+    <!-- Table -->
+    <table class="table table-striped table-hover-custom table-dark room-list">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">{{i18n "comp_name"}}</th>
+        <th scope="col">{{i18n "time"}}</th>
+        <th scope="col">{{i18n "capacity"}}</th>
+        <th scope="col">{{i18n "status"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="col">#</th>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
+        <td>d</td>
+      </tr>
+      {{#each comps}}
+      <tr class="one-comp" data-id="{{this.id}}">
+        <th scope="col">{{this.index}}</th>
+        <td>{{this.name}}</td>
+        <td>{{this.timeStr}}</td>
+        <td>{{this.capacity}}</td>
+        <td>{{this.state}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+    </table>
+    </div>
+    <div class="panel panel-dark">
+      <div class="panel-heading">活动详情</div>
+      <div class="panel-body">
+        <h3>第一次定期演奏会（指定曲）</h3>
+        <br/>
+        <h4>开始时间</h4>
+        <p>2020/9/12 20:00</p>
+        <h4>比赛曲目</h4>
+        <p>指定曲（利兹与青鸟）</p>
+        <h4>活动人数</h4>
+        <p>25/64</p>
+        <h4>参赛人员</h4>
+        <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+      </div>
+      <div class="panel-footer">
+        <button class="btn btn-success button-create">
+          <span class="glyphicon glyphicon-plus"></span>
+          {{i18n "make_comp"}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="lobby-footer">
+    <span>{{i18n "online_count"}}<span class="nr-player-online">0</span></span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span>{{i18n "idle_count"}}<span class="nr-player-idle">0</span></span>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <span>{{i18n "server_stat"}}<span class="status-online">{{i18n "online"}}</span></span>
+  </div>
+</div>

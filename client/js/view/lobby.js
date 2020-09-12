@@ -39,6 +39,7 @@ let Lobby = Backbone.View.extend({
   },
   events: {
     "click #playerSquare": "playerSquare",
+    "click #competition": "goToCompetition",
     "click #startMatchmakingWithBot": "startMatchmakingWithBot",
     "click .btnCollection": "goToCollection",
     "click .btnLuckyDraw": "goToLuckyDraw",
@@ -136,6 +137,9 @@ let Lobby = Backbone.View.extend({
   },
   playerSquare: function(){
     this.app.roomRoute();
+  },
+  goToCompetition: function() {
+    this.app.competitionRoute();
   },
   startMatchmakingWithBot: function(){
     this.app.trigger("startMatchmakingWithBot");

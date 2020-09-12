@@ -74,6 +74,13 @@ class CompetitionDao {
     table.insertMany(records);
   }
 
+  async loadCompGameRecords(compId) {
+    const table = DB.getInstance().db.collection(TABLE_COMP_GAME_RECORD);
+    return await table.find({
+      compId,
+    }).toArray();
+  }
+
   async updateGameRecord(record) {
     await table.updateOne({
       compId: record.compId,
@@ -84,6 +91,13 @@ class CompetitionDao {
         recordUrl: record.recordUrl,
       }
     });
+  }
+
+  async getCandidates(compId) {
+    const table = DB.getInstance().db.collection(TABLE_USER_COMP_REL);
+    return await table.find({
+      compId,
+    }).toArray();
   }
 
   async enroll(username, compId, userRank) {
