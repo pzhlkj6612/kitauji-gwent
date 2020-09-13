@@ -66,6 +66,16 @@
     "status_waiting": "Waiting",
     "status_playing": "Playing",
 
+    "make_comp": "Create Event",
+    "comp_name": "Event",
+    "comp_time": "Time",
+    "comp_enroll": "Enroll",
+    "comp_quit": "Quit",
+    "comp_enter": "Enter",
+    "comp_not_started": "Not Started",
+    "comp_started": "Running",
+    "comp_ended": "End",
+
     "result_of": "Result of {0}",
     "price_representative": "Gold (Representative)",
     "price_gold": "Gold",

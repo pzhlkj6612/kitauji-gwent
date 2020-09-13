@@ -2,6 +2,7 @@ let Backbone = require("backbone");
 
 let funDecks = require("../../../assets/data/fun-deck");
 const util = require("../util");
+const Const = require("../const");
 
 let Competition = Backbone.View.extend({
   template: require("../../templates/competition/competition.handlebars"),
@@ -9,9 +10,11 @@ let Competition = Backbone.View.extend({
     this.app = app;
     this.user = app.user;
     this._compList = [];
-    this._selectedComp = null;
+    this._selectedCompId = null;
+    this._currentComp = null;
     this.listenTo(this.user, "change:serverStatus", this.renderStatus.bind(this));
     this.app.receive("response:competitions", this.onCompsResponse.bind(this));
+    this.app.receive("response:competition", this.onCompResponse.bind(this));
     this.app.send("request:competitions");
     $(".gwent-battle").html(this.el);
     this.render();
@@ -21,10 +24,15 @@ let Competition = Backbone.View.extend({
     "click .button-create": "makeComp",
     "click .button-refresh": "refresh",
     "click .one-comp": "onCompClick",
+    "click .btn-competition-action": "onActionClick",
   },
   render: function() {
+    for (let comp of this._compList) {
+      comp.selected = (comp.id === this._selectedCompId);
+    }
     this.$el.html(this.template({
       comps: this._compList,
+      comp: this._currentComp,
     }));
     this.renderStatus();
     return this;
@@ -54,21 +62,54 @@ let Competition = Backbone.View.extend({
     let tr = $(e.target).closest(".one-comp");
     if (!tr || !tr.length) return;
     let compId = tr.data("id");
-    this._selectedComp = compId;
+    this._selectedCompId = compId;
     this.app.send("request:competition", {
       compId,
     });
-  },
-  onCompsResponse: function(comps) {
-    this._compList = [];
-    let index = 1;
-    for (let comp of comps) {
-      comp.index = index++;
-      this._compList.push(comp);
-    }
-    this._compList.sort((a, b) => b.startTime - a.startTime);
     this.render();
   },
+  onCompsResponse: function(comps) {
+    comps = comps || [];
+    let index = 1;
+    comps.sort((a, b) => b.startTime - a.startTime);
+    for (let comp of comps) {
+      comp.index = index++;
+      comp.modeStr = util.toModeStr(comp.mode, comp.funDeck);
+      comp.timeStr = util.toTimeStr(new Date(comp.startTime));
+    }
+    if (comps[0]) {
+      this._selectedCompId = comps[0].id;
+      this.app.send("request:competition", {
+        compId: this._selectedCompId,
+      });
+    }
+    this._compList = comps;
+    this.render();
+  },
+  onCompResponse: function(comp) {
+    comp.modeStr = util.toModeStr(comp.mode, comp.funDeck);
+    comp.timeStr = util.toTimeStr(new Date(comp.startTime));
+    comp.canAction = comp.state === Const.COMP_STATE_NOT_STARTED ||
+      (comp.state !== Const.COMP_STATE_STARTED && comp.hasMe);
+    comp.actionText = comp.hasMe ? i18n.getText("comp_quit") : i18n.getText("comp_enroll");
+    if (comp.state === Const.COMP_STATE_STARTED) {
+      i18n.getText("comp_enter");
+    }
+    comp.infoText = i18n.getText(comp.state);
+    this._currentComp = comp;
+    this.render();
+  },
+  onActionClick: function() {
+    if (!this._currentComp) return;
+    if (this._currentComp.state === Const.COMP_STATE_NOT_STARTED) {
+      this.app.send("request:compEnroll", {
+        compId: this._currentComp.id,
+        quit: this._currentComp.hasMe,
+      });
+    } else if (this._currentComp.state === Const.COMP_STATE_STARTED) {
+      //TODO: go to tree page
+    }
+  }
 });
 
 let MakeCompModal = Backbone.Modal.extend({
@@ -90,17 +131,17 @@ let MakeCompModal = Backbone.Modal.extend({
     $("#funDeckDesc").text((funDecks[deck] || {}).description);
   },
   onBtnClick: function() {
-    let compName = this.$el.find("#roomName").val();
+    let name = this.$el.find("#roomName").val();
     let startTime = this.$el.find("#startTime").val();
     let capacity = this.$el.find("#capacity").val();
     let mode = this.$el.find("input[name=mode]:checked").val();
-    let deck = this.$el.find("#funDeck").val();
-    this.model.get("app").send("request:makeComp", {
-      compName,
-      startTime,
+    let funDeck = this.$el.find("#funDeck").val();
+    this.model.get("app").send("request:makeCompetition", {
+      name,
+      startTime: new Date(startTime).getTime(),
       capacity,
       mode,
-      deck,
+      funDeck,
     });
     this.remove();
   }

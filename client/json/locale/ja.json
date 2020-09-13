@@ -66,6 +66,16 @@
     "status_waiting": "準備中",
     "status_playing": "游戏中",
 
+    "make_comp": "イベントを作る",
+    "comp_name": "イベント",
+    "comp_time": "時間",
+    "comp_enroll": "参加",
+    "comp_quit": "取り消し",
+    "comp_enter": "入る",
+    "comp_not_started": "準備中",
+    "comp_started": "進行中",
+    "comp_ended": "終わり",
+
     "result_of": "{0}結果発表",
     "price_representative": "金賞(代表)",
     "price_gold": "金賞",

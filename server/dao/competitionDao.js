@@ -47,6 +47,7 @@ class CompetitionDao {
   }
 
   async getCompetitions() {
+    await DB.getInstance().connectPromise;
     const table = DB.getInstance().db.collection(TABLE_COMPETITION);
     return await table.find({}).toArray();
   }
@@ -100,7 +101,16 @@ class CompetitionDao {
     }).toArray();
   }
 
-  async enroll(username, compId, userRank) {
+  async getCandidate(username, compId) {
+    const table = DB.getInstance().db.collection(TABLE_USER_COMP_REL);
+    return await table.findOne({
+      username,
+      compId,
+    });
+  }
+
+  async enroll(userModel, compId, userRank) {
+    let {username, bandName} = userModel;
     let comp = await this.getCompetitionById(compId);
     if (!comp) {
       return false;
@@ -114,6 +124,7 @@ class CompetitionDao {
         compName: comp.name,
         grade: comp.capacity,
         userRank: userRank || 999,
+        bandName,
       }
     }, {
       upsert: true,
@@ -142,3 +153,5 @@ class CompetitionDao {
   }
 
 }
+
+module.exports = CompetitionDao;

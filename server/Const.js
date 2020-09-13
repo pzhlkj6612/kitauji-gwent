@@ -35,7 +35,7 @@ module.exports = {
   DEFAULT_FUN_DECK: "minami",
 
   // competition
-  COMP_STATE_NOT_STARTED: 1,
-  COMP_STATE_STARTED: 2,
-  COMP_STATE_ENDED: 3,
+  COMP_STATE_NOT_STARTED: "comp_not_started",
+  COMP_STATE_STARTED: "comp_started",
+  COMP_STATE_ENDED: "comp_ended",
 };

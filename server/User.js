@@ -2,6 +2,7 @@ var Cache = require("./dao/cache");
 var Const = require("./Const");
 var LuckyDraw = require("./LuckyDraw");
 var Quest = require("./Quest");
+const CompetitionService = require("./service/competitionService");
 
 var User = (function(){
   var User = function(socket, token){
@@ -329,6 +330,19 @@ var User = (function(){
     return response;
   }
 
+  r.getCompetitionInfo_ = async function(compId) {
+    let info = await CompetitionService.getInstance().getCompetitionInfo(compId) || {};
+    if (!info) return null;
+    let candidates = Object.values(info.candidateMap || {});
+    let result = info.comp || {};
+    result.playerStr = candidates
+      .map(c=>`${c.bandName}(${c.username})`)
+      .join(", ");
+    result.playerNum = candidates.length;
+    result.hasMe = candidates.some(c=>c.username === this.userModel.username);
+    return result;
+  }
+
   r.testData_ = async function(data) {
       // give initial 12 cards
       let cards = await LuckyDraw.getInstance().draw(80, Const.SCENARIO_ZENKOKU, data.username, "kitauji", true);
@@ -498,6 +512,34 @@ var User = (function(){
 
     socket.on("request:rooms", function() {
       socket.emit("response:rooms", matchmaking.getRooms());
+    });
+
+    socket.on("request:makeCompetition", async function(data) {
+      let inst = CompetitionService.getInstance();
+      await inst.addCompetition(data);
+      socket.emit("response:competitions", await inst.getCompetitions());
+    });
+
+    socket.on("request:competitions", async function() {
+      socket.emit("response:competitions", await CompetitionService.getInstance().getCompetitions());
+    });
+
+    socket.on("request:competition", async function(data) {
+      let result = await self.getCompetitionInfo_(data.compId);
+      if (!result) return;
+      socket.emit("response:competition", result);
+    });
+
+    socket.on("request:compEnroll", async function(data) {
+      let {compId, quit} = data;
+      if (quit) {
+        await CompetitionService.getInstance().quit(self.userModel, compId);
+      } else {
+        await CompetitionService.getInstance().enroll(self.userModel, compId);
+      }
+      let result = await self.getCompetitionInfo_(compId);
+      if (!result) return;
+      socket.emit("response:competition", result);
     });
 
     socket.on("request:gameLoaded", function(data){
