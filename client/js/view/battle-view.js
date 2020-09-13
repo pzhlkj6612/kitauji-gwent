@@ -108,6 +108,7 @@ let BattleView = Backbone.View.extend({
     this.render();
   },
   onQuit: function() {
+    this.isReplay = false; // stop replaying
     this.user.get("app").send("request:quitGame");
     this.user.get("app").trigger("timer:cancel");
     this.stopListening();
@@ -593,15 +594,17 @@ let BattleView = Backbone.View.extend({
     let step = 0;
     let lastTimestamp;
     function next() {
+      if (!self.isReplay) return;
       if (step >= self.gameRecords.length) return;
       let record = self.gameRecords[step];
       if (!lastTimestamp) lastTimestamp = record.timestamp;
+      let interval = Math.min(3000, record.timestamp - lastTimestamp);
       setTimeout(function() {
         self.app.trigger(record.event, record.data);
         lastTimestamp = record.timestamp;
         step++;
         next();
-      }, record.timestamp - lastTimestamp);
+      }, interval);
     }
     next();
   },
