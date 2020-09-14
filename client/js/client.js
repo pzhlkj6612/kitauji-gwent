@@ -8,6 +8,7 @@ let Lobby = require("./view/lobby");
 let CollectionsView = require("./view/collections");
 let RoomView = require("./view/room");
 let CompetitionView = require("./view/competition");
+let TreeView = require("./view/tree");
 let LuckyDrawLobbyView = require("./view/lucky-draw-lobby");
 let LoginView = require("./view/login");
 let BattleView = require("./view/battle-view");
@@ -167,6 +168,13 @@ let App = Backbone.Router.extend({
   competitionRoute: function() {
     this.removeCurrentView_();
     this.currentView = new CompetitionView(this);
+  },
+  treeRoute: function(compId) {
+    this.removeCurrentView_();
+    this.currentView = new TreeView({
+      app: this,
+      compId,
+    });
   },
   removeCurrentView_: function() {
     if(this.currentView){

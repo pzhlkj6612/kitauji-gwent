@@ -20,6 +20,7 @@ class CompetitionService {
   async addCompetition(data) {
     let result = await CompDao.getInstance().addCompetition(data);
     this.pending_.push(result);
+    await this.mockCandidates_(result.id, result.capacity);
   }
 
   async getCompetitions() {
@@ -52,9 +53,9 @@ class CompetitionService {
     return info;
   }
 
-  async enroll(userModel, compId) {
+  async enroll(userModel, compId, userRank) {
     let {username} = userModel;
-    let userRank = Cache.getInstance().getUserRank(username);
+    userRank = userRank || Cache.getInstance().getUserRank(username);
     await CompDao.getInstance().enroll(userModel, compId, userRank);
     if (this.cache_[compId]) {
       this.cache_[compId].candidateMap[username] = await CompDao.getInstance().getCandidate(username, compId);
@@ -70,33 +71,33 @@ class CompetitionService {
   }
 
   async startTimer_() {
-    this.pending_ = await this.getCompetitions();
-    let task = () => {
+    this.pending_ = await CompDao.getInstance().getNotStartedCompetitions();
+    let task = async () => {
       try {
-        this.pending_ = this.pending_
-          .filter(comp => comp.state === Const.COMP_STATE_NOT_STARTED);
         let now = new Date().getTime();
         for (let comp of this.pending_) {
-          if (comp.startTime < now) {
+          if (comp.startTime < now + 1000) {
             await this.startCompetition_(comp);
           }
         }
+        this.pending_ = this.pending_
+          .filter(comp => comp.state === Const.COMP_STATE_NOT_STARTED);
       } catch (e) {
         console.warn(e);
       } finally {
-        this.timer_ = setTimeout(task, 60 - new Date().getSeconds());
+        // round to next minute
+        this.timer_ = setTimeout(task, (60 - new Date().getSeconds()) * 1000);
       }
     }
-    // round to next minute
-    this.timer_ = setTimeout(task, 60 - new Date().getSeconds());
+    task();
   }
 
   async startCompetition_(comp) {
     // get candidates
     let candidates = await CompDao.getInstance().getCandidates(comp.id);
-    if (!candidates) return false;
-    let tree = Array(2 * this.nearestPowerOf2_(candidates.length) - 1);
-    console.info("tree size: ", tree.length);
+    if (!candidates || !candidates.length) return false;
+    let tree = [];
+    console.info("tree size: ", 2 * this.nearestPowerOf2_(candidates.length) - 1);
     
     // arrange candidates according to rank
     candidates.sort((a, b) => a.userRank - b.userRank);
@@ -105,21 +106,23 @@ class CompetitionService {
     // update and persist comp. state
     comp.state = Const.COMP_STATE_STARTED;
     await CompDao.getInstance().updateCompetition(comp);
-    await CompDao.persistCompGameRecords(tree.filter(node => !!node));
+    await CompDao.getInstance().persistCompGameRecords(tree.filter(node => !!node));
     if (this.cache_[comp.id]) {
       this.cache_[comp.id].tree = tree;
+      this.cache_[comp.id].comp.state = Const.COMP_STATE_STARTED;
     }
     return true;
   }
 
   arrangeCandidates_(tree, top, candidates) {
     if (!candidates.length) return;
+    tree[top] = {
+      compId: candidates[0].compId,
+      nodeIndex: top,
+      players: [],
+    };
     if (candidates.length <= 2) {
-      tree[top] = {
-        compId: candidates[0].compId,
-        nodeIndex: top,
-        players: candidates.map(c=>c.username),
-      };
+      tree[top].players = candidates.map(c=>c.username);
       return;
     }
     let left = [], right = [];
@@ -137,6 +140,15 @@ class CompetitionService {
       tree[node.nodeIndex] = node;
     }
     return tree;
+  }
+
+  async mockCandidates_(compId, capacity) {
+    for (let i = 0; i < (Math.random() * capacity) | 0; i++) {
+      await this.enroll({
+        username: "bot" + i,
+        bandName: "band" + i,
+      }, compId, i + 1);
+    }
   }
 
   /**

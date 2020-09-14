@@ -24,7 +24,8 @@ let Competition = Backbone.View.extend({
     "click .button-create": "makeComp",
     "click .button-refresh": "refresh",
     "click .one-comp": "onCompClick",
-    "click .btn-competition-action": "onActionClick",
+    "click .btn-comp-enroll,.btn-comp-quit": "onEnrollClick",
+    "click .btn-comp-enter": "onEnterClick",
   },
   render: function() {
     for (let comp of this._compList) {
@@ -89,25 +90,31 @@ let Competition = Backbone.View.extend({
   onCompResponse: function(comp) {
     comp.modeStr = util.toModeStr(comp.mode, comp.funDeck);
     comp.timeStr = util.toTimeStr(new Date(comp.startTime));
-    comp.canAction = comp.state === Const.COMP_STATE_NOT_STARTED ||
-      (comp.state !== Const.COMP_STATE_STARTED && comp.hasMe);
-    comp.actionText = comp.hasMe ? i18n.getText("comp_quit") : i18n.getText("comp_enroll");
-    if (comp.state === Const.COMP_STATE_STARTED) {
-      i18n.getText("comp_enter");
+    if (comp.state === Const.COMP_STATE_NOT_STARTED) {
+      if (comp.hasMe) comp.canQuit = true;
+      else comp.canEnroll = true;
+    } else if (comp.state === Const.COMP_STATE_STARTED && comp.hasMe) {
+      comp.canEnter = true;
+    } else {
+      comp.readonly = true;
     }
     comp.infoText = i18n.getText(comp.state);
     this._currentComp = comp;
     this.render();
   },
-  onActionClick: function() {
+  onEnrollClick: function() {
     if (!this._currentComp) return;
     if (this._currentComp.state === Const.COMP_STATE_NOT_STARTED) {
       this.app.send("request:compEnroll", {
         compId: this._currentComp.id,
         quit: this._currentComp.hasMe,
       });
-    } else if (this._currentComp.state === Const.COMP_STATE_STARTED) {
-      //TODO: go to tree page
+    }
+  },
+  onEnterClick: function() {
+    if (!this._currentComp) return;
+    if (this._currentComp.state === Const.COMP_STATE_STARTED) {
+      this.app.treeRoute(this._currentComp.id);
     }
   }
 });

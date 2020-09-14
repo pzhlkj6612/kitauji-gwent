@@ -9,7 +9,7 @@
       </button>
     </div>
     <!-- Table -->
-    <table class="table table-striped table-hover-custom table-dark room-list">
+    <table class="table table-hover-custom table-dark room-list">
     <thead>
       <tr>
         <th scope="col">#</th>
@@ -47,11 +47,22 @@
         <p>{{comp.playerStr}}</p>
       </div>
       <div class="panel-footer">
-        {{#if comp.canAction}}
-        <button class="btn {{#if comp.hasMe}}btn-warning{{else}}btn-success{{/if}} btn-competition-action">
-          {{comp.actionText}}
+        {{#if comp.canEnroll}}
+        <button class="btn btn-info btn-comp-enroll">
+          {{i18n "comp_enroll"}}
         </button>
-        {{else}}
+        {{/if}}
+        {{#if comp.canQuit}}
+        <button class="btn btn-warning btn-comp-quit">
+          {{i18n "comp_quit"}}
+        </button>
+        {{/if}}
+        {{#if comp.canEnter}}
+        <button class="btn btn-success btn-comp-enter">
+          {{i18n "comp_enter"}}
+        </button>
+        {{/if}}
+        {{#if comp.readonly}}
         {{comp.infoText}}
         {{/if}}
       </div>

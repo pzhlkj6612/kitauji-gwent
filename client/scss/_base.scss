@@ -197,4 +197,9 @@ body {
       background-color: rgba(255,255,255,.08) !important;
     }
   }
+  &.table-hover-td {
+    tbody td:hover {
+      background-color: rgba(255,255,255,.08) !important;
+    }
+  }
 }

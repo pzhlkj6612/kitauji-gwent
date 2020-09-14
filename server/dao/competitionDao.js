@@ -52,6 +52,14 @@ class CompetitionDao {
     return await table.find({}).toArray();
   }
 
+  async getNotStartedCompetitions() {
+    await DB.getInstance().connectPromise;
+    const table = DB.getInstance().db.collection(TABLE_COMPETITION);
+    return await table.find({
+      state: Const.COMP_STATE_NOT_STARTED,
+    }).toArray();
+  }
+
   async getCompetitionById(id) {
     const table = DB.getInstance().db.collection(TABLE_COMPETITION);
     return await table.findOne({
@@ -66,7 +74,9 @@ class CompetitionDao {
     await table.updateOne({
       id,
     }, {
-      state: comp.state,
+      $set: {
+        state: comp.state,
+      }
     });
   }
 

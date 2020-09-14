@@ -330,7 +330,7 @@ var User = (function(){
     return response;
   }
 
-  r.getCompetitionInfo_ = async function(compId) {
+  r.getCompetitionInfo_ = async function(compId, includeTree) {
     let info = await CompetitionService.getInstance().getCompetitionInfo(compId) || {};
     if (!info) return null;
     let candidates = Object.values(info.candidateMap || {});
@@ -340,6 +340,9 @@ var User = (function(){
       .join(", ");
     result.playerNum = candidates.length;
     result.hasMe = candidates.some(c=>c.username === this.userModel.username);
+    if (includeTree) {
+      result.tree = info.tree;
+    }
     return result;
   }
 
@@ -525,7 +528,7 @@ var User = (function(){
     });
 
     socket.on("request:competition", async function(data) {
-      let result = await self.getCompetitionInfo_(data.compId);
+      let result = await self.getCompetitionInfo_(data.compId, data.includeTree);
       if (!result) return;
       socket.emit("response:competition", result);
     });
