@@ -98,6 +98,8 @@ class CompetitionDao {
       nodeIndex: record.nodeIndex,
     }, {
       $set: {
+        players: record.players,
+        bandNames: record.bandNames,
         winner: record.winner,
         recordUrl: record.recordUrl,
       }

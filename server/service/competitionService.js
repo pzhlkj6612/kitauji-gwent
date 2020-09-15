@@ -70,6 +70,35 @@ class CompetitionService {
     }
   }
 
+  async winGame(userModel, compId, nodeIndex) {
+    if (nodeIndex === 0) {
+      //TODO: handle end of competition
+      return;
+    }
+    let tree = this.cache_[compId].tree;
+    let node = tree[nodeIndex];
+    node.winner = userModel.username;
+    //TODO: set record url
+    await CompDao.getInstance().updateGameRecord(node);
+
+    // trigger next round
+    await this.triggerNextRound_(compId, (nodeIndex - 1) / 2);
+  }
+
+  async triggerNextRound_(compId, parentIndex) {
+    let tree = this.cache_[compId].tree;
+    let left = tree[2 * parentIndex + 1];
+    let right = tree[2 * parentIndex + 2];
+    if (!left.winner || !right.winner) {
+      // children not finished yet
+      return;
+    }
+    parent.players = [left.winner, right.winner];
+    parent.bandNames = [left.bandNames[left.players.indexOf(left.winner)],
+      right.bandNames[right.players.indexOf(right.winner)]];
+    await CompDao.getInstance().updateGameRecord(parent);
+  }
+
   async startTimer_() {
     this.pending_ = await CompDao.getInstance().getNotStartedCompetitions();
     let task = async () => {
@@ -120,9 +149,15 @@ class CompetitionService {
       compId: candidates[0].compId,
       nodeIndex: top,
       players: [],
+      bandNames: [],
     };
     if (candidates.length <= 2) {
       tree[top].players = candidates.map(c=>c.username);
+      tree[top].bandNames = candidates.map(c=>c.bandName);
+      if (candidates.length === 1) {
+        // no opponent, pass directly
+        tree[top].winner = candidates[0].username;
+      }
       return;
     }
     let left = [], right = [];
