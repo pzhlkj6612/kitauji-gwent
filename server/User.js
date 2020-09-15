@@ -3,6 +3,7 @@ var Const = require("./Const");
 var LuckyDraw = require("./LuckyDraw");
 var Quest = require("./Quest");
 const CompetitionService = require("./service/competitionService");
+const Auth = require("./service/Auth");
 
 var User = (function(){
   var User = function(socket, token){
@@ -462,7 +463,16 @@ var User = (function(){
       if(!data){
         return;
       }
-      self.userModel.bandName = data.bandName;
+      if (data.bandName) {
+        self.userModel.bandName = data.bandName;
+      }
+      if (data.password) {
+        if (data.oldPassword !== self.userModel.password) {
+          socket.emit("notification", {msgKey: "msg_wrong_password"});
+          return;
+        }
+        self.userModel.password = data.password;
+      }
       await db.updateUser(self.userModel);
       socket.emit("response:updateUserInfo", {user: self.userModel});
     })
@@ -518,6 +528,10 @@ var User = (function(){
     });
 
     socket.on("request:makeCompetition", async function(data) {
+      if (!Auth.canCreateComp(self.userModel.username)) {
+        socket.emit("notification", {msgKey: "no_authority"});
+        return;
+      }
       let inst = CompetitionService.getInstance();
       await inst.addCompetition(data);
       socket.emit("response:competitions", await inst.getCompetitions());

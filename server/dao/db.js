@@ -76,6 +76,7 @@ class DB {
       $set: {
         bandName: userModel.bandName,
         currentDeck: userModel.currentDeck,
+        password: userModel.password,
       }
     });
   }
