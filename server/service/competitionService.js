@@ -1,6 +1,7 @@
 const CompDao = require("../dao/competitionDao");
 const Const = require("../Const");
 const Cache = require("../dao/cache");
+const SchoolData = require("../../assets/data/schools");
 
 let instance_;
 
@@ -70,32 +71,34 @@ class CompetitionService {
     }
   }
 
-  async winGame(userModel, compId, nodeIndex) {
+  async winGame(username, compId, nodeIndex) {
+    let tree = this.cache_[compId].tree;
+    let node = tree[nodeIndex];
+    if (node.winner ||
+      node.players.length < 2 ||
+      !node.players.includes(username)) {
+      return;
+    }
+    node.winner = username;
+    //TODO: set record url
+    await CompDao.getInstance().updateGameRecord(node);
+
     if (nodeIndex === 0) {
       //TODO: handle end of competition
       return;
     }
-    let tree = this.cache_[compId].tree;
-    let node = tree[nodeIndex];
-    node.winner = userModel.username;
-    //TODO: set record url
-    await CompDao.getInstance().updateGameRecord(node);
-
     // trigger next round
-    await this.triggerNextRound_(compId, (nodeIndex - 1) / 2);
+    await this.triggerNextRound_(compId, Math.floor((nodeIndex - 1) / 2),
+      username, node.bandNames[node.players.indexOf(username)]);
   }
 
-  async triggerNextRound_(compId, parentIndex) {
+  async triggerNextRound_(compId, parentIndex, username, bandName) {
     let tree = this.cache_[compId].tree;
-    let left = tree[2 * parentIndex + 1];
-    let right = tree[2 * parentIndex + 2];
-    if (!left.winner || !right.winner) {
-      // children not finished yet
-      return;
-    }
-    parent.players = [left.winner, right.winner];
-    parent.bandNames = [left.bandNames[left.players.indexOf(left.winner)],
-      right.bandNames[right.players.indexOf(right.winner)]];
+    let parent = tree[parentIndex];
+    parent.players = parent.players || [];
+    parent.players.push(username);
+    parent.bandNames = parent.bandNames || [];
+    parent.bandNames.push(bandName);
     await CompDao.getInstance().updateGameRecord(parent);
   }
 
@@ -157,6 +160,11 @@ class CompetitionService {
       if (candidates.length === 1) {
         // no opponent, pass directly
         tree[top].winner = candidates[0].username;
+        let parentIndex = Math.floor((top - 1) / 2);
+        if (parentIndex < 0) return;
+        let parent = tree[parentIndex];
+        parent.players = [candidates[0].username];
+        parent.bandNames = [candidates[0].bandName];
       }
       return;
     }
@@ -182,7 +190,7 @@ class CompetitionService {
     for (let i = 0; i < capacity; i++) {
       await this.enroll({
         username: "bot" + i,
-        bandName: "band" + i,
+        bandName: SchoolData["zenkoku"][(Math.random() * SchoolData["zenkoku"].length) | 0],
       }, compId, i + 1);
     }
   }

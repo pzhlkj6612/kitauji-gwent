@@ -93,6 +93,7 @@ class CompetitionDao {
   }
 
   async updateGameRecord(record) {
+    const table = DB.getInstance().db.collection(TABLE_COMP_GAME_RECORD);
     await table.updateOne({
       compId: record.compId,
       nodeIndex: record.nodeIndex,
@@ -145,7 +146,7 @@ class CompetitionDao {
 
   async quit(username, compId) {
     const table = DB.getInstance().db.collection(TABLE_USER_COMP_REL);
-    await table.remove({
+    await table.deleteOne({
       username,
       compId,
     });

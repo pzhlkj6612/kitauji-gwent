@@ -1,6 +1,9 @@
 let Backbone = require("backbone");
 let Handlebars = require('handlebars/runtime').default;
 
+const STATE_NOT_READY = 1;
+const STATE_READY = 2;
+
 Handlebars.registerHelper("treeTable", function(tree) {
   if (!tree || !tree.length) return "";
   let size = tree.length;
@@ -15,6 +18,7 @@ Handlebars.registerHelper("treeTable", function(tree) {
   let left = collect(tree, 1, false);
   let right = collect(tree, 2, true);
   if (left[0]) left[0].push(tree[0]);
+  else left[0] = [tree[0]];
 
   let out = "";
   for (let i = 0; i < left.length; i++) {
@@ -47,15 +51,20 @@ function innerTable(node) {
   if (!node.nodeIndex && node.nodeIndex !== 0) return "";
   node.players = node.players || [];
   node.bandNames = node.bandNames || [];
-  let out = '<div class="inner-table"><table>';
-  for (let i = 0; i < 2; i++) {
-    out += "<tr><td>";
+  let out = `<div class="inner-table" data-index="${node.nodeIndex}"><table>`;
+  for (let i = 0; i < Math.max(node.players.length, 1); i++) {
     if (node.players && node.players[i]) {
-      out += `${node.bandNames[i]}(${node.players[i]})`;
+      out += `<tr data-username=${node.players[i]}><td>${node.bandNames[i]}(${node.players[i]})`;
+    } else {
+      out += "<tr><td>";
     }
     out += "</td>";
-    if (node.me && node.me === node.players[i]) {
-      out += '<td><button class="btn btn-success button-prepare">准备</button></td>';
+    if (!node.winner && node.me && node.me === node.players[i]) {
+      if (node.myState === STATE_NOT_READY) {
+        out += '<td><button class="btn btn-success button-prepare">准备</button></td>';
+      } else {
+        out += '<td><button class="btn btn-warning button-cancel-prepare">取消</button></td>';
+      }
     } else if (node.winner && node.winner === node.players[i]) {
       out += '<td class="winner-badge"></td>';
     } else {
@@ -92,21 +101,31 @@ let Tree = Backbone.View.extend({
     this._comp = {};
     this.listenTo(this.user, "change:serverStatus", this.renderStatus.bind(this));
     this.app.receive("response:competition", this.onCompResponse.bind(this));
-    this.app.send("request:competition", {
-      compId: this._compId,
-      includeTree: true,
-    });
+    this.refresh();
     $(".gwent-battle").html(this.el);
     this.render();
   },
   events: {
     "click .button-quit": "close",
+    "click .button-prepare": "doPrepare",
+    "click .button-cancel-prepare": "doPrepare",
+    "click .inner-table tr": "forcePlayerWin",
+  },
+  refresh: function() {
+    this.app.send("request:competition", {
+      compId: this._compId,
+      includeTree: true,
+    });
+  },
+  close: function() {
+    this.app.competitionRoute();
   },
   render: function() {
     this.$el.html(this.template({
       tree: this._comp.tree,
     }));
     this.renderStatus();
+    this.restoreScroll_();
     return this;
   },
   renderStatus: function() {
@@ -116,7 +135,55 @@ let Tree = Backbone.View.extend({
   },
   onCompResponse: function(comp) {
     this._comp = comp;
+    let myNode = this.getMyNode_();
+    if (myNode) {
+      myNode.me = this.user.get("userModel").username;
+      myNode.myState = STATE_NOT_READY;
+    }
     this.render();
+  },
+  doPrepare: function() {
+    let myNode = this.getMyNode_();
+    if (!myNode) return;
+    if (myNode.myState === STATE_NOT_READY) {
+      myNode.myState = STATE_READY;
+    } else {
+      myNode.myState = STATE_NOT_READY;
+    }
+    this.rememberScroll_();
+    this.render();
+  },
+  forcePlayerWin: function(e) {
+    let username = $(e.target).closest("tr").data("username");
+    let nodeIndex = $(e.target).closest(".inner-table").data("index");
+    this.app.send("request:compForceWin", {
+      username,
+      nodeIndex,
+      compId: this._comp.id,
+    });
+    setTimeout(() => {
+      this.rememberScroll_();
+      this.refresh();
+    }, 100);
+  },
+  getMyNode_: function() {
+    if (!this._comp.tree) {
+      return null;
+    }
+    let username = this.user.get("userModel").username;
+    return this._comp.tree.find(node => {
+      return node && node.players && node.players.includes(username);
+    });
+  },
+  rememberScroll_: function() {
+    let top = $(".panel-body").scrollTop();
+    let left = $(".panel-body").scrollLeft();
+    this.scrollPosition_ = [top, left];
+  },
+  restoreScroll_: function() {
+    if (!this.scrollPosition_) return;
+    $(".panel-body").scrollTop(this.scrollPosition_[0]);
+    $(".panel-body").scrollLeft(this.scrollPosition_[1]);
   },
 });
 

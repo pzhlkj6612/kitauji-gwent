@@ -72,6 +72,7 @@ var User = (function(){
     }
     if (!this.userModel) return;
     this.userModel.wallet = this.userModel.wallet || 0;
+    this.userModel.isAdmin = Auth.isAdmin(username);
     this._deck = await db.loadCustomDeck(username, this.userModel.currentDeck);
   }
 
@@ -557,6 +558,11 @@ var User = (function(){
       let result = await self.getCompetitionInfo_(compId);
       if (!result) return;
       socket.emit("response:competition", result);
+    });
+
+    socket.on("request:compForceWin", async function(data) {
+      let {compId, nodeIndex, username} = data;
+      await CompetitionService.getInstance().winGame(username, compId, nodeIndex);
     });
 
     socket.on("request:gameLoaded", function(data){
