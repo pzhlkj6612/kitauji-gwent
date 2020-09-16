@@ -178,7 +178,8 @@ class CompetitionService {
   }
 
   async mockCandidates_(compId, capacity) {
-    for (let i = 0; i < (Math.random() * capacity) | 0; i++) {
+    capacity = (Math.random() * capacity) | 0;
+    for (let i = 0; i < capacity; i++) {
       await this.enroll({
         username: "bot" + i,
         bandName: "band" + i,

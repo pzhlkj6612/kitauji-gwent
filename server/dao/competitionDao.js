@@ -156,7 +156,7 @@ class CompetitionDao {
       id: shortid.generate(),
       name: comp.name,
       startTime: Math.max(new Date().getTime(), comp.startTime),
-      capacity: comp.capacity,
+      capacity: Number(comp.capacity),
       mode: comp.mode,
       funDeck: comp.funDeck,
       state: Const.COMP_STATE_NOT_STARTED,

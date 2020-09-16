@@ -19,17 +19,57 @@ Handlebars.registerHelper("treeTable", function(tree) {
   let out = "";
   for (let i = 0; i < left.length; i++) {
     out += "<tr>"
-    for (let cell of left[i].concat(right[i] || [])) {
-      let spanStr = cell.span > 1 ? `rowspan="${cell.span}"` : "";
-      out += `<td ${spanStr}>${cell.players}</td>`;
+    for (let node of left[i].concat(right[i] || [])) {
+      let nodeClass = getNodeClass(node, tree);
+      nodeClass.push("node");
+      out += `<td rowspan="${node.span}" class="${nodeClass.join(" ")}">${innerTable(node)}</td>`;
     }
     out += "</tr>";
   }
   return out;
 });
 
+function getNodeClass(node, tree) {
+  if (!node.nodeIndex && node.nodeIndex !== 0) {
+    return ["empty-node"];
+  }
+  let nodeClass = [];
+  let childIndex = 2 * node.nodeIndex + 1;
+  if (!tree[childIndex] || !tree[childIndex].nodeIndex) {
+    nodeClass.push("leaf");
+  }
+  nodeClass.push(node.nodeIndex % 2 === 0 ? "right-node" : "left-node");
+  nodeClass.push(node.reverse ? "right-tree" : "left-tree");
+  return nodeClass;
+}
+
+function innerTable(node) {
+  if (!node.nodeIndex && node.nodeIndex !== 0) return "";
+  node.players = node.players || [];
+  node.bandNames = node.bandNames || [];
+  let out = '<div class="inner-table"><table>';
+  for (let i = 0; i < 2; i++) {
+    out += "<tr><td>";
+    if (node.players && node.players[i]) {
+      out += `${node.bandNames[i]}(${node.players[i]})`;
+    }
+    out += "</td>";
+    if (node.me && node.me === node.players[i]) {
+      out += '<td><button class="btn btn-success button-prepare">准备</button></td>';
+    } else if (node.winner && node.winner === node.players[i]) {
+      out += '<td class="winner-badge"></td>';
+    } else {
+      out += "<td></td>";
+    }
+    out += "</tr>";
+  }
+  out += "</table></div>";
+  return out;
+}
+
 function collect(tree, top, reverse) {
   if (top >= tree.length) return [];
+  tree[top].reverse = reverse;
   let left = collect(tree, top * 2 + 1, reverse);
   if (left && left[0]) {
     if (reverse) {

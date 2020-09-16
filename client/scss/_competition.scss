@@ -63,7 +63,8 @@
   background-size: cover;
 
   .panel {
-    width: 80%;
+    width: 95%;
+    height: 80%;
     flex-grow: 1;
     margin: 50px;
     display: flex;
@@ -71,23 +72,104 @@
 
     .panel-body {
       flex-grow: 1;
-      display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
       overflow: scroll;
     }
   }
 
   .tree {
     width: unset;
-    th,td {
+    td {
+      border: none;
       text-align: center;
       vertical-align: middle;
-      width: 120px;
+      padding: 0;
+      position: relative;
+      &.node {
+        &::after,&::before {
+          content: '';
+          position: absolute;
+          right: 0;
+          border-right: 1px solid #ccc;
+          width: 8px;
+          height: 50%;
+        }
+        &.right-tree::after,&.right-tree::before {
+          left: 0;
+          right: auto;
+          border-right: none;
+          border-left: 1px solid #ccc;
+        }
+        &::after {
+          top: 50%;
+          border-top: 1px solid #ccc;
+          border-radius: 0 5px 0 0;
+        }
+        &::before {
+          bottom: 50%;
+          border-bottom: 1px solid #ccc;
+          border-radius: 0 0 5px 0;
+        }
+        &.left-node::before {
+          display: none;
+        }
+        &.right-node::after {
+          display: none;
+        }
+        &.empty-node {
+          &::before,&::after {
+            display: none;
+          }
+        }
+        &.leaf .inner-table::before {
+          display: none;
+        }
+        &.right-tree .inner-table::before {
+          right: 0;
+          left: auto;
+        }
+      }
     }
-    tr {
-      height: 60px;
+
+    .inner-table {
+      min-width: 120px;
+      margin: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        border: 1px solid #ccc;
+        width: 8px;
+        height: 0;
+      }
+      .table {
+        width: 100%;
+      }
+      td {
+        text-align: left;
+        width: unset;
+        padding: 8px;
+        position: relative;
+      }
+    }
+    .inner-table:hover {
+      background-color: rgba(255,255,255,.08) !important;
     }
   }
+
+  .winner-badge::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: gold;
+  }
+
 }
