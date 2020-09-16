@@ -43,8 +43,12 @@ function getNodeClass(node, tree) {
   if (!tree[childIndex] || !tree[childIndex].nodeIndex) {
     nodeClass.push("leaf");
   }
-  nodeClass.push(node.nodeIndex % 2 === 0 ? "right-node" : "left-node");
-  nodeClass.push(node.reverse ? "right-tree" : "left-tree");
+  if (nodeIndex <= 2) {
+    nodeClass.push("root");
+  } else {
+    nodeClass.push(node.nodeIndex % 2 === 0 ? "right-node" : "left-node");
+    nodeClass.push(node.reverse ? "right-tree" : "left-tree");
+  }
   return nodeClass;
 }
 

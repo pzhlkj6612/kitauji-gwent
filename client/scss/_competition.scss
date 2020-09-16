@@ -110,13 +110,19 @@
           border-bottom: 1px solid #ccc;
           border-radius: 0 0 5px 0;
         }
+        &.right-tree::after {
+          border-radius: 5px 0 0 0;
+        }
+        &.right-tree::before {
+          border-radius: 0 0 0 5px;
+        }
         &.left-node::before {
           display: none;
         }
         &.right-node::after {
           display: none;
         }
-        &.empty-node {
+        &.empty-node,&.root {
           &::before,&::after {
             display: none;
           }
@@ -127,6 +133,15 @@
         &.right-tree .inner-table::before {
           right: 0;
           left: auto;
+        }
+        &.root .inner-table::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          right: 0;
+          border: 1px solid #ccc;
+          width: 8px;
+          height: 0;
         }
       }
     }
