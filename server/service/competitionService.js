@@ -85,6 +85,9 @@ class CompetitionService {
 
     if (nodeIndex === 0) {
       //TODO: handle end of competition
+      let comp = this.cache_[compId];
+      comp.state = Const.COMP_STATE_ENDED;
+      await CompDao.getInstance().updateCompetition(comp);
       return;
     }
     // trigger next round
