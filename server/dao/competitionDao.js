@@ -123,7 +123,7 @@ class CompetitionDao {
   }
 
   async enroll(userModel, compId, userRank) {
-    let {username, bandName} = userModel;
+    let {username, bandName, isBot} = userModel;
     let comp = await this.getCompetitionById(compId);
     if (!comp) {
       return false;
@@ -138,6 +138,7 @@ class CompetitionDao {
         grade: comp.capacity,
         userRank: userRank || 999,
         bandName,
+        isBot,
       }
     }, {
       upsert: true,

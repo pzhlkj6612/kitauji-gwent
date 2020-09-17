@@ -560,7 +560,20 @@ var User = (function(){
       socket.emit("response:competition", result);
     });
 
+    socket.on("request:compReady", async (data) => {
+      let {compId, nodeIndex, cancel} = data;
+      if (self.getRoom()) return;
+      if(self._inQueue) {
+        matchmaking.removeFromQueue(self, self._roomKey);
+      }
+      if (cancel) return;
+      self._roomKey = await CompetitionService.getInstance().compReady(self, compId, nodeIndex);
+    });
+
     socket.on("request:compForceWin", async function(data) {
+      if (!Auth.isAdmin(self.userModel.username)) {
+        return;
+      }
       let {compId, nodeIndex, username} = data;
       await CompetitionService.getInstance().winGame(username, compId, nodeIndex);
     });

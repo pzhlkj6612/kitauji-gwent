@@ -25,9 +25,9 @@ var HandWrittenBot = (function(){
     SocketStub.prototype.emit = function(event, msg) {
       this.bot.send(event, msg);
     };
-    var HandWrittenBot = function(user){
+    var HandWrittenBot = function(user, botOptions){
       if(!(this instanceof HandWrittenBot)){
-        return (new HandWrittenBot(user));
+        return (new HandWrittenBot(user, botOptions));
       }
       /**
        * constructor here
@@ -37,33 +37,13 @@ var HandWrittenBot = (function(){
       this.socket = new SocketStub(this);
       this._rooms = [];
       this._id = this.generateID();
-      switch (user.getScenario()) {
-        case Const.SCENARIO_KYOTO:
-          this.setDeck("random_easy");
-          this.generateName(["kyoto"]);
-          break;
-        case Const.SCENARIO_KANSAI:
-          this.setDeck("random_normal");
-          this.generateName(["kansai"]);
-          break;
-        case Const.SCENARIO_ZENKOKU:
-          if (this.shouldPlayMirrorMode(user)) {
-            try {
-              this.setMirrorDeck(user.getDeck());
-            } catch (e) {
-              console.warn(e);
-              this.setDeck("random_advanced");
-            }
-          } else {
-            this.setDeck("random_advanced");
-          }
-          this.generateName(["zenkoku"]);
-          break;
-        default:
-          this.setDeck("random");
-          this.generateName();
-      }
       this.strategy = new BotStrategy(this);
+      if (botOptions) {
+        this.setDeck(botOptions.deck || "random");
+        this._name = botOptions.bandName;
+      } else {
+        this.generateRoomAndDeck(user);
+      }
     };
     var r = HandWrittenBot.prototype;
     /**
@@ -288,6 +268,35 @@ var HandWrittenBot = (function(){
 
     r.generateID = function() {
       return (((Math.random() * 8999) + 1000) | 0);
+    }
+
+    r.generateRoomAndDeck = function(user) {
+      switch (user.getScenario()) {
+        case Const.SCENARIO_KYOTO:
+          this.setDeck("random_easy");
+          this.generateName(["kyoto"]);
+          break;
+        case Const.SCENARIO_KANSAI:
+          this.setDeck("random_normal");
+          this.generateName(["kansai"]);
+          break;
+        case Const.SCENARIO_ZENKOKU:
+          if (this.shouldPlayMirrorMode(user)) {
+            try {
+              this.setMirrorDeck(user.getDeck());
+            } catch (e) {
+              console.warn(e);
+              this.setDeck("random_advanced");
+            }
+          } else {
+            this.setDeck("random_advanced");
+          }
+          this.generateName(["zenkoku"]);
+          break;
+        default:
+          this.setDeck("random");
+          this.generateName();
+      }
     }
 
     r.generateName = function(categories) {

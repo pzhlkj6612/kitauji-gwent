@@ -92,6 +92,24 @@ class CompetitionService {
       username, node.bandNames[node.players.indexOf(username)]);
   }
 
+  async compReady(user, compId, nodeIndex) {
+    let comp = this.cache_[compId].comp;
+    let node = this.cache_[compId].tree[nodeIndex];
+    let username = user.getUserModel().username;
+    let index = node.players.indexOf(username);
+    if (index < 0) {
+      return null;
+    }
+    let botOptions;
+    if (node.withBot && node.players.length > 1) {
+      botOptions = {
+        deck: comp.funDeck,
+        bandName: node.bandNames[1 - index],
+      }
+    }
+    return matchmaking.makeOrJoinCompetitionRoom(user, comp, nodeIndex, botOptions);
+  }
+
   async triggerNextRound_(compId, parentIndex, username, bandName) {
     let tree = this.cache_[compId].tree;
     let parent = tree[parentIndex];
@@ -157,6 +175,7 @@ class CompetitionService {
     if (candidates.length <= 2) {
       tree[top].players = candidates.map(c=>c.username);
       tree[top].bandNames = candidates.map(c=>c.bandName);
+      tree[top].withBot = candidates.some(c=>c.isBot);
       if (candidates.length === 1) {
         // no opponent, pass directly
         tree[top].winner = candidates[0].username;
@@ -191,6 +210,7 @@ class CompetitionService {
       await this.enroll({
         username: "bot" + i,
         bandName: SchoolData["zenkoku"][(Math.random() * SchoolData["zenkoku"].length) | 0],
+        isBot: true,
       }, compId, i + 1);
     }
   }

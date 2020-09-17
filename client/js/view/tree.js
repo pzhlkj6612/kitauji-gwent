@@ -4,7 +4,8 @@ let Handlebars = require('handlebars/runtime').default;
 const STATE_NOT_READY = 1;
 const STATE_READY = 2;
 
-Handlebars.registerHelper("treeTable", function(tree) {
+Handlebars.registerHelper("treeTable", function(comp) {
+  let tree = comp.tree;
   if (!tree || !tree.length) return "";
   let size = tree.length;
   let height = 32 - Math.clz32(size);
@@ -26,7 +27,7 @@ Handlebars.registerHelper("treeTable", function(tree) {
     for (let node of left[i].concat(right[i] || [])) {
       let nodeClass = getNodeClass(node, tree);
       nodeClass.push("node");
-      out += `<td rowspan="${node.span}" class="${nodeClass.join(" ")}">${innerTable(node)}</td>`;
+      out += `<td rowspan="${node.span}" class="${nodeClass.join(" ")}">${innerTable(node, comp)}</td>`;
     }
     out += "</tr>";
   }
@@ -47,7 +48,7 @@ function getNodeClass(node, tree) {
   return nodeClass;
 }
 
-function innerTable(node) {
+function innerTable(node, comp) {
   if (!node.nodeIndex && node.nodeIndex !== 0) return "";
   node.players = node.players || [];
   node.bandNames = node.bandNames || [];
@@ -67,6 +68,8 @@ function innerTable(node) {
       }
     } else if (node.winner && node.winner === node.players[i]) {
       out += '<td class="winner-badge"></td>';
+    } else if (node.players[i] && comp.isAdmin) {
+      out += '<td><button class="btn btn-danger button-force-win">保送</button></td>';
     } else {
       out += "<td></td>";
     }
@@ -109,7 +112,7 @@ let Tree = Backbone.View.extend({
     "click .button-quit": "close",
     "click .button-prepare": "doPrepare",
     "click .button-cancel-prepare": "doPrepare",
-    "click .inner-table tr": "forcePlayerWin",
+    "click .button-force-win": "forcePlayerWin",
   },
   refresh: function() {
     this.app.send("request:competition", {
@@ -122,7 +125,7 @@ let Tree = Backbone.View.extend({
   },
   render: function() {
     this.$el.html(this.template({
-      tree: this._comp.tree,
+      comp: this._comp,
     }));
     this.renderStatus();
     this.restoreScroll_();
@@ -135,6 +138,8 @@ let Tree = Backbone.View.extend({
   },
   onCompResponse: function(comp) {
     this._comp = comp;
+    this._comp.isAdmin = this.user.get("userModel").isAdmin;
+
     let myNode = this.getMyNode_();
     if (myNode) {
       myNode.me = this.user.get("userModel").username;
@@ -147,6 +152,10 @@ let Tree = Backbone.View.extend({
     if (!myNode) return;
     if (myNode.myState === STATE_NOT_READY) {
       myNode.myState = STATE_READY;
+      this.app.send("request:compReady", {
+        compId: this._compId,
+        nodeIndex: myNode.nodeIndex,
+      })
     } else {
       myNode.myState = STATE_NOT_READY;
     }
@@ -154,6 +163,7 @@ let Tree = Backbone.View.extend({
     this.render();
   },
   forcePlayerWin: function(e) {
+    if (!this.user.get("userModel").isAdmin) return;
     let username = $(e.target).closest("tr").data("username");
     let nodeIndex = $(e.target).closest(".inner-table").data("index");
     this.app.send("request:compForceWin", {

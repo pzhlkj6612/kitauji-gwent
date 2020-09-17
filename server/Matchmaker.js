@@ -56,6 +56,7 @@ var Matchmaker = (function(){
     this._queue = [];
     this._queueByRoom = {};
     this._userRooms = {};
+    this._competitionRooms = {};
   };
   var r = Matchmaker.prototype;
   /**
@@ -83,12 +84,12 @@ var Matchmaker = (function(){
     }
   }
 
-  r.findBotOpponent = function(user) {
+  r.findBotOpponent = function(user, botOptions) {
     var c = connections;
     var room = Room();
     c.roomCollection[room.getID()] = room;
     room.join(user);
-    var bot = HandWrittenBot(user); // TODO
+    var bot = HandWrittenBot(user, botOptions);
     room.join(bot);
     user._inQueue = false;
     return room;
@@ -119,25 +120,40 @@ var Matchmaker = (function(){
   }
 
   r.makeRoom = function(user, data) {
-    let id = shortid.generate();
-    let mode = data.mode || Const.DEFAULT_MODE;
-    let room = {
-      id,
-      roomName: data.roomName || this._generateRoomName(),
-      mode: mode,
-      deck: mode === Const.FUN_MODE ? (data.deck || Const.DEFAULT_FUN_DECK) : null,
-      status: Const.ROOM_STATE_IDLE,
-      creator: user.getUserModel().username,
-      updateAt: new Date().getTime(),
-    };
+    let room = this._makeRoom(user, data);
     this._userRooms[id] = room;
     this._evictOldestRoom();
     this.findOpponent(user, id);
     return id;
   }
 
+  r.makeOrJoinCompetitionRoom = function(user, comp, nodeIndex, botOptions) {
+    let id = `${comp.id}#${nodeIndex}`;
+    let compRooms = this._competitionRooms[comp.id] || {};
+    if (!compRooms[id]) {
+      let room = this._makeRoom(user, {
+        id,
+        mode: comp.mode,
+        deck: comp.funDeck,
+      });
+      compRooms[nodeIndex] = room;
+    }
+    this._competitionRooms[comp.id] = compRooms;
+    if (botOptions) {
+      this.findBotOpponent(user, botOptions);
+    } else {
+      this.findOpponent(user, id);
+    }
+    return id;
+  }
+
   r.getRoomById = function(id) {
-    return this._userRooms[id];
+    let room = this._userRooms[id];
+    if (room) {
+      return room;
+    }
+    let [compId, nodeIndex] = id.split("#");
+    return (this._competitionRooms[compId] || {})[nodeIndex];
   }
 
   r.getRooms = function() {
@@ -154,6 +170,20 @@ var Matchmaker = (function(){
     if (!room) return;
     room.updateAt = new Date().getTime();
     room.status = data.status || room.status;
+  }
+
+  r._makeRoom = function(user, data) {
+    let id = data.id || shortid.generate();
+    let mode = data.mode || Const.DEFAULT_MODE;
+    return {
+      id,
+      roomName: data.roomName || this._generateRoomName(),
+      mode,
+      deck: mode === Const.FUN_MODE ? (data.deck || Const.DEFAULT_FUN_DECK) : null,
+      status: Const.ROOM_STATE_IDLE,
+      creator: user.getUserModel().username,
+      updateAt: new Date().getTime(),
+    };
   }
 
   r._updateRoomPlayers = function(roomId, users) {
