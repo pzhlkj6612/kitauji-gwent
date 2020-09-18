@@ -82,6 +82,13 @@ class CompetitionService {
   async loseGame(username, compId, nodeIndex) {
     await CompDao.getInstance().updateGrade(
       username, compId, this.nodeIndexToGrade(nodeIndex));
+
+      let node = this.cache_[compId].tree[nodeIndex];
+      let foeIndex = 1 - node.players.indexOf(username);
+
+      if (node.withBot) {
+        await this.winGame(node.players[foeIndex], compId, nodeIndex);
+      }
   }
 
   async winGame(username, compId, nodeIndex) {
@@ -130,6 +137,9 @@ class CompetitionService {
   async triggerNextRound_(compId, parentIndex, username, bandName, withBot) {
     let tree = this.cache_[compId].tree;
     let parent = tree[parentIndex];
+    if (parent.players && parent.players.length >= 2) {
+      return;
+    }
     parent.players = parent.players || [];
     parent.players.push(username);
     parent.bandNames = parent.bandNames || [];

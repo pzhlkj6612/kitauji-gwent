@@ -150,10 +150,12 @@ var Matchmaker = (function(){
   }
 
   r.endGame = async function(roomId, userModel, gameState) {
-    if (!gameState.isWin && gameState.score === gameState.foeScore) {
+    if (!gameState.isWin && !gameState.isQuit &&
+      gameState.score === gameState.foeScore) {
       // if it's a draw
       return;
     }
+    if (!roomId) return;
     if (!this._isCompRoom(roomId)) return;
     let [compId, nodeIndex] = roomId.split("#");
     await CompetitionService.getInstance().endGame(
@@ -201,7 +203,7 @@ var Matchmaker = (function(){
   }
 
   r._isCompRoom = function(roomId) {
-    if (!roomId.includes("#")) return false;
+    if (!roomId || !roomId.includes("#")) return false;
     let [compId, nodeIndex] = roomId.split("#");
     return !!(this._competitionRooms[compId] &&
       this._competitionRooms[compId][nodeIndex]);

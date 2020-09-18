@@ -217,7 +217,7 @@ var Battle = (function(){
     })
   }
 
-  r.gameOver = async function(winner){
+  r.gameOver = async function(winner, isQuit){
     let p1Scores = this.p1.getScores();
     let p2Scores = this.p2.getScores();
     let p1Total = p1Scores.reduce((sum,s)=>sum+s, 0);
@@ -226,17 +226,20 @@ var Battle = (function(){
       winner: winner ? winner.getName() : null,
       p1Scores,
       p2Scores,
+      isQuit,
     };
     data.gameResult = await this._user1.endGame({
       isWin: winner === this.p1,
       score: p1Total,
       foeScore: p2Total,
+      isQuit,
     }, this.p1.deck.getFaction(), this._user2);
     this.p1.send("gameover", data, true);
     data.gameResult = await this._user2.endGame({
       isWin: winner === this.p2,
       score: p2Total,
       foeScore: p1Total,
+      isQuit,
     }, this.p2.deck.getFaction(), this._user1);
     this.p2.send("gameover", data, true);
 
@@ -444,10 +447,10 @@ var Battle = (function(){
       return;
     }
     var side = this[sideName];
-
-
     if(side && side.foe){
       side.foe.send("foe:left", null, true);
+      // quit game when other user still playing, record as lose
+      this.gameOver(side.foe, true);
       return;
     }
     console.log("side foe not defined!");

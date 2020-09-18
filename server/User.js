@@ -139,9 +139,11 @@ var User = (function(){
   }
 
   r.getDeck = function() {
-    let room = matchmaking.getRoomById(this._roomKey);
-    if (room && room.mode === Const.FUN_MODE && room.deck) {
-      return room.deck;
+    if (this._roomKey) {
+      let room = matchmaking.getRoomById(this._roomKey);
+      if (room && room.mode === Const.FUN_MODE && room.deck) {
+        return room.deck;
+      }
     }
     return this._deck;
   }
@@ -226,6 +228,9 @@ var User = (function(){
     }
 
     await matchmaking.endGame(this._roomKey, this.userModel, gameState);
+
+    // both side won't get reward if someone quit.
+    if (gameState.isQuit) return;
 
     if (!this._scenario) return result;
     // update quest progress
@@ -599,14 +604,6 @@ var User = (function(){
     })
 
     socket.on("request:quitGame", function() {
-      if (self._rooms.length && self.getRoom().hasUser() > 1 && self._battleSide) {
-        // quit game when other user still playing, record as lose
-        self.endGame({
-          isWin: false,
-          score: 0,
-          foeScore: 1,
-        }, self.userModel.initialDeck, self._battleSide.foe.getUser());
-      }
       self.disconnect();
     })
 
