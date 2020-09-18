@@ -71,6 +71,19 @@ class CompetitionService {
     }
   }
 
+  async endGame(username, compId, nodeIndex, isWin) {
+    if (isWin) {
+      await this.winGame(username, compId, nodeIndex);
+    } else {
+      await this.loseGame(username, compId, nodeIndex);
+    }
+  }
+
+  async loseGame(username, compId, nodeIndex) {
+    await CompDao.getInstance().updateGrade(
+      username, compId, this.nodeIndexToGrade(nodeIndex));
+  }
+
   async winGame(username, compId, nodeIndex) {
     let tree = this.cache_[compId].tree;
     let node = tree[nodeIndex];
@@ -88,11 +101,12 @@ class CompetitionService {
       let comp = this.cache_[compId];
       comp.state = Const.COMP_STATE_ENDED;
       await CompDao.getInstance().updateCompetition(comp);
+      await CompDao.getInstance().updateGrade(username, compId, 1);
       return;
     }
     // trigger next round
     await this.triggerNextRound_(compId, Math.floor((nodeIndex - 1) / 2),
-      username, node.bandNames[node.players.indexOf(username)]);
+      username, node.bandNames[node.players.indexOf(username)], node.withBot);
   }
 
   async compReady(user, compId, nodeIndex) {
@@ -106,20 +120,21 @@ class CompetitionService {
     let botOptions;
     if (node.withBot && node.players.length > 1) {
       botOptions = {
-        deck: comp.funDeck,
+        deck: comp.mode === Const.FUN_MODE ? comp.funDeck : null,
         bandName: node.bandNames[1 - index],
       }
     }
     return matchmaking.makeOrJoinCompetitionRoom(user, comp, nodeIndex, botOptions);
   }
 
-  async triggerNextRound_(compId, parentIndex, username, bandName) {
+  async triggerNextRound_(compId, parentIndex, username, bandName, withBot) {
     let tree = this.cache_[compId].tree;
     let parent = tree[parentIndex];
     parent.players = parent.players || [];
     parent.players.push(username);
     parent.bandNames = parent.bandNames || [];
     parent.bandNames.push(bandName);
+    parent.withBot = parent.withBot || withBot;
     await CompDao.getInstance().updateGameRecord(parent);
   }
 
@@ -224,6 +239,13 @@ class CompetitionService {
    */
   nearestPowerOf2_(n) {
     return 1 << 31 - Math.clz32(n);
+  }
+
+  /**
+   * 0 -> 2; 1,2 -> 4; 3,4,5,6 -> 8
+   */
+  nodeIndexToGrade(index) {
+    return this.nearestPowerOf2_(index + 1) * 2;
   }
 }
 

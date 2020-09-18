@@ -153,6 +153,18 @@ class CompetitionDao {
     });
   }
 
+  async updateGrade(username, compId, grade) {
+    const table = DB.getInstance().db.collection(TABLE_USER_COMP_REL);
+    await table.updateOne({
+      username,
+      compId,
+    }, {
+      $set: {
+        grade,
+      }
+    });
+  }
+
   static toCompetitionDto_(comp) {
     return {
       id: shortid.generate(),
@@ -160,7 +172,7 @@ class CompetitionDao {
       startTime: Math.max(new Date().getTime(), comp.startTime),
       capacity: Number(comp.capacity),
       mode: comp.mode,
-      funDeck: comp.funDeck,
+      funDeck: comp.mode === Const.FUN_MODE ? (comp.funDeck || Const.DEFAULT_FUN_DECK) : null,
       state: Const.COMP_STATE_NOT_STARTED,
       candidates: [],
     };

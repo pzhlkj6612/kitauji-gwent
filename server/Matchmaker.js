@@ -1,6 +1,7 @@
 var shortid = require("shortid");
 var HandWrittenBot = require("./HandWrittenBot");
 var Const = require("./Const");
+const CompetitionService = require("./service/competitionService");
 
 /**
  * Special logic for these room:
@@ -121,6 +122,7 @@ var Matchmaker = (function(){
 
   r.makeRoom = function(user, data) {
     let room = this._makeRoom(user, data);
+    let id = room.id;
     this._userRooms[id] = room;
     this._evictOldestRoom();
     this.findOpponent(user, id);
@@ -145,6 +147,17 @@ var Matchmaker = (function(){
       this.findOpponent(user, id);
     }
     return id;
+  }
+
+  r.endGame = async function(roomId, userModel, gameState) {
+    if (!gameState.isWin && gameState.score === gameState.foeScore) {
+      // if it's a draw
+      return;
+    }
+    if (!this._isCompRoom(roomId)) return;
+    let [compId, nodeIndex] = roomId.split("#");
+    await CompetitionService.getInstance().endGame(
+      userModel.username, compId, Number(nodeIndex), gameState.isWin);
   }
 
   r.getRoomById = function(id) {
@@ -183,7 +196,15 @@ var Matchmaker = (function(){
       status: Const.ROOM_STATE_IDLE,
       creator: user.getUserModel().username,
       updateAt: new Date().getTime(),
+      type: data.type,
     };
+  }
+
+  r._isCompRoom = function(roomId) {
+    if (!roomId.includes("#")) return false;
+    let [compId, nodeIndex] = roomId.split("#");
+    return !!(this._competitionRooms[compId] &&
+      this._competitionRooms[compId][nodeIndex]);
   }
 
   r._updateRoomPlayers = function(roomId, users) {

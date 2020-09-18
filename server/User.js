@@ -221,12 +221,13 @@ var User = (function(){
    */
   r.endGame = async function(gameState, faction, foe) {
     let result = {};
-    if (!this._scenario) return result;
-
     if (!foe.isBot()) {
       await Cache.getInstance().recordUserWin(this.userModel.username, gameState.isWin);
     }
 
+    await matchmaking.endGame(this._roomKey, this.userModel, gameState);
+
+    if (!this._scenario) return result;
     // update quest progress
     let questState = await Quest.updateQuestProgress(this.userModel, this._scenario, {
       foeName: foe.getName(),
