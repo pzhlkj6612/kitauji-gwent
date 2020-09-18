@@ -40,7 +40,8 @@ let ContestResultModal = Backbone.View.extend({
         });
         $(".container").prepend(luckyDraw.render().el);
       } else {
-        this.app.initialize();
+        this.app.reinitialize();
+        this.app.goBack();
       }
     }, 1000);
   },

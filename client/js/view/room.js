@@ -38,7 +38,7 @@ let Room = Backbone.View.extend({
     this.app.send("request:matchmaking", {
       cancel: true,
     });
-    this.app.lobbyRoute();
+    this.app.goBack();
   },
   refresh: function() {
     this.app.send("request:rooms");

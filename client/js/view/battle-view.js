@@ -23,6 +23,11 @@ let BattleView = Backbone.View.extend({
 
     $(this.el).prependTo('.gwent-battle');
 
+    if(!user.get("room")) {
+      new Notification({msgKey: "游戏初始化错误：房间id为空"}).render();
+      return;
+    }
+
     this.listenTo(user, "change:showPreview", this.renderPreview);
     this.listenTo(user, "change:waiting", this.render);
     this.listenTo(user, "change:passing", this.render);
@@ -59,10 +64,6 @@ let BattleView = Backbone.View.extend({
       return;
     }
 
-    if(!user.get("room")) {
-      new Notification({msgKey: "游戏初始化错误：房间id为空"}).render();
-      return;
-    }
     //TODO: send gameLoaded when user press READY button
     this.app.send("request:gameLoaded", {_roomID: user.get("room")});
   },
@@ -112,7 +113,8 @@ let BattleView = Backbone.View.extend({
     this.user.get("app").send("request:quitGame");
     this.user.get("app").trigger("timer:cancel");
     this.stopListening();
-    this.user.get("app").initialize();
+    this.app.reinitialize();
+    this.app.goBack();
   },
   onClick: function(e){
     if (this.isReplay) return;
@@ -731,7 +733,8 @@ let WinnerModal = Modal.extend({
       });
       $(".container").prepend(luckyDraw.render().el);
     } else {
-      this.model.get("app").initialize();
+      this.model.get("app").reinitialize();
+      this.model.get("app").goBack();
     }
   },
   onDownloadClick: function() {

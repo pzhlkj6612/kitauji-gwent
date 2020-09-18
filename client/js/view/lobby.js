@@ -23,6 +23,11 @@ let Lobby = Backbone.View.extend({
     this.app = options.app;
     this.questProgress = {};
 
+    if (!localStorage["token"]) {
+      this.app.navigate("login", {trigger: true, replace: true});
+      return;
+    }
+
     this.app.receive("response:ranking", this.onRankingResponse.bind(this));
     this.app.receive("response:updateUserInfo", this.onUserInfoResponse.bind(this));
     this.app.send("request:questProgress");
@@ -74,10 +79,10 @@ let Lobby = Backbone.View.extend({
     return this;
   },
   goToCollection: function() {
-    this.app.collectionsRoute();
+    this.app.navigate("collections", {trigger: true});
   },
   goToLuckyDraw: function() {
-    this.app.luckyDrawRoute();
+    this.app.navigate("luckyDraw", {trigger: true});
   },
   onReplayClick: function() {
     this.$el.find("#gameReplayFile").click();
@@ -136,22 +141,13 @@ let Lobby = Backbone.View.extend({
     this.$el.prepend(modal.render().el);
   },
   playerSquare: function(){
-    this.app.roomRoute();
+    this.app.navigate("room", {trigger: true});
   },
   goToCompetition: function() {
-    this.app.competitionRoute();
+    this.app.navigate("competition", {trigger: true});
   },
   startMatchmakingWithBot: function(){
     this.app.trigger("startMatchmakingWithBot");
-  },
-  setDeck: function(e){
-    let val = $(e.target).val();
-    this.$el.find("#deckChoice option[value='" + val + "']").attr("selected", "selected")
-    if (val === "custom") {
-      this.app.collectionsRoute();
-      return;
-    }
-    this.app.trigger("setDeck", val);
   },
   changeName: function(e){
     let name = $(e.target).val();

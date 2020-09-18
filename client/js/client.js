@@ -58,12 +58,20 @@ Handlebars.registerHelper("formatMessage", function(msg){
 
 let App = Backbone.Router.extend({
   routes: {
-    /*"lobby": "lobbyRoute",
+    "lobby": "lobbyRoute",
+    "login": "loginRoute",
     "battle": "battleRoute",
-    "*path": "defaultRoute"*/
+    "collections": "collectionsRoute",
+    "room": "roomRoute",
+    "competition": "competitionRoute",
+    "tree/:compId": "treeRoute",
+    "luckyDraw": "luckyDrawRoute",
+    "*path": "defaultRoute"
   },
   initialize: function(){
-    let self = this;
+    this.reinitialize();
+  },
+  reinitialize: function() {
     if (this.getCurrentView()) {
       this.getCurrentView().stopListening();
     }
@@ -73,13 +81,6 @@ let App = Backbone.Router.extend({
       this.user.stopListening();
     }
     this.user = new User({app: this});
-
-    /*Backbone.history.start();*/
-    if (localStorage["token"]) {
-      this.lobbyRoute();
-    } else {
-      this.loginRoute();
-    }
   },
   connect: function(){
     if (this.socket) {
@@ -127,6 +128,9 @@ let App = Backbone.Router.extend({
   },
   getCurrentView: function() {
     return this.currentView;
+  },
+  goBack: function() {
+    window.history.back();
   },
   loginRoute: function(){
     this.removeCurrentView_();
@@ -237,7 +241,7 @@ let User = Backbone.Model.extend({
     app.receive("user:init", function(data) {
       localStorage["connectionId"] = data.connId;
       if (data.needLogin) {
-        app.loginRoute();
+        app.navigate("login", {trigger: true, replace: true});
       } else {
         self.setUserModel(data.model);
       }
@@ -450,6 +454,8 @@ let User = Backbone.Model.extend({
     this.set("roomFoeSide", data.foeSide);
     this.set("withBot", data.withBot);
     this.set("room", data.roomId);
+    // route manually, since battle view may be routed multiple times
+    this.get("app").navigate("battle", {trigger: false});
     this.get("app").battleRoute(data.gameRecords);
   },
   logout: function() {

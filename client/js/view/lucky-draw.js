@@ -18,7 +18,8 @@ let LuckyDrawModal = Backbone.View.extend({
     this.$el.find(".dialog").removeClass("anim-visible");
     setTimeout(() => {
       this.remove();
-      this.app.initialize();
+      this.app.reinitialize();
+      this.app.goBack();
     }, 1000);
   },
   render() {

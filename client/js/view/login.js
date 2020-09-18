@@ -48,14 +48,14 @@ let Login = Backbone.View.extend({
     if (data.success) {
       localStorage.setItem("token", data.token);
       this.user.setUserModel(data.model);
-      this.app.lobbyRoute();
+      this.app.navigate("lobby", {trigger: true, replace: true});
     }
   },
   onSignInResponse: function(data) {
     if (data.success) {
       localStorage.setItem("token", data.token);
       this.user.setUserModel(data.model);
-      this.app.lobbyRoute();
+      this.app.navigate("lobby", {trigger: true, replace: true});
       this.showInitialCards(data.initialCards);
     }
     this.signInModal &&

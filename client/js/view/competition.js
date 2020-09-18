@@ -44,7 +44,7 @@ let Competition = Backbone.View.extend({
     this.$el.find(".nr-player-idle").html(data.idle);
   },
   close: function() {
-    this.app.lobbyRoute();
+    this.app.goBack();
   },
   refresh: function() {
     this.app.send("request:competitions");
@@ -114,7 +114,7 @@ let Competition = Backbone.View.extend({
   onEnterClick: function() {
     if (!this._currentComp) return;
     if (this._currentComp.state === Const.COMP_STATE_STARTED) {
-      this.app.treeRoute(this._currentComp.id);
+      this.app.navigate(`tree/${this._currentComp.id}`, {trigger: true});
     }
   }
 });

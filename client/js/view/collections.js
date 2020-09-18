@@ -397,10 +397,10 @@ let Collections = Backbone.View.extend({
     if (this.dirty) {
       this.app.send("set:customDeck", customDeck);
     }
-    this.app.lobbyRoute();
+    this.app.goBack();
   },
   onQuit: function() {
-    this.app.lobbyRoute();
+    this.app.goBack();
   },
   onLeaderClick: function() {
     this.$el.find(".leader-collection").removeClass("hidden");

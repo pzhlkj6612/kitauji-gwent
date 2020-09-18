@@ -125,7 +125,7 @@ let Tree = Backbone.View.extend({
     });
   },
   close: function() {
-    this.app.competitionRoute();
+    this.app.goBack();
   },
   render: function() {
     this.$el.html(this.template({

@@ -17,7 +17,7 @@ let LuckyDrawLobby = Backbone.View.extend({
     this.render();
   },
   close: function() {
-    this.app.lobbyRoute();
+    this.app.goBack();
   },
   render() {
     this.$el.html(this.template({
