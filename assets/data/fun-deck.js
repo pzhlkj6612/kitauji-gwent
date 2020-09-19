@@ -11,4 +11,16 @@ module.exports = {
     name: "利兹与青鸟",
     description: "围绕王牌铠冢霙打造，以木管为主的吹奏阵容",
   },
+  "green_army": {
+    name: "绿衣军团",
+    description: "由绿校服学生组成的吹奏阵容",
+  },
+  "red_army": {
+    name: "红衣军团",
+    description: "由红校服学生组成的吹奏阵容",
+  },
+  "blue_army": {
+    name: "蓝衣军团",
+    description: "由蓝校服学生组成的吹奏阵容",
+  },
 };

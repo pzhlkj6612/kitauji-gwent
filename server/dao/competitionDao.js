@@ -110,6 +110,7 @@ class CompetitionDao {
         bandNames: record.bandNames,
         winner: record.winner,
         recordUrl: record.recordUrl,
+        withBot: record.withBot,
       }
     });
   }

@@ -254,6 +254,7 @@ let BattleView = Backbone.View.extend({
     }
     if(this.user.get("setHorn") != null && this.user.get("setHorn") !== false){
       let $field = $(e.target).closest(".active-field");
+      if (!$field.length) return;
 
       //console.log($field);
       let target = $field.hasClass("field-close") ? 0 : ($field.hasClass("field-range") ? 1 : 2);

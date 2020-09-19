@@ -75,7 +75,7 @@ function toTimeStr(date) {
 
 function toModeStr(mode, deck) {
   let modeStr = i18n.getText(mode);
-  if (deck) {
+  if (deck && funDecks[deck]) {
     modeStr += `(${funDecks[deck].name})`;
   }
   return modeStr;

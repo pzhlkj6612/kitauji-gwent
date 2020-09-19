@@ -424,7 +424,7 @@ var User = (function(){
       await db.storeCustomDeckByList(data.username, data.initialDeck, cards);
       // start first quest
       await db.updateProgress(data.username, Const.SCENARIO_KYOTO, []);
-      // await self.testData_(data);
+      await self.testData_(data);
 
       await self.loadUserModel(data.username);
 
