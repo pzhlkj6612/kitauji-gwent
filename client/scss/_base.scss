@@ -44,6 +44,7 @@ body {
 
 .bbm-wrapper {
   background: rgba(6, 13, 22, .5);
+  filter:progid:DXImageTransform.Microsoft.Gradient(startColorstr=#7F000000,endColorstr=#7F000000);
   //background: rgba(14, 27, 43, 0.5);
 }
 
@@ -170,6 +171,7 @@ body {
   color: white;
   border-color: transparent;
   background-color: #212529f6;
+  filter:progid:DXImageTransform.Microsoft.Gradient(startColorstr=#7F000000,endColorstr=#7F000000);
   .panel-heading,.panel-footer {
     background-color: unset;
     border-color: #32383e;
