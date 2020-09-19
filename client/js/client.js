@@ -140,6 +140,7 @@ let App = Backbone.Router.extend({
     });
   },
   lobbyRoute: function(){
+    if (!this.checkLogin_()) return;
     this.removeCurrentView_();
     this.currentView = new Lobby({
       app: this,
@@ -156,6 +157,7 @@ let App = Backbone.Router.extend({
     });
   },
   collectionsRoute: function() {
+    if (!this.checkLogin_()) return;
     this.removeCurrentView_();
     this.currentView = new CollectionsView({
       app: this,
@@ -163,6 +165,7 @@ let App = Backbone.Router.extend({
     });
   },
   roomRoute: function() {
+    if (!this.checkLogin_()) return;
     this.removeCurrentView_();
     this.currentView = new RoomView({
       app: this,
@@ -170,15 +173,32 @@ let App = Backbone.Router.extend({
     });
   },
   competitionRoute: function() {
+    if (!this.checkLogin_()) return;
     this.removeCurrentView_();
     this.currentView = new CompetitionView(this);
   },
   treeRoute: function(compId) {
+    if (!this.checkLogin_()) return;
     this.removeCurrentView_();
     this.currentView = new TreeView({
       app: this,
       compId,
     });
+  },
+  luckyDrawRoute: function() {
+    if (!this.checkLogin_()) return;
+    this.removeCurrentView_();
+    this.currentView = new LuckyDrawLobbyView({
+      app: this,
+      user: this.user
+    });
+  },
+  checkLogin_: function() {
+    if (!localStorage["token"]) {
+      this.app.navigate("login", {trigger: true, replace: true});
+      return false;
+    }
+    return true;
   },
   removeCurrentView_: function() {
     if(this.currentView){
@@ -187,13 +207,6 @@ let App = Backbone.Router.extend({
         $(".notifications").after('<div class="gwent-battle"></div>');
       }
     }
-  },
-  luckyDrawRoute: function() {
-    this.removeCurrentView_();
-    this.currentView = new LuckyDrawLobbyView({
-      app: this,
-      user: this.user
-    });
   },
   defaultRoute: function(path){
     this.navigate("lobby", {trigger: true});

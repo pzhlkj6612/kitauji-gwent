@@ -23,11 +23,6 @@ let Lobby = Backbone.View.extend({
     this.app = options.app;
     this.questProgress = {};
 
-    if (!localStorage["token"]) {
-      this.app.navigate("login", {trigger: true, replace: true});
-      return;
-    }
-
     this.app.receive("response:ranking", this.onRankingResponse.bind(this));
     this.app.receive("response:updateUserInfo", this.onUserInfoResponse.bind(this));
     this.app.send("request:questProgress");
