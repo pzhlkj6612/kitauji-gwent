@@ -55,6 +55,10 @@ class CompetitionService {
     if (gameRecords && gameRecords.length) {
       info.tree = this.rebuildTree_(gameRecords);
     }
+
+    if (info.comp.state === Const.COMP_STATE_ENDED) {
+      info.result = await this.getCompetitionResult(compId);
+    }
     return info;
   }
 
@@ -80,6 +84,27 @@ class CompetitionService {
     if (this.cache_[compId]) {
       delete this.cache_[compId].candidateMap[username];
     }
+  }
+
+  async getCompetitionResult(compId) {
+    let players = await CompDao.getInstance().getCompetitionResult(compId, 8);
+
+    // similar to Quest#generateQuestReport
+    const QUOTA = {
+      [Const.PRICE_REPRESENTATIVE]: 1,
+      [Const.PRICE_GOLD]: 1,
+      [Const.PRICE_SILVER]: 2,
+      [Const.PRICE_BRONZE]: 4,
+    }
+    let prices = {};
+    for (let price of [Const.PRICE_REPRESENTATIVE, Const.PRICE_GOLD, Const.PRICE_SILVER, Const.PRICE_BRONZE]) {
+      prices[price] = [];
+      for (let i = 0; i < QUOTA[price]; i++) {
+        let player = players.shift();
+        prices[price].push(`${player.bandName}(${player.username})`);
+      }
+    }
+    return prices;
   }
 
   async endGame(username, compId, nodeIndex, isWin) {
@@ -120,6 +145,7 @@ class CompetitionService {
       comp.state = Const.COMP_STATE_ENDED;
       await CompDao.getInstance().updateCompetition(comp);
       await CompDao.getInstance().updateGrade(username, compId, 1);
+      this.cache_[compId].result = await this.getCompetitionResult(compId);
       return;
     }
     // trigger next round

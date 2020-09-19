@@ -54,7 +54,10 @@ class CompetitionDao {
   async getCompetitions() {
     await DB.getInstance().connectPromise;
     const table = DB.getInstance().db.collection(TABLE_COMPETITION);
-    return await table.find({}, {projection: {_id: 0}}).toArray();
+    return await table.find({}, {
+      projection: {_id: 0},
+      limit: 20,
+    }).toArray();
   }
 
   async getNotStartedCompetitions() {
@@ -159,6 +162,16 @@ class CompetitionDao {
       username,
       compId,
     });
+  }
+
+  async getCompetitionResult(compId, limit) {
+    const table = DB.getInstance().db.collection(TABLE_USER_COMP_REL);
+    return await table.find({
+      compId,
+    }, {
+      sort: {grade: 1},
+      limit,
+    }).toArray();
   }
 
   async updateGrade(username, compId, grade) {

@@ -50,6 +50,19 @@
         <p>{{comp.playerNum}}/{{comp.capacity}}</p>
         <h4>参赛人员</h4>
         <p>{{comp.playerStr}}</p>
+        <h4>比赛结果</h4>
+        <table class="competition-result">
+        {{#each comp.report}}
+          <tr>
+            <td>
+              {{this.name}}
+            </td>
+            <td class="{{this.className}}">
+              {{this.price}}
+            </td>
+          </tr>
+        {{/each}}
+        </table>
       </div>
       <div class="panel-footer">
         {{#if isAdmin}}

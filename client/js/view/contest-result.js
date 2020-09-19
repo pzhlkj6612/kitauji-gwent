@@ -1,19 +1,6 @@
 let Backbone = require("backbone");
+const util = require("../util");
 let LuckyDraw = require("./lucky-draw");
-
-const PRICE_LABEL = {
-  0: "price_representative",
-  1: "price_gold",
-  2: "price_silver",
-  3: "price_bronze",
-};
-
-const PRICE_CLASSNAME = {
-  0: "price-gold",
-  1: "price-gold",
-  2: "price-silver",
-  3: "price-bronze",
-}
 
 let ContestResultModal = Backbone.View.extend({
   template: require("../../templates/contestResult.handlebars"),
@@ -65,8 +52,8 @@ let ContestResultModal = Backbone.View.extend({
       for (let school of report[price]) {
         schoolList.push({
           name: school,
-          price: i18n.getText(PRICE_LABEL[price]),
-          className: PRICE_CLASSNAME[price],
+          price: i18n.getText(util.toPriceLabel(price)),
+          className: util.toPriceClassName(price),
           isMe: this.user.get("userModel") &&
             school === this.user.get("userModel").bandName,
         });

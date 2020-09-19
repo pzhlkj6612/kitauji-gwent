@@ -103,8 +103,24 @@ let Competition = Backbone.View.extend({
       comp.readonly = true;
     }
     comp.infoText = i18n.getText(comp.state);
+    if (comp.result) {
+      comp.report = this.toSchoolList_(comp.result);
+    }
     this._currentComp = comp;
     this.render();
+  },
+  toSchoolList_: function(report) {
+    let schoolList = [];
+    for (let price of Object.keys(report)) {
+      for (let school of report[price]) {
+        schoolList.push({
+          name: school,
+          price: i18n.getText(util.toPriceLabel(price)),
+          className: util.toPriceClassName(price),
+        });
+      }
+    }
+    return schoolList;
   },
   onEnrollClick: function() {
     if (!this._currentComp) return;

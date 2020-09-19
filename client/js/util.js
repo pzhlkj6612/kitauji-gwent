@@ -81,6 +81,28 @@ function toModeStr(mode, deck) {
   return modeStr;
 }
 
+const PRICE_LABEL = {
+  0: "price_representative",
+  1: "price_gold",
+  2: "price_silver",
+  3: "price_bronze",
+};
+
+const PRICE_CLASSNAME = {
+  0: "price-gold",
+  1: "price-gold",
+  2: "price-silver",
+  3: "price-bronze",
+}
+
+function toPriceLabel(price) {
+  return PRICE_LABEL[price];
+}
+
+function toPriceClassName(price) {
+  return PRICE_CLASSNAME[price];
+}
+
 module.exports = {
   toFactionText,
   toRarityText,
@@ -91,4 +113,6 @@ module.exports = {
   getFunDeckList,
   toTimeStr,
   toModeStr,
+  toPriceLabel,
+  toPriceClassName,
 };

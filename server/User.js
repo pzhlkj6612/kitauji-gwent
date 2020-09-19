@@ -229,9 +229,6 @@ var User = (function(){
 
     await matchmaking.endGame(this._roomKey, this.userModel, gameState);
 
-    // both side won't get reward if someone quit.
-    if (gameState.isQuit) return;
-
     if (!this._scenario) return result;
     // update quest progress
     let questState = await Quest.updateQuestProgress(this.userModel, this._scenario, {
@@ -239,6 +236,9 @@ var User = (function(){
       isWin: gameState.isWin,
     });
     result["questState"] = questState;
+
+    // both side won't get reward if someone quit.
+    if (gameState.isQuit) return;
 
     // do lucky draw based on result
     try {
@@ -341,16 +341,23 @@ var User = (function(){
   r.getCompetitionInfo_ = async function(compId, includeTree) {
     let info = await CompetitionService.getInstance().getCompetitionInfo(compId) || {};
     if (!info) return null;
-    let candidates = Object.values(info.candidateMap || {});
+    let candidates = Object.values(info.candidateMap || {}).reverse();
     let result = info.comp || {};
-    result.playerStr = candidates
-      .map(c=>`${c.bandName}(${c.username})`)
-      .join(", ");
+    if (candidates.length > 10) {
+      result.playerStr = candidates.slice(0, 10)
+        .map(c=>`${c.bandName}(${c.username})`)
+        .join(", ") + ` 等 ${candidates.length} 人`;
+    } else {
+      result.playerStr = candidates
+        .map(c=>`${c.bandName}(${c.username})`)
+        .join(", ");
+    }
     result.playerNum = candidates.length;
     result.hasMe = candidates.some(c=>c.username === this.userModel.username);
     if (includeTree) {
       result.tree = info.tree;
     }
+    result.result = info.result;
     return result;
   }
 
