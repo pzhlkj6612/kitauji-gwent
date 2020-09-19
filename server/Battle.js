@@ -233,6 +233,7 @@ var Battle = (function(){
       score: p1Total,
       foeScore: p2Total,
       isQuit,
+      isDraw: !isQuit && !(data.winner),
     }, this.p1.deck.getFaction(), this._user2);
     this.p1.send("gameover", data, true);
     data.gameResult = await this._user2.endGame({
@@ -240,6 +241,7 @@ var Battle = (function(){
       score: p2Total,
       foeScore: p1Total,
       isQuit,
+      isDraw: !isQuit && !(data.winner),
     }, this.p2.deck.getFaction(), this._user1);
     this.p2.send("gameover", data, true);
 

@@ -3,9 +3,14 @@
   <div class="panel-container">
     <div class="panel panel-dark">
     <div class="panel-heading panel-heading-reverse">
+      {{#if isAdmin}}
       <button class="btn btn-success button-create">
         <span class="glyphicon glyphicon-plus"></span>
         {{i18n "make_comp"}}
+      </button>
+      {{/if}}
+      <button class="btn btn-default button-refresh">
+        <span class="glyphicon glyphicon-refresh"></span>
       </button>
     </div>
     <!-- Table -->
@@ -47,6 +52,11 @@
         <p>{{comp.playerStr}}</p>
       </div>
       <div class="panel-footer">
+        {{#if isAdmin}}
+        <button class="btn btn-danger btn-comp-delete">
+          {{i18n "delete"}}
+        </button>
+        {{/if}}
         {{#if comp.canEnroll}}
         <button class="btn btn-info btn-comp-enroll">
           {{i18n "comp_enroll"}}

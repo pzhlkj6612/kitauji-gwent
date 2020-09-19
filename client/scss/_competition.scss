@@ -34,6 +34,7 @@
 
     .panel-body {
       flex-grow: 1;
+      overflow: scroll;
     }
   }
 
@@ -69,6 +70,13 @@
     margin: 50px;
     display: flex;
     flex-direction: column;
+
+    .panel-heading {
+      .btn {
+        float: right;
+      }
+      padding: 10px;
+    }
 
     .panel-body {
       flex-grow: 1;
@@ -147,7 +155,6 @@
     }
 
     .inner-table {
-      min-width: 120px;
       margin: 8px;
       border: 1px solid #ccc;
       border-radius: 5px;
@@ -169,6 +176,16 @@
         padding: 8px;
         position: relative;
       }
+      .name {
+        min-width: 120px;
+      }
+      .loser {
+        color: #666;
+      }
+      .isMe {
+        font-weight: bold;
+        font-style: italic;
+      }
     }
     .inner-table:hover {
       background-color: rgba(255,255,255,.08) !important;
@@ -180,7 +197,7 @@
     position: absolute;
     top: 50%;
     transform: translate(0, -50%);
-    right: 5px;
+    right: 10px;
     width: 10px;
     height: 10px;
     border-radius: 5px;

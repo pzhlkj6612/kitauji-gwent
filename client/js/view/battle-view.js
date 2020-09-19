@@ -23,7 +23,7 @@ let BattleView = Backbone.View.extend({
 
     $(this.el).prependTo('.gwent-battle');
 
-    if(!user.get("room")) {
+    if(!this.isReplay && !user.get("room")) {
       new Notification({msgKey: "游戏初始化错误：房间id为空"}).render();
       return;
     }
@@ -600,7 +600,7 @@ let BattleView = Backbone.View.extend({
       if (step >= self.gameRecords.length) return;
       let record = self.gameRecords[step];
       if (!lastTimestamp) lastTimestamp = record.timestamp;
-      let interval = Math.min(3000, record.timestamp - lastTimestamp);
+      let interval = Math.min(2000, record.timestamp - lastTimestamp);
       setTimeout(function() {
         self.app.trigger(record.event, record.data);
         lastTimestamp = record.timestamp;

@@ -150,8 +150,7 @@ var Matchmaker = (function(){
   }
 
   r.endGame = async function(roomId, userModel, gameState) {
-    if (!gameState.isWin && !gameState.isQuit &&
-      gameState.score === gameState.foeScore) {
+    if (gameState.isDraw) {
       // if it's a draw
       return;
     }

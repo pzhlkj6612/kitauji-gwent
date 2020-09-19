@@ -46,10 +46,15 @@ class CompetitionDao {
     return comp;
   }
 
+  async deleteCompetition(compId) {
+    const table = DB.getInstance().db.collection(TABLE_COMPETITION);
+    await table.deleteOne({id: compId});
+  }
+
   async getCompetitions() {
     await DB.getInstance().connectPromise;
     const table = DB.getInstance().db.collection(TABLE_COMPETITION);
-    return await table.find({}).toArray();
+    return await table.find({}, {projection: {_id: 0}}).toArray();
   }
 
   async getNotStartedCompetitions() {
@@ -89,6 +94,8 @@ class CompetitionDao {
     const table = DB.getInstance().db.collection(TABLE_COMP_GAME_RECORD);
     return await table.find({
       compId,
+    }, {
+      projection: {_id: 0},
     }).toArray();
   }
 
@@ -169,6 +176,7 @@ class CompetitionDao {
     return {
       id: shortid.generate(),
       name: comp.name,
+      organizer: comp.organizer,
       startTime: Math.max(new Date().getTime(), comp.startTime),
       capacity: Number(comp.capacity),
       mode: comp.mode,

@@ -26,6 +26,7 @@ let Competition = Backbone.View.extend({
     "click .one-comp": "onCompClick",
     "click .btn-comp-enroll,.btn-comp-quit": "onEnrollClick",
     "click .btn-comp-enter": "onEnterClick",
+    "click .btn-comp-delete": "onDeleteClick",
   },
   render: function() {
     for (let comp of this._compList) {
@@ -34,6 +35,7 @@ let Competition = Backbone.View.extend({
     this.$el.html(this.template({
       comps: this._compList,
       comp: this._currentComp,
+      isAdmin: this.user.get("userModel").isAdmin,
     }));
     this.renderStatus();
     return this;
@@ -88,12 +90,13 @@ let Competition = Backbone.View.extend({
     this.render();
   },
   onCompResponse: function(comp) {
+    let isAdmin = this.user.get("userModel").isAdmin;
     comp.modeStr = util.toModeStr(comp.mode, comp.funDeck);
     comp.timeStr = util.toTimeStr(new Date(comp.startTime));
     if (comp.state === Const.COMP_STATE_NOT_STARTED) {
       if (comp.hasMe) comp.canQuit = true;
       else comp.canEnroll = true;
-    } else if (comp.state === Const.COMP_STATE_STARTED && comp.hasMe) {
+    } else if (comp.state === Const.COMP_STATE_STARTED && (comp.hasMe || isAdmin)) {
       comp.canEnter = true;
     } else {
       comp.readonly = true;
@@ -116,7 +119,12 @@ let Competition = Backbone.View.extend({
     if (this._currentComp.state === Const.COMP_STATE_STARTED) {
       this.app.navigate(`tree/${this._currentComp.id}`, {trigger: true});
     }
-  }
+  },
+  onDeleteClick: function() {
+    this.app.send("request:compDelete", {
+      compId: this._currentComp.id,
+    });
+  },
 });
 
 let MakeCompModal = Backbone.Modal.extend({

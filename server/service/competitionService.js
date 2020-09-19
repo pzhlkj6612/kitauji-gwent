@@ -24,6 +24,10 @@ class CompetitionService {
     await this.mockCandidates_(result.id, result.capacity);
   }
 
+  async deleteCompetition(compId) {
+    await CompDao.getInstance().deleteCompetition(compId);
+  }
+
   async getCompetitions() {
     return await CompDao.getInstance().getCompetitions();
   }
@@ -55,12 +59,19 @@ class CompetitionService {
   }
 
   async enroll(userModel, compId, userRank) {
+    if (this.cache_[compId]) {
+      let capacity = Number(this.cache_[compId].comp.capacity);
+      if (Object.keys(this.cache_[compId].candidateMap).length >= capacity) {
+        return false;
+      }
+    }
     let {username} = userModel;
     userRank = userRank || Cache.getInstance().getUserRank(username);
     await CompDao.getInstance().enroll(userModel, compId, userRank);
     if (this.cache_[compId]) {
       this.cache_[compId].candidateMap[username] = await CompDao.getInstance().getCandidate(username, compId);
     }
+    return true;
   }
 
   async quit(userModel, compId) {
@@ -105,7 +116,7 @@ class CompetitionService {
 
     if (nodeIndex === 0) {
       //TODO: handle end of competition
-      let comp = this.cache_[compId];
+      let comp = this.cache_[compId].comp;
       comp.state = Const.COMP_STATE_ENDED;
       await CompDao.getInstance().updateCompetition(comp);
       await CompDao.getInstance().updateGrade(username, compId, 1);

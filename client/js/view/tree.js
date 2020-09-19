@@ -58,22 +58,23 @@ function innerTable(node, comp) {
   node.bandNames = node.bandNames || [];
   let out = `<div class="inner-table" data-index="${node.nodeIndex}"><table>`;
   for (let i = 0; i < Math.max(node.players.length, 1); i++) {
-    if (node.players && node.players[i]) {
-      out += `<tr data-username=${node.players[i]}><td>${node.bandNames[i]}(${node.players[i]})`;
-    } else {
-      out += "<tr><td>";
-    }
-    out += "</td>";
-    if (!node.winner && node.me && node.me === node.players[i]) {
+    let isWinner = node.winner && node.winner === node.players[i];
+    let isLoser = node.winner && !isWinner;
+    let isMe = !node.winner && node.me && node.me === node.players[i];
+
+    let clz = isLoser ? "loser" : (isMe ? "me" : "");
+    let name = node.players && node.players[i] ? `${node.bandNames[i]}(${node.players[i]})` : "";
+    out += `<tr class="${clz}" data-username=${node.players[i]}><td class="name">${name}</td>`;
+    if (isMe) {
       if (node.myState === STATE_NOT_READY) {
-        out += '<td><button class="btn btn-success button-prepare">准备</button></td>';
+        out += '<td><button class="btn btn-sm btn-success button-prepare">准备</button></td>';
       } else {
-        out += '<td><button class="btn btn-warning button-cancel-prepare">取消</button></td>';
+        out += '<td><button class="btn btn-sm btn-warning button-cancel-prepare">取消</button></td>';
       }
-    } else if (node.winner && node.winner === node.players[i]) {
+    } else if (isWinner) {
       out += '<td class="winner-badge"></td>';
-    } else if (node.players[i] && comp.isAdmin) {
-      out += '<td><button class="btn btn-danger button-force-win">保送</button></td>';
+    } else if (!node.winner && node.players.length >= 2 && comp.isAdmin) {
+      out += '<td><button class="btn btn-sm btn-danger button-force-win">保送</button></td>';
     } else {
       out += "<td></td>";
     }
@@ -107,6 +108,7 @@ let Tree = Backbone.View.extend({
     this._compId = options.compId;
     this._comp = {};
     this.listenTo(this.user, "change:serverStatus", this.renderStatus.bind(this));
+    this.listenTo(this.app.user, "change:userModel", this.refresh.bind(this));
     this.app.receive("response:competition", this.onCompResponse.bind(this));
     this.refresh();
     $(".gwent-battle").html(this.el);
@@ -114,6 +116,8 @@ let Tree = Backbone.View.extend({
   },
   events: {
     "click .button-quit": "close",
+    "click .button-refresh": "refresh",
+    "click .button-locate": "scrollToMe",
     "click .button-prepare": "doPrepare",
     "click .button-cancel-prepare": "doPrepare",
     "click .button-force-win": "forcePlayerWin",
@@ -150,6 +154,7 @@ let Tree = Backbone.View.extend({
       myNode.myState = STATE_NOT_READY;
     }
     this.render();
+    this.scrollToMe_();
   },
   doPrepare: function() {
     let myNode = this.getMyNode_();
@@ -159,9 +164,14 @@ let Tree = Backbone.View.extend({
       this.app.send("request:compReady", {
         compId: this._compId,
         nodeIndex: myNode.nodeIndex,
-      })
+      });
     } else {
       myNode.myState = STATE_NOT_READY;
+      this.app.send("request:compReady", {
+        compId: this._compId,
+        nodeIndex: myNode.nodeIndex,
+        cancel: true,
+      });
     }
     this.rememberScroll_();
     this.render();
@@ -179,6 +189,9 @@ let Tree = Backbone.View.extend({
       this.rememberScroll_();
       this.refresh();
     }, 100);
+  },
+  scrollToMe: function() {
+    this.scrollToMe_(true);
   },
   getMyNode_: function() {
     if (!this._comp.tree) {
@@ -198,6 +211,27 @@ let Tree = Backbone.View.extend({
     if (!this.scrollPosition_) return;
     $(".panel-body").scrollTop(this.scrollPosition_[0]);
     $(".panel-body").scrollLeft(this.scrollPosition_[1]);
+  },
+  scrollToMe_: function(force) {
+    let readyBtn = $(".button-prepare")[0];
+    if (!readyBtn) {
+      return;
+    }
+    // only scroll once if not forced
+    if (!force && this.scrolled_) return;
+    this.scrolled_ = true;
+    let offset = $(readyBtn).closest(".inner-table").offset();
+    let parentOffset = $(".panel-body").offset();
+    $(".panel-body").animate(
+      {
+        scrollTop: offset.top + $(".panel-body").scrollTop() - parentOffset.top,
+        scrollLeft: offset.left + $(".panel-body").scrollLeft() - parentOffset.left,
+      },
+      {
+        duration: 500,
+        complete: () => {this.rememberScroll_();},
+      }
+    );
   },
 });
 

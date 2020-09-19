@@ -70,7 +70,7 @@ function getFunDeckList() {
 function toTimeStr(date) {
   let h = date.getHours();
   let m = date.getMinutes();
-  return `${date.toISOString().slice(0,10)} ${h>9?h:'0'+h}:${m>9?m:'0'+m}`;
+  return `${date.toLocaleDateString()} ${h>9?h:'0'+h}:${m>9?m:'0'+m}`;
 }
 
 function toModeStr(mode, deck) {

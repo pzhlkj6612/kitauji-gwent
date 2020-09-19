@@ -234,7 +234,7 @@ let InitialCardsModal = Modal.extend({
 
 let User = Backbone.Model.extend({
   defaults: {
-    userModel: null,
+    userModel: {},
     name: typeof localStorage["bandName"] === "string" ? localStorage["bandName"].slice(0, 20) : null,
     deck: "random",
     scenario: null,
@@ -450,7 +450,8 @@ let User = Backbone.Model.extend({
     localStorage["region"] = region;
     localStorage.removeItem("token");
     localStorage.removeItem("connectionId");
-    this.get("app").initialize();
+    this.get("app").reinitialize();
+    this.get("app").loginRoute();
   },
   chooseSide: function(roomSide){
     this.get("app").send("response:chooseWhichSideBegins", {
