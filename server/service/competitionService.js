@@ -21,7 +21,7 @@ class CompetitionService {
   async addCompetition(data) {
     let result = await CompDao.getInstance().addCompetition(data);
     this.pending_.push(result);
-    await this.mockCandidates_(result.id, result.capacity);
+    // await this.mockCandidates_(result.id, result.capacity);
   }
 
   async deleteCompetition(compId) {

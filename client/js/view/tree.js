@@ -4,6 +4,9 @@ let Handlebars = require('handlebars/runtime').default;
 const STATE_NOT_READY = 1;
 const STATE_READY = 2;
 
+/**
+ * see https://codepen.io/philippkuehn/pen/QbrOaN
+ */
 Handlebars.registerHelper("treeTable", function(comp) {
   let tree = comp.tree;
   if (!tree || !tree.length) return "";
