@@ -96,7 +96,8 @@ let Competition = Backbone.View.extend({
     if (comp.state === Const.COMP_STATE_NOT_STARTED) {
       if (comp.hasMe) comp.canQuit = true;
       else comp.canEnroll = true;
-    } else if (comp.state === Const.COMP_STATE_STARTED && (comp.hasMe || isAdmin)) {
+    } else if ((comp.hasMe || isAdmin)) {
+      // can enter started or ended competition
       comp.canEnter = true;
     } else {
       comp.readonly = true;
@@ -116,9 +117,7 @@ let Competition = Backbone.View.extend({
   },
   onEnterClick: function() {
     if (!this._currentComp) return;
-    if (this._currentComp.state === Const.COMP_STATE_STARTED) {
-      this.app.navigate(`tree/${this._currentComp.id}`, {trigger: true});
-    }
+    this.app.navigate(`tree/${this._currentComp.id}`, {trigger: true});
   },
   onDeleteClick: function() {
     this.app.send("request:compDelete", {

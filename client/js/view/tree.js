@@ -123,6 +123,7 @@ let Tree = Backbone.View.extend({
     "click .button-force-win": "forcePlayerWin",
   },
   refresh: function() {
+    this.rememberScroll_();
     this.app.send("request:competition", {
       compId: this._compId,
       includeTree: true,
@@ -186,7 +187,6 @@ let Tree = Backbone.View.extend({
       compId: this._comp.id,
     });
     setTimeout(() => {
-      this.rememberScroll_();
       this.refresh();
     }, 100);
   },

@@ -536,7 +536,7 @@ var User = (function(){
 
     socket.on("request:makeCompetition", async function(data) {
       if (!Auth.canCreateComp(self.userModel.username)) {
-        socket.emit("notification", {msgKey: "no_authority"});
+        socket.emit("notification", {msgKey: "msg_no_authority"});
         return;
       }
       data.organizer = self.userModel.username;
@@ -562,7 +562,7 @@ var User = (function(){
       } else {
         let ok = await CompetitionService.getInstance().enroll(self.userModel, compId);
         if (!ok) {
-          socket.emit("notification", {msgKey: "enroll_failed"});
+          socket.emit("notification", {msgKey: "msg_enroll_failed"});
           return;
         }
       }
@@ -573,7 +573,7 @@ var User = (function(){
 
     socket.on("request:compDelete", async function(data) {
       if (!Auth.isAdmin(self.userModel.username)) {
-        socket.emit("notification", {msgKey: "no_authority"});
+        socket.emit("notification", {msgKey: "msg_no_authority"});
         return;
       }
       let {compId} = data;
