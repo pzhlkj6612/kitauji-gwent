@@ -23,11 +23,6 @@ let BattleView = Backbone.View.extend({
 
     $(this.el).prependTo('.gwent-battle');
 
-    if(!this.isReplay && !user.get("room")) {
-      new Notification({msgKey: "游戏初始化错误：房间id为空"}).render();
-      return;
-    }
-
     this.listenTo(user, "change:showPreview", this.renderPreview);
     this.listenTo(user, "change:waiting", this.render);
     this.listenTo(user, "change:passing", this.render);

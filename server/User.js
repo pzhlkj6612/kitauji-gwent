@@ -3,7 +3,7 @@ var Const = require("./Const");
 var LuckyDraw = require("./LuckyDraw");
 var Quest = require("./Quest");
 const CompetitionService = require("./service/competitionService");
-const Auth = require("./service/Auth");
+const Auth = require("./service/auth");
 
 var User = (function(){
   var User = function(socket, token){

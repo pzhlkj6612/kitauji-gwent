@@ -100,6 +100,7 @@ class CompetitionService {
     for (let price of [Const.PRICE_REPRESENTATIVE, Const.PRICE_GOLD, Const.PRICE_SILVER, Const.PRICE_BRONZE]) {
       prices[price] = [];
       for (let i = 0; i < QUOTA[price]; i++) {
+        if (!players.length) break;
         let player = players.shift();
         prices[price].push(`${player.bandName}(${player.username})`);
       }

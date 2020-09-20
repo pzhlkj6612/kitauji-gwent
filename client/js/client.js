@@ -148,6 +148,12 @@ let App = Backbone.Router.extend({
     });
   },
   battleRoute: function(gameRecords){
+    if (!this.checkLogin_()) return;
+    if(!this.gameRecords && !this.user.get("room")) {
+      // 游戏初始化错误：房间id为空
+      this.navigate("lobby", {trigger: true, replace: true});
+      return;
+    }
     this.removeCurrentView_();
     this.currentView = new BattleView({
       app: this,
@@ -195,7 +201,7 @@ let App = Backbone.Router.extend({
   },
   checkLogin_: function() {
     if (!localStorage["token"]) {
-      this.app.navigate("login", {trigger: true, replace: true});
+      this.navigate("login", {trigger: true, replace: true});
       return false;
     }
     return true;
