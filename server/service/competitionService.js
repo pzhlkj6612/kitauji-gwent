@@ -88,6 +88,7 @@ class CompetitionService {
 
   async getCompetitionResult(compId) {
     let players = await CompDao.getInstance().getCompetitionResult(compId, 8);
+    players.sort((a, b) => a.grade - b.grade);
 
     // similar to Quest#generateQuestReport
     const QUOTA = {
