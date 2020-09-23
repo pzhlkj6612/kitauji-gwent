@@ -131,16 +131,14 @@ var Matchmaker = (function(){
 
   r.makeOrJoinCompetitionRoom = function(user, comp, nodeIndex, botOptions) {
     let id = `${comp.id}#${nodeIndex}`;
-    let compRooms = this._competitionRooms[comp.id] || {};
-    if (!compRooms[id]) {
+    if (!this._competitionRooms[id]) {
       let room = this._makeRoom(user, {
         id,
         mode: comp.mode,
         deck: comp.funDeck,
       });
-      compRooms[nodeIndex] = room;
+      this._competitionRooms[id] = room;
     }
-    this._competitionRooms[comp.id] = compRooms;
     if (botOptions) {
       this.findBotOpponent(user, botOptions);
     } else {
@@ -166,8 +164,7 @@ var Matchmaker = (function(){
     if (room) {
       return room;
     }
-    let [compId, nodeIndex] = id.split("#");
-    return (this._competitionRooms[compId] || {})[nodeIndex];
+    return this._competitionRooms[id];
   }
 
   r.getRooms = function() {
@@ -180,7 +177,7 @@ var Matchmaker = (function(){
   }
 
   r.updateRoom = function(roomId, data) {
-    let room = this._userRooms[roomId];
+    let room = this.getRoomById(roomId);
     if (!room) return;
     room.updateAt = new Date().getTime();
     room.status = data.status || room.status;
@@ -202,14 +199,11 @@ var Matchmaker = (function(){
   }
 
   r._isCompRoom = function(roomId) {
-    if (!roomId || !roomId.includes("#")) return false;
-    let [compId, nodeIndex] = roomId.split("#");
-    return !!(this._competitionRooms[compId] &&
-      this._competitionRooms[compId][nodeIndex]);
+    return !!(this._competitionRooms[roomId]);
   }
 
   r._updateRoomPlayers = function(roomId, users) {
-    let room = this._userRooms[roomId];
+    let room = this.getRoomById(roomId);
     if (!room) return;
     room.playerNum = users.length;
     room.players = users.map(user => user.getUserModel().username);

@@ -149,7 +149,7 @@ let App = Backbone.Router.extend({
   },
   battleRoute: function(gameRecords){
     if (!this.checkLogin_()) return;
-    if(!this.gameRecords && !this.user.get("room")) {
+    if(!gameRecords && !this.user.get("room")) {
       // 游戏初始化错误：房间id为空
       this.navigate("lobby", {trigger: true, replace: true});
       return;
