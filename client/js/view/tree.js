@@ -138,6 +138,7 @@ let Tree = Backbone.View.extend({
     "click .button-prepare": "doPrepare",
     "click .button-cancel-prepare": "doPrepare",
     "click .button-force-win": "forcePlayerWin",
+    "click .button-watch": "doWatch",
   },
   refresh: function() {
     this.rememberScroll_();
@@ -206,6 +207,13 @@ let Tree = Backbone.View.extend({
     setTimeout(() => {
       this.refresh();
     }, 100);
+  },
+  doWatch: function(e) {
+    let nodeIndex = $(e.target).closest(".inner-table").data("index");
+    this.app.send("request:compWatch", {
+      compId: this._comp.id,
+      nodeIndex,
+    });
   },
   scrollToMe: function() {
     this.scrollToMe_(true);
