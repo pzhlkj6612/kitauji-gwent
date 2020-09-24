@@ -193,9 +193,15 @@
         font-weight: bold;
         font-style: italic;
       }
+      .header {
+        display: none;
+      }
     }
     .inner-table:hover {
       background-color: rgba(255,255,255,.08) !important;
+      .header {
+        display: block;
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 let Backbone = require("backbone");
 let Handlebars = require('handlebars/runtime').default;
+let Const = require("../const");
 
 const STATE_NOT_READY = 1;
 const STATE_READY = 2;
@@ -60,6 +61,7 @@ function innerTable(node, comp) {
   node.players = node.players || [];
   node.bandNames = node.bandNames || [];
   let out = `<div class="inner-table" data-index="${node.nodeIndex}"><table>`;
+  out += header(node);
   for (let i = 0; i < Math.max(node.players.length, 1); i++) {
     let isWinner = node.winner && node.winner === node.players[i];
     let isLoser = node.winner && !isWinner;
@@ -76,6 +78,8 @@ function innerTable(node, comp) {
       }
     } else if (isWinner) {
       out += '<td class="winner-badge"></td>';
+    } else if ((node.readyPlayers || []).includes(node.players[i])) {
+      out += `<td>${node.roomStatus === Const.ROOM_STATE_IDLE ? "已准备" : "游戏中"}</td>`;
     } else if (!node.winner && node.players.length >= 2 && comp.isAdmin) {
       out += '<td><button class="btn btn-sm btn-danger button-force-win">保送</button></td>';
     } else {
@@ -84,6 +88,16 @@ function innerTable(node, comp) {
     out += "</tr>";
   }
   out += "</table></div>";
+  return out;
+}
+
+function header(node) {
+  let out = "";
+  if (node.roomStatus === Const.ROOM_STATE_PLAYING) {
+    out += `<tr class="header"><th colspan="2">`;
+    out += `<button class="btn btn-sm btn-info button-watch">观战</button>`
+    out += `</th></tr>`;
+  }
   return out;
 }
 

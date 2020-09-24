@@ -176,6 +176,22 @@ var Matchmaker = (function(){
     return this._userRooms;
   }
 
+  /**
+   * Put room info in competition tree
+   */
+  r.getRoomsForCompetition = function(compId, tree) {
+    for (let node of tree) {
+      let roomId = `${compId}#${node.nodeIndex}`;
+      let room = this.getRoomById(roomId);
+      if (!room) continue;
+      if (room.status !== Const.ROOM_STATE_PLAYING) {
+        this._updateRoomPlayers(roomId, this._queueByRoom[roomId] || []);
+      }
+      node.roomStatus = room.status;
+      node.readyPlayers = room.players;
+    }
+  }
+
   r.updateRoom = function(roomId, data) {
     let room = this.getRoomById(roomId);
     if (!room) return;

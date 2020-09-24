@@ -168,10 +168,7 @@ class CompetitionDao {
     const table = DB.getInstance().db.collection(TABLE_USER_COMP_REL);
     return await table.find({
       compId,
-    }, {
-      sort: {grade: 1},
-      limit,
-    }).toArray();
+    }).sort({grade: 1}).limit(limit).toArray();
   }
 
   async updateGrade(username, compId, grade) {

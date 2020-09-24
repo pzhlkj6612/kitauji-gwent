@@ -356,6 +356,7 @@ var User = (function(){
     result.hasMe = candidates.some(c=>c.username === this.userModel.username);
     if (includeTree) {
       result.tree = info.tree;
+      matchmaking.getRoomsForCompetition(compId, result.tree);
     }
     result.result = info.result;
     return result;
