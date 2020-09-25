@@ -319,7 +319,11 @@ var HandWrittenBot = (function(){
     r.getName = function() {
       return this._name;
     }
-  
+
+    r.getDisplayName = function() {
+      return this._name;
+    }
+
     r.getRoom = function() {
       return this._rooms[0];
     }

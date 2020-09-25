@@ -127,7 +127,7 @@ var User = (function(){
   }
 
   r.getName = function() {
-    return this.userModel ? this.userModel.bandName : "anonymous";
+    return this.userModel ? this.getDisplayName() : "anonymous";
   }
 
   r.getRoom = function() {
@@ -154,6 +154,10 @@ var User = (function(){
 
   r.getUserModel = function() {
     return this.userModel;
+  }
+
+  r.getDisplayName = function() {
+    return `${this.userModel.bandName}(${this.userModel.username})`;
   }
 
   r.addRoom = function(room) {
@@ -339,6 +343,7 @@ var User = (function(){
   }
 
   r.getCompetitionInfo_ = async function(compId, includeTree) {
+    if (!this.userModel) return null;
     let info = await CompetitionService.getInstance().getCompetitionInfo(compId) || {};
     if (!info) return null;
     let candidates = Object.values(info.candidateMap || {}).reverse();

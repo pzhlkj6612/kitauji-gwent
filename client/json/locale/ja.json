@@ -166,6 +166,8 @@
     "msg_login_success": "ログイン完了",
     "msg_no_authority": "権限がありません",
     "msg_enroll_failed": "参加できません",
+    "msg_enter_room": "{0} が入りました",
+    "msg_new_audience": "{0} が入りました",
     "msg_leader_activated": "「{0}」は「{1}」を使いました",
     "msg_passed": "{0} passed!",
     "msg_choose_no_card": "「{0}」はカードを選んでいない",

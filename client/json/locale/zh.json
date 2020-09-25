@@ -166,6 +166,8 @@
     "msg_login_success": "登录成功！",
     "msg_no_authority": "没有权限！",
     "msg_enroll_failed": "报名失败",
+    "msg_enter_room": "玩家 {0} 进入房间",
+    "msg_new_audience": "{0} 进入房间观战",
     "msg_leader_activated": "{0} 使用 {1}！（领袖牌）",
     "msg_passed": "{0} 放弃出牌！",
     "msg_choose_no_card": "{0} 没有从你的退部/毕业部员中选择。",

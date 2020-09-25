@@ -72,16 +72,16 @@ function innerTable(node, comp) {
     out += `<tr class="${clz}" data-username=${node.players[i]}><td class="name">${name}</td>`;
     if (isMe) {
       if (node.myState === STATE_NOT_READY) {
-        out += '<td><button class="btn btn-sm btn-success button-prepare">准备</button></td>';
+        out += '<td><button class="btn btn-xs btn-success button-prepare">准备</button></td>';
       } else {
-        out += '<td><button class="btn btn-sm btn-warning button-cancel-prepare">取消</button></td>';
+        out += '<td><button class="btn btn-xs btn-warning button-cancel-prepare">取消</button></td>';
       }
     } else if (isWinner) {
       out += '<td class="winner-badge"></td>';
     } else if ((node.readyPlayers || []).includes(node.players[i])) {
-      out += `<td>${node.roomStatus === Const.ROOM_STATE_IDLE ? "已准备" : "游戏中"}</td>`;
+      out += `<td><small>${node.roomStatus === Const.ROOM_STATE_IDLE ? "已准备" : "游戏中"}</small></td>`;
     } else if (!node.winner && node.players.length >= 2 && comp.isAdmin) {
-      out += '<td><button class="btn btn-sm btn-danger button-force-win">保送</button></td>';
+      out += '<td><button class="btn btn-xs btn-danger button-force-win">保送</button></td>';
     } else {
       out += "<td></td>";
     }
@@ -95,7 +95,7 @@ function header(node) {
   let out = "";
   if (node.roomStatus === Const.ROOM_STATE_PLAYING) {
     out += `<tr class="header"><th colspan="2">`;
-    out += `<button class="btn btn-sm btn-info button-watch">观战</button>`
+    out += `<button class="btn btn-xs btn-info button-watch">观战</button>`
     out += `</th></tr>`;
   }
   return out;

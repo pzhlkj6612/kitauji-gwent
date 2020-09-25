@@ -46,14 +46,8 @@ Handlebars.registerHelper("health", function(lives){
   return out;
 });
 Handlebars.registerHelper("formatMessage", function(msg){
-  let out = "";
   var lines = msg.split(/\n/g);
-
-  lines.forEach(function(line){
-    out += line + "<br>";
-  })
-
-  return out;
+  return lines.join("<br>");
 });
 
 let App = Backbone.Router.extend({
@@ -396,6 +390,9 @@ let User = Backbone.Model.extend({
 
     app.receive("notification", function(data){
       app.trigger("notification", data);
+      if (data.options && data.options.chat) {
+        return;
+      }
       new Notification(data).render();
     })
 

@@ -64,7 +64,7 @@ var Room = (function(){
       roomId: this.getID(),
       isWatching: true,
     });
-    this._battle && this._battle.update();
+    this._battle && this._battle.updateAudience(user);
   }
 
   r.isOpen = function(){

@@ -166,6 +166,8 @@
     "msg_login_success": "Login success!",
     "msg_no_authority": "No authority.",
     "msg_enroll_failed": "Failed to enroll.",
+    "msg_enter_room": "{0} entered the room",
+    "msg_new_audience": "{0} entered the room",
     "msg_leader_activated": "{0} activated {1}! (leadercard)",
     "msg_passed": "{0} passed!",
     "msg_choose_no_card": "{0} takes no card from your discard pile (or there wasn't any card to choose)",

@@ -57,7 +57,8 @@ var Battle = (function(){
     this.p2.foe = this.p1;
     this.p1.setUpWeatherFieldWith(this.p2);
 
-
+    this.sendNotification("msg_enter_room", [this._user1.getDisplayName()], {chat: true});
+    this.sendNotification("msg_enter_room", [this._user2.getDisplayName()], {chat: true});
     this.start();
   }
 
@@ -148,16 +149,12 @@ var Battle = (function(){
 
     this.runEvent("Turn" + side.getID());
 
-    if (side === this.p1) {
-      this._audience.forEach(user => user.send("set:waiting", {waiting: this.p1.isWaiting()}));
-    }
+    this._audience.forEach(user => user.send("set:waiting", {waiting: this.p1.isWaiting()}));
     //console.log("current Turn: ", side.getName());
   }
 
   r.passing = function(side) {
-    if (side === this.p1) {
-      this._audience.forEach(user => user.send("set:passing", {passing: this.p1.isPassing()}));
-    }
+    this._audience.forEach(user => user.send("set:passing", {passing: this.p1.isPassing()}));
   }
 
   r.getWinner = function() {
@@ -261,6 +258,12 @@ var Battle = (function(){
     this._user2.disconnect();
   }
 
+  r.updateAudience = function(user) {
+    this._update(this.p1, true, user);
+    this._update(this.p2, true, user);
+    this.sendNotification("msg_new_audience", [user.getDisplayName()], {chat: true});
+  }
+
   r.update = function(){
     //console.("update called");
     this._update(this.p1);
@@ -271,9 +274,9 @@ var Battle = (function(){
     this._update(side, true);
   }
 
-  r._update = function(p, isPrivate){
+  r._update = function(p, isPrivate, opt_target){
     isPrivate = isPrivate || false;
-    p.send("update:info", {
+    let data = {
       // update:info
       info: p.getInfo(),
       leader: p.field[Card.TYPE.LEADER].get()[0],
@@ -284,7 +287,13 @@ var Battle = (function(){
       ranged: p.field[Card.TYPE.RANGED].getInfo(),
       siege: p.field[Card.TYPE.SIEGE].getInfo(),
       weather: p.field[Card.TYPE.WEATHER].getInfo()
-    }, isPrivate);
+    };
+    if (opt_target) {
+      data._roomSide = p.getID();
+      opt_target.send("update:info", data);
+    } else {
+      p.send("update:info", data, isPrivate);
+    }
   }
 
   r.send = function(event, data){
@@ -292,8 +301,12 @@ var Battle = (function(){
       event: event,
       data: data
     });*/
-    // this.p1.socket.emit(event, data);
-    // this.p2.socket.emit(event, data);
+    if (this.p1.isBot) {
+      this.p1.socket.emit(event, data);
+    }
+    if (this.p2.isBot) {
+      this.p2.socket.emit(event, data);
+    }
 
     // send to players and audience
     this.socket.in(this._id).emit(event, data);
@@ -475,11 +488,15 @@ var Battle = (function(){
     this.channel = null;
   }
 
-  r.sendNotification = function(msg, values) {
-    this.send("notification", {
+  r.sendNotification = function(msg, values, options) {
+    let data = {
       msgKey: msg,
       values
-    })
+    };
+    if (options) {
+      data.options = options;
+    }
+    this.send("notification", data);
   }
 
   r.sendNotificationTo = function(side, msg, values) {

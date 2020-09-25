@@ -68,7 +68,7 @@ let SideView = Backbone.View.extend({
       passBtn: this.side === ".player" &&
         (this.isPlayerSide && !this.app.user.get("waiting") ||
         !this.isPlayerSide && this.app.user.get("waiting")),
-      switchBtn: this.battleView.isReplay && this.side !== ".player",
+      switchBtn: this.battleView.readOnly && this.side !== ".player",
       hideTimer: this.app.user.get("withBot"),
       timeLeft: this.timeLeft,
       danger: this.timeLeft < 10,

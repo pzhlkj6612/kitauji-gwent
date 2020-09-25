@@ -623,11 +623,15 @@ $game-height: 800px;
 }
 
 .chat-window {
-  width: 80%;
-  height: 400px;
+  width: 220px;
+  position: absolute;
+  height: 300px;
   top: 50%;
-  transform: translate(0, -50%);
-  background: rgba(0,0,0,.6);
+  z-index: 10;
+  padding: 8px;
+  transform: translate(20px, -50%);
+  background: rgba(0,0,0,.4);
+  color: #ccc;
   overflow-y: scroll;
 }
 

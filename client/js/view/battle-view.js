@@ -1,4 +1,5 @@
 let Backbone = require("backbone");
+let Handlebars = require('handlebars/runtime').default;
 let Modal = require("./modal");
 let SideView = require("./side-view");
 let LuckyDraw = require("./lucky-draw");
@@ -10,9 +11,10 @@ let cardData = require("../../../assets/data/cards");
 let deckData = require("../../../assets/data/deck");
 let abilityData = require("../../../assets/data/abilities");
 
+Handlebars.registerPartial("messages", require("../../templates/message.handlebars"));
+
 let BattleView = Backbone.View.extend({
   template: require("../../templates/battle.handlebars"),
-  messageTemplate: require("../../templates/message.handlebars"),
   initialize: function(options){
     let user = this.user = options.user;
     this.app = options.app;
@@ -22,6 +24,7 @@ let BattleView = Backbone.View.extend({
     this.gameRecords = options.gameRecords || [];
     this.waitForAnimation = false;
     this.animatedCards = {};
+    this.messages = [];
 
     $(this.el).prependTo('.gwent-battle');
 
@@ -57,7 +60,9 @@ let BattleView = Backbone.View.extend({
     }
 
     //TODO: send gameLoaded when user press READY button
-    this.app.send("request:gameLoaded", {_roomID: user.get("room")});
+    if (!this.readOnly) {
+      this.app.send("request:gameLoaded", {_roomID: user.get("room")});
+    }
   },
   events: {
     "mouseover .card": "onMouseover",
@@ -297,6 +302,7 @@ let BattleView = Backbone.View.extend({
       isWaiting: self.user.get("waiting"),
       playerRemained: self.yourSide ? self.yourSide.infoData.deck : 0,
       foeRemained: self.otherSide ? self.otherSide.infoData.deck : 0,
+      messages: self.messages
     }));
     if(!(this.otherSide && this.yourSide)) return;
     this.otherSide.render();
@@ -339,6 +345,10 @@ let BattleView = Backbone.View.extend({
     if(this.user.get("waitForDecoy") != null && this.user.get("waitForDecoy") !== false){
       let id = this.user.get("waitForDecoy");
       this.$el.find("[data-id='" + id + "']").addClass("activeCard");
+    }
+    let $chatWindow = $(".chat-window");
+    if ($chatWindow && $chatWindow.length) {
+      $chatWindow.scrollTop($chatWindow.prop("scrollHeight"));
     }
     return this;
   },
@@ -499,7 +509,7 @@ let BattleView = Backbone.View.extend({
     app.on("set:waiting", function(data) {
       self.recordGameEvent("set:waiting", data);
       let waiting = data.waiting;
-      if (!waiting && !self.user.get("withBot")) {
+      if (!waiting && !self.user.get("withBot") && !self.readOnly) {
         app.trigger("timer:start");
       }
       self.user.set("waiting", waiting);
@@ -515,10 +525,8 @@ let BattleView = Backbone.View.extend({
       if (self.isReplay) {
         new Notification(data).render();
       }
-      let $chatWindow = $(".chat-window");
-      if ($chatWindow && $chatWindow.length) {
-        $chatWindow.append(this.messageTemplate({message: i18n.getText(data.msgKey, data.values)}))
-        $chatWindow.animate({scrollTop: $chatWindow.prop("scrollHeight")}, 500);
+      if (data.options && data.options.chat) {
+        self.messages.push(i18n.getText(data.msgKey, data.values));
       }
     });
 
