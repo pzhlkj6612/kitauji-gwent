@@ -1,6 +1,7 @@
 var shortid = require("shortid");
 var Battle = require("./Battle");
 const Const = require("./Const");
+const Auth = require("./service/auth");
 
 var Room = (function(){
   var Room = function(opt_roomKey){
@@ -52,7 +53,9 @@ var Room = (function(){
   }
 
   r.addAudience = function(user) {
-    if (this._audience.length > Const.ROOM_MAX_AUDIENCE) {
+    if (!Auth.isAdmin(user.getUserModel().username) &&
+      this._audience.length >= Const.ROOM_MAX_AUDIENCE) {
+      user.send("notification", {msgKey: "msg_max_audience"});
       return;
     }
     this._audience.push(user);

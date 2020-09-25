@@ -168,6 +168,7 @@
     "msg_enroll_failed": "参加できません",
     "msg_enter_room": "{0} が入りました",
     "msg_new_audience": "{0} が入りました",
+    "msg_max_audience": "人数が多いため、入りられません",
     "msg_leader_activated": "「{0}」は「{1}」を使いました",
     "msg_passed": "{0} passed!",
     "msg_choose_no_card": "「{0}」はカードを選んでいない",
