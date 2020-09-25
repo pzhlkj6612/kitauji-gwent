@@ -622,6 +622,15 @@ $game-height: 800px;
 
 }
 
+.chat-window {
+  width: 80%;
+  height: 400px;
+  top: 50%;
+  transform: translate(0, -50%);
+  background: rgba(0,0,0,.6);
+  overflow-y: scroll;
+}
+
 .gwent-lives {
   padding: 0;
 

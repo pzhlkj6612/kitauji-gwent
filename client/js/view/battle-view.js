@@ -12,6 +12,7 @@ let abilityData = require("../../../assets/data/abilities");
 
 let BattleView = Backbone.View.extend({
   template: require("../../templates/battle.handlebars"),
+  messageTemplate: require("../../templates/message.handlebars"),
   initialize: function(options){
     let user = this.user = options.user;
     this.app = options.app;
@@ -34,11 +35,6 @@ let BattleView = Backbone.View.extend({
     this.listenTo(user, "change:chooseHeal", this.render);
     this.listenTo(user, "change:isReDrawing", this.render);
     this.listenTo(user, "change:chooseSide", this.render);
-
-    this.$hand = this.$el.find(".field-hand");
-    this.$preview = this.$el.find(".card-preview");
-
-    //$(window).on("resize", this.calculateMargin.bind(this, this.$hand));
 
     if (user.get("scenario") && (
       user.get("questProgress")[user.get("scenario")] === 4
@@ -518,6 +514,11 @@ let BattleView = Backbone.View.extend({
       self.recordGameEvent("notification", data);
       if (self.isReplay) {
         new Notification(data).render();
+      }
+      let $chatWindow = $(".chat-window");
+      if ($chatWindow && $chatWindow.length) {
+        $chatWindow.append(this.messageTemplate({message: i18n.getText(data.msgKey, data.values)}))
+        $chatWindow.animate({scrollTop: $chatWindow.prop("scrollHeight")}, 500);
       }
     });
 
