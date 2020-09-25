@@ -149,7 +149,9 @@ let App = Backbone.Router.extend({
   },
   battleRoute: function(gameRecords){
     if (!this.checkLogin_()) return;
-    if(!gameRecords && !this.user.get("room")) {
+    let isReplay = !!gameRecords;
+    let isWatching = this.user.get("isWatching");
+    if(!(isReplay || isWatching) && !this.user.get("room")) {
       // 游戏初始化错误：房间id为空
       this.navigate("lobby", {trigger: true, replace: true});
       return;
@@ -158,8 +160,9 @@ let App = Backbone.Router.extend({
     this.currentView = new BattleView({
       app: this,
       user: this.user,
-      isReplay: !!gameRecords,
-      gameRecords: gameRecords,
+      isReplay,
+      gameRecords,
+      isWatching,
     });
   },
   collectionsRoute: function() {
@@ -474,6 +477,7 @@ let User = Backbone.Model.extend({
     this.set("roomFoeSide", data.foeSide);
     this.set("withBot", data.withBot);
     this.set("room", data.roomId);
+    this.set("isWatching", data.isWatching);
     // route manually, since battle view may be routed multiple times
     this.get("app").navigate("battle", {trigger: false});
     this.get("app").battleRoute(data.gameRecords);

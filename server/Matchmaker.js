@@ -102,7 +102,7 @@ var Matchmaker = (function(){
     var found = this._checkForOpponent(opt_roomKey);
 
     if(found){
-      if (this._userRooms[opt_roomKey]) {
+      if (this.getRoomById(opt_roomKey)) {
         this.updateRoom(opt_roomKey, {
           status: Const.ROOM_STATE_PLAYING,
         });
@@ -118,6 +118,12 @@ var Matchmaker = (function(){
     }
 
     this._getInQueue(user, opt_roomKey);
+  }
+
+  r.watchGame = function(user, roomKey) {
+    let gameRoom = connections.roomCollection[roomKey];
+    if (!gameRoom) return;
+    gameRoom.addAudience(user);
   }
 
   r.makeRoom = function(user, data) {

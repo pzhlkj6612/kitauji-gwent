@@ -607,6 +607,15 @@ var User = (function(){
       await CompetitionService.getInstance().winGame(username, compId, nodeIndex);
     });
 
+    socket.on("request:compWatch", function(data) {
+      let {compId, nodeIndex} = data;
+      if (self.getRoom()) return;
+      if(self._inQueue) {
+        matchmaking.removeFromQueue(self, self._roomKey);
+      }
+      matchmaking.watchGame(self, `${compId}#${nodeIndex}`);
+    });
+
     socket.on("request:gameLoaded", function(data){
       //console.log(data);
       if (!connections.roomCollection[data._roomID]) {

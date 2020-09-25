@@ -8,9 +8,9 @@ const Util = require("./CardUtil");
 
 
 var Battle = (function(){
-  var Battle = function(id, p1, p2, socket){
+  var Battle = function(id, p1, p2, audience, socket){
     if(!(this instanceof Battle)){
-      return (new Battle(id, p1, p2, socket));
+      return (new Battle(id, p1, p2, audience, socket));
     }
     /**
      * constructor here
@@ -20,6 +20,7 @@ var Battle = (function(){
     this._id = id;
     this._user1 = p1;
     this._user2 = p2;
+    this._audience = audience || [];
     this._started = false;
     this.socket = socket;
   };
@@ -34,6 +35,7 @@ var Battle = (function(){
   r.p2 = null;
   r._user1 = null;
   r._user2 = null;
+  r._audience = [];
   r._started = false;
   r._ended = false;
   r.turn = 0;
@@ -142,12 +144,20 @@ var Battle = (function(){
       return this.switchTurn(side.foe, 1);
     }
 
-
     this.runEvent("EachTurn");
 
     this.runEvent("Turn" + side.getID());
 
+    if (side === this.p1) {
+      this._audience.forEach(user => user.send("set:waiting", {waiting: this.p1.isWaiting()}));
+    }
     //console.log("current Turn: ", side.getName());
+  }
+
+  r.passing = function(side) {
+    if (side === this.p1) {
+      this._audience.forEach(user => user.send("set:passing", {passing: this.p1.isPassing()}));
+    }
   }
 
   r.getWinner = function() {
@@ -228,6 +238,7 @@ var Battle = (function(){
       p2Scores,
       isQuit,
     };
+    this._audience.forEach(user => user.send("gameover", data));
     data.gameResult = await this._user1.endGame({
       isWin: winner === this.p1,
       score: p1Total,
@@ -281,9 +292,11 @@ var Battle = (function(){
       event: event,
       data: data
     });*/
-    this.p1.socket.emit(event, data);
-    this.p2.socket.emit(event, data);
-    // io.sockets.in(this._id).emit(event, data);
+    // this.p1.socket.emit(event, data);
+    // this.p2.socket.emit(event, data);
+
+    // send to players and audience
+    this.socket.in(this._id).emit(event, data);
   }
 
   r.runEvent = function(eventid, ctx, args, uid){

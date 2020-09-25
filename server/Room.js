@@ -12,9 +12,10 @@ var Room = (function(){
      */
 
     var self = this;
-    this._id = shortid.generate();
+    this._id = opt_roomKey || shortid.generate();
     this._roomKey = opt_roomKey;
     this._users = [];
+    this._audience = [];
     this._ready = {};
     //this.socket = scServer.global;
 
@@ -50,6 +51,22 @@ var Room = (function(){
     }
   }
 
+  r.addAudience = function(user) {
+    if (this._audience.length > Const.ROOM_MAX_AUDIENCE) {
+      return;
+    }
+    this._audience.push(user);
+    user.socket.join(this.getID());
+    user.send("init:battle", {
+      // audience see p1's view by default
+      side: "p1",
+      foeSide: "p2",
+      roomId: this.getID(),
+      isWatching: true,
+    });
+    this._battle && this._battle.update();
+  }
+
   r.isOpen = function(){
     return !(this._users.length >= 2);
   }
@@ -73,6 +90,7 @@ var Room = (function(){
       roomId: this.getID(),
       withBot: this._users[1-i] && this._users[1-i].isBot(),
     });
+    user.socket.join(this.getID());
     if (this._battle) {
       var battleSide = this._battle.getBattleSide(side);
       // may rejoin before battle init...
@@ -87,7 +105,7 @@ var Room = (function(){
   }
 
   r.initBattle = function(){
-    this._battle = Battle(this._id, this._users[0], this._users[1], io);
+    this._battle = Battle(this._id, this._users[0], this._users[1], this._audience, io);
     this._users[0].send("init:battle", {
       side: "p1",
       foeSide: "p2",

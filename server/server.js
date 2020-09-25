@@ -63,7 +63,7 @@ io.on("connection", function(socket) { //global connection
     let user = null;
     if (data.connId != null) {
       user = connections.findById(data.connId);
-      if (user && user.getRoom()) {
+      if (user) {
         console.log("user ", user.getName(), " reconnect");
         try {
           user.reconnect(socket);

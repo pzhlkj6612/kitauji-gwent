@@ -38,4 +38,6 @@ module.exports = {
   COMP_STATE_NOT_STARTED: "comp_not_started",
   COMP_STATE_STARTED: "comp_started",
   COMP_STATE_ENDED: "comp_ended",
+
+  ROOM_MAX_AUDIENCE: 10,
 };

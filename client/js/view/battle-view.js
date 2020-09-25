@@ -16,6 +16,7 @@ let BattleView = Backbone.View.extend({
     let user = this.user = options.user;
     this.app = options.app;
     this.isReplay = options.isReplay || false;
+    this.readOnly = this.isReplay || options.isWatching;
     this.isRecording = options.isRecording || !this.isReplay;
     this.gameRecords = options.gameRecords || [];
     this.waitForAnimation = false;
@@ -75,7 +76,7 @@ let BattleView = Backbone.View.extend({
     "click .field-leader>.card-wrap": "clickLeader"
   },
   onPassing: function(){
-    if (this.isReplay) return;
+    if (this.readOnly) return;
     if(this.user.get("passing")) return;
     if(this.user.get("waiting")) return;
     this.user.set("passing", true);
@@ -83,7 +84,7 @@ let BattleView = Backbone.View.extend({
     this.user.get("app").trigger("timer:cancel");
   },
   onSwitchPlayer: function() {
-    if (!this.isReplay) return;
+    if (!this.readOnly) return;
     // switch side name
     let roomSide = this.user.get("roomSide");
     let roomFoeSide = this.user.get("roomFoeSide");
@@ -112,7 +113,7 @@ let BattleView = Backbone.View.extend({
     this.app.goBack();
   },
   onClick: function(e){
-    if (this.isReplay) return;
+    if (this.readOnly) return;
     if(!!this.user.get("waiting")) return;
     if(!!this.user.get("passing")) return;
 
@@ -359,7 +360,7 @@ let BattleView = Backbone.View.extend({
     }*/
   },
   clickLeader: function(e){
-    if (this.isReplay) return;
+    if (this.readOnly) return;
     let $card = $(e.target).closest(".field-leader");
     if(!$card.parent().hasClass("player")) return;
     if($card.find(".card").hasClass("disabled")) return;
