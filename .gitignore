@@ -20,3 +20,6 @@ kitauji-gwent-linux
 kitauji-gwent-macos
 kitauji-gwent-win.exe
 *.pem
+
+# Desktop Services Store on macOS
+.DS_Store
