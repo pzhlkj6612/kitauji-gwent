@@ -187,6 +187,7 @@ var Matchmaker = (function(){
    */
   r.getRoomsForCompetition = function(compId, tree) {
     for (let node of tree) {
+      if (!node) continue;
       let roomId = `${compId}#${node.nodeIndex}`;
       let room = this.getRoomById(roomId);
       if (!room) continue;

@@ -606,6 +606,7 @@ var User = (function(){
 
     socket.on("request:compForceWin", async function(data) {
       if (!Auth.isAdmin(self.userModel.username)) {
+        console.warn("force win failed: no authority", self.userModel.username);
         return;
       }
       let {compId, nodeIndex, username} = data;

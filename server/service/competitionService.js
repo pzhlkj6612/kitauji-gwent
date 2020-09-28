@@ -147,6 +147,9 @@ class CompetitionService {
       comp.state = Const.COMP_STATE_ENDED;
       await CompDao.getInstance().updateCompetition(comp);
       await CompDao.getInstance().updateGrade(username, compId, 1);
+      // also record foe's grade here.
+      let other = node.players[1 - node.players.indexOf(username)];
+      await CompDao.getInstance().updateGrade(other, compId, 2);
       this.cache_[compId].result = await this.getCompetitionResult(compId);
       return;
     }
