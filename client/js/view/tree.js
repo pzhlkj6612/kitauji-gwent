@@ -80,10 +80,11 @@ function innerTable(node, comp) {
       out += '<td class="winner-badge"></td>';
     } else if ((node.readyPlayers || []).includes(node.players[i])) {
       out += `<td><small>${node.roomStatus === Const.ROOM_STATE_IDLE ? "已准备" : "游戏中"}</small></td>`;
-    } else if (!node.winner && node.players.length >= 2 && comp.isAdmin) {
-      out += '<td><button class="btn btn-xs btn-danger button-force-win">保送</button></td>';
     } else {
       out += "<td></td>";
+    }
+    if (!node.winner && node.players.length >= 2 && comp.isAdmin) {
+      out += '<td><button class="btn btn-xs btn-danger button-force-win">保送</button></td>';
     }
     out += "</tr>";
   }
@@ -200,7 +201,7 @@ let Tree = Backbone.View.extend({
     let username = $(e.target).closest("tr").data("username");
     let nodeIndex = $(e.target).closest(".inner-table").data("index");
     this.app.send("request:compForceWin", {
-      username,
+      username: String(username),
       nodeIndex,
       compId: this._comp.id,
     });
