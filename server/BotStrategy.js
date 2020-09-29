@@ -603,7 +603,7 @@ var BotStrategy = (function(){
     }
     r.getFieldBoostForHorn = function(field, fieldIdx) {
       if (field.cards.some(c=>Util.isHorn(c)) || field.horn) return 0;
-      let handScore = this.getScoreSum(this.getHandCards(false, fieldIdx).filter(c=>Util.canReplace(c)), c=>c._data.power);
+      let handScore = this.getScoreSum(this.getHandCards(true, fieldIdx).filter(c=>Util.canReplace(c)), c=>c._data.power);
       let boost =  handScore * 0.2 + this.getScoreSum(field.cards.filter(c=>Util.canReplace(c)), c=>c.power);
       if (this.getHandCards(true).some(c=>Util.isClearWeather(c))) {
         return boost;
