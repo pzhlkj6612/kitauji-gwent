@@ -73,12 +73,12 @@ var Card = (function(){
   r.getBasePower = function(){
     var base = this._data.power;
     if(this._forcedPower > -1){
-      base = this._forcedPower > this._data.power ? this._data.power : this._forcedPower;
+      base = Math.min(this._forcedPower, this._data.power);
     }
     for (let key in this._forcePowerBy) {
       let forcePower = this._forcePowerBy[key];
       if (forcePower > -1) {
-        base = forcePower > this._data.power ? this._data.power : forcePower;
+        base = Math.min(forcePower, this._data.power);
       }
     }
     return base;

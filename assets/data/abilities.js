@@ -67,10 +67,10 @@ module.exports = {
         // no male are hero, so
         if (_card.isMale()) {
           _card.setForcePowerBy(1, "lips");
-          if (_card.getPower(true) <= 0) {
-            var removed = self.foe.field[_card.getType()].removeCard(_card);
-            self.foe.addToDiscard(removed, true);
-          }
+          // if (_card.getPower(true) <= 0) {
+          //   var removed = self.foe.field[_card.getType()].removeCard(_card);
+          //   self.foe.addToDiscard(removed, true);
+          // }
         }
       });
     }
@@ -273,7 +273,7 @@ module.exports = {
     description: "ability_desc_spy",
     changeSide: true,
     onAfterPlace: function(){
-      this.draw(2);
+      this.draw(2, true);
       this.sendNotification("msg_played_spy", [this.getName()]);
     }
   },
