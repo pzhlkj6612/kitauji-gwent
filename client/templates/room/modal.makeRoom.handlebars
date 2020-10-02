@@ -25,13 +25,25 @@
     <div class="form-group">
       <label for="startTime" class="col-sm-2 control-label">开始时间</label>
       <div class="col-sm-10">
-        <input type="datetime-local" class="form-control" id="startTime" name="birthday">
+        <input type="datetime-local" class="form-control" id="startTime" name="startTime">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="enrollEndTime" class="col-sm-2 control-label">报名截止时间（可选）</label>
+      <div class="col-sm-10">
+        <input type="datetime-local" class="form-control" id="enrollEndTime" name="enrollEndTime">
       </div>
     </div>
     <div class="form-group">
       <label for="capacity" class="col-sm-2 control-label">参赛人数</label>
       <div class="col-sm-10">
         <input type="number" class="form-control" id="capacity" name="capacity" min="0">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="prices" class="col-sm-2 control-label">奖金（可选）</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="prices" placeholder="例：{1: 2000, 2: 1000, 4: 500}">
       </div>
     </div>
     {{/if}}

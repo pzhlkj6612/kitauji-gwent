@@ -96,7 +96,7 @@ let Competition = Backbone.View.extend({
     if (comp.state === Const.COMP_STATE_NOT_STARTED) {
       if (comp.hasMe) comp.canQuit = true;
       else comp.canEnroll = true;
-    } else if ((comp.hasMe || isAdmin)) {
+    } else if (comp.state === Const.COMP_STATE_STARTED && comp.hasMe || isAdmin) {
       // can enter started or ended competition
       comp.canEnter = true;
     } else {
@@ -163,15 +163,19 @@ let MakeCompModal = Backbone.Modal.extend({
   onBtnClick: function() {
     let name = this.$el.find("#roomName").val();
     let startTime = this.$el.find("#startTime").val();
+    let enrollEndTime = this.$el.find("#enrollEndTime").val();
     let capacity = this.$el.find("#capacity").val();
     let mode = this.$el.find("input[name=mode]:checked").val();
     let funDeck = this.$el.find("#funDeck").val();
+    let prices = this.$el.find("#prices").val();
     this.model.get("app").send("request:makeCompetition", {
       name,
       startTime: new Date(startTime).getTime(),
+      enrollEndTime: enrollEndTime ? new Date(enrollEndTime).getTime() : null,
       capacity,
       mode,
       funDeck,
+      prices,
     });
     this.remove();
   }

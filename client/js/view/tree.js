@@ -69,7 +69,23 @@ function innerTable(node, comp) {
 
     let clz = isLoser ? "loser" : (isMe ? "me" : "");
     let name = node.players && node.players[i] ? `${node.bandNames[i]}(${node.players[i]})` : "";
-    out += `<tr class="${clz}" data-username=${node.players[i]}><td class="name">${name}</td>`;
+    out += `<tr class="${clz}" data-username=${node.players[i]}>`;
+
+    if (node.players.length >= 2) {
+      node.winners = node.winners || [node.winner];
+      let wins = node.winners.filter(p=>p===node.players[i]).length;
+      for (let j = 0; j < (node.slot || 1); j++) {
+        out += `<td class="normal-badge ${j < wins ? "winner-badge" : ""}"></td>`;
+      }
+    }
+
+    out += `<td class="name">${name}</td>`;
+
+    if (comp.state === Const.COMP_STATE_ENROLL_ENDED) {
+      // readonly when enroll end but game not started
+      out += "</tr>";
+      continue;
+    }
     if (isMe) {
       if (node.myState === STATE_NOT_READY) {
         out += '<td><button class="btn btn-xs btn-success button-prepare">准备</button></td>';
