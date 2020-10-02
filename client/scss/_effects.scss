@@ -51,6 +51,7 @@
 
 .small-cards-modal {
   flex-grow: 1;
+  overflow-y: scroll;
 
   .hand-wrap {
     background: rgba(0, 0, 0, .8);

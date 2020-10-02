@@ -38,10 +38,12 @@
     </table>
     </div>
     <div class="panel panel-dark">
-      <div class="panel-heading">活动详情</div>
+      {{!-- <div class="panel-heading">活动详情</div> --}}
       <div class="panel-body">
-        <h3>{{comp.name}}</h3>
-        <br/>
+        <div class="event-title">
+          <span class="title">{{comp.name}}</span>
+          <span class="watermark">画师：河豚</span>
+        </div>
         <h4>{{i18n "comp_time"}}</h4>
         <p>{{comp.timeStr}}</p>
         <h4>{{i18n "game_mode"}}</h4>
