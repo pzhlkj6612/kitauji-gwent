@@ -6,6 +6,7 @@
  * 3 leader
  * 4 special (decoy)
  * 5 weather
+ * 6 non-card
  */
 
  /**
@@ -2116,5 +2117,16 @@ module.exports = {
     faction: "kumiko1S2",
     rarity: 2,
     type: 0
+  },
+  // non card
+  "gold_trophy": {
+    img: "gold",
+    faction: "nonCard",
+    type: 6,
+  },
+  "silver_trophy": {
+    img: "silver",
+    faction: "nonCard",
+    type: 6,
   },
 }

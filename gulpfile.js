@@ -172,7 +172,11 @@ gulp.task("generate sprites", ["resize lg"], function() {
     margin: 0
     //template: "./client/scss/_cards.hbs"
   })
-  .pipe(imagesConvert({targetType: 'jpg'}))
+  .pipe(gulpif(function (file) {
+    return file.path.match(".*\\.png$") != null;
+  }, imagesConvert({
+    targetType: 'jpg'
+  })))
   .pipe(imagemin())
   .pipe(gulpif(function (file) {
     return file.path.match(".*\\.png$") != null;

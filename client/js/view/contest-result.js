@@ -20,7 +20,7 @@ let ContestResultModal = Backbone.View.extend({
     setTimeout(() => {
       this.remove();
       if (this.gameResult.newCard && this.gameResult.newCard.length ||
-        this.gameResult.coins) {
+        this.gameResult.coins || this.gameResult.trophy) {
         let luckyDraw = new LuckyDraw({
           app: this.app,
           gameResult: this.gameResult,

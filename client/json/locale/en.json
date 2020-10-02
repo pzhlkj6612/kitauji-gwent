@@ -60,7 +60,7 @@
     "optional": "Optional",
     "game_mode": "Game Mode",
     "defaultMode": "自选曲",
-    "funMode": "指定曲",
+    "funMode": "课题曲",
     "default_mode_desc": "Use your own deck",
     "fun_mode_desc": "Use system provided deck",
     "join_room": "Join",
@@ -75,6 +75,7 @@
     "delete": "Delete",
     "comp_enter": "Enter",
     "comp_not_started": "Not Started",
+    "comp_enroll_ended": "报名截止",
     "comp_started": "Running",
     "comp_ended": "End",
 
@@ -88,6 +89,8 @@
     "lucky_draw_leader_text": "You get leader card {1}({2})! Check your deck for detail.【{0}】",
     "lucky_draw_skin_text": "You get {1}({2})! Check your deck for detail.【{0}】",
     "lucky_draw_coin_text": "你获得了【部费】x{0}！(部费可用于抽卡)",
+    "lucky_draw_trophy_gold_text": "你获得了【冠军奖杯】！",
+    "lucky_draw_trophy_sliver_text": "你获得了【亚军奖杯】！",
 
     "card_collection": "Card Collection",
     "card_in_deck": "Cards in Deck",
@@ -185,6 +188,7 @@
     "msg_begin": "{0} begins!",
     "msg_new_round": "Start new round!",
     "msg_draw_extra_card": "{0} draws 1 extra card! (Sound! Euphonium(S1) faction ability)",
+    "msg_draw_extra_cards": "课题曲模式：{0} 获得 {1} 名新部员（手牌数量上限为10）！",
     "msg_decide_who_start": "{0} decides who starts first",
     "msg_win_the_tie": "{0} wins the tie! (Oath's Finale faction ability)",
     "msg_choose_taibu": "{0} chooses a card to destroy.",

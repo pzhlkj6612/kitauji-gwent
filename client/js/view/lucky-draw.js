@@ -9,10 +9,27 @@ let LuckyDrawModal = Backbone.View.extend({
   },
   initialize: function(options) {
     this.app = options.app;
+    // display order: trophy -> card -> coin
+    this.trophy = options.gameResult.trophy;
     this.card = options.gameResult.newCard;
     this.coins = options.gameResult.coins;
+    this.pages = [];
+    if (this.trophy) {
+      this.pages.push({trophy: this.trophy});
+    }
+    if (this.card) {
+      this.pages.push({card: this.card});
+    }
+    if (this.coins) {
+      this.pages.push({coins: this.coins});
+    }
   },
   close: function() {
+    this.pages.shift();
+    if (this.pages.length) {
+      this.render();
+      return;
+    }
     this.$el.find(".luckyDraw-background").removeClass("anim-visible");
     this.$el.find(".card-container").removeClass("anim-visible");
     this.$el.find(".dialog").removeClass("anim-visible");
@@ -23,7 +40,10 @@ let LuckyDrawModal = Backbone.View.extend({
     }, 1000);
   },
   render() {
-    if (this.coins) {
+    let page = this.pages[0];
+    if (page.trophy) {
+      return this.renderTrophy();
+    } else if (page.coins) {
       return this.renderCoins();
     }
     let cardModel = this.toCardModel(this.card);
@@ -68,6 +88,22 @@ let LuckyDrawModal = Backbone.View.extend({
       this.coins,
     ]);
     this.$el.html(this.template({
+      text: text,
+    }));
+    this.renderAnimation();
+    return this;
+  },
+  renderTrophy: function() {
+    let text, card;
+    if (Number(this.trophy) === 1) {
+      text = i18n.getText("lucky_draw_trophy_gold_text");
+      card = "gold_trophy";
+    } else {
+      text = i18n.getText("lucky_draw_trophy_sliver_text");
+      card = "silver_trophy";
+    }
+    this.$el.html(this.template({
+      card: this.toCardModel(card),
       text: text,
     }));
     this.renderAnimation();

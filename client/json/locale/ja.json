@@ -75,6 +75,7 @@
     "delete": "削除",
     "comp_enter": "入る",
     "comp_not_started": "準備中",
+    "comp_enroll_ended": "报名截止",
     "comp_started": "進行中",
     "comp_ended": "終わり",
 
@@ -88,6 +89,8 @@
     "lucky_draw_leader_text": "「{1}({2})」指揮を手に入れました！デッキをチェックしてください。【{0}】",
     "lucky_draw_skin_text": "「{1}({2})」を手に入れました！デッキをチェックしてください。【{0}】",
     "lucky_draw_coin_text": "你获得了【部费】x{0}！(部费可用于抽卡)",
+    "lucky_draw_trophy_gold_text": "你获得了【冠军奖杯】！",
+    "lucky_draw_trophy_sliver_text": "你获得了【亚军奖杯】！",
 
     "card_collection": "カードコレクション",
     "card_in_deck": "編成",
@@ -185,6 +188,7 @@
     "msg_begin": "「{0}」から始まります",
     "msg_new_round": "次のラウンドが始まりました",
     "msg_draw_extra_card": "「{0}」は部員を１人もらいました（「響け！」第1期デッキ技）！",
+    "msg_draw_extra_cards": "课题曲モード：「{0}」は部員を {1} 人もらいました！",
     "msg_decide_who_start": "「{0}」は誰から始まりますかを決まります",
     "msg_win_the_tie": "「{0}」は引き分けを勝ちました（「誓いのフィナーレ」デッキ技）",
     "msg_choose_taibu": "「{0}」は退部相手を選びます",
