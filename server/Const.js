@@ -36,6 +36,7 @@ module.exports = {
 
   // competition
   COMP_STATE_NOT_STARTED: "comp_not_started",
+  COMP_STATE_ENROLL_ENDED: "comp_enroll_ended",
   COMP_STATE_STARTED: "comp_started",
   COMP_STATE_ENDED: "comp_ended",
 

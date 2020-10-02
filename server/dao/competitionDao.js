@@ -64,7 +64,11 @@ class CompetitionDao {
     await DB.getInstance().connectPromise;
     const table = DB.getInstance().db.collection(TABLE_COMPETITION);
     return await table.find({
-      state: Const.COMP_STATE_NOT_STARTED,
+      $or: [{
+        state: Const.COMP_STATE_NOT_STARTED,
+      }, {
+        state: Const.COMP_STATE_ENROLL_ENDED,
+      }]
     }).toArray();
   }
 
@@ -184,15 +188,26 @@ class CompetitionDao {
   }
 
   static toCompetitionDto_(comp) {
+    let startTime = Math.max(new Date().getTime(), comp.startTime);
+    let enrollEndTime = Math.min(comp.enrollEndTime || startTime, startTime);
+    let prices = {};
+    if (comp.prices) {
+      try {
+        prices = JSON.parse(comp.prices);
+      } catch (e) {
+      }
+    }
     return {
       id: shortid.generate(),
       name: comp.name,
       organizer: comp.organizer,
-      startTime: Math.max(new Date().getTime(), comp.startTime),
+      startTime,
+      enrollEndTime,
       capacity: Number(comp.capacity),
       mode: comp.mode,
       funDeck: comp.mode === Const.FUN_MODE ? (comp.funDeck || Const.DEFAULT_FUN_DECK) : null,
       state: Const.COMP_STATE_NOT_STARTED,
+      prices: prices,
       candidates: [],
     };
   }

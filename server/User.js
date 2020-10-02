@@ -231,7 +231,10 @@ var User = (function(){
       await Cache.getInstance().recordUserWin(this.userModel.username, gameState.isWin);
     }
 
-    await matchmaking.endGame(this._roomKey, this.userModel, gameState);
+    await matchmaking.endGame(this._roomKey, this.userModel, gameState, result);
+    if (result.coins) {
+      await db.updateWallet(this.userModel.username, result.coins);
+    }
 
     if (!this._scenario) return result;
     // update quest progress

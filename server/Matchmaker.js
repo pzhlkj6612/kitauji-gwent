@@ -102,13 +102,16 @@ var Matchmaker = (function(){
     var found = this._checkForOpponent(opt_roomKey);
 
     if(found){
+      let room;
       if (this.getRoomById(opt_roomKey)) {
         this.updateRoom(opt_roomKey, {
           status: Const.ROOM_STATE_PLAYING,
         });
         this._updateRoomPlayers(opt_roomKey, [found, user]);
+        room = Room(opt_roomKey);
+      } else {
+        room = Room();
       }
-      var room = Room(opt_roomKey);
       c.roomCollection[room.getID()] = room;
       room.join(user);
       room.join(found);
@@ -153,7 +156,7 @@ var Matchmaker = (function(){
     return id;
   }
 
-  r.endGame = async function(roomId, userModel, gameState) {
+  r.endGame = async function(roomId, userModel, gameState, result) {
     if (gameState.isDraw) {
       // if it's a draw
       return;
@@ -162,7 +165,7 @@ var Matchmaker = (function(){
     if (!this._isCompRoom(roomId)) return;
     let [compId, nodeIndex] = roomId.split("#");
     await CompetitionService.getInstance().endGame(
-      userModel.username, compId, Number(nodeIndex), gameState.isWin);
+      userModel.username, compId, Number(nodeIndex), gameState.isWin, result);
   }
 
   r.getRoomById = function(id) {
