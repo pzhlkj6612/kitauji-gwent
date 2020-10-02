@@ -52,6 +52,7 @@ let SideView = Backbone.View.extend({
     this.renderSiegeField();
     this.renderWeatherField();
     this.renderPlayCardAnimation();
+    this.renderGetCardAnimation();
 
     return this;
   },
@@ -220,6 +221,26 @@ let SideView = Backbone.View.extend({
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
     this.battleView.calculateMargin($field.find(".field-siege"), 9);
+  },
+  renderGetCardAnimation: function() {
+    let getCard = this.infoData.getCard;
+    if (!getCard) return;
+    let id = getCard._id;
+    let $card = $(`.field-hand .card[data-id='${id}']`);
+    if (!$card || $card.length === 0) {
+      return;
+    }
+    if (this.battleView.animatedGetCards[id]) {
+      console.info("already animated");
+      return;
+    }
+    this.battleView.animatedGetCards[id] = true;
+    let $getCard = $(".get-card-animation");
+    $getCard.html($card.html());
+    $getCard.addClass("move-to-hand");
+    setTimeout(() => {
+      $getCard.removeClass("move-to-hand");
+    }, 500);
   },
   renderPlayCardAnimation: function() {
     let placedCard = this.infoData.placedCard;

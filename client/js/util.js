@@ -7,6 +7,8 @@ function toFactionText(faction) {
       return "deck_ku1";
     case "kumiko1S2":
       return "deck_ku1S2";
+    case "funDeck":
+      return "funMode";
     case "kumiko2":
     default:
       return "deck_ku2";

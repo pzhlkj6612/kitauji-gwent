@@ -59,6 +59,7 @@ var Deck = (function(){
   ];
 
   Deck.FACTION = {
+    FUN_DECK: "funDeck",
     SOUND_EUPHO_S1: "kumiko1",
     SCOIATAEL: "scoiatael",
     OATHS_FINALE: "kitauji",
@@ -122,6 +123,7 @@ var Deck = (function(){
     this._faction = deck.faction;
     if (FunDeckData[deckKey]) {
       this._funDeck = deckKey;
+      this._faction = Deck.FACTION.FUN_DECK;
     }
 
     this._loadCards();

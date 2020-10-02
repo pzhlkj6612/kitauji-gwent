@@ -24,6 +24,7 @@ let BattleView = Backbone.View.extend({
     this.gameRecords = options.gameRecords || [];
     this.waitForAnimation = false;
     this.animatedCards = {};
+    this.animatedGetCards = {};
     this.messages = [];
 
     $(this.el).prependTo('.gwent-battle');
@@ -180,6 +181,9 @@ let BattleView = Backbone.View.extend({
         break;
       case 2:
         animationClass = isSpy ? "move-to-foe-siege" : "move-to-player-siege";
+        break;
+      case 5:
+        animationClass = "move-to-weather";
         break;
     }
     playCard.addClass(animationClass);
@@ -403,6 +407,7 @@ let BattleView = Backbone.View.extend({
       self.recordGameEvent("new:round");
       playSound("smash");
       self.animatedCards = {};
+      self.animatedGetCards = {};
     })
     app.on("update:info", function(data){
       self.recordGameEvent("update:info", data);
@@ -732,7 +737,8 @@ let WinnerModal = Modal.extend({
         gameResult: gameResult,
       });
       $(".container").prepend(contestReport.render().el);
-    } else if (gameResult.newCard && gameResult.newCard.length || gameResult.coins) {
+    } else if (gameResult.newCard && gameResult.newCard.length ||
+      gameResult.coins || gameResult.trophy) {
       let luckyDraw = new LuckyDraw({
         app: this.model.get("app"),
         gameResult,

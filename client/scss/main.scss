@@ -397,7 +397,7 @@ $game-height: 800px;
   flex-direction: column-reverse;
 }
 
-.play-card-animation {
+.play-card-animation,.get-card-animation {
   position: fixed;
   transform: translate(1200px,300px);
   left: 0;
@@ -408,7 +408,7 @@ $game-height: 800px;
   overflow: hidden;
 }
 
-.play-card-animation i {
+.play-card-animation i,.get-card-animation i {
   border-radius: 10px;
   display: block;
   position: absolute;
@@ -442,6 +442,18 @@ $game-height: 800px;
   to {
       -webkit-transform: rotate(0deg);
   }
+}
+
+.move-to-hand {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(800px,630px);
+}
+
+.move-to-weather {
+  transition: 0.3s;
+  visibility: visible;
+  transform: translate(100px,350px);
 }
 
 .move-to-player-siege {

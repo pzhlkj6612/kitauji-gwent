@@ -185,9 +185,13 @@ var Battle = (function(){
 
 
     if(winner.deck.getFaction() === Deck.FACTION.SOUND_EUPHO_S1 && !lastRound.isTie){
-      winner.draw(1);
+      winner.draw(1, true);
       //console.log(winner.getName() + " draws 1 extra card! (Northern ability)");
       this.sendNotification("msg_draw_extra_card", [winner.getName()]);
+    }
+    if (this.p1.deck.getFaction() === Deck.FACTION.FUN_DECK &&
+      this.p2.deck.getFaction() === Deck.FACTION.FUN_DECK) {
+      this.waitForFunDeckRedraw();
     }
 
     this.update();
@@ -205,6 +209,15 @@ var Battle = (function(){
       this.sendNotification("msg_begin", [winner.getName()]);
       this.switchTurn(winner);
     }
+  }
+
+  r.waitForFunDeckRedraw = function() {
+    let num1 = Math.min(3, Math.max(0, 10 - this.p1.hand.length()));
+    let num2 = Math.min(3, Math.max(0, 10 - this.p2.hand.length()));
+    this.p1.draw(num1, true);
+    this.p2.draw(num2, true);
+    this.sendNotification("msg_draw_extra_cards", [this.p1.getName(), num1]);
+    this.sendNotification("msg_draw_extra_cards", [this.p2.getName(), num2]);
   }
 
   r.waitForScoiatael = function(side){

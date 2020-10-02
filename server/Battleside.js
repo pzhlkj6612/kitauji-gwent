@@ -63,6 +63,7 @@ Battleside = (function() {
   r._attacked = null;
   r._healed = null;
   r._placedCard = null;
+  r._getCard = null;
   r._isNewRound = false;
 
 
@@ -388,11 +389,15 @@ Battleside = (function() {
     return this.n;
   }
 
-  r.draw = function(times) {
+  r.draw = function(times, animate) {
+    if (times <= 0) return;
     while(times--) {
       var card = this.deck.draw();
       if (!card) return;
       this.hand.add(card);
+      if (animate) {
+        this._getCard = card;
+      }
     }
   }
 
@@ -418,6 +423,7 @@ Battleside = (function() {
       discard: this.getDiscard(false).filter(c=>Util.canReplace(c)).map(c=>Util.compress(c)),
       scorched: this.getScorched(false),
       placedCard: this.getPlacedCard(false),
+      getCard: this.getGetCard(false),
       healed: this._healed,
       attacked: this._attacked,
       isNewRound: isNewRound,
@@ -507,6 +513,7 @@ Battleside = (function() {
     this._attacked = [];
     this._healed = [];
     this._placedCard = null;
+    this._getCard = null;
 
     this.runEvent("NextTurn", null, [this.foe]);
   }
@@ -989,6 +996,13 @@ Battleside = (function() {
     return this._placedCard;
   }
 
+  r.getGetCard = function(json) {
+    if(json) {
+      return JSON.stringify(this._getCard);
+    }
+    return this._getCard;
+  }
+
   r.resetNewRound = function() {
     this.clearMainFields();
     this.setWeather(5, {
@@ -1063,7 +1077,7 @@ Battleside = (function() {
 
       self.deck.add(card);
       self.deck.shuffle();
-      self.draw(1);
+      self.draw(1, true);
 
       if(!left) {
         self.send("redraw:close", null, true);
