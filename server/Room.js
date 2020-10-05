@@ -138,6 +138,7 @@ var Room = (function(){
   }
 
   r.bothReady = function(){
+    if (!this._users[0] || !this._users[1]) return false;
     return !!this._ready[this._users[0].getID()] && !!this._ready[this._users[1].getID()];
   }
 

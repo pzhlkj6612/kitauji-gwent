@@ -259,6 +259,10 @@ class CompetitionService {
   }
 
   async enrollEnd_(comp) {
+    if (comp.state === Const.COMP_STATE_ENROLL_ENDED) {
+      // already arranged
+      return;
+    }
     // get candidates
     let candidates = await CompDao.getInstance().getCandidates(comp.id);
     if (!candidates || !candidates.length) return false;

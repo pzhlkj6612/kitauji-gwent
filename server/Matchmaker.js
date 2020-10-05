@@ -98,6 +98,9 @@ var Matchmaker = (function(){
 
   r.findOpponent = function(user, opt_roomKey){
     var c = connections;
+    if (c.roomCollection[opt_roomKey]) {
+      return;
+    }
 
     var found = this._checkForOpponent(opt_roomKey);
 
