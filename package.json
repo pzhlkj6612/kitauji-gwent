@@ -36,6 +36,7 @@
     "gulp-version-number": "^0.2.4",
     "handlebars": "^4.7.6",
     "jquery": "^2.1.4",
+    "merge-stream": "^2.0.0",
     "sprity": "^1.0.6",
     "sprity-gm": "^1.0.2",
     "sprity-sass": "^1.0.4",

@@ -17,6 +17,7 @@ var version = require('gulp-version-number');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var gutil = require('gulp-util');
+var merge = require('merge-stream');
 //livereload({start: true});
 
 //fast install
@@ -39,7 +40,7 @@ const versionConfig = {
 };
 
 gulp.task('browserify', function() {
-  browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
+  return browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
   .transform(handlebars).on("error", function(err) {
     console.log(err);
   })
@@ -60,7 +61,7 @@ gulp.task('browserify', function() {
 });
 
 gulp.task('sass', ["generate ability sprites"], function() {
-  gulp.src('./client/scss/main.scss')
+  return gulp.src('./client/scss/main.scss')
   .pipe(sass({
     outputStyle: 'compressed'
   }).on("error", function(err) {
@@ -75,7 +76,7 @@ gulp.task('sass', ["generate ability sprites"], function() {
 });
 
 gulp.task("unit tests", function() {
-  browserify('./test/src/mainSpec.js', {standalone: "app", debug: true})
+  return browserify('./test/src/mainSpec.js', {standalone: "app", debug: true})
   .transform(babelify)
   .bundle().on("error", function(err) {
     console.log(err);
@@ -88,8 +89,8 @@ gulp.task("unit tests", function() {
   }));
 })
 
-gulp.task("watch", function() {
-  if(argv.production) return;
+gulp.task("watch", function(done) {
+  if(argv.production) return done();
   gulp.watch("./assets/data/*", ["browserify"]);
   gulp.watch("./client/js/**", ["browserify"]);
   gulp.watch("./client/templates/**", ["browserify"]);
@@ -101,15 +102,17 @@ gulp.task("watch", function() {
 
 
 gulp.task("index", function() {
-  gulp.src("./client/index.html")
+  var indexHtmlStream = gulp.src("./client/index.html")
   .pipe(version(versionConfig))
   .pipe(gulp.dest("./public/"));
 
-  gulp.src("./client/json/**")
+  var jsonStream = gulp.src("./client/json/**")
   .pipe(gulp.dest("./public/json/"));
 
-  gulp.src("./client/css/app.css")
+  var appCssStream = gulp.src("./client/css/app.css")
   .pipe(gulp.dest("./public/build"));
+
+  return merge(indexHtmlStream, jsonStream, appCssStream);
 })
 
 gulp.task('resize md', function(done) {
@@ -138,10 +141,10 @@ gulp.task('resize lg', ["resize md"], function(done) {
   .pipe(gulp.dest('./assets/cards/lg/'));
 });
 
-gulp.task("generate card sprites", ["resize lg"], function() {
+gulp.task("generate card sprites", ["resize lg"], function(done) {
   if(fs.existsSync(__dirname + "/public/build/cards-lg-kitauji.png")) {
     console.log("skip card sprites generation");
-    return;
+    return done();
   }
 
 
@@ -173,10 +176,10 @@ gulp.task("generate card sprites", ["resize lg"], function() {
   .pipe(gulp.dest("./public/build/"));
 })
 
-gulp.task("generate ability sprites", function() {
+gulp.task("generate ability sprites", function(done) {
   if(fs.existsSync(__dirname + "/public/build/_ability.scss")) {
     console.log("skip ability sprites generation");
-    return;
+    return done();
   }
 
   return sprity.src({
