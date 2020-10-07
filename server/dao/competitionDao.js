@@ -116,6 +116,7 @@ class CompetitionDao {
         players: record.players,
         bandNames: record.bandNames,
         winner: record.winner,
+        winners: record.winners,
         recordUrl: record.recordUrl,
         withBot: record.withBot,
       }
