@@ -112,19 +112,6 @@ gulp.task("index", function() {
   .pipe(gulp.dest("./public/build"));
 })
 
-gulp.task('resize sm', function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/sm/kitauji/oumae_kumiko.png")) {
-    console.log("skip generating sm images");
-    return done();
-  }
-  return gulp.src('./assets/original_cards/**/*.png')
-  .pipe(gm(function(gmfile) {
-    return gmfile.resize(null, 120);
-  }))
-  .pipe(imagemin())
-  .pipe(gulp.dest('./assets/cards/sm/'));
-});
-
 gulp.task('resize md', function(done) {
   if(fs.existsSync(__dirname + "/assets/cards/md/kitauji/oumae_kumiko.png")) {
     console.log("skip generating md images");
