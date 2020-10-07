@@ -32,7 +32,7 @@ const versionConfig = {
       },
       {
         'type'  : 'css',
-        'files': ['app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
+        'files': ['ability.css', 'app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
       }
     ],
   },
