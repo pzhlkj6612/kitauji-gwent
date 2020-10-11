@@ -103,7 +103,6 @@ gulp.task('resize md', function(done) {
   .pipe(gm(function(gmfile) {
     return gmfile.resize(null, 284);
   }))
-  .pipe(imagemin())
   .pipe(gulp.dest('./assets/cards/md/'));
 });
 
@@ -116,7 +115,6 @@ gulp.task('resize lg', ["resize md"], function(done) {
   .pipe(gm(function(gmfile) {
     return gmfile.resize(null, 450);
   }))
-  .pipe(imagemin())
   .pipe(gulp.dest('./assets/cards/lg/'));
 });
 
