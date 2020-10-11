@@ -94,31 +94,23 @@ gulp.task("index", function() {
   return merge(indexHtmlStream, jsonStream, appCssStream);
 })
 
-gulp.task('resize md', function(done) {
+gulp.task('resize', function(done) {
   if(fs.existsSync(__dirname + "/assets/cards/md/kitauji/oumae_kumiko.png")) {
-    console.log("skip generating md images");
-    return done();
-  }
-  return gulp.src('./assets/original_cards/**/*.png')
-  .pipe(gm(function(gmfile) {
-    return gmfile.resize(null, 284);
-  }))
-  .pipe(gulp.dest('./assets/cards/md/'));
-});
-
-gulp.task('resize lg', ["resize md"], function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/lg/kitauji/oumae_kumiko.png")) {
-    console.log("skip generating lg images");
+    console.log("skip image resizing");
     return done();
   }
   return gulp.src('./assets/original_cards/**/*.png')
   .pipe(gm(function(gmfile) {
     return gmfile.resize(null, 450);
   }))
-  .pipe(gulp.dest('./assets/cards/lg/'));
+  .pipe(gulp.dest('./assets/cards/lg/'))
+  .pipe(gm(function(gmfile) {
+    return gmfile.resize(null, 284);
+  }))
+  .pipe(gulp.dest('./assets/cards/md/'));
 });
 
-gulp.task("generate card sprites", ["resize lg"], function(done) {
+gulp.task("generate card sprites", ["resize"], function(done) {
   if(fs.existsSync(__dirname + "/public/build/cards.css")) {
     console.log("skip card sprites generation");
     return done();
@@ -181,7 +173,7 @@ gulp.task("generate ability sprites", function(done) {
 })
 
 
-gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate card sprites", "generate ability sprites"]);
+gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize", "generate card sprites", "generate ability sprites"]);
 
 function errorHandler (errorMessage) {
   throw new Error(errorMessage);
