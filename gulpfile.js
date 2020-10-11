@@ -138,9 +138,9 @@ gulp.task('resize lg', ["resize md"], function(done) {
   .pipe(gulp.dest('./assets/cards/lg/'));
 });
 
-gulp.task("generate sprites", ["resize lg"], function() {
+gulp.task("generate card sprites", ["resize lg"], function() {
   if(fs.existsSync(__dirname + "/public/build/cards-lg-kitauji.png")) {
-    console.log("skip sprite generation");
+    console.log("skip card sprites generation");
     return;
   }
 
@@ -173,9 +173,9 @@ gulp.task("generate sprites", ["resize lg"], function() {
   .pipe(gulp.dest("./public/build/"));
 })
 
-gulp.task("effect sprites", function() {
+gulp.task("generate ability sprites", function() {
   if(fs.existsSync(__dirname + "/public/build/abilities-md.PNG")) {
-    console.log("skip effect sprite generation");
+    console.log("skip ability sprites generation");
     return;
   }
 
@@ -201,4 +201,4 @@ gulp.task("effect sprites", function() {
 })
 
 
-gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate sprites", "effect sprites"]);
+gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate card sprites", "generate ability sprites"]);
