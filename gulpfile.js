@@ -121,7 +121,7 @@ gulp.task('resize lg', ["resize md"], function(done) {
 });
 
 gulp.task("generate card sprites", ["resize lg"], function(done) {
-  if(fs.existsSync(__dirname + "/public/build/cards-lg-kitauji.png")) {
+  if(fs.existsSync(__dirname + "/public/build/cards.css")) {
     console.log("skip card sprites generation");
     return done();
   }
