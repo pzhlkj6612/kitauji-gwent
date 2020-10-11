@@ -11,6 +11,9 @@
 @import "room";
 @import "competition";
 
+// Run the gulp task "generate ability sprites" to generate this file.
+@import "../../public/build/ability";
+
 ::-webkit-scrollbar {
   display: none;
 }

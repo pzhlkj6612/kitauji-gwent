@@ -32,7 +32,7 @@ const versionConfig = {
       },
       {
         'type'  : 'css',
-        'files': ['ability.css', 'app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
+        'files': ['app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
       }
     ],
   },
@@ -59,7 +59,7 @@ gulp.task('browserify', function() {
 
 });
 
-gulp.task('sass', function() {
+gulp.task('sass', ["generate ability sprites"], function() {
   gulp.src('./client/scss/main.scss')
   .pipe(sass({
     outputStyle: 'compressed'
@@ -174,14 +174,14 @@ gulp.task("generate card sprites", ["resize lg"], function() {
 })
 
 gulp.task("generate ability sprites", function() {
-  if(fs.existsSync(__dirname + "/public/build/abilities-md.PNG")) {
+  if(fs.existsSync(__dirname + "/public/build/_ability.scss")) {
     console.log("skip ability sprites generation");
     return;
   }
 
   return sprity.src({
     src: "./assets/texture/ability/**/*.png",
-    style: "ability.css",
+    style: "_ability.scss",
     processor: "css",
     engine: "gm",
     orientation: "binary-tree",
