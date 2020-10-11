@@ -13,6 +13,9 @@ var version = require('gulp-version-number');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
 var merge = require('merge-stream');
+var path = require('path');
+var cssConcat = require('gulp-concat-css');
+var gulpIf = require('gulp-if');
 //livereload({start: true});
 
 //fast install
@@ -112,22 +115,14 @@ gulp.task("generate card sprites", ["resize"], function(done) {
     return done();
   }
 
-
-  return sprity.src({
-    src: "./assets/cards/**/*.png",
-    style: "cards.css",
-    //"style-type": "scss",
-    processor: "css",
-    engine: "gm",
-    orientation: "binary-tree",
-    split: true,
-    cssPath: "../../public/build/",
-    prefix: "card",
-    name: "cards",
-    margin: 0,
-    format: "jpg"
-    //template: "./client/scss/_cards.hbs"
-  })
+  return getSpriteStreamFromPngFiles(
+    "./assets/cards/",
+    "cards.css",
+    "cards",
+    "card",
+    "jpg",
+    true
+  )
   .pipe(gulp.dest("./public/build/"));
 })
 
@@ -137,19 +132,14 @@ gulp.task("generate ability sprites", function(done) {
     return done();
   }
 
-  return sprity.src({
-    src: "./assets/texture/ability/**/*.png",
-    style: "_ability.scss",
-    processor: "css",
-    engine: "gm",
-    orientation: "binary-tree",
-    split: true,
-    cssPath: "../../public/build/",
-    prefix: "ability",
-    name: "abilities",
-    margin: 0,
-    format: "png"
-  })
+  return getSpriteStreamFromPngFiles(
+    "./assets/texture/ability/",
+    "_ability.scss",
+    "abilities",
+    "ability",
+    "png",
+    false
+  )
   .pipe(gulp.dest("./public/build/"));
 })
 
@@ -158,4 +148,57 @@ gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "res
 
 function errorHandler (errorMessage) {
   throw new Error(errorMessage);
+}
+
+// Learned from
+//   https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
+//
+function getFolders (dirPath) {
+  return fs.readdirSync(dirPath)
+    .filter(function (file) {
+      return fs.statSync(path.join(dirPath, file)).isDirectory();
+    });
+}
+
+function getSpriteStreamFromPngFiles (
+  inputImageDirPath,
+  outputStyleFileName,
+  outputImagefileNamePrefix,
+  cssPrefix,
+  outputImagefileFormat,
+  generateSplitSprites
+) {
+  var folders = getFolders(inputImageDirPath);
+  if (folders.length === 0) {
+    errorHandler(`No subdirectory in "${inputImageDirPath}".`);
+  }
+
+  var tasks = folders.map(function (folder) {
+    var filesGlobPath = path.join(inputImageDirPath, folder, "/**/*.png"); // Attention!
+    console.log("source glob path: " + filesGlobPath);
+
+    var imageFileNamePrefix = `${outputImagefileNamePrefix}-${folder}`;
+    console.log("imageFileNamePrefix: " + imageFileNamePrefix);
+
+    var cssSpritesheetName = `${cssPrefix}-${folder}`;
+    console.log("cssSpritesheetName: " + cssSpritesheetName);
+
+    return sprity.src({
+      src: filesGlobPath,
+      style: `${imageFileNamePrefix}.css`, // Don't care about 'style', these css files will be concatenated with each other.
+      name: imageFileNamePrefix,
+      prefix: cssSpritesheetName,
+      format: outputImagefileFormat,
+      processor: "css",
+      engine: "gm",
+      orientation: "binary-tree",
+      cssPath: "../../public/build/",
+      split: generateSplitSprites,
+      margin: 0
+    });
+  });
+
+  return merge(tasks).pipe(gulpIf("*.css", cssConcat(
+    outputStyleFileName
+  )));
 }
