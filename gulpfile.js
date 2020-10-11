@@ -6,7 +6,6 @@ var babelify = require("babelify");
 var livereload = require("gulp-livereload");
 var sass = require("gulp-sass");
 var handlebars = require("browserify-handlebars");
-var imagemin = require('gulp-imagemin');
 var imagesConvert = require('gulp-images-convert');
 var gm = require("gulp-gm");
 var sprity = require("sprity");
@@ -136,7 +135,6 @@ gulp.task("generate card sprites", ["resize"], function(done) {
   }, imagesConvert({
     targetType: 'jpg'
   })))
-  .pipe(imagemin())
   .pipe(gulpif(function (file) {
     return file.path.match(".*\\.png$") != null;
   }, rename({
@@ -163,7 +161,6 @@ gulp.task("generate ability sprites", function(done) {
     name: "abilities",
     margin: 0
   })
-  .pipe(imagemin())
   .pipe(gulpif(function (file) {
     return file.path.match(".*\\.png$") != null;
   }, rename({
