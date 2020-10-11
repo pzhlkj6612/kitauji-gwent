@@ -6,12 +6,9 @@ var babelify = require("babelify");
 var livereload = require("gulp-livereload");
 var sass = require("gulp-sass");
 var handlebars = require("browserify-handlebars");
-var imagesConvert = require('gulp-images-convert');
 var gm = require("gulp-gm");
 var sprity = require("sprity");
-var gulpif = require("gulp-if");
 var argv = require("minimist")(process.argv.slice(2));
-var rename = require("gulp-rename");
 var version = require('gulp-version-number');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
@@ -127,19 +124,10 @@ gulp.task("generate card sprites", ["resize"], function(done) {
     cssPath: "../../public/build/",
     prefix: "card",
     name: "cards",
-    margin: 0
+    margin: 0,
+    format: "jpg"
     //template: "./client/scss/_cards.hbs"
   })
-  .pipe(gulpif(function (file) {
-    return file.path.match(".*\\.png$") != null;
-  }, imagesConvert({
-    targetType: 'jpg'
-  })))
-  .pipe(gulpif(function (file) {
-    return file.path.match(".*\\.png$") != null;
-  }, rename({
-    extname: ".PNG"
-  })))
   .pipe(gulp.dest("./public/build/"));
 })
 
@@ -159,13 +147,9 @@ gulp.task("generate ability sprites", function(done) {
     cssPath: "../../public/build/",
     prefix: "ability",
     name: "abilities",
-    margin: 0
+    margin: 0,
+    format: "png"
   })
-  .pipe(gulpif(function (file) {
-    return file.path.match(".*\\.png$") != null;
-  }, rename({
-    extname: ".PNG"
-  })))
   .pipe(gulp.dest("./public/build/"));
 })
 

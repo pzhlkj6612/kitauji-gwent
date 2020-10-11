@@ -7,7 +7,6 @@
   "dependencies": {
     "connect": "3.0.1",
     "express": "^4.13.4",
-    "gulp-rename": "^1.2.2",
     "jquery-deferred": "^0.3.0",
     "minimist": "1.1.0",
     "mongodb": "^3.5.9",
@@ -26,8 +25,6 @@
     "browserify-handlebars": "^1.0.0",
     "gulp": "^3.9.0",
     "gulp-gm": "^0.0.9",
-    "gulp-if": "^1.2.5",
-    "gulp-images-convert": "^1.1.1",
     "gulp-livereload": "^3.8.0",
     "gulp-sass": "^3.0.0",
     "gulp-uglify": "^3.0.2",
