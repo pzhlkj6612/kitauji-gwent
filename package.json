@@ -24,7 +24,7 @@
     "browserify": "^10.2.4",
     "browserify-handlebars": "^1.0.0",
     "gmsmith": "^1.2.0",
-    "gulp": "^3.9.0",
+    "gulp": "^4.0.2",
     "gulp-concat-css": "^3.1.0",
     "gulp-gm": "^0.0.9",
     "gulp-if": "^3.0.0",
@@ -37,7 +37,7 @@
     "jquery": "^2.1.4",
     "merge-stream": "^2.0.0",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "^1.1.2"
+    "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
     "gulp": "gulp",

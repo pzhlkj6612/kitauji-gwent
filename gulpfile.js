@@ -40,7 +40,7 @@ const versionConfig = {
 
 const jpegSpriteImageQuality = 82; // GraphicsMagick's default value: 75
 
-gulp.task('browserify', function() {
+function browserifyTask() {
   return browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
   .transform(handlebars).on("error", errorHandler)
   .transform(babelify)
@@ -51,38 +51,38 @@ gulp.task('browserify', function() {
   .on('error', errorHandler)
   .pipe(gulp.dest('./public/build/').on("error", errorHandler));
 
-});
+}
 
-gulp.task('sass', ["generate ability sprites"], function() {
+function sassTask() {
   return gulp.src('./client/scss/main.scss')
   .pipe(sass({
     outputStyle: 'compressed'
   }).on("error", errorHandler))
   .pipe(gulp.dest('./public/build/').on("error", errorHandler))
   .pipe(livereload().on("error", errorHandler));
-});
+}
 
-gulp.task("unit tests", function() {
+function unitTestsTask() {
   return browserify('./test/src/mainSpec.js', {standalone: "app", debug: true})
   .transform(babelify)
   .bundle().on("error", errorHandler)
   .pipe(source('spec.js').on("error", errorHandler))
   .pipe(gulp.dest('./test/spec/').on("error", errorHandler));
-})
+}
 
-gulp.task("watch", function(done) {
+function watchTask(done) {
   if(argv.production) return done();
-  gulp.watch("./assets/data/*", ["browserify"]);
-  gulp.watch("./client/js/**", ["browserify"]);
-  gulp.watch("./client/templates/**", ["browserify"]);
-  gulp.watch("./client/scss/*", ["sass"]);
-  gulp.watch("./client/*.html", ["index"]);
-  gulp.watch("./client/json/**", ["index", "browserify"]);
-  gulp.watch("./test/src/*", ["unit tests"]);
-})
+  gulp.watch("./assets/data/*", gulp.series(browserifyTask));
+  gulp.watch("./client/js/**", gulp.series(browserifyTask));
+  gulp.watch("./client/templates/**", gulp.series(browserifyTask));
+  gulp.watch("./client/scss/*", gulp.series(sassTask));
+  gulp.watch("./client/*.html", gulp.series(indexTask));
+  gulp.watch("./client/json/**", gulp.parallel(indexTask, browserifyTask));
+  gulp.watch("./test/src/*", gulp.series(unitTestsTask));
+}
 
 
-gulp.task("index", function() {
+function indexTask() {
   var indexHtmlStream = gulp.src("./client/index.html")
   .pipe(version(versionConfig))
   .pipe(gulp.dest("./public/"));
@@ -94,9 +94,9 @@ gulp.task("index", function() {
   .pipe(gulp.dest("./public/build"));
 
   return merge(indexHtmlStream, jsonStream, appCssStream);
-})
+}
 
-gulp.task('resize', function(done) {
+function resizeTask(done) {
   if(fs.existsSync(__dirname + "/assets/cards/md/kitauji/oumae_kumiko.png")) {
     console.log("skip image resizing");
     return done();
@@ -110,9 +110,9 @@ gulp.task('resize', function(done) {
     return gmfile.resize(null, 284);
   }))
   .pipe(gulp.dest('./assets/cards/md/'));
-});
+}
 
-gulp.task("generate card sprites", ["resize"], function(done) {
+function cardSpritesGenerationTask(done) {
   if(fs.existsSync(__dirname + "/public/build/cards.css")) {
     console.log("skip card sprites generation");
     return done();
@@ -127,9 +127,9 @@ gulp.task("generate card sprites", ["resize"], function(done) {
     true
   )
   .pipe(gulp.dest("./public/build/"));
-})
+}
 
-gulp.task("generate ability sprites", function(done) {
+function abilitySpritesGenerationTask(done) {
   if(fs.existsSync(__dirname + "/public/build/_ability.scss")) {
     console.log("skip ability sprites generation");
     return done();
@@ -144,10 +144,29 @@ gulp.task("generate ability sprites", function(done) {
     false
   )
   .pipe(gulp.dest("./public/build/"));
-})
+}
 
 
-gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize", "generate card sprites", "generate ability sprites"]);
+var sassTaskDelegate = gulp.series(abilitySpritesGenerationTask, sassTask);
+var cardSpritesGenerationTaskDelegate = gulp.series(resizeTask, cardSpritesGenerationTask);
+
+exports.browserify = browserifyTask;
+exports.watch = watchTask;
+exports.sass = sassTaskDelegate;
+exports.unitTests = unitTestsTask;
+exports.index = indexTask;
+exports.resize = resizeTask;
+exports.cardSpritesGeneration = cardSpritesGenerationTaskDelegate;
+exports.abilitySpritesGeneration = abilitySpritesGenerationTask;
+
+exports.default = gulp.parallel(
+  watchTask,
+  browserifyTask,
+  sassTaskDelegate,
+  unitTestsTask,
+  indexTask,
+  cardSpritesGenerationTaskDelegate
+);
 
 function errorHandler (errorMessage) {
   throw new Error(errorMessage);
