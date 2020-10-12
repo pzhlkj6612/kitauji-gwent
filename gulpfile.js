@@ -7,7 +7,6 @@ var livereload = require("gulp-livereload");
 var sass = require("gulp-sass");
 var handlebars = require("browserify-handlebars");
 var gm = require("gulp-gm");
-var sprity = require("sprity");
 var argv = require("minimist")(process.argv.slice(2));
 var version = require('gulp-version-number');
 var buffer = require('vinyl-buffer');
@@ -16,6 +15,8 @@ var merge = require('merge-stream');
 var path = require('path');
 var cssConcat = require('gulp-concat-css');
 var gulpIf = require('gulp-if');
+var spriteSmithMulti = require('gulp.spritesmith-multi');
+var gmsmith = require('gmsmith');
 //livereload({start: true});
 
 //fast install
@@ -36,6 +37,8 @@ const versionConfig = {
     ],
   },
 };
+
+const jpegSpriteImageQuality = 82; // GraphicsMagick's default value: 75
 
 gulp.task('browserify', function() {
   return browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
@@ -152,6 +155,7 @@ function errorHandler (errorMessage) {
 
 // Learned from
 //   https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
+//   https://github.com/google/material-design-icons/pull/757/files?file-filters%5B%5D=.js#diff-ba210a9157252cc983268fdc3aa3ed52
 //
 function getFolders (dirPath) {
   return fs.readdirSync(dirPath)
@@ -177,25 +181,32 @@ function getSpriteStreamFromPngFiles (
     var filesGlobPath = path.join(inputImageDirPath, folder, "/**/*.png"); // Attention!
     console.log("source glob path: " + filesGlobPath);
 
-    var imageFileNamePrefix = `${outputImagefileNamePrefix}-${folder}`;
+    var imageFileNamePrefix = outputImagefileNamePrefix;
+    if (generateSplitSprites) {
+      imageFileNamePrefix = `${outputImagefileNamePrefix}-${folder}`;
+    }
     console.log("imageFileNamePrefix: " + imageFileNamePrefix);
 
-    var cssSpritesheetName = `${cssPrefix}-${folder}`;
+    var cssSpritesheetName = cssPrefix;
+    if (generateSplitSprites) {
+      cssSpritesheetName = `${cssPrefix}-${folder}`;
+    }
     console.log("cssSpritesheetName: " + cssSpritesheetName);
+    
+    return gulp.src(filesGlobPath, { read: false /* `gmsmith` doesn't support in-memory content */ })
+    .pipe(spriteSmithMulti({
+      spritesmith: function (options, sprite, icons) {
+        options.imgName = `${imageFileNamePrefix}-${sprite}.${outputImagefileFormat}`;
+        // Don't care about 'cssName', these css files will be concatenated with each other.
+        options.imgPath = `../../public/build/${options.imgName}`;
+        options.cssSpritesheetName = `${cssSpritesheetName}-${sprite}`;
 
-    return sprity.src({
-      src: filesGlobPath,
-      style: `${imageFileNamePrefix}.css`, // Don't care about 'style', these css files will be concatenated with each other.
-      name: imageFileNamePrefix,
-      prefix: cssSpritesheetName,
-      format: outputImagefileFormat,
-      processor: "css",
-      engine: "gm",
-      orientation: "binary-tree",
-      cssPath: "../../public/build/",
-      split: generateSplitSprites,
-      margin: 0
-    });
+        options.engine = gmsmith;
+        options.imgOpts = {
+          quality: jpegSpriteImageQuality
+        };
+      }
+    }));
   });
 
   return merge(tasks).pipe(gulpIf("*.css", cssConcat(

@@ -144,27 +144,27 @@
     transition: all .5s;
   }
   .btn-collection {
-    @extend .ability-md-muster;
+    @extend .ability-md__muster;
     @extend .ability-md;
   }
   .btn-luckyDraw {
-    @extend .ability-md-monaka;
+    @extend .ability-md__monaka;
     @extend .ability-md;
   }
   .btn-replay {
-    @extend .ability-md-spy;
+    @extend .ability-md__spy;
     @extend .ability-md;
   }
   .btn-startMatchWithBot {
-    @extend .ability-md-guard;
+    @extend .ability-md__guard;
     @extend .ability-md;
   }
   .btn-startMatch {
-    @extend .ability-md-bond;
+    @extend .ability-md__bond;
     @extend .ability-md;
   }
   .btn-competition {
-    @extend .ability-md-horn;
+    @extend .ability-md__horn;
     @extend .ability-md;
   }
 }

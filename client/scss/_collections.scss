@@ -41,23 +41,23 @@
         }
 
         .icon-all-card {
-          @extend .ability-md-all;
+          @extend .ability-md__all;
           @extend .ability-md;
         }
         .icon-wood {
-          @extend .ability-md-wood;
+          @extend .ability-md__wood;
           @extend .ability-md;
         }
         .icon-brass {
-          @extend .ability-md-brass;
+          @extend .ability-md__brass;
           @extend .ability-md;
         }
         .icon-perc {
-          @extend .ability-md-perc;
+          @extend .ability-md__perc;
           @extend .ability-md;
         }
         .icon-special {
-          @extend .ability-md-special;
+          @extend .ability-md__special;
           @extend .ability-md;
         }
       }
