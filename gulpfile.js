@@ -16,7 +16,6 @@ var rename = require("gulp-rename");
 var version = require('gulp-version-number');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
-var gutil = require('gulp-util');
 var merge = require('merge-stream');
 //livereload({start: true});
 
@@ -41,22 +40,14 @@ const versionConfig = {
 
 gulp.task('browserify', function() {
   return browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
-  .transform(handlebars).on("error", function(err) {
-    console.log(err);
-  })
+  .transform(handlebars).on("error", errorHandler)
   .transform(babelify)
-  .bundle().on("error", function(err) {
-    console.log(err);
-  })
-  .pipe(source('app.js').on("error", function(err) {
-    console.log(err);
-  }))
+  .bundle().on("error", errorHandler)
+  .pipe(source('app.js').on("error", errorHandler))
   .pipe(buffer())
   .pipe(uglify())
-  .on('error', gutil.log)
-  .pipe(gulp.dest('./public/build/').on("error", function(err) {
-    console.log(err);
-  }));
+  .on('error', errorHandler)
+  .pipe(gulp.dest('./public/build/').on("error", errorHandler));
 
 });
 
@@ -64,29 +55,17 @@ gulp.task('sass', ["generate ability sprites"], function() {
   return gulp.src('./client/scss/main.scss')
   .pipe(sass({
     outputStyle: 'compressed'
-  }).on("error", function(err) {
-    console.log(err);
-  }))
-  .pipe(gulp.dest('./public/build/').on("error", function(err) {
-    console.log(err);
-  }))
-  .pipe(livereload().on("error", function(err) {
-    console.log(err);
-  }));
+  }).on("error", errorHandler))
+  .pipe(gulp.dest('./public/build/').on("error", errorHandler))
+  .pipe(livereload().on("error", errorHandler));
 });
 
 gulp.task("unit tests", function() {
   return browserify('./test/src/mainSpec.js', {standalone: "app", debug: true})
   .transform(babelify)
-  .bundle().on("error", function(err) {
-    console.log(err);
-  })
-  .pipe(source('spec.js').on("error", function(err) {
-    console.log(err);
-  }))
-  .pipe(gulp.dest('./test/spec/').on("error", function(err) {
-    console.log(err);
-  }));
+  .bundle().on("error", errorHandler)
+  .pipe(source('spec.js').on("error", errorHandler))
+  .pipe(gulp.dest('./test/spec/').on("error", errorHandler));
 })
 
 gulp.task("watch", function(done) {
@@ -205,3 +184,7 @@ gulp.task("generate ability sprites", function(done) {
 
 
 gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate card sprites", "generate ability sprites"]);
+
+function errorHandler (errorMessage) {
+  throw new Error(errorMessage);
+}
