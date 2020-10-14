@@ -23,3 +23,6 @@ kitauji-gwent-win.exe
 
 # Desktop Services Store on macOS
 .DS_Store
+
+db/
+configdb/
