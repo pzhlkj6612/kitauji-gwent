@@ -1,0 +1,32 @@
+version: "3.3"
+services:
+    game:
+        build:
+            context: ./
+            dockerfile: Dockerfile.2
+        image: kitauji-gwnet
+        networks:
+            kitauji_net:
+                ipv4_address: 172.31.0.2
+        ports:
+            - 3000:3000
+        restart: always
+        depends_on:
+            - db
+    db:
+        image: mongo:latest
+        hostname: kitauji_db
+        networks:
+            kitauji_net:
+                ipv4_address: 172.31.0.3
+        volumes: 
+            - ./db:/data/db
+            - ./configdb:/data/configdb
+        restart: always
+networks:
+    kitauji_net:
+        name: kitauji_network
+        ipam:
+            driver: default
+            config:
+                - subnet: "172.31.0.0/29"
