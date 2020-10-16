@@ -1,5 +1,3 @@
-@import "ability";
-
 .card-wrap {
   float: left;
   cursor: pointer;
@@ -98,52 +96,52 @@
 }
 
 .spy-card:before {
-  @extend .ability-md-spy;
+  @extend .ability-md__spy;
   @extend .ability-md;
 }
 
 .morale-card:before {
-  @extend .ability-md-morale;
+  @extend .ability-md__morale;
   @extend .ability-md;
 }
 
 .muster-card:before {
-  @extend .ability-md-muster;
+  @extend .ability-md__muster;
   @extend .ability-md;
 }
 
 .medic-card:before {
-  @extend .ability-md-medic;
+  @extend .ability-md__medic;
   @extend .ability-md;
 }
 
 .bond-card:before {
-  @extend .ability-md-bond;
+  @extend .ability-md__bond;
   @extend .ability-md;
 }
 
 .horn-card:before {
-  @extend .ability-md-horn;
+  @extend .ability-md__horn;
   @extend .ability-md;
 }
 
 .tunning-card:before {
-  @extend .ability-md-tunning;
+  @extend .ability-md__tunning;
   @extend .ability-md;
 }
 
 .lips-card:before {
-  @extend .ability-md-lips;
+  @extend .ability-md__lips;
   @extend .ability-md;
 }
 
 .kasa-card:before {
-  @extend .ability-md-kasa;
+  @extend .ability-md__kasa;
   @extend .ability-md;
 }
 
 .decoy-card:before {
-  @extend .ability-md-decoy;
+  @extend .ability-md__decoy;
   @extend .ability-md;
 }
 

@@ -6,17 +6,17 @@ var babelify = require("babelify");
 var livereload = require("gulp-livereload");
 var sass = require("gulp-sass");
 var handlebars = require("browserify-handlebars");
-var imagemin = require('gulp-imagemin');
-var imagesConvert = require('gulp-images-convert');
 var gm = require("gulp-gm");
-var sprity = require("sprity");
-var gulpif = require("gulp-if");
 var argv = require("minimist")(process.argv.slice(2));
-var rename = require("gulp-rename");
 var version = require('gulp-version-number');
 var buffer = require('vinyl-buffer');
 var uglify = require('gulp-uglify');
-var gutil = require('gulp-util');
+var merge = require('merge-stream');
+var path = require('path');
+var cssConcat = require('gulp-concat-css');
+var gulpIf = require('gulp-if');
+var spriteSmithMulti = require('gulp.spritesmith-multi');
+var gmsmith = require('gmsmith');
 //livereload({start: true});
 
 //fast install
@@ -32,173 +32,203 @@ const versionConfig = {
       },
       {
         'type'  : 'css',
-        'files': ['ability.css', 'app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
+        'files': ['app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
       }
     ],
   },
 };
 
-gulp.task('browserify', function() {
-  browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
-  .transform(handlebars).on("error", function(err) {
-    console.log(err);
-  })
+const jpegSpriteImageQuality = 82; // GraphicsMagick's default value: 75
+
+function browserifyTask() {
+  return browserify('./client/js/main.js', {standalone: "app", debug: false}) // set false when publish
+  .transform(handlebars).on("error", errorHandler)
   .transform(babelify)
-  .bundle().on("error", function(err) {
-    console.log(err);
-  })
-  .pipe(source('app.js').on("error", function(err) {
-    console.log(err);
-  }))
+  .bundle().on("error", errorHandler)
+  .pipe(source('app.js').on("error", errorHandler))
   .pipe(buffer())
   .pipe(uglify())
-  .on('error', gutil.log)
-  .pipe(gulp.dest('./public/build/').on("error", function(err) {
-    console.log(err);
-  }));
+  .on('error', errorHandler)
+  .pipe(gulp.dest('./public/build/').on("error", errorHandler));
 
-});
+}
 
-gulp.task('sass', function() {
-  gulp.src('./client/scss/main.scss')
+function sassTask() {
+  return gulp.src('./client/scss/main.scss')
   .pipe(sass({
     outputStyle: 'compressed'
-  }).on("error", function(err) {
-    console.log(err);
-  }))
-  .pipe(gulp.dest('./public/build/').on("error", function(err) {
-    console.log(err);
-  }))
-  .pipe(livereload().on("error", function(err) {
-    console.log(err);
-  }));
-});
+  }).on("error", errorHandler))
+  .pipe(gulp.dest('./public/build/').on("error", errorHandler))
+  .pipe(livereload().on("error", errorHandler));
+}
 
-gulp.task("unit tests", function() {
-  browserify('./test/src/mainSpec.js', {standalone: "app", debug: true})
+function unitTestsTask() {
+  return browserify('./test/src/mainSpec.js', {standalone: "app", debug: true})
   .transform(babelify)
-  .bundle().on("error", function(err) {
-    console.log(err);
-  })
-  .pipe(source('spec.js').on("error", function(err) {
-    console.log(err);
-  }))
-  .pipe(gulp.dest('./test/spec/').on("error", function(err) {
-    console.log(err);
-  }));
-})
+  .bundle().on("error", errorHandler)
+  .pipe(source('spec.js').on("error", errorHandler))
+  .pipe(gulp.dest('./test/spec/').on("error", errorHandler));
+}
 
-gulp.task("watch", function() {
-  if(argv.production) return;
-  gulp.watch("./assets/data/*", ["browserify"]);
-  gulp.watch("./client/js/**", ["browserify"]);
-  gulp.watch("./client/templates/**", ["browserify"]);
-  gulp.watch("./client/scss/*", ["sass"]);
-  gulp.watch("./client/*.html", ["index"]);
-  gulp.watch("./client/json/**", ["index", "browserify"]);
-  gulp.watch("./test/src/*", ["unit tests"]);
-})
+function watchTask(done) {
+  if(argv.production) return done();
+  gulp.watch("./assets/data/*", gulp.series(browserifyTask));
+  gulp.watch("./client/js/**", gulp.series(browserifyTask));
+  gulp.watch("./client/templates/**", gulp.series(browserifyTask));
+  gulp.watch("./client/scss/*", gulp.series(sassTask));
+  gulp.watch("./client/*.html", gulp.series(indexTask));
+  gulp.watch("./client/json/**", gulp.parallel(indexTask, browserifyTask));
+  gulp.watch("./test/src/*", gulp.series(unitTestsTask));
+}
 
 
-gulp.task("index", function() {
-  gulp.src("./client/index.html")
+function indexTask() {
+  var indexHtmlStream = gulp.src("./client/index.html")
   .pipe(version(versionConfig))
   .pipe(gulp.dest("./public/"));
 
-  gulp.src("./client/json/**")
+  var jsonStream = gulp.src("./client/json/**")
   .pipe(gulp.dest("./public/json/"));
 
-  gulp.src("./client/css/app.css")
+  var appCssStream = gulp.src("./client/css/app.css")
   .pipe(gulp.dest("./public/build"));
-})
 
-gulp.task('resize md', function(done) {
+  return merge(indexHtmlStream, jsonStream, appCssStream);
+}
+
+function resizeTask(done) {
   if(fs.existsSync(__dirname + "/assets/cards/md/kitauji/oumae_kumiko.png")) {
-    console.log("skip generating md images");
-    return done();
-  }
-  return gulp.src('./assets/original_cards/**/*.png')
-  .pipe(gm(function(gmfile) {
-    return gmfile.resize(null, 284);
-  }))
-  .pipe(imagemin())
-  .pipe(gulp.dest('./assets/cards/md/'));
-});
-
-gulp.task('resize lg', ["resize md"], function(done) {
-  if(fs.existsSync(__dirname + "/assets/cards/lg/kitauji/oumae_kumiko.png")) {
-    console.log("skip generating lg images");
+    console.log("skip image resizing");
     return done();
   }
   return gulp.src('./assets/original_cards/**/*.png')
   .pipe(gm(function(gmfile) {
     return gmfile.resize(null, 450);
   }))
-  .pipe(imagemin())
-  .pipe(gulp.dest('./assets/cards/lg/'));
-});
+  .pipe(gulp.dest('./assets/cards/lg/'))
+  .pipe(gm(function(gmfile) {
+    return gmfile.resize(null, 284);
+  }))
+  .pipe(gulp.dest('./assets/cards/md/'));
+}
 
-gulp.task("generate sprites", ["resize lg"], function() {
-  if(fs.existsSync(__dirname + "/public/build/cards-lg-kitauji.png")) {
-    console.log("skip sprite generation");
-    return;
+function cardSpritesGenerationTask(done) {
+  if(fs.existsSync(__dirname + "/public/build/cards.css")) {
+    console.log("skip card sprites generation");
+    return done();
   }
 
-
-  return sprity.src({
-    src: "./assets/cards/**/*.png",
-    style: "cards.css",
-    //"style-type": "scss",
-    processor: "css",
-    engine: "gm",
-    orientation: "binary-tree",
-    split: true,
-    cssPath: "../../public/build/",
-    prefix: "card",
-    name: "cards",
-    margin: 0
-    //template: "./client/scss/_cards.hbs"
-  })
-  .pipe(gulpif(function (file) {
-    return file.path.match(".*\\.png$") != null;
-  }, imagesConvert({
-    targetType: 'jpg'
-  })))
-  .pipe(imagemin())
-  .pipe(gulpif(function (file) {
-    return file.path.match(".*\\.png$") != null;
-  }, rename({
-    extname: ".PNG"
-  })))
+  return getSpriteStreamFromPngFiles(
+    "./assets/cards/",
+    "cards.css",
+    "cards",
+    "card",
+    "jpg",
+    true
+  )
   .pipe(gulp.dest("./public/build/"));
-})
+}
 
-gulp.task("effect sprites", function() {
-  if(fs.existsSync(__dirname + "/public/build/abilities-md.PNG")) {
-    console.log("skip effect sprite generation");
-    return;
+function abilitySpritesGenerationTask(done) {
+  if(fs.existsSync(__dirname + "/public/build/_ability.scss")) {
+    console.log("skip ability sprites generation");
+    return done();
   }
 
-  return sprity.src({
-    src: "./assets/texture/ability/**/*.png",
-    style: "ability.css",
-    processor: "css",
-    engine: "gm",
-    orientation: "binary-tree",
-    split: true,
-    cssPath: "../../public/build/",
-    prefix: "ability",
-    name: "abilities",
-    margin: 0
-  })
-  .pipe(imagemin())
-  .pipe(gulpif(function (file) {
-    return file.path.match(".*\\.png$") != null;
-  }, rename({
-    extname: ".PNG"
-  })))
+  return getSpriteStreamFromPngFiles(
+    "./assets/texture/ability/",
+    "_ability.scss",
+    "abilities",
+    "ability",
+    "png",
+    false
+  )
   .pipe(gulp.dest("./public/build/"));
-})
+}
 
 
-gulp.task("default", ["watch", "browserify", "sass", "unit tests", "index", "resize lg", "resize md", "generate sprites", "effect sprites"]);
+var sassTaskDelegate = gulp.series(abilitySpritesGenerationTask, sassTask);
+var cardSpritesGenerationTaskDelegate = gulp.series(resizeTask, cardSpritesGenerationTask);
+
+exports.browserify = browserifyTask;
+exports.watch = watchTask;
+exports.sass = sassTaskDelegate;
+exports.unitTests = unitTestsTask;
+exports.index = indexTask;
+exports.resize = resizeTask;
+exports.cardSpritesGeneration = cardSpritesGenerationTaskDelegate;
+exports.abilitySpritesGeneration = abilitySpritesGenerationTask;
+
+exports.default = gulp.parallel(
+  watchTask,
+  browserifyTask,
+  sassTaskDelegate,
+  unitTestsTask,
+  indexTask,
+  cardSpritesGenerationTaskDelegate
+);
+
+function errorHandler (errorMessage) {
+  throw new Error(errorMessage);
+}
+
+// Learned from
+//   https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
+//   https://github.com/google/material-design-icons/pull/757/files?file-filters%5B%5D=.js#diff-ba210a9157252cc983268fdc3aa3ed52
+//
+function getFolders (dirPath) {
+  return fs.readdirSync(dirPath)
+    .filter(function (file) {
+      return fs.statSync(path.join(dirPath, file)).isDirectory();
+    });
+}
+
+function getSpriteStreamFromPngFiles (
+  inputImageDirPath,
+  outputStyleFileName,
+  outputImagefileNamePrefix,
+  cssPrefix,
+  outputImagefileFormat,
+  generateSplitSprites
+) {
+  var folders = getFolders(inputImageDirPath);
+  if (folders.length === 0) {
+    errorHandler(`No subdirectory in "${inputImageDirPath}".`);
+  }
+
+  var tasks = folders.map(function (folder) {
+    var filesGlobPath = path.join(inputImageDirPath, folder, "/**/*.png"); // Attention!
+    console.log("source glob path: " + filesGlobPath);
+
+    var imageFileNamePrefix = outputImagefileNamePrefix;
+    if (generateSplitSprites) {
+      imageFileNamePrefix = `${outputImagefileNamePrefix}-${folder}`;
+    }
+    console.log("imageFileNamePrefix: " + imageFileNamePrefix);
+
+    var cssSpritesheetName = cssPrefix;
+    if (generateSplitSprites) {
+      cssSpritesheetName = `${cssPrefix}-${folder}`;
+    }
+    console.log("cssSpritesheetName: " + cssSpritesheetName);
+    
+    return gulp.src(filesGlobPath, { read: false /* `gmsmith` doesn't support in-memory content */ })
+    .pipe(spriteSmithMulti({
+      spritesmith: function (options, sprite, icons) {
+        options.imgName = `${imageFileNamePrefix}-${sprite}.${outputImagefileFormat}`;
+        // Don't care about 'cssName', these css files will be concatenated with each other.
+        options.imgPath = `../../public/build/${options.imgName}`;
+        options.cssSpritesheetName = `${cssSpritesheetName}-${sprite}`;
+
+        options.engine = gmsmith;
+        options.imgOpts = {
+          quality: jpegSpriteImageQuality
+        };
+      }
+    }));
+  });
+
+  return merge(tasks).pipe(gulpIf("*.css", cssConcat(
+    outputStyleFileName
+  )));
+}
