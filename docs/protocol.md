@@ -2,21 +2,29 @@
 
 Event|Data|Note
 ----|----|----
+request:login||log in
+request:signin||sign in
 user:init|`{connId: string, token: string}`|
-request:matchmaking:bot||
-request:matchmaking|`{roomName?: string}`|
+request:matchmaking|`{roomName?: string, cancel?: boolean, scenario?: string, bot?: boolean}`|start a game if an opponent is found, wait if not
 request:gameLoaded|`{_roomID: string}`|set room ready
 set:deck|`{deck: string}`|set deck by deck name, deprecated
 set:customDeck|`{deck: string, leader: string, cardInDeck: object}`|cardInDeck: map card name to count
 
-### Room
+### Room(in the room page)
+
+Event|Data|Note
+----|----|----
+request:makeRoom||create a new room
+request:rooms||get a list of rooms
+
+### Battle Room
 
 Event|Data|Note
 ----|----|----
 request:quitGame||quit current game
 response:joinRoom|`number`|roomID
-room:rejoin|`{side: string, foeSide: string, roomID: string}`|user rejoin, send necessary info
-init:battle|`{side: string, foeSide: string}`|
+room:rejoin|`{side: string, foeSide: string, roomID: string, withBot: boolean}`|user rejoin, send necessary info
+init:battle|`{side: string, foeSide: string, roomID: string, withBot: boolean}`|
 foe:connecting||foe temporarily offline, wait for reconnect
 foe:reconnect||foe reconnect
 foe:left||foe disconnect
@@ -53,3 +61,11 @@ Event|Data|Note
 ----|----|----
 update:playerOnline|`{online: number, idle: number}`|
 notification|`{message: string}`|
+
+## What happens before a game is started
+
+1. Client send `request:login` or `request:signin`.
+2. Client send `request:matchmaking`.
+3. When an opponent is found, server send `init:battle`.
+4. Client receive `init:battle` and respond with `request:gameLoaded`.
+5. When both clients are ready, start the game.
