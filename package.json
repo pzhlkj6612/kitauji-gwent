@@ -5,6 +5,7 @@
   "main": "gulpfile.js",
   "bin": "server/server.js",
   "dependencies": {
+    "backbone.modal": "^1.1.6",
     "connect": "3.0.1",
     "express": "^4.13.4",
     "jquery-deferred": "^0.3.0",

@@ -1,6 +1,6 @@
 let socket = require("socket.io-client");
 let Backbone = require("backbone");
-require("./backbone.modal-min");
+require("backbone.modal/backbone.modal-min");
 let Handlebars = require('handlebars/runtime').default;
 let $ = require("jquery");
 
