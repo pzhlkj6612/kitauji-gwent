@@ -760,7 +760,6 @@ let Preview = Backbone.View.extend({
   template: require("../../templates/preview.handlebars"),
   initialize: function(opt){
     this.card = cardData[opt.key];
-    this.size = opt.size || "lg";
     this.previewB = opt.previewB || false;
 
     this.$el.addClass(this.previewB ? "preview-b" : "");
@@ -806,7 +805,6 @@ let Preview = Backbone.View.extend({
       hasAttackPower: this.attackPower > 0,
       grade: this.grade,
       hasGrade: this.grade > 0,
-      size: this.size,
       previewB: this.previewB
     })
     this.$el.html(html);
