@@ -77,6 +77,7 @@ function watchTask(done) {
   gulp.watch("./client/templates/**", gulp.series(browserifyTask));
   gulp.watch("./client/scss/*", gulp.series(sassTask));
   gulp.watch("./client/*.html", gulp.series(indexTask));
+  gulp.watch("./client/css/*.css", gulp.series(indexTask));
   gulp.watch("./client/json/**", gulp.parallel(indexTask, browserifyTask));
   gulp.watch("./test/src/*", gulp.series(unitTestsTask));
 }
