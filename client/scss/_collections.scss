@@ -172,16 +172,15 @@
   margin: 5px;
 
   i {
-    border-radius: 10px;
-    top: 2px;
-    left: 2px;
     display: block;
-    position: absolute;
-    z-index: 10;
+  }
+
+  .collection-card-locator {
+    transform: scale(0.631);
   }
 
   .card-animation {
-    border-radius: 8px;
+    border-radius: 13px;
   }
 
   .card-count {
@@ -234,7 +233,7 @@
     z-index: 11;
     background: #101010bb;
     filter:progid:DXImageTransform.Microsoft.Gradient(startColorstr=#7F000000,endColorstr=#7F000000);
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 13px 13px;
 
     .related-card {
       color: red,

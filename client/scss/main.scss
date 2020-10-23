@@ -568,6 +568,19 @@ $game-height: 800px;
   }*/
 }
 
+.card, .card-cell {
+  .card-locator {
+    display: block;
+    overflow: hidden;
+    position: absolute;
+    transform-origin: left top;
+    width: 237px; // 238px
+    border-radius: 20px;
+    margin: 2px;
+    z-index: 10;
+  }
+}
+
 .field-discard,
 .field-deck {
   background: rgba(0,0,0,.6);

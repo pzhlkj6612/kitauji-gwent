@@ -31,20 +31,32 @@
   height: 93px;
   width: 69px;
   position: relative;
-  overflow: hidden;
 
   //causes weird bug when margin gets calculated
   //transition: margin .05s ease-in-out 0s;
+
+  .normal-card-locator {
+    transform: scale(0.272);
+    height: 327px; // 333px
+  }
+
+  .field-card-locator {
+    transform: scale(0.272);
+    height: 327px; // 333px
+  }
+
+  .card-effect-locator {
+    border-radius: 7px;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
 }
 
 .card i {
-  border-radius: 10px;
   display: block;
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  transform: scale(.43) translate(-68%, -67%);
-  z-index: 10;
 }
 
 .small-cards-modal {
@@ -300,10 +312,10 @@
   background-size: 800% 800%;
   position: absolute;
   z-index: 20;
-  top: 3px;
-  left: 3px;
-  width: calc(100% - 4px);
-  height: calc(100% - 4px);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
   cursor: pointer;
 }
@@ -314,9 +326,9 @@
 .grave:hover .overlay-card,
 .leader-card:hover .overlay-card {
   opacity: 1;
-  -webkit-animation: AnimationName 10s ease infinite;
-  -moz-animation: AnimationName 10s ease infinite;
-  animation: AnimationName 10s ease infinite;
+  -webkit-animation: Shadow 4s ease-in-out infinite;
+  -moz-animation: Shadow 4s ease-in-out infinite;
+  animation: Shadow 4s ease-in-out infinite;
 }
 
 @-webkit-keyframes CardAnimation {
