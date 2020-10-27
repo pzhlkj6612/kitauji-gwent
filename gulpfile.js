@@ -17,6 +17,7 @@ var cssConcat = require('gulp-concat-css');
 var gulpIf = require('gulp-if');
 var spriteSmithMulti = require('gulp.spritesmith-multi');
 var gmsmith = require('gmsmith');
+var sourcemaps = require('gulp-sourcemaps');
 livereload({start: true});
 
 //fast install
@@ -55,9 +56,11 @@ function browserifyTask() {
 
 function sassTask() {
   return gulp.src('./client/scss/main.scss')
+  .pipe(sourcemaps.init())
   .pipe(sass({
     outputStyle: 'compressed'
   }).on("error", errorHandler))
+  .pipe(sourcemaps.write())
   .pipe(gulp.dest('./public/build/').on("error", errorHandler))
   .pipe(livereload().on("error", errorHandler));
 }
