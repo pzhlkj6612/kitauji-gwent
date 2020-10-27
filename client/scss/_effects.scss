@@ -5,6 +5,8 @@
   height: auto !important;
   width: auto !important;
   margin: 3px;
+  position: relative;
+  padding: 4px 0;
 }
 
 .card-cell:hover .shadow,
@@ -16,22 +18,22 @@
   width: calc(100% - 26px);
 }
 
-/*.card-wrap:hover {
-  z-index: 20;
-}*/
+.card-wrap:hover {
+  z-index: 100;
+}
 
 .card {
   border: none !important;
   margin: 0;
   height: 93px !important;
-}
-
-.card {
   float: left;
-  height: 93px;
   width: 69px;
   position: relative;
   overflow: hidden;
+  border-radius: 8px;
+  z-index: 10;
+  top: 3px;
+  left: 3px;
 
   //causes weird bug when margin gets calculated
   //transition: margin .05s ease-in-out 0s;
@@ -73,15 +75,6 @@
     float: left;
   }
 
-}
-
-.card-wrap {
-  float: left;
-  cursor: pointer;
-  z-index: 10;
-  height: auto !important;
-  width: auto !important;
-  margin: 3px;
 }
 
 .scorch-card:before {
@@ -304,6 +297,7 @@
   left: 3px;
   width: calc(100% - 4px);
   height: calc(100% - 4px);
+  border-radius: 12px;
   opacity: 0;
   cursor: pointer;
 }
@@ -314,9 +308,9 @@
 .grave:hover .overlay-card,
 .leader-card:hover .overlay-card {
   opacity: 1;
-  -webkit-animation: AnimationName 10s ease infinite;
-  -moz-animation: AnimationName 10s ease infinite;
-  animation: AnimationName 10s ease infinite;
+  -webkit-animation: CardAnimation 10s ease infinite;
+  -moz-animation: CardAnimation 10s ease infinite;
+  animation: CardAnimation 10s ease infinite;
 }
 
 @-webkit-keyframes CardAnimation {

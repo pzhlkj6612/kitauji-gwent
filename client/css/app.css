@@ -355,7 +355,6 @@ nav a.active {
     left: 4px;
 }
 
-.card,
 .card-small-small {
     float: left;
     border-radius: 8px;
@@ -389,22 +388,6 @@ nav a.active {
     opacity: 1;
 }
 
-.shadow {
-    border-radius: 35%;
-    box-shadow: 0 0 15px 14px #ffa500;
-    content: "";
-    height: calc(100% - 50px);
-    left: 15px;
-    position: absolute;
-    width: calc(100% - 22px);
-    z-index: 1;
-    top: 30px;
-    transition: all 0.3s ease-in-out 0s;
-    opacity: 0;
-}
-
-.card-cell:hover .shadow,
-.card-wrap:hover .shadow,
 .card-wrap-small:hover .shadow {
     -webkit-animation: Shadow 4s ease-in-out infinite;
     animation: Shadow 4s ease-in-out infinite;
@@ -477,22 +460,6 @@ nav a.active {
     }
 }
 
-.overlay-card {
-    background: linear-gradient(2deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-    background-size: 800% 800%;
-    position: absolute;
-    z-index: 20;
-    top: 6px;
-    left: 6px;
-    width: calc(100% - 4px);
-    height: calc(100% - 4px);
-    border-radius: 12px;
-    opacity: 0;
-    cursor: pointer;
-}
-
-.card-cell:hover .overlay-card,
-.card-wrap:hover .overlay-card,
 .card-wrap-small:hover .overlay-card {
     opacity: 1;
     -webkit-animation: AnimationName 10s ease infinite;
@@ -523,14 +490,6 @@ nav a.active {
     }
 }
 
-.card-wrap {
-    float: left;
-    width: 126px;
-    height: 233px;
-    position: relative;
-    padding: 4px 0;
-}
-
 .card-wrap-big {
     width: 158px;
     height: 292px;
@@ -546,7 +505,6 @@ nav a.active {
     padding: 4px;
 }
 
-.card-wrap:hover,
 .card-wrap-small:hover {
     z-index: 100;
 }
