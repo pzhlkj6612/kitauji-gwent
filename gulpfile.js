@@ -17,7 +17,7 @@ var cssConcat = require('gulp-concat-css');
 var gulpIf = require('gulp-if');
 var spriteSmithMulti = require('gulp.spritesmith-multi');
 var gmsmith = require('gmsmith');
-//livereload({start: true});
+livereload({start: true});
 
 //fast install
 //npm i --save-dev browserify vinyl-source-stream babelify gulp-livereload gulp gulp-sass
@@ -92,7 +92,8 @@ function indexTask() {
   .pipe(gulp.dest("./public/json/"));
 
   var appCssStream = gulp.src("./client/css/app.css")
-  .pipe(gulp.dest("./public/build"));
+  .pipe(gulp.dest("./public/build"))
+  .pipe(livereload().on("error", errorHandler));
 
   return merge(indexHtmlStream, jsonStream, appCssStream);
 }
