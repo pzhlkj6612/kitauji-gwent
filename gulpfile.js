@@ -36,7 +36,7 @@ const versionConfig = {
       },
       {
         'type'  : 'css',
-        'files': ['app.css', 'cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
+        'files': ['cards.css', 'main.css'] // Array [{String|Regex}] of explicit files to append to
       }
     ],
   },
@@ -97,11 +97,7 @@ function indexTask() {
   var jsonStream = gulp.src("./client/json/**")
   .pipe(gulp.dest("./public/json/"));
 
-  var appCssStream = gulp.src("./client/css/app.css")
-  .pipe(gulp.dest("./public/build"))
-  .pipe(livereload().on("error", errorHandler));
-
-  return merge(indexHtmlStream, jsonStream, appCssStream);
+  return merge(indexHtmlStream, jsonStream);
 }
 
 function resizeTask(done) {
