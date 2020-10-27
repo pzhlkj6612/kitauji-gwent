@@ -35,10 +35,9 @@ html {
 }
 
 body {
-  background: url(/assets/inner-bg.jpg) #ffffff center top no-repeat;
+  background: black;
   width: 100%;
   height: 100%;
-  overflow: visible;
   font-family: 'Titillium Web', sans-serif;
 }
 
@@ -205,4 +204,88 @@ body {
       background-color: rgba(255,255,255,.08) !important;
     }
   }
+}
+
+.row {
+  height: 100%;
+}
+
+::-moz-selection {
+  background: rgba(217, 111, 31, 0.99);
+  color: #fff;
+  text-shadow: none;
+}
+
+::selection {
+  background: rgba(217, 111, 31, 0.99);
+  color: #fff;
+  text-shadow: none;
+}
+
+input, textarea {
+  font-family: 'Titillium Web', sans-serif;
+  outline: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.btn-sub {
+  color: #3f4c5b;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out 0s;
+}
+
+.btn-sub:hover {
+  color: #8798ac;
+}
+
+.wrap-btn-action {
+  float: left;
+  padding: 10px 20px;
+  cursor: pointer;
+  height: 48px;
+  background: #da7020;
+  background: linear-gradient(to right, #da7020 0%, #ca5907 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#da7020', endColorstr='#ca5907', GradientType=1);
+  transition: box-shadow 0.3s ease-in-out 0s;
+}
+
+.wrap-btn-action:hover {
+  box-shadow: 0 0 10px 0 rgba(217, 111, 31, 0.8) !important;
+}
+
+.btn-action {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  float: left;
+  text-transform: uppercase;
+}
+
+::-webkit-input-placeholder {
+  color: #697e97;
+}
+
+:-moz-placeholder {
+  color: #697e97;
+  opacity: 1;
+}
+
+::-moz-placeholder {
+  color: #697e97;
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  color: #697e97;
 }
