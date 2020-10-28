@@ -18,7 +18,10 @@ var gulpIf = require('gulp-if');
 var spriteSmithMulti = require('gulp.spritesmith-multi');
 var gmsmith = require('gmsmith');
 var sourcemaps = require('gulp-sourcemaps');
-livereload({start: true});
+
+if(!argv.production) {
+  livereload({start: true});
+}
 
 //fast install
 //npm i --save-dev browserify vinyl-source-stream babelify gulp-livereload gulp gulp-sass
