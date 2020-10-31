@@ -31,6 +31,7 @@
     "gulp-concat-css": "^3.1.0",
     "gulp-gm": "^0.0.9",
     "gulp-if": "^3.0.0",
+    "gulp-jimp": "^1.2.9",
     "gulp-livereload": "^4.0.2",
     "gulp-sass": "^3.0.0",
     "gulp-sourcemaps": "^2.6.5",
