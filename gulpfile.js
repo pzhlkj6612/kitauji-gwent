@@ -6,7 +6,6 @@ var babelify = require("babelify");
 var livereload = require("gulp-livereload");
 var sass = require("gulp-sass");
 var handlebars = require("browserify-handlebars");
-var gm = require("gulp-gm");
 var argv = require("minimist")(process.argv.slice(2));
 var version = require('gulp-version-number');
 var buffer = require('vinyl-buffer');
@@ -16,7 +15,6 @@ var path = require('path');
 var cssConcat = require('gulp-concat-css');
 var gulpIf = require('gulp-if');
 var spriteSmithMulti = require('gulp.spritesmith-multi');
-var gmsmith = require('gmsmith');
 var sourcemaps = require('gulp-sourcemaps');
 var jimp = require('gulp-jimp');
 
@@ -105,12 +103,20 @@ function resizeTask(done) {
     return done();
   }
   return gulp.src('./assets/original_cards/**/*.png')
-  .pipe(gm(function(gmfile) {
-    return gmfile.resize(null, 450);
+  .pipe(jimp({
+    '': {
+      resize: {
+        height: 450
+      }
+    }
   }))
   .pipe(gulp.dest('./assets/cards/lg/'))
-  .pipe(gm(function(gmfile) {
-    return gmfile.resize(null, 284);
+  .pipe(jimp({
+    '': {
+      resize: {
+        height: 284
+      }
+    }
   }))
   .pipe(gulp.dest('./assets/cards/md/'));
 }
@@ -223,7 +229,7 @@ function getSpriteStreamFromPngFiles (
         options.imgPath = `../../public/build/${imageFileNamePrefix}-${sprite}.${outputImagefileFormat}`;
         options.cssSpritesheetName = `${cssSpritesheetName}-${sprite}`;
 
-        options.engine = gmsmith;
+        // Use the default engine 'pixelsmith'.
         // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
       }
     }));
