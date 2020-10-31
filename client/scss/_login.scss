@@ -39,20 +39,6 @@
     justify-content: center;
   }
 
-  .field-session {
-    float: left;
-    padding: 10px 20px;
-    border: 0;
-    color: #8798ac;
-    font-size: 16px;
-    margin: 0 10px 0 0;
-    height: 48px;
-    width: 250px;
-    background: #e1eaf7;
-    background: linear-gradient(to right, #e1eaf7 0%, #e1eaf7 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#243141', endColorstr='#334152', GradientType=1);
-  }
-
   .btn-siginin-action {
     height: auto !important;
     width: auto !important;
@@ -74,4 +60,18 @@
   .status-online {
     color: green;
   }
+}
+
+.field-session {
+  float: left;
+  padding: 10px 20px;
+  border: 0;
+  color: #8798ac;
+  font-size: 16px;
+  margin: 0 10px 0 0;
+  height: 48px;
+  width: 250px;
+  background: #e1eaf7;
+  background: linear-gradient(to right, #e1eaf7 0%, #e1eaf7 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#243141', endColorstr='#334152', GradientType=1);
 }
