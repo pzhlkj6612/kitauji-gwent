@@ -18,6 +18,7 @@ var gulpIf = require('gulp-if');
 var spriteSmithMulti = require('gulp.spritesmith-multi');
 var gmsmith = require('gmsmith');
 var sourcemaps = require('gulp-sourcemaps');
+var jimp = require('gulp-jimp');
 
 //fast install
 //npm i --save-dev browserify vinyl-source-stream babelify gulp-livereload gulp gulp-sass
@@ -217,20 +218,28 @@ function getSpriteStreamFromPngFiles (
     return gulp.src(filesGlobPath, { read: false /* `gmsmith` doesn't support in-memory content */ })
     .pipe(spriteSmithMulti({
       spritesmith: function (options, sprite, icons) {
-        options.imgName = `${imageFileNamePrefix}-${sprite}.${outputImagefileFormat}`;
+        options.imgName = `${imageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
         // Don't care about 'cssName', these css files will be concatenated with each other.
-        options.imgPath = `../../public/build/${options.imgName}`;
+        options.imgPath = `../../public/build/${imageFileNamePrefix}-${sprite}.${outputImagefileFormat}`;
         options.cssSpritesheetName = `${cssSpritesheetName}-${sprite}`;
 
         options.engine = gmsmith;
-        options.imgOpts = {
-          quality: jpegSpriteImageQuality
-        };
+        // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
       }
     }));
   });
 
-  return merge(tasks).pipe(gulpIf("*.css", cssConcat(
-    outputStyleFileName
-  )));
+  return merge(tasks)
+  .pipe(buffer()) // Streaming not supported by gulp-jimp.
+  .pipe(gulpIf("*.css",
+      cssConcat(
+          outputStyleFileName
+      ),
+      jimp({
+        '': {
+          quality: jpegSpriteImageQuality,
+          type: outputImagefileFormat
+        }
+      })
+  ));
 }
