@@ -19,10 +19,6 @@ var spriteSmithMulti = require('gulp.spritesmith-multi');
 var gmsmith = require('gmsmith');
 var sourcemaps = require('gulp-sourcemaps');
 
-if(!argv.production) {
-  livereload({start: true});
-}
-
 //fast install
 //npm i --save-dev browserify vinyl-source-stream babelify gulp-livereload gulp gulp-sass
 const versionConfig = {
@@ -78,6 +74,8 @@ function unitTestsTask() {
 
 function watchTask(done) {
   if(argv.production) return done();
+
+  livereload({start: true});
   gulp.watch("./assets/data/*", gulp.series(browserifyTask));
   gulp.watch("./client/js/**", gulp.series(browserifyTask));
   gulp.watch("./client/templates/**", gulp.series(browserifyTask));
