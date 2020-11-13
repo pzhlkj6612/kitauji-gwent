@@ -104,6 +104,7 @@ let BattleView = Backbone.View.extend({
     this.otherSide.leader = leader;
     this.otherSide.field = field;
     this.otherSide.isPlayerSide = !this.otherSide.isPlayerSide;
+    this.handCards = this.otherHandCards || this.handCards;
     this.render();
   },
   onQuit: function() {
@@ -389,18 +390,21 @@ let BattleView = Backbone.View.extend({
     app.on("update:hand", function(data){
       self.recordGameEvent("update:hand", data);
       data.cards.forEach(c=>util.uncompress(c));
+      data.cards.sort((a, b) => {
+        let powerA = a._data.power + (String(a._data.ability).includes("hero") ? 100 : 0);
+        let powerB = b._data.power + (String(b._data.ability).includes("hero") ? 100 : 0);
+        if (powerA > powerB) return 1;
+        else if (powerA < powerB) return -1;
+        if (a._data.type > b._data.type) return 1;
+        else if (a._data.type < b._data.type) return -1;
+        return 0;
+      });
       if(user.get("roomSide") == data._roomSide){
         self.handCards = data.cards;
-        self.handCards.sort((a, b) => {
-          let powerA = a._data.power + (String(a._data.ability).includes("hero") ? 100 : 0);
-          let powerB = b._data.power + (String(b._data.ability).includes("hero") ? 100 : 0);
-          if (powerA > powerB) return 1;
-          else if (powerA < powerB) return -1;
-          if (a._data.type > b._data.type) return 1;
-          else if (a._data.type < b._data.type) return -1;
-          return 0;
-        });
         self.render();
+      } else {
+        // just for replay
+        self.otherHandCards = data.cards;
       }
     })
     app.on("new:round", function() {
