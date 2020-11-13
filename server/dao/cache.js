@@ -1,4 +1,5 @@
 var SortedSet = require('redis-sorted-set');
+const Auth = require('../service/auth');
 
 let instance_;
 
@@ -23,6 +24,7 @@ class Cache {
     }
     for (let user of allUser) {
       if (!user.winCount && !user.loseCount) continue;
+      if (Auth.isBlack(user.username)) continue;
       this.winRanking.set(user.username, -user.winCount);
     }
   }
