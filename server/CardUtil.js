@@ -1,4 +1,5 @@
 var CardData = require("../assets/data/cards");
+const Const = require("./Const");
 
 let Util = {};
 
@@ -129,6 +130,10 @@ Util.getLimit = function(cardKey) {
     return 3;
   }
   return 999;
+}
+Util.isInDeck = function(cardKey, deck) {
+  return CardData[cardKey].faction === deck ||
+    CardData[cardKey].faction === Const.NEUTRAL_DECK;
 }
 
 module.exports = Util;

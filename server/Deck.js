@@ -4,6 +4,7 @@ var DeckData = require("../assets/data/deck");
 let FunDeckData = require("../assets/data/fun-deck-detail");
 var Util = require("./CardUtil");
 var _ = require("underscore");
+const Const = require("./Const");
 
 var Deck = (function(){
   var Deck = function(deck, side){
@@ -75,6 +76,10 @@ var Deck = (function(){
         console.warn("found null card in custom deck: ", customDeck);
         continue;
       }
+      if (!Util.isInDeck(key, customDeck.deck)) {
+        console.warn("found invalid card in custom deck: ", customDeck);
+        continue;
+      }
       let limit = customDeck.isBot ? 999 : Util.getLimit(key);
       // if card has limit, can only add card up to that limit
       limit = Math.min(limit, cardInDeck[key]);
@@ -86,6 +91,10 @@ var Deck = (function(){
     if (!customDeck.leader) {
       console.warn("found null leader in custom deck: ", customDeck);
     } else {
+      // filter illegal leader card
+      if (!Util.isInDeck(customDeck.leader, customDeck.deck)) {
+        customDeck.leader = Const.DEFAULT_LEADER;
+      }
       deck.push(customDeck.leader);
     }
 

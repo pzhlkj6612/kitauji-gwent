@@ -381,6 +381,7 @@ var User = (function(){
       // give initial leader card
       await db.addLeaderCards(data.username, [Const.DEFAULT_LEADER]);
       cards.push(Const.DEFAULT_LEADER);
+      await db.addLeaderCards(data.username, ["tanaka_asuka_shiki", "oumae_kumiko_shiki"]);
       // give initial coins
       await db.updateWallet(data.username, 10000);
       // start first quest
@@ -440,7 +441,7 @@ var User = (function(){
       await db.storeCustomDeckByList(data.username, data.initialDeck, cards);
       // start first quest
       await db.updateProgress(data.username, Const.SCENARIO_KYOTO, []);
-      // await self.testData_(data);
+      await self.testData_(data);
 
       await self.loadUserModel(data.username);
 
