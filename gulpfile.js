@@ -220,7 +220,7 @@ function getSpriteStreamFromPngFiles (
       cssSpritesheetName = `${cssPrefix}-${folder}`;
     }
     console.log("cssSpritesheetName: " + cssSpritesheetName);
-    
+
     return gulp.src(filesGlobPath, { read: false /* `gmsmith` doesn't support in-memory content */ })
     .pipe(spriteSmithMulti({
       spritesmith: function (options, sprite, icons) {
