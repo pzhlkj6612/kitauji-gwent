@@ -194,9 +194,9 @@ function getFolders (dirPath) {
 function getSpriteStreamFromPngFiles (
   inputImageDirPath,
   outputStyleFileName,
-  outputImagefileNamePrefix,
+  outputImageFileNamePrefix,
   cssPrefix,
-  outputImagefileFormat,
+  outputImageFileFormat,
   generateSplitSprites
 ) {
   var folders = getFolders(inputImageDirPath);
@@ -208,9 +208,9 @@ function getSpriteStreamFromPngFiles (
     var filesGlobPath = path.join(inputImageDirPath, folder, "/**/*.png"); // Attention!
     console.log("source glob path: " + filesGlobPath);
 
-    var imageFileNamePrefix = outputImagefileNamePrefix;
+    var imageFileNamePrefix = outputImageFileNamePrefix;
     if (generateSplitSprites) {
-      imageFileNamePrefix = `${outputImagefileNamePrefix}-${folder}`;
+      imageFileNamePrefix = `${outputImageFileNamePrefix}-${folder}`;
     }
     console.log("imageFileNamePrefix: " + imageFileNamePrefix);
 
@@ -225,7 +225,7 @@ function getSpriteStreamFromPngFiles (
       spritesmith: function (options, sprite, icons) {
         options.imgName = `${imageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
         // Don't care about 'cssName', these css files will be concatenated with each other.
-        options.imgPath = `../../public/build/${imageFileNamePrefix}-${sprite}.${outputImagefileFormat}`;
+        options.imgPath = `../../public/build/${imageFileNamePrefix}-${sprite}.${outputImageFileFormat}`;
         options.cssSpritesheetName = `${cssSpritesheetName}-${sprite}`;
 
         // Use the default engine 'pixelsmith'.
@@ -245,7 +245,7 @@ function getSpriteStreamFromPngFiles (
       jimp({
         '': {
           quality: jpegSpriteImageQuality,
-          type: outputImagefileFormat
+          type: outputImageFileFormat
         }
       })
   ));
