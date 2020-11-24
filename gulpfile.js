@@ -230,6 +230,8 @@ function getSpriteStreamFromPngFiles (
 
         // Use the default engine 'pixelsmith'.
         // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
+
+        return options;
       }
     }));
   });
