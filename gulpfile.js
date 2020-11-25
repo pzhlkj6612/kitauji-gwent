@@ -183,7 +183,6 @@ function errorHandler (errorMessage) {
 
 // Learned from
 //   https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
-//   https://github.com/google/material-design-icons/pull/757/files?file-filters%5B%5D=.js#diff-ba210a9157252cc983268fdc3aa3ed52
 //
 function getFolders (dirPath) {
   return fs.readdirSync(dirPath)
@@ -221,7 +220,7 @@ function getSpriteStreamFromPngFiles (
     }
     console.log("cssSpritesheetName: " + cssSpritesheetName);
 
-    return gulp.src(filesGlobPath, { read: false /* `gmsmith` doesn't support in-memory content */ })
+    return gulp.src(filesGlobPath)
     .pipe(spriteSmithMulti({
       spritesmith: function (options, sprite, icons) {
         options.imgName = `${imageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
