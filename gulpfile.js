@@ -193,12 +193,6 @@ function getSpriteStreamFromPngFiles (
     var filesGlobPath = path.join(inputImageDirPath, "/**/*.png"); // Attention!
     console.log("source glob path: " + filesGlobPath);
 
-    var imageFileNamePrefix = outputImageFileNamePrefix;
-    console.log("imageFileNamePrefix: " + imageFileNamePrefix);
-
-    var cssSpritesheetName = cssPrefix;
-    console.log("cssSpritesheetName: " + cssSpritesheetName);
-
     return gulp.src(filesGlobPath)
     .pipe(spriteSmithMulti({
       to: (!generateSplitSprites ? null : function (filePath) {
@@ -206,10 +200,10 @@ function getSpriteStreamFromPngFiles (
             .replace(/[\/\\ ]/g, '-');
       }),
       spritesmith: function (options, sprite, icons) {
-        options.imgName = `${imageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
+        options.imgName = `${outputImageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
         // Don't care about 'cssName', these css files will be concatenated with each other.
-        options.imgPath = `../../public/build/${imageFileNamePrefix}-${sprite}.${outputImageFileFormat}`;
-        options.cssSpritesheetName = `${cssSpritesheetName}-${sprite}`;
+        options.imgPath = `../../public/build/${outputImageFileNamePrefix}-${sprite}.${outputImageFileFormat}`;
+        options.cssSpritesheetName = `${cssPrefix}-${sprite}`;
 
         // Use the default engine 'pixelsmith'.
         // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
