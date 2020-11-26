@@ -181,16 +181,6 @@ function errorHandler (errorMessage) {
   throw new Error(errorMessage);
 }
 
-// Learned from
-//   https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
-//
-function getFolders (dirPath) {
-  return fs.readdirSync(dirPath)
-    .filter(function (file) {
-      return fs.statSync(path.join(dirPath, file)).isDirectory();
-    });
-}
-
 function getSpriteStreamFromPngFiles (
   inputImageDirPath,
   outputStyleFileName,
@@ -199,29 +189,22 @@ function getSpriteStreamFromPngFiles (
   outputImageFileFormat,
   generateSplitSprites
 ) {
-  var folders = getFolders(inputImageDirPath);
-  if (folders.length === 0) {
-    errorHandler(`No subdirectory in "${inputImageDirPath}".`);
-  }
-
-  var tasks = folders.map(function (folder) {
-    var filesGlobPath = path.join(inputImageDirPath, folder, "/**/*.png"); // Attention!
+  var generateSplits = function () {
+    var filesGlobPath = path.join(inputImageDirPath, "/**/*.png"); // Attention!
     console.log("source glob path: " + filesGlobPath);
 
     var imageFileNamePrefix = outputImageFileNamePrefix;
-    if (generateSplitSprites) {
-      imageFileNamePrefix = `${outputImageFileNamePrefix}-${folder}`;
-    }
     console.log("imageFileNamePrefix: " + imageFileNamePrefix);
 
     var cssSpritesheetName = cssPrefix;
-    if (generateSplitSprites) {
-      cssSpritesheetName = `${cssPrefix}-${folder}`;
-    }
     console.log("cssSpritesheetName: " + cssSpritesheetName);
 
     return gulp.src(filesGlobPath)
     .pipe(spriteSmithMulti({
+      to: (!generateSplitSprites ? null : function (filePath) {
+        return path.dirname(path.relative(inputImageDirPath, filePath))
+            .replace(/[\/\\ ]/g, '-');
+      }),
       spritesmith: function (options, sprite, icons) {
         options.imgName = `${imageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
         // Don't care about 'cssName', these css files will be concatenated with each other.
@@ -234,9 +217,9 @@ function getSpriteStreamFromPngFiles (
         return options;
       }
     }));
-  });
+  };
 
-  return merge(tasks)
+  return generateSplits()
   .pipe(buffer()) // Streaming not supported by gulp-jimp.
   .pipe(gulpIf("*.css",
       cssConcat(
