@@ -189,31 +189,27 @@ function getSpriteStreamFromPngFiles (
   outputImageFileFormat,
   generateSplitSprites
 ) {
-  var generateSplits = function () {
-    var filesGlobPath = path.join(inputImageDirPath, "/**/*.png"); // Attention!
-    console.log("source glob path: " + filesGlobPath);
+  var filesGlobPath = path.join(inputImageDirPath, "/**/*.png"); // Attention!
+  console.log("source glob path: " + filesGlobPath);
 
-    return gulp.src(filesGlobPath)
-    .pipe(spriteSmithMulti({
-      to: (!generateSplitSprites ? null : function (filePath) {
-        return path.dirname(path.relative(inputImageDirPath, filePath))
-            .replace(/[\/\\ ]/g, '-');
-      }),
-      spritesmith: function (options, sprite, icons) {
-        options.imgName = `${outputImageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
-        // Don't care about 'cssName', these css files will be concatenated with each other.
-        options.imgPath = `../../public/build/${outputImageFileNamePrefix}-${sprite}.${outputImageFileFormat}`;
-        options.cssSpritesheetName = `${cssPrefix}-${sprite}`;
+  return gulp.src(filesGlobPath)
+  .pipe(spriteSmithMulti({
+    to: (!generateSplitSprites ? null : function (filePath) {
+      return path.dirname(path.relative(inputImageDirPath, filePath))
+          .replace(/[\/\\ ]/g, '-');
+    }),
+    spritesmith: function (options, sprite, icons) {
+      options.imgName = `${outputImageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
+      // Don't care about 'cssName', these css files will be concatenated with each other.
+      options.imgPath = `../../public/build/${outputImageFileNamePrefix}-${sprite}.${outputImageFileFormat}`;
+      options.cssSpritesheetName = `${cssPrefix}-${sprite}`;
 
-        // Use the default engine 'pixelsmith'.
-        // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
+      // Use the default engine 'pixelsmith'.
+      // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
 
-        return options;
-      }
-    }));
-  };
-
-  return generateSplits()
+      return options;
+    }
+  }))
   .pipe(buffer()) // Streaming not supported by gulp-jimp.
   .pipe(gulpIf("*.css",
       cssConcat(
