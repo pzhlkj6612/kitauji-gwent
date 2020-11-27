@@ -16,7 +16,7 @@ var cssConcat = require('gulp-concat-css');
 var gulpIf = require('gulp-if');
 var spriteSmithMulti = require('gulp.spritesmith-multi');
 var sourcemaps = require('gulp-sourcemaps');
-var jimp = require('gulp-jimp');
+var jimp = require('gulp-jimp-wrapper');
 
 //fast install
 //npm i --save-dev browserify vinyl-source-stream babelify gulp-livereload gulp gulp-sass
@@ -103,21 +103,9 @@ function resizeTask(done) {
     return done();
   }
   return gulp.src('./assets/original_cards/**/*.png')
-  .pipe(jimp({
-    '': {
-      resize: {
-        height: 450
-      }
-    }
-  }))
+  .pipe(jimp(image => image.resize(-1, 450))) // The value "-1" is equal to the constant "Jimp.AUTO".
   .pipe(gulp.dest('./assets/cards/lg/'))
-  .pipe(jimp({
-    '': {
-      resize: {
-        height: 284
-      }
-    }
-  }))
+  .pipe(jimp(image => image.resize(-1, 284))) // Ditto.
   .pipe(gulp.dest('./assets/cards/md/'));
 }
 
@@ -242,11 +230,11 @@ function getSpriteStreamFromPngFiles (
       cssConcat(
           outputStyleFileName
       ),
-      jimp({
-        '': {
-          quality: jpegSpriteImageQuality,
-          type: outputImageFileFormat
-        }
-      })
+      jimp(
+          image => image.quality(jpegSpriteImageQuality),
+          {
+            extname: outputImageFileFormat
+          }
+      )
   ));
 }
