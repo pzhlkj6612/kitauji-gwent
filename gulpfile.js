@@ -181,61 +181,35 @@ function errorHandler (errorMessage) {
   throw new Error(errorMessage);
 }
 
-// Learned from
-//   https://github.com/gulpjs/gulp/blob/master/docs/recipes/running-task-steps-per-folder.md
-//   https://github.com/google/material-design-icons/pull/757/files?file-filters%5B%5D=.js#diff-ba210a9157252cc983268fdc3aa3ed52
-//
-function getFolders (dirPath) {
-  return fs.readdirSync(dirPath)
-    .filter(function (file) {
-      return fs.statSync(path.join(dirPath, file)).isDirectory();
-    });
-}
-
 function getSpriteStreamFromPngFiles (
   inputImageDirPath,
   outputStyleFileName,
-  outputImagefileNamePrefix,
+  outputImageFileNamePrefix,
   cssPrefix,
-  outputImagefileFormat,
+  outputImageFileFormat,
   generateSplitSprites
 ) {
-  var folders = getFolders(inputImageDirPath);
-  if (folders.length === 0) {
-    errorHandler(`No subdirectory in "${inputImageDirPath}".`);
-  }
+  var filesGlobPath = path.join(inputImageDirPath, "/**/*.png"); // Attention!
+  console.log("source glob path: " + filesGlobPath);
 
-  var tasks = folders.map(function (folder) {
-    var filesGlobPath = path.join(inputImageDirPath, folder, "/**/*.png"); // Attention!
-    console.log("source glob path: " + filesGlobPath);
+  return gulp.src(filesGlobPath)
+  .pipe(spriteSmithMulti({
+    to: (!generateSplitSprites ? null : function (filePath) {
+      return path.dirname(path.relative(inputImageDirPath, filePath))
+          .replace(/[\/\\ ]/g, '-');
+    }),
+    spritesmith: function (options, sprite, icons) {
+      options.imgName = `${outputImageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
+      // Don't care about 'cssName', these css files will be concatenated with each other.
+      options.imgPath = `../../public/build/${outputImageFileNamePrefix}-${sprite}.${outputImageFileFormat}`;
+      options.cssSpritesheetName = `${cssPrefix}-${sprite}`;
 
-    var imageFileNamePrefix = outputImagefileNamePrefix;
-    if (generateSplitSprites) {
-      imageFileNamePrefix = `${outputImagefileNamePrefix}-${folder}`;
+      // Use the default engine 'pixelsmith'.
+      // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
+
+      return options;
     }
-    console.log("imageFileNamePrefix: " + imageFileNamePrefix);
-
-    var cssSpritesheetName = cssPrefix;
-    if (generateSplitSprites) {
-      cssSpritesheetName = `${cssPrefix}-${folder}`;
-    }
-    console.log("cssSpritesheetName: " + cssSpritesheetName);
-    
-    return gulp.src(filesGlobPath, { read: false /* `gmsmith` doesn't support in-memory content */ })
-    .pipe(spriteSmithMulti({
-      spritesmith: function (options, sprite, icons) {
-        options.imgName = `${imageFileNamePrefix}-${sprite}.png`; // The format conversion does not work well on macOS.
-        // Don't care about 'cssName', these css files will be concatenated with each other.
-        options.imgPath = `../../public/build/${imageFileNamePrefix}-${sprite}.${outputImagefileFormat}`;
-        options.cssSpritesheetName = `${cssSpritesheetName}-${sprite}`;
-
-        // Use the default engine 'pixelsmith'.
-        // The argument 'options.imgOpts.quality' is unnecessary, because the output images are always PNG files.
-      }
-    }));
-  });
-
-  return merge(tasks)
+  }))
   .pipe(buffer()) // Streaming not supported by gulp-jimp.
   .pipe(gulpIf("*.css",
       cssConcat(
@@ -244,7 +218,7 @@ function getSpriteStreamFromPngFiles (
       jimp({
         '': {
           quality: jpegSpriteImageQuality,
-          type: outputImagefileFormat
+          type: outputImageFileFormat
         }
       })
   ));
