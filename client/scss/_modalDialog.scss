@@ -1,32 +1,23 @@
 .bbm-wrapper {
-  background: rgba(6, 13, 22, .5);
   filter:progid:DXImageTransform.Microsoft.Gradient(startColorstr=#7F000000,endColorstr=#7F000000);
-  //background: rgba(14, 27, 43, 0.5);
 
   .bbm-modal {
-    background: transparent;
     box-shadow: none;
-    width: 1000px;
-    max-width: 100%;
+    max-width: 1000px;
     border-radius: 0;
-    margin-left: 200px;
-    margin-top: 80px;
     background: rgba(6, 13, 22, 0.65);
     padding: 20px 0 0 0;
     display: flex;
     flex-direction: column;
-    height: 550px;
+    min-height: 550px;
 
     .bbm-modal__topbar {
       text-align: center;
-      margin-bottom: 0;
-      padding-bottom: 30px;
     }
 
     .bbm-modal__title {
       font-size: 26px;
       color: white;
-      margin: 0 0 20px 0;
     }
 
     .bbm-modal__section {
@@ -35,7 +26,11 @@
       transform: translate(-50%, 0px);
       left: 50%;
       width: 80%;
-      color: white;
+      color: #ddd;
+
+      p {
+        color: #ddd;
+      }
 
       .wrap-btn-action.btn-register-action.startMatchmaking {
         line-height: 30px;
@@ -54,19 +49,21 @@
         .win-game {
           color: white;
           font-weight: bold;
+          text-shadow: 0 0 10px;
         }
       }
 
       .help-block {
         margin-bottom: 0;
+        color: #ddd;
       }
     }
 
     .bbm-modal__bottombar {
+      text-align: center;
 
       .btn-sub {
         font-size: 22px;
-        color: #6a8097;
         color: #3f4c5b;
         cursor: pointer;
         text-transform: uppercase;
