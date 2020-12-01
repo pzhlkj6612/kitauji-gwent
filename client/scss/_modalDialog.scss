@@ -21,19 +21,6 @@
       text-align: center;
       margin-bottom: 0;
       padding-bottom: 30px;
-
-      .btn-sub {
-        font-size: 22px;
-        color: #6a8097;
-        color: #3f4c5b;
-        cursor: pointer;
-        text-transform: uppercase;
-        transition: all 0.3s ease-in-out 0s;
-      }
-
-      .btn-sub:hover {
-        color: #8798ac;
-      }
     }
 
     .bbm-modal__title {
@@ -72,6 +59,22 @@
 
       .help-block {
         margin-bottom: 0;
+      }
+    }
+
+    .bbm-modal__bottombar {
+
+      .btn-sub {
+        font-size: 22px;
+        color: #6a8097;
+        color: #3f4c5b;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.3s ease-in-out 0s;
+      }
+
+      .btn-sub:hover {
+        color: #8798ac;
       }
     }
   }
