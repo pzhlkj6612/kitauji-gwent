@@ -70,7 +70,7 @@
     .card-table {
       flex-grow: 1;
       text-align: center;
-      overflow-y: scroll;
+      overflow-y: auto;
       margin: 10px;
 
       .placeholder {
@@ -117,7 +117,7 @@
 
     .deck-stats {
       flex-grow: 1;
-      overflow-y: scroll;
+      overflow-y: auto;
 
       .special-limit {
         color: #41ff2a;
