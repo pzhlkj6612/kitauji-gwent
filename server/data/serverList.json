@@ -1,0 +1,14 @@
+[
+  {
+    "name": "aws",
+    "hostname": "ec2-13-113-243-171.ap-northeast-1.compute.amazonaws.com"
+  },
+  {
+    "name": "aliyun",
+    "hostname": "121.196.61.18"
+  },
+  {
+    "name": "localhost",
+    "hostname": "localhost"
+  }
+]

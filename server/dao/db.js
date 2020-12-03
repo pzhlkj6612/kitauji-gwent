@@ -17,10 +17,12 @@ let instance_;
 
 class DB {
   constructor() {
+    this.dbConnected = false;
     this.connectPromise = MongoClient.connect(`mongodb://${Config.MONGODB_HOST}:${MONGODB_PORT}`).then((client) => {
       console.info("mongodb connected");
       this.client = client;
       this.db = client.db(DB_NAME);
+      this.dbConnected = true;
     }).catch(e => {
       console.warn("Database not started. But you can still connect to online servers");
       console.warn("本地未安装数据库，请忽略报错并在游戏中选择线上服务器。>_<");

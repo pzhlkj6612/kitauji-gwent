@@ -2,6 +2,7 @@ var http = require("http");
 var express = require('express');
 var favicon = require('serve-favicon');
 var path = require('path');
+var fs = require('fs');
 var app = express();
 var Config = require("../public/Config")
 var DB = require("./dao/db");
@@ -52,8 +53,22 @@ app.get("/version", function(req, res) {
   res.send(String(Config.MAJOR_VERSION));
 });
 
-app.get("/hosts", function(req, res) {
-  res.json(Config.SERVERS);
+// Use promise-based fs in Node 10+.
+app.get("/hosts", async (req, res, next) => {
+  return fs.readFile("./server/data/serverList.json", "utf-8", (err, data) => {
+    if (err) {
+      console.trace(err);
+      next(err);
+    } else {
+      let serverList = JSON.parse(data);
+      if (!DB.getInstance().dbConnected) {
+        serverList = serverList.filter((el) => {
+          return el["name"] !== "localhost";
+        })
+      }
+      res.json(serverList);
+    }
+  });
 });
 
 var admin = io.of("/admin");
