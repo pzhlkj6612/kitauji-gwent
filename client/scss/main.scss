@@ -15,12 +15,36 @@
 // Run the gulp task "generate ability sprites" to generate this file.
 @import "../../public/build/ability";
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 $height: 600px;
 $game-height: 800px;
+
+$scrollbar-size: 6px;
+
+$scrollbar-background-color: rgba(255, 255, 255, 0.2);
+$scrollbar-foreground-color: rgba(255, 255, 255, 0.4);
+$scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
+
+*::-webkit-scrollbar {
+  width: $scrollbar-size;
+  height: $scrollbar-size;
+}
+
+*::-webkit-scrollbar-track {
+  background: $scrollbar-background-color;
+}
+
+*::-webkit-scrollbar-corner {
+  background: $scrollbar-background-color;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: $scrollbar-foreground-color;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-foreground-color $scrollbar-background-color;
+}
 
 .container {
   width: 1440px;
