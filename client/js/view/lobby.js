@@ -168,8 +168,24 @@ let Lobby = Backbone.View.extend({
     }
   },
   renderKanban: function() {
-    let character = KANBAN_CHARACTERS[(Math.random() * KANBAN_CHARACTERS.length) | 0];
+    console.trace('renderKanban');
+
+    let characterIndex = parseInt(localStorage.getItem('characterIndex'));
+
+    console.log(characterIndex);
+
+    if (!characterIndex || isNaN(characterIndex)) {
+      characterIndex = ((Math.random() * KANBAN_CHARACTERS.length) | 0);
+    }
+
+    console.log(characterIndex);
+
+    let character = KANBAN_CHARACTERS[characterIndex | 0];
+    console.log(character);
     this.$el.find(".kanban").addClass(character);
+
+    // characterIndex = ((Math.random() * KANBAN_CHARACTERS.length) | 0);
+    localStorage.setItem('characterIndex', characterIndex.toString());
   },
   onRankingResponse: function(response) {
     let userModel = this.app.user.get("userModel");
