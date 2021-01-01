@@ -1,6 +1,7 @@
 let Backbone = require("backbone");
 const Util = require("../util");
 const funDeck = require("../../../assets/data/fun-deck");
+const Const = require("../const");
 
 let SideView = Backbone.View.extend({
   el: ".container",
@@ -59,6 +60,7 @@ let SideView = Backbone.View.extend({
   renderInfo: function(){
     let d = this.infoData;
     let l = this.leader;
+    this.applyCardStyle_([l]);
     let deckName = i18n.getText(Util.toFactionText(d.faction));
     if (d.funDeck && funDeck[d.funDeck]) {
       deckName = `${funDeck[d.funDeck].name}（${deckName}）`
@@ -90,11 +92,9 @@ let SideView = Backbone.View.extend({
 
     $infoInner.addClass("active-field");
     if(this.app.user.get("waiting") && this.isPlayerSide){
-      this.$info.addClass("removeBackground");
       $infoInner.removeClass("active-field");
     }
     if(!this.app.user.get("waiting") && !this.isPlayerSide){
-      this.$info.addClass("removeBackground");
       $infoInner.removeClass("active-field");
     }
   },
@@ -106,13 +106,14 @@ let SideView = Backbone.View.extend({
     let score = this.field.close.score;
     let horn = this.field.close.horn;
 
-    this.highlightCards_(cards);
+    this.applyCardStyle_(cards);
 
     let html = this.templateCards(cards);
 
     $field.find(".field-close").html(html)
     $field.find(".large-field-counter").html(score)
     if(horn){
+      this.applyCardStyle_([horn]);
       this.$fields.find(".field-horn-close").html(this.templateCards([horn]));
     } else {
       this.$fields.find(".field-horn-close").html("");
@@ -130,10 +131,9 @@ let SideView = Backbone.View.extend({
       this.$el.find(".field-close").parent().removeClass("field-frost");
     }
 
-    //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-close"), 9);
+    this.calculateCardMargin($field.find(".field-close"), 5);
   },
-  highlightCards_: function(cards) {
+  applyCardStyle_: function(cards) {
     if (this.side === ".foe") {
       let attackData = this.app.user.get("chooseAttack");
       if (attackData) {
@@ -151,6 +151,18 @@ let SideView = Backbone.View.extend({
         cards.forEach(c => c._highlight = false);
       }
     }
+    if (this.app.user.get("theme") === Const.THEME_KYOANI) {
+      cards.forEach(c => {
+        c._theme = true;
+        if (c._data) {
+          c._themeImg = Util.getThemeImgName(c);
+        }
+        if (c._data && c._data.type !== 3) {
+          c._isHero = String(c._data.ability).includes("hero");
+          c._mainAbility = Util.getMainAbility(c._data.ability);
+        }
+      })
+    }
   },
   renderRangeField: function(){
     if(!this.field.ranged) return;
@@ -160,13 +172,14 @@ let SideView = Backbone.View.extend({
     let score = this.field.ranged.score;
     let horn = this.field.ranged.horn;
 
-    this.highlightCards_(cards);
+    this.applyCardStyle_(cards);
 
     let html = this.templateCards(cards);
 
     $field.find(".field-range").html(html)
     $field.find(".large-field-counter").html(score)
     if(horn){
+      this.applyCardStyle_([horn]);
       this.$fields.find(".field-horn-range").html(this.templateCards([horn]));
     } else {
       this.$fields.find(".field-horn-range").html("");
@@ -185,7 +198,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-range"), 9);
+    this.calculateCardMargin($field.find(".field-range"), 5);
   },
   renderSiegeField: function(){
     if(!this.field.siege) return;
@@ -195,13 +208,14 @@ let SideView = Backbone.View.extend({
     let score = this.field.siege.score;
     let horn = this.field.siege.horn;
 
-    this.highlightCards_(cards);
+    this.applyCardStyle_(cards);
 
     let html = this.templateCards(cards);
 
     $field.find(".field-siege").html(html)
     $field.find(".large-field-counter").html(score)
     if(horn){
+      this.applyCardStyle_([horn]);
       this.$fields.find(".field-horn-siege").html(this.templateCards([horn]));
     } else {
       this.$fields.find(".field-horn-siege").html("");
@@ -220,7 +234,7 @@ let SideView = Backbone.View.extend({
     }
 
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
-    this.battleView.calculateMargin($field.find(".field-siege"), 9);
+    this.calculateCardMargin($field.find(".field-siege"), 5);
   },
   renderGetCardAnimation: function() {
     let getCard = this.infoData.getCard;
@@ -239,7 +253,11 @@ let SideView = Backbone.View.extend({
     $getCard.html($card.html());
     $getCard.addClass("move-to-hand");
     setTimeout(() => {
+      let {x, y} = this.battleView.getElementCenter($('.right-side'));
       $getCard.removeClass("move-to-hand");
+      $getCard.css({
+        'transform': `translate(${x}px, ${y}px)`,
+      });
     }, 500);
   },
   renderPlayCardAnimation: function() {
@@ -275,9 +293,9 @@ let SideView = Backbone.View.extend({
     } else if (ability.includes("spy")) {
       animClass = "spy-card";
     } else if (ability.includes("morale")) {
-      animClass = "morale-card";
+      animClass = "morale_boost-card";
     } else if (ability.includes("commanders_horn")) {
-      animClass = "horn-card";
+      animClass = "commanders_horn-card";
     } else if (ability.includes("decoy")) {
       animClass = "decoy-card";
     } else if (ability.includes("kasa")) {
@@ -285,7 +303,7 @@ let SideView = Backbone.View.extend({
     } else if (ability.includes("tight_bond")) {
       card = $(`${this.side} .card[data-bondType='${card.data("bondtype")}']`);
       if (card.length >= 2) {
-        animClass = "bond-card";
+        animClass = "tight_bond-card";
       }
     } else if (ability.includes("muster")) {
       card = $(`${this.side} .card[data-musterType='${card.data("mustertype")}']`);
@@ -296,11 +314,11 @@ let SideView = Backbone.View.extend({
       playSound("heal");
       animClass = "tunning-card";
       sub = $(`${this.side} .card`);
-      subAnimClass = "heal-card";
+      subAnimClass = "heal-anim-card";
     } else if (ability.includes("lips")) {
       animClass = "lips-card";
       sub = $(`${this.side === ".foe" ? ".player" : ".foe"} .card`);
-      subAnimClass = "attack-card";
+      subAnimClass = "attack-anim-card";
     }
     if (ability.includes("hero")) {
       animClass = animClass ? animClass+" hero-card" : "hero-card";
@@ -343,19 +361,34 @@ let SideView = Backbone.View.extend({
 
     this.battleView.calculateMargin($weatherField, 0);
     return this;
-  }
-  /*,
-  lives: function(lives){
-    let out = "";
-    for(let i = 0; i < 2; i++) {
-      out += "<i";
-      if(i < lives){
-        out += " class='ruby'";
-      }
-      out += "></i>";
+  },
+  calculateCardMargin: function($container) {
+    if (this.app.user.get("theme") !== Const.THEME_KYOANI) {
+      this.battleView.calculateMargin($container, 9);
+      return;
     }
-    return out;
-  }*/
+    let minSize = 5;
+    var Class = $container.find(".card-wrap").length ? ".card-wrap" : ".card";
+    let cards = $container.find(Class);
+    var n = cards.length;
+    let w = $container.height(), c = cards.outerHeight(true);
+    let res;
+    if(n < minSize)
+      res = 0;
+    else {
+      res = -((w - c) / (n - 1) - c) + 1;
+    }
+    w += c;
+    cards.not(Class+":first-child").css("margin-top", -res);
+    let containerTop = $container.offset().top;
+    for (let i = 0; i < n; i++) {
+      let card = cards[i];
+      let offset = $(card).offset().top + $(card).outerHeight(true) - containerTop;
+      let margin = Math.round(100 * Math.pow(Math.abs(offset - w / 2) / w * 2, 2)) - 10;
+      margin = this.isPlayerSide ? margin: -margin;
+      $(card).css({"transform": `translate(${margin}px,0)`});
+    }
+  }
 });
 
 module.exports = SideView;

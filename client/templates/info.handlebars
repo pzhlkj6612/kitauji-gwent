@@ -18,15 +18,15 @@
   <div class="col-xs-8 info-name">{{data.name}}</div>
   <div class="col-xs-4 passing">{{#if data.passing}}{{i18n "passed"}}{{/if}}</div>
   <h5 class="col-xs-12 info-deck">{{deck}}</h5>
-  <div class="col-xs-12">
-    <div class="col-xs-2 info-title"></div>
-    <div class="col-xs-2 hand-card">{{data.hand}}</div>
-    <div class="col-xs-6">
-      <div class="col-xs-12 gwent-lives">
-        {{#health data.lives}}
-        {{/health}}
-      </div>
+  <div class="col-xs-12 info-others">
+    <div class="hand-card-wrapper">
+      <div class="info-title"></div>
+      <div class="hand-card">{{data.hand}}</div>
     </div>
-    <div class="col-xs-2 score">{{data.score}}</div>
+    <div class="gwent-lives">
+      {{#health data.lives}}
+      {{/health}}
+    </div>
+    <div class="score">{{data.score}}</div>
   </div>
 </div>

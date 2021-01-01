@@ -17,6 +17,13 @@
   * 3 SSR
   */
 
+/**
+ * flag
+ * 1 RED
+ * 2 GREEN
+ * 3 BLUE
+ */
+
 module.exports = {
   "none": {
     name: "none",
@@ -33,6 +40,7 @@ module.exports = {
     bondType: "doubleReed",
     img: "kenzaki_ririka",
     faction: "kitauji",
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -43,6 +51,7 @@ module.exports = {
     bondType: "doubleReed",
     img: "kabutodani_eru",
     faction: "kitauji",
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -53,6 +62,7 @@ module.exports = {
     bondType: "doubleReed",
     img: "koteyama_suruga",
     faction: "kitauji",
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -62,6 +72,7 @@ module.exports = {
     ability: null,
     img: "maki_chikai",
     faction: "kitauji",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -71,6 +82,7 @@ module.exports = {
     ability: null,
     img: "suzuki_mirei",
     faction: "kitauji",
+    flag: 2,
     rarity: 0,
     type: 1
   },
@@ -80,6 +92,7 @@ module.exports = {
     ability: "hero",
     img: "yoroizuka_mizore",
     faction: "kitauji",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -89,6 +102,7 @@ module.exports = {
     ability: null,
     img: "kamaya_tsubame",
     faction: "kitauji",
+    flag: 2,
     rarity: 0,
     type: 2
   },
@@ -99,6 +113,7 @@ module.exports = {
     bondType: "perc",
     img: "inoue_junna",
     faction: "kitauji",
+    flag: 1,
     rarity: 2,
     type: 2
   },
@@ -109,6 +124,7 @@ module.exports = {
     bondType: "perc",
     img: "sakai_masako",
     faction: "kitauji",
+    flag: 1,
     rarity: 2,
     type: 2
   },
@@ -119,6 +135,7 @@ module.exports = {
     img: "tsukinaga_motomu",
     faction: "kitauji",
     male: true,
+    flag: 2,
     rarity: 0,
     type: 2
   },
@@ -129,6 +146,7 @@ module.exports = {
     img: "tsukamoto_shuichi",
     faction: "kitauji",
     male: true,
+    flag: 1,
     rarity: 1,
     type: 1
   },
@@ -139,6 +157,7 @@ module.exports = {
     img: "kishibe_miru",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 0,
     type: 1
   },
@@ -148,6 +167,7 @@ module.exports = {
     ability: "commanders_horn",
     img: "katou_hazuki",
     faction: "kitauji",
+    flag: 1,
     rarity: 2,
     type: 1
   },
@@ -158,6 +178,7 @@ module.exports = {
     img: "iwata_keina",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -167,6 +188,7 @@ module.exports = {
     ability: null,
     img: "higashiura_motoko",
     faction: "kitauji",
+    flag: 2,
     rarity: 1,
     type: 2
   },
@@ -178,6 +200,7 @@ module.exports = {
     img: "nagase_riko",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -190,6 +213,7 @@ module.exports = {
     faction: "kitauji",
     grade: 3,
     male: true,
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -281,6 +305,7 @@ module.exports = {
     img: "kabe_tomoe",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -290,6 +315,7 @@ module.exports = {
     ability: ["hero", "spy"],
     img: "hisaishi_kanade",
     faction: "kitauji",
+    flag: 2,
     rarity: 3,
     type: 1
   },
@@ -299,6 +325,7 @@ module.exports = {
     ability: ["hero", "scorch"],
     img: "kasaki_nozomi",
     faction: "kitauji",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -309,6 +336,7 @@ module.exports = {
     attackPower: 4,
     img: "kousaka_reina",
     faction: "kitauji",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -318,6 +346,7 @@ module.exports = {
     ability: "hero",
     img: "kawashima_sapphire",
     faction: "kitauji",
+    flag: 1,
     rarity: 3,
     type: 2
   },
@@ -327,6 +356,7 @@ module.exports = {
     ability: null,
     img: "suzuki_satsuki",
     faction: "kitauji",
+    flag: 2,
     rarity: 0,
     type: 1
   },
@@ -337,6 +367,7 @@ module.exports = {
     musterType: "flute2",
     img: "oda_meiko",
     faction: "kitauji",
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -347,6 +378,7 @@ module.exports = {
     musterType: "flute2",
     img: "takahashi_sari",
     faction: "kitauji",
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -357,6 +389,7 @@ module.exports = {
     musterType: "flute2",
     img: "nakano_tsubomi",
     faction: "kitauji",
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -366,6 +399,7 @@ module.exports = {
     ability: ["hero", "morale_boost"],
     img: "yoshikawa_yuko",
     faction: "kitauji",
+    flag: 3,
     rarity: 3,
     type: 1
   },
@@ -375,6 +409,7 @@ module.exports = {
     ability: null,
     img: "nakagawa_natsuki",
     faction: "kitauji",
+    flag: 3,
     grade: 3,
     rarity: 0,
     type: 1
@@ -385,6 +420,7 @@ module.exports = {
     ability: null,
     img: "kohinata_yume",
     faction: "kitauji",
+    flag: 2,
     rarity: 1,
     type: 1
   },
@@ -395,6 +431,7 @@ module.exports = {
     bondType: "siblings",
     img: "takino_sayaka",
     faction: "kitauji",
+    flag: 2,
     rarity: 1,
     type: 1
   },
@@ -407,6 +444,7 @@ module.exports = {
     faction: "kitauji",
     rarity: 1,
     grade: 3,
+    flag: 3,
     male: true,
     type: 1
   },
@@ -417,6 +455,7 @@ module.exports = {
     musterType: "flute1",
     img: "etou_kana",
     faction: "kitauji",
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -427,6 +466,7 @@ module.exports = {
     musterType: "flute1",
     img: "hiraishi_narumi",
     faction: "kitauji",
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -437,6 +477,7 @@ module.exports = {
     musterType: "flute1",
     img: "yamane_tsumiki",
     faction: "kitauji",
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -446,6 +487,7 @@ module.exports = {
     ability: ["hero", "medic"],
     img: "oumae_kumiko",
     faction: "kitauji",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -457,6 +499,7 @@ module.exports = {
     img: "maeda_aota",
     faction: "kitauji",
     male: true,
+    flag: 2,
     rarity: 0,
     type: 2
   },
@@ -468,6 +511,7 @@ module.exports = {
     img: "maeda_sosuke",
     faction: "kitauji",
     male: true,
+    flag: 2,
     rarity: 0,
     type: 2
   },
@@ -477,6 +521,7 @@ module.exports = {
     ability: "spy",
     img: "hakase_michiru",
     faction: "kitauji",
+    flag: 2,
     rarity: 2,
     type: 1
   },
@@ -488,6 +533,7 @@ module.exports = {
     img: "takigawa_chikao",
     faction: "kitauji",
     male: true,
+    flag: 1,
     rarity: 2,
     type: 0
   },
@@ -498,6 +544,7 @@ module.exports = {
     bondType: "bg",
     img: "takahisa_chieri",
     faction: "kitauji",
+    flag: 1,
     rarity: 2,
     type: 0
   },
@@ -507,6 +554,7 @@ module.exports = {
     ability: null,
     img: "ueda_hiyoko",
     faction: "kitauji",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -516,6 +564,7 @@ module.exports = {
     ability: null,
     img: "fukui_sayaka",
     faction: "kitauji",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -525,6 +574,7 @@ module.exports = {
     ability: null,
     img: "yoshizawa_akiko",
     faction: "kitauji",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -535,6 +585,7 @@ module.exports = {
     img: "kitayama_tairu",
     faction: "kitauji",
     male: true,
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -545,6 +596,7 @@ module.exports = {
     img: "hirao_sumiko",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 1,
     type: 0
   },
@@ -555,6 +607,7 @@ module.exports = {
     img: "ono_miyoko",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 1,
     type: 2
   },
@@ -565,6 +618,7 @@ module.exports = {
     img: "inoue_shirabe",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 1,
     type: 0
   },
@@ -574,6 +628,7 @@ module.exports = {
     ability: "spy",
     img: "hitomi_lala",
     faction: "kitauji",
+    flag: 1,
     rarity: 2,
     type: 1
   },
@@ -583,6 +638,7 @@ module.exports = {
     ability: null,
     img: "morimoto_michio",
     faction: "kitauji",
+    flag: 1,
     rarity: 1,
     type: 1
   },
@@ -593,6 +649,7 @@ module.exports = {
     img: "shima_rie",
     faction: "kitauji",
     grade: 3,
+    flag: 3,
     rarity: 2,
     type: 0
   },
@@ -662,6 +719,7 @@ module.exports = {
     img: "kenzaki_ririka_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -674,6 +732,7 @@ module.exports = {
     img: "kabutodani_eru_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -686,6 +745,7 @@ module.exports = {
     img: "koteyama_suruga_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -697,6 +757,7 @@ module.exports = {
     img: "yoroizuka_mizore_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -708,6 +769,7 @@ module.exports = {
     img: "yoroizuka_mizore_2",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -719,6 +781,7 @@ module.exports = {
     img: "yoroizuka_mizore_3",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -730,6 +793,7 @@ module.exports = {
     img: "yoroizuka_mizore_4",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -741,6 +805,7 @@ module.exports = {
     img: "kasaki_nozomi_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -752,6 +817,7 @@ module.exports = {
     img: "kasaki_nozomi_2",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -763,6 +829,7 @@ module.exports = {
     img: "kasaki_nozomi_3",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -774,6 +841,7 @@ module.exports = {
     img: "kasaki_nozomi_4",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -785,6 +853,7 @@ module.exports = {
     img: "kasaki_nozomi_5",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 0
   },
@@ -797,6 +866,7 @@ module.exports = {
     img: "kousaka_reina_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -809,6 +879,7 @@ module.exports = {
     img: "oda_meiko_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -821,6 +892,7 @@ module.exports = {
     img: "takahashi_sari_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -833,6 +905,7 @@ module.exports = {
     img: "nakano_tsubomi_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -844,6 +917,7 @@ module.exports = {
     img: "yoshikawa_yuko_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 1
   },
@@ -855,6 +929,7 @@ module.exports = {
     img: "yoshikawa_yuko_2",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 3,
     rarity: 3,
     type: 1
   },
@@ -867,6 +942,7 @@ module.exports = {
     faction: "kitauji",
     skinFaction: "liz",
     grade: 3,
+    flag: 3,
     rarity: 0,
     type: 1
   },
@@ -879,6 +955,7 @@ module.exports = {
     img: "etou_kana_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -891,6 +968,7 @@ module.exports = {
     img: "hiraishi_narumi_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -903,6 +981,7 @@ module.exports = {
     img: "yamane_tsumiki_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -914,6 +993,7 @@ module.exports = {
     img: "oumae_kumiko_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -925,6 +1005,7 @@ module.exports = {
     img: "oumae_kumiko_2",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -937,6 +1018,7 @@ module.exports = {
     img: "takahisa_chieri_1",
     faction: "kitauji",
     skinFaction: "liz",
+    flag: 1,
     rarity: 2,
     type: 0
   },
@@ -949,6 +1031,7 @@ module.exports = {
     faction: "kitauji",
     skinFaction: "liz",
     grade: 3,
+    flag: 3,
     rarity: 1,
     type: 2
   },
@@ -961,6 +1044,7 @@ module.exports = {
     faction: "kitauji",
     skinFaction: "liz",
     grade: 3,
+    flag: 3,
     rarity: 1,
     type: 0
   },
@@ -973,6 +1057,7 @@ module.exports = {
     img: "souga_yoriko",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -983,6 +1068,7 @@ module.exports = {
     img: "himegami_kotoko",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -994,6 +1080,7 @@ module.exports = {
     img: "kitamura_raina",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1005,6 +1092,7 @@ module.exports = {
     img: "oka_mikino",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1016,6 +1104,7 @@ module.exports = {
     img: "kase_maina",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1026,6 +1115,7 @@ module.exports = {
     img: "torizuka_hirone",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1036,6 +1126,7 @@ module.exports = {
     img: "suzuka_sakiko",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1046,6 +1137,7 @@ module.exports = {
     img: "okamoto_raimu",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1057,6 +1149,7 @@ module.exports = {
     img: "miya_kiriko",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -1068,6 +1161,7 @@ module.exports = {
     img: "wataru_horie",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -1078,6 +1172,7 @@ module.exports = {
     img: "saitou_aoi",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1088,6 +1183,7 @@ module.exports = {
     img: "watanabe_tsune",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -1099,6 +1195,7 @@ module.exports = {
     img: "kahashi_hiro",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 1
   },
@@ -1109,6 +1206,7 @@ module.exports = {
     img: "sawada_juri",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 1
   },
@@ -1120,6 +1218,7 @@ module.exports = {
     img: "taura_mei",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 1
   },
@@ -1132,6 +1231,7 @@ module.exports = {
     faction: "kumiko1",
     grade: 3,
     male: true,
+    flag: 2,
     rarity: 1,
     type: 1
   },
@@ -1143,6 +1243,7 @@ module.exports = {
     faction: "kumiko1",
     grade: 3,
     male: true,
+    flag: 2,
     rarity: 2,
     type: 2
   },
@@ -1153,6 +1254,7 @@ module.exports = {
     img: "kayama_saki",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 2
   },
@@ -1163,6 +1265,7 @@ module.exports = {
     img: "tanaka_asuka",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 1
   },
@@ -1173,6 +1276,7 @@ module.exports = {
     img: "ogasawara_haruka",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 0
   },
@@ -1183,6 +1287,7 @@ module.exports = {
     img: "nakaseko_kaori",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 1
   },
@@ -1192,6 +1297,7 @@ module.exports = {
     ability: "spy",
     img: "hitomi_lala",
     faction: "kumiko1",
+    flag: 1,
     rarity: 2,
     type: 1
   },
@@ -1202,6 +1308,7 @@ module.exports = {
     bondType: "flute_k1",
     img: "oda_meiko",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1212,6 +1319,7 @@ module.exports = {
     bondType: "flute_k1",
     img: "takahashi_sari",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1221,6 +1329,7 @@ module.exports = {
     ability: "commanders_horn",
     img: "katou_hazuki",
     faction: "kumiko1",
+    flag: 1,
     rarity: 2,
     type: 1
   },
@@ -1230,6 +1339,7 @@ module.exports = {
     ability: null,
     img: "oumae_kumiko",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1240,6 +1350,7 @@ module.exports = {
     bondType: "perc",
     img: "inoue_junna",
     faction: "kumiko1",
+    flag: 1,
     rarity: 1,
     type: 2
   },
@@ -1250,6 +1361,7 @@ module.exports = {
     bondType: "perc",
     img: "sakai_masako",
     faction: "kumiko1",
+    flag: 1,
     rarity: 1,
     type: 2
   },
@@ -1261,6 +1373,7 @@ module.exports = {
     img: "takigawa_chikao",
     faction: "kumiko1",
     male: true,
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -1271,6 +1384,7 @@ module.exports = {
     bondType: "no_eye",
     img: "takahisa_chieri",
     faction: "kumiko1",
+    flag: 1,
     rarity: 2,
     type: 0
   },
@@ -1280,6 +1394,7 @@ module.exports = {
     ability: null,
     img: "ueda_hiyoko",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1289,6 +1404,7 @@ module.exports = {
     ability: null,
     img: "fukui_sayaka",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1298,6 +1414,7 @@ module.exports = {
     ability: null,
     img: "yoshizawa_akiko",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1307,6 +1424,7 @@ module.exports = {
     ability: "medic",
     img: "iwata_keina",
     faction: "kumiko1",
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -1318,6 +1436,7 @@ module.exports = {
     img: "tsukamoto_shuichi",
     faction: "kumiko1",
     male: true,
+    flag: 1,
     rarity: 1,
     type: 1
   },
@@ -1327,6 +1446,7 @@ module.exports = {
     ability: null,
     img: "maki_chikai",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1336,6 +1456,7 @@ module.exports = {
     ability: null,
     img: "morimoto_michio",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1345,6 +1466,7 @@ module.exports = {
     ability: null,
     img: "kamaya_tsubame",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 2
   },
@@ -1354,6 +1476,7 @@ module.exports = {
     ability: "hero",
     img: "kousaka_reina",
     faction: "kumiko1",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -1363,6 +1486,7 @@ module.exports = {
     ability: "hero",
     img: "kawashima_sapphire",
     faction: "kumiko1",
+    flag: 1,
     rarity: 3,
     type: 2
   },
@@ -1373,6 +1497,7 @@ module.exports = {
     bondType: "tuba",
     img: "nagase_riko",
     faction: "kumiko1",
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -1384,6 +1509,7 @@ module.exports = {
     img: "gotou_takuya",
     faction: "kumiko1",
     male: true,
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -1393,6 +1519,7 @@ module.exports = {
     ability: "guard",
     img: "yoshikawa_yuko",
     faction: "kumiko1",
+    flag: 3,
     rarity: 1,
     type: 1
   },
@@ -1402,6 +1529,7 @@ module.exports = {
     ability: "monaka",
     img: "nakagawa_natsuki",
     faction: "kumiko1",
+    flag: 3,
     rarity: 1,
     type: 1
   },
@@ -1411,6 +1539,7 @@ module.exports = {
     ability: "monaka",
     img: "kabe_tomoe",
     faction: "kumiko1",
+    flag: 3,
     rarity: 1,
     type: 1
   },
@@ -1420,6 +1549,7 @@ module.exports = {
     ability: "monaka",
     img: "morita_shinobu",
     faction: "kumiko1",
+    flag: 3,
     rarity: 1,
     type: 0
   },
@@ -1429,6 +1559,7 @@ module.exports = {
     ability: null,
     img: "shima_rie",
     faction: "kumiko1",
+    flag: 3,
     rarity: 0,
     type: 0
   },
@@ -1438,6 +1569,7 @@ module.exports = {
     ability: null,
     img: "ono_miyoko",
     faction: "kumiko1",
+    flag: 3,
     rarity: 0,
     type: 2
   },
@@ -1448,6 +1580,7 @@ module.exports = {
     musterType: "idol",
     img: "hirao_sumiko",
     faction: "kumiko1",
+    flag: 3,
     rarity: 1,
     type: 0
   },
@@ -1457,6 +1590,7 @@ module.exports = {
     ability: null,
     img: "kishibe_miru",
     faction: "kumiko1",
+    flag: 3,
     rarity: 0,
     type: 1
   },
@@ -1466,6 +1600,7 @@ module.exports = {
     ability: null,
     img: "yoroizuka_mizore",
     faction: "kumiko1",
+    flag: 3,
     rarity: 2,
     type: 0
   },
@@ -1481,6 +1616,7 @@ module.exports = {
     img: "gotou_takuya",
     faction: "kumiko1",
     male: true,
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -1493,6 +1629,7 @@ module.exports = {
     ability: "medic",
     img: "iwata_keina",
     faction: "kumiko1",
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -1507,6 +1644,7 @@ module.exports = {
     img: "kase_maina",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1519,6 +1657,7 @@ module.exports = {
     ability: "hero",
     img: "kawashima_sapphire",
     faction: "kumiko1",
+    flag: 1,
     rarity: 3,
     type: 2
   },
@@ -1531,6 +1670,7 @@ module.exports = {
     ability: "hero",
     img: "kousaka_reina",
     faction: "kumiko1",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -1544,6 +1684,7 @@ module.exports = {
     bondType: "tuba",
     img: "nagase_riko",
     faction: "kumiko1",
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -1556,6 +1697,7 @@ module.exports = {
     ability: "monaka",
     img: "nakagawa_natsuki",
     faction: "kumiko1",
+    flag: 3,
     rarity: 1,
     type: 1
   },
@@ -1569,6 +1711,7 @@ module.exports = {
     img: "nakaseko_kaori",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 1
   },
@@ -1582,6 +1725,7 @@ module.exports = {
     img: "ogasawara_haruka",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 0
   },
@@ -1594,6 +1738,7 @@ module.exports = {
     ability: null,
     img: "oumae_kumiko",
     faction: "kumiko1",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1607,6 +1752,7 @@ module.exports = {
     img: "tanaka_asuka",
     faction: "kumiko1",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 1
   },
@@ -1620,6 +1766,7 @@ module.exports = {
     bondType: "no_eye",
     img: "takahisa_chieri",
     faction: "kumiko1",
+    flag: 1,
     rarity: 2,
     type: 0
   },
@@ -1631,6 +1778,7 @@ module.exports = {
     img: "souga_yoriko",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -1641,6 +1789,7 @@ module.exports = {
     img: "himegami_kotoko",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -1652,6 +1801,7 @@ module.exports = {
     img: "kitamura_raina",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1663,6 +1813,7 @@ module.exports = {
     img: "oka_mikino",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1674,6 +1825,7 @@ module.exports = {
     img: "kase_maina",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1684,6 +1836,7 @@ module.exports = {
     img: "torizuka_hirone",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1694,6 +1847,7 @@ module.exports = {
     img: "suzuka_sakiko",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 0
   },
@@ -1704,6 +1858,7 @@ module.exports = {
     img: "okamoto_raimu",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -1715,6 +1870,7 @@ module.exports = {
     img: "miya_kiriko",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -1726,6 +1882,7 @@ module.exports = {
     img: "wataru_horie",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 0
   },
@@ -1736,6 +1893,7 @@ module.exports = {
     img: "watanabe_tsune",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 0,
     type: 0
   },
@@ -1746,6 +1904,7 @@ module.exports = {
     img: "kahashi_hiro",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 0,
     type: 1
   },
@@ -1756,6 +1915,7 @@ module.exports = {
     img: "sawada_juri",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 2,
     type: 1
   },
@@ -1767,6 +1927,7 @@ module.exports = {
     img: "taura_mei",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 1
   },
@@ -1779,6 +1940,7 @@ module.exports = {
     faction: "kumiko1S2",
     grade: 3,
     male: true,
+    flag: 2,
     rarity: 1,
     type: 1
   },
@@ -1790,6 +1952,7 @@ module.exports = {
     faction: "kumiko1S2",
     grade: 3,
     male: true,
+    flag: 2,
     rarity: 2,
     type: 2
   },
@@ -1800,6 +1963,7 @@ module.exports = {
     img: "kayama_saki",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 1,
     type: 2
   },
@@ -1810,6 +1974,7 @@ module.exports = {
     img: "tanaka_asuka",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 1
   },
@@ -1820,6 +1985,7 @@ module.exports = {
     img: "ogasawara_haruka",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 0
   },
@@ -1830,6 +1996,7 @@ module.exports = {
     img: "nakaseko_kaori",
     faction: "kumiko1S2",
     grade: 3,
+    flag: 2,
     rarity: 3,
     type: 1
   },
@@ -1839,6 +2006,7 @@ module.exports = {
     ability: "spy",
     img: "hitomi_lala",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 2,
     type: 1
   },
@@ -1849,6 +2017,7 @@ module.exports = {
     bondType: "flute_k1",
     img: "oda_meiko",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1859,6 +2028,7 @@ module.exports = {
     bondType: "flute_k1",
     img: "takahashi_sari",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1868,6 +2038,7 @@ module.exports = {
     ability: "commanders_horn",
     img: "katou_hazuki",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 2,
     type: 1
   },
@@ -1877,6 +2048,7 @@ module.exports = {
     ability: ["hero", "medic"],
     img: "oumae_kumiko",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -1887,6 +2059,7 @@ module.exports = {
     bondType: "perc",
     img: "inoue_junna",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 1,
     type: 2
   },
@@ -1897,6 +2070,7 @@ module.exports = {
     bondType: "perc",
     img: "sakai_masako",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 1,
     type: 2
   },
@@ -1908,6 +2082,7 @@ module.exports = {
     img: "takigawa_chikao",
     faction: "kumiko1S2",
     male: true,
+    flag: 1,
     rarity: 1,
     type: 0
   },
@@ -1918,6 +2093,7 @@ module.exports = {
     bondType: "no_eye",
     img: "takahisa_chieri",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 2,
     type: 0
   },
@@ -1927,6 +2103,7 @@ module.exports = {
     ability: null,
     img: "ueda_hiyoko",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1936,6 +2113,7 @@ module.exports = {
     ability: null,
     img: "fukui_sayaka",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1945,6 +2123,7 @@ module.exports = {
     ability: null,
     img: "yoshizawa_akiko",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1954,6 +2133,7 @@ module.exports = {
     ability: "medic",
     img: "iwata_keina",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -1965,6 +2145,7 @@ module.exports = {
     img: "tsukamoto_shuichi",
     faction: "kumiko1S2",
     male: true,
+    flag: 1,
     rarity: 1,
     type: 1
   },
@@ -1974,6 +2155,7 @@ module.exports = {
     ability: null,
     img: "maki_chikai",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 0
   },
@@ -1983,6 +2165,7 @@ module.exports = {
     ability: null,
     img: "morimoto_michio",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 1
   },
@@ -1992,6 +2175,7 @@ module.exports = {
     ability: null,
     img: "kamaya_tsubame",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 0,
     type: 2
   },
@@ -2001,6 +2185,7 @@ module.exports = {
     ability: "hero",
     img: "kousaka_reina",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 3,
     type: 1
   },
@@ -2010,6 +2195,7 @@ module.exports = {
     ability: "hero",
     img: "kawashima_sapphire",
     faction: "kumiko1S2",
+    flag: 1,
     rarity: 3,
     type: 2
   },
@@ -2020,6 +2206,7 @@ module.exports = {
     bondType: "tuba",
     img: "nagase_riko",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -2031,6 +2218,7 @@ module.exports = {
     img: "gotou_takuya",
     faction: "kumiko1S2",
     male: true,
+    flag: 3,
     rarity: 2,
     type: 1
   },
@@ -2041,6 +2229,7 @@ module.exports = {
     bondType: "nakayoshi",
     img: "yoshikawa_yuko",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 1,
     type: 1
   },
@@ -2051,6 +2240,7 @@ module.exports = {
     bondType: "nakayoshi",
     img: "nakagawa_natsuki",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 1,
     type: 1
   },
@@ -2060,6 +2250,7 @@ module.exports = {
     ability: null,
     img: "kabe_tomoe",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 0,
     type: 1
   },
@@ -2069,6 +2260,7 @@ module.exports = {
     ability: null,
     img: "shima_rie",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 0,
     type: 0
   },
@@ -2078,6 +2270,7 @@ module.exports = {
     ability: null,
     img: "ono_miyoko",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 0,
     type: 2
   },
@@ -2088,6 +2281,7 @@ module.exports = {
     musterType: "idol",
     img: "hirao_sumiko",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 1,
     type: 0
   },
@@ -2097,6 +2291,7 @@ module.exports = {
     ability: null,
     img: "kishibe_miru",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 0,
     type: 1
   },
@@ -2106,6 +2301,7 @@ module.exports = {
     ability: null,
     img: "yoroizuka_mizore",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 2,
     type: 0
   },
@@ -2115,6 +2311,7 @@ module.exports = {
     ability: "kasa",
     img: "kasaki_nozomi",
     faction: "kumiko1S2",
+    flag: 3,
     rarity: 2,
     type: 0
   },

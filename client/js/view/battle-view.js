@@ -66,8 +66,8 @@ let BattleView = Backbone.View.extend({
     }
   },
   events: {
-    "mouseover .card": "onMouseover",
-    "mouseleave .card": "onMouseleave",
+    "mouseover .card>i": "onMouseover",
+    "mouseleave .card>i": "onMouseleave",
     "click .field-hand": "onClick",
     "click .battleside.player": "onClickFieldCard",
     "click .battleside.foe": "onClickFoeFieldCard",
@@ -172,25 +172,35 @@ let BattleView = Backbone.View.extend({
     playCard.html($card.html());
     let type = $card.data("type");
     let isSpy = $card.data("ability").includes("spy");
-    let animationClass;
+    let target;
     switch (type) {
       case 0:
-        animationClass = isSpy ? "move-to-foe-close" : "move-to-player-close";
+        target = isSpy ? '.foe .field-close' : '.player .field-close';
         break;
       case 1:
-        animationClass = isSpy ? "move-to-foe-range" : "move-to-player-range";
+        target = isSpy ? '.foe .field-range' : '.player .field-range';
         break;
       case 2:
-        animationClass = isSpy ? "move-to-foe-siege" : "move-to-player-siege";
+        target = isSpy ? '.foe .field-siege' : '.player .field-siege';
         break;
       case 5:
-        animationClass = "move-to-weather";
+        target = '.field-weather';
         break;
     }
-    playCard.addClass(animationClass);
-    setTimeout(() => {
-      playCard.removeClass(animationClass);
-    }, 200);
+    if (target) {
+      let {x, y} = this.getElementCenter($(target));
+      playCard.addClass("move-card");
+      playCard.css({
+        'transform': `translate(${x}px, ${y}px)`
+      });
+      setTimeout(() => {
+        let {x, y} = this.getElementCenter($('.right-side'));
+        playCard.removeClass("move-card")
+        playCard.css({
+          'transform': `translate(${x}px, ${y}px)`,
+        });
+      }, 200);
+    }
 
 
     if(key === "decoy" || key === "tubakun"){
@@ -259,7 +269,7 @@ let BattleView = Backbone.View.extend({
       if (!$field.length) return;
 
       //console.log($field);
-      let target = $field.hasClass("field-close") ? 0 : ($field.hasClass("field-range") ? 1 : 2);
+      let target = $field.hasClass("field-horn-close") ? 0 : ($field.hasClass("field-horn-range") ? 1 : 2);
       this.app.send("horn:field", {
         field: target
       });
@@ -280,7 +290,7 @@ let BattleView = Backbone.View.extend({
     let $discard = $(e.target).closest(".field-discard");
     //console.log("opened discard");
     let side;
-    if($discard.parent().parent().hasClass("player")){
+    if($discard.parent().hasClass("player")){
       side = this.yourSide;
     }
     else {
@@ -307,7 +317,8 @@ let BattleView = Backbone.View.extend({
       isWaiting: self.user.get("waiting"),
       playerRemained: self.yourSide ? self.yourSide.infoData.deck : 0,
       foeRemained: self.otherSide ? self.otherSide.infoData.deck : 0,
-      messages: self.messages
+      messages: self.messages,
+      theme: self.user.get("theme")
     }));
     if(!(this.otherSide && this.yourSide)) return;
     this.otherSide.render();
@@ -440,17 +451,17 @@ let BattleView = Backbone.View.extend({
       self.waitForAnimation = true;
       let scorchedCards = scorched.map(c=>{
         let card = $(`.card[data-id='${c._id}']`);
-        card.addClass("scorch-card");
+        card.addClass("scorch-anim-card");
         return card;
       });
       let attackedCards = attacked.map(c=>{
         let card = $(`.card[data-id='${c._id}']`);
-        card.addClass("attack-card");
+        card.addClass("attack-anim-card");
         return card;
       });
       let healedCards = healed.map(c=>{
         let card = $(`.card[data-id='${c._id}']`);
-        card.addClass("heal-card");
+        card.addClass("heal-anim-card");
         return card;
       });
       if (scorchedCards.length) {
@@ -463,9 +474,9 @@ let BattleView = Backbone.View.extend({
         playSound("heal1");
       }
       setTimeout(() => {
-        scorchedCards.forEach(c=>c.removeClass("scorch-card"));
-        attackedCards.forEach(c=>c.removeClass("attack-card"));
-        healedCards.forEach(c=>c.removeClass("heal-card"));
+        scorchedCards.forEach(c=>c.removeClass("scorch-anim-card"));
+        attackedCards.forEach(c=>c.removeClass("attack-anim-card"));
+        healedCards.forEach(c=>c.removeClass("heal-anim-card"));
         self.waitForAnimation = false;
         self.render();
       }, 500);
@@ -638,6 +649,15 @@ let BattleView = Backbone.View.extend({
     }
 
     $container.find(Class).not(Class+":first-child").css("margin-left", -res);
+  },
+  getElementCenter: function($el) {
+    let offset = $el.offset();
+    let width = $el.outerWidth();
+    let height = $el.outerHeight();
+    return {
+      x: offset.left + width / 2,
+      y: offset.top + height / 2
+    };
   }
 });
 

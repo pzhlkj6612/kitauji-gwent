@@ -105,6 +105,53 @@ function toPriceClassName(price) {
   return PRICE_CLASSNAME[price];
 }
 
+function getMainAbility(abilities) {
+  if (!abilities || abilities.length === 0) return null;
+  if(!Array.isArray(abilities)){
+    abilities = [abilities];
+  }
+  for (let ability of abilities) {
+    if (ability !== 'hero') return ability;
+  }
+  return null;
+}
+
+let EXIST = [
+  "hashimoto",
+  "kabe_tomoe",
+  "kabutodani_eru",
+  "kahashi_hiro",
+  "kawashima_sapphire",
+  "kenzaki_ririka",
+  "kohinata_yume",
+  "nakagawa_natsuki",
+  "noguchi_hideri",
+  "oka_mikino",
+  "okamoto_raimu",
+  "ono_miyoko",
+  "oumae_kumiko",
+  "saitou_aoi",
+  "sawada_juri",
+  "takahisa_chieri",
+  "takigawa_chikao",
+  "taura_mei",
+  "tsukamoto_shuichi",
+];
+let PATTERN_KEY = /([_a-z]*)_(\d|shiki)/;
+function getThemeImgName(card) {
+  if (card && card._data) {
+    let key = card._data.img;
+    let matches = key.match(PATTERN_KEY);
+    if (matches && matches[1]) {
+      key = matches[1];
+    }
+    if (EXIST.includes(key)) {
+      return key;
+    }
+  }
+  return "oumae_kumiko";
+}
+
 module.exports = {
   toFactionText,
   toRarityText,
@@ -117,4 +164,6 @@ module.exports = {
   toModeStr,
   toPriceLabel,
   toPriceClassName,
+  getMainAbility,
+  getThemeImgName,
 };

@@ -1,0 +1,327 @@
+
+.gwent-battle-background.theme-kyoani {
+  background: url(/assets/texture/board1.jpg) left top no-repeat #000000;
+
+  .button-quit {
+    margin: 90px 10px;
+  }
+
+  .gwent-battle-inner {
+    flex-direction: column;
+  }
+
+  .left-side {
+    height: 110px;
+    width: unset;
+    flex-direction: row-reverse;
+  }
+
+  .game-info {
+    .info-inner {
+      background: unset;
+      margin-top: 6px;
+      margin-bottom: 20px;
+      padding: 0;
+      width: 370px;
+      .info-name {
+        width: 100%;
+      }
+    }
+    .field-leader {
+      width: min-content;
+      padding-left: 0;
+      position: absolute;
+      .card {
+        overflow: visible;
+        i {
+          transform: none;
+        }
+      }
+      .button-pass-wrap {
+        margin-right: 0;
+        position: relative;
+        .countdown-timer {
+          width: 100%;
+          text-align: center;
+          transform: translateY(80px);
+        }
+      }
+    }
+    .passing {
+      position: absolute;
+      margin: 0;
+      text-align: left;
+      color: gray;
+    }
+    .info-others {
+      position: absolute;
+      padding: 0;
+      .score {
+        position: absolute;
+        transform: translate(290px, 0);
+      }
+    }
+  }
+
+  .game-info-foe {
+    align-items: flex-end;
+    .info-inner {
+      margin-right: 45px;
+      padding-left: 170px;
+    }
+    .field-leader {
+      padding-top: 0;
+      transform: translate(-580px, 255px);
+      .card i {
+        transform: rotateY(180deg);
+      }
+    }
+    .passing {
+      transform: translate(-270px, 20px);
+    }
+    .info-others {
+      flex-direction: row-reverse;
+      transform: translate(-360px, 15px);
+      .score {
+        transform: translate(-300px, 0px);
+      }
+    }
+  }
+
+  .game-info-player {
+    flex-direction: column;
+    .info-inner {
+      margin-left: 35px;
+    }
+    .field-leader {
+      margin-bottom: 0;
+      transform: translate(570px, 255px);
+    }
+    .passing {
+      transform: translate(380px, 20px);
+    }
+    .info-others {
+      transform: translate(205px, 15px);
+    }
+  }
+
+  .field-weather {
+    padding: 0;
+    width: 450px;
+    transform: translate(0, 480px);
+  }
+
+  .middle-side {
+    height: unset;
+    width: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .board{
+      height: 550px;
+      width: 1250px;
+      display: flex;
+      flex-direction: row-reverse;
+
+      .battleside {
+        display: flex;
+        flex-direction: row-reverse;
+
+        .field {
+          width: unset;
+          height: unset;
+          padding: 0;
+          flex-direction: column-reverse;
+          align-items: center;
+          &.field-frost:before,
+          &.field-fog:before,
+          &.field-rain:before {
+            width: 210px;
+            height: 410px;
+            z-index: 0;
+          }
+          &.field-frost:before {
+            transform: translate(40px, -100px);
+            background: url("/assets/texture/board_weather_frost_2.png") no-repeat;
+          }
+          &.field-fog:before {
+            transform: translate(35px, -125px);
+            background: url("/assets/texture/board_weather_fog_2.png") no-repeat;
+          }
+          &.field-rain:before {
+            transform: translate(20px, -150px);
+            background: url("/assets/texture/board_weather_rain_2.png") no-repeat;
+          }
+        }
+
+        .field-horn {
+          width: 80px;
+          height: 60px;
+          z-index: 11;
+          .card {
+            overflow: visible;
+            position: absolute;
+            bottom: 0;
+            top: unset;
+            i {
+              transform: rotateY(180deg);
+            }
+          }
+        }
+        .field-horn-close {
+          transform: translateX(130px);
+        }
+        .field-horn-range {
+          transform: translateX(100px);
+        }
+        .field-horn-siege {
+          transform: translateX(60px);
+        }
+        .large-field-counter {
+          margin: 15px 0;
+          z-index: 12;
+        }
+        .field:nth-child(1) .large-field-counter {
+          transform: translateX(160px);
+        }
+        .field:nth-child(2) .large-field-counter {
+          transform: translateX(120px);
+        }
+        .field:nth-child(3) .large-field-counter {
+          transform: translateX(80px);
+        }
+
+        .field-close,.field-range,.field-siege {
+          width: 100px;
+          height: 400px;
+          flex-direction: column;
+          align-items: center;
+          .card {
+            overflow: visible;
+            .card-attr-power {
+              height: 93px;
+              bottom: 0;
+            }
+            i {
+              top: unset;
+              bottom: 0;
+              transform: rotateY(180deg);
+            }
+          }
+        }
+
+        .field-range {
+          margin-bottom: 10px;
+        }
+
+        .field-siege {
+          margin-bottom: 20px;
+        }
+
+        &.battleside-foe {
+          .field-horn-close {
+            transform: translateX(-130px);
+          }
+          .field-horn-range {
+            transform: translateX(-100px);
+          }
+          .field-horn-siege {
+            transform: translateX(-60px);
+          }
+          .field:nth-child(3) .large-field-counter {
+            transform: translateX(-160px);
+          }
+          .field:nth-child(2) .large-field-counter {
+            transform: translateX(-120px);
+          }
+          .field:nth-child(1) .large-field-counter {
+            transform: translateX(-80px);
+          }
+
+          .field-close,.field-range,.field-siege,.field-horn {
+            .card i {
+              transform: none;
+            }
+          }
+          .field-frost:before {
+            transform: translate(-40px, -100px) rotateY(180deg);
+          }
+          .field-fog:before {
+            transform: translate(-35px, -125px) rotateY(180deg);
+          }
+          .field-rain:before {
+            transform: translate(-20px, -150px) rotateY(180deg);
+          }
+        }
+      }
+    }
+
+    .field-hand {
+      width: 880px;
+      margin-top: 12px;
+      margin-left: 8px;
+      padding: 0 85px;
+    }
+  }
+
+  .card {
+    &.card-shadow::after {
+      content: '';
+      position: absolute;
+      cursor: default;
+      height: 10px;
+      width: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      border-radius: 100%;
+      box-shadow: 0 15px 8px #0000007f;
+    }
+
+  }
+
+  .right-side {
+    width: 0;
+    position: absolute;
+    transform: translateX(580px);
+
+    .right-side-inner {
+      position: absolute;
+      width: 150px;
+      height: unset;
+      padding: 0;
+    }
+
+    .field-discard,.field-deck {
+      margin-left: 0;
+      background: unset;
+      &:hover {
+        background: rgba(0,0,0,.4);
+      }
+    }
+
+    .right-side-foe {
+      transform: translate(670px, 700px);
+    }
+
+    .right-side-player {
+      flex-direction: unset;
+      transform: translate(-525px, 700px);
+    }
+
+    // .card-preview {
+    //   transform: translateX(580px);
+    // }
+
+    .chat-window {
+      width: 250px;
+      height: 120px;
+      z-index: 10;
+      padding: 8px;
+      transform: translate(15px, 35px);
+      top: 0;
+      background: none;
+    }
+  }
+}

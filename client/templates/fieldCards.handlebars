@@ -1,17 +1,35 @@
 {{#each this}}
-  <div class="card{{#if _disabled}} disabled{{/if}} {{#if _highlight}} active-field{{/if}}" 
+  <div class="card card-shadow{{#if _disabled}} disabled{{/if}} {{#if _highlight}} active-field{{/if}}" 
     data-key="{{_key}}" data-id="{{_id}}"  data-ability="{{_data.ability}}" 
     data-bondtype="{{_data.bondType}}" data-mustertype="{{_data.musterType}}"
     data-diff="{{diffPos}}">
-    {{#if diff}}
-      <span class="card-attr-power {{#if diffPos}}card-attr-positive{{/if}}">
-        <span>{{power}}</span>
-      </span>
-    {{/if}}
-    {{#if _data.skinFaction}}
-      <i class="card-md-{{_data.skinFaction}} card-md-{{_data.skinFaction}}__{{_data.img}}"></i>
+    {{#if _theme}}
+      {{#if power}}
+        <span class="card-attr-power {{#if _isHero}}card-attr-hero{{/if}} {{#if diffNeg}}card-attr-negative{{/if}} {{#if diffPos}}card-attr-positive{{/if}}">
+          <span>{{power}}</span>
+        </span>
+        {{#if _data.flag}}
+          <span class="card-grade-flag card-grade-flag-{{_data.flag}}">
+          </span>
+        {{/if}}
+      {{/if}}
+      {{#if _mainAbility}}
+        <span class="card-attr-ability {{_mainAbility}}-card">
+          <span></span>
+        </span>
+      {{/if}}
+      <i class="kyoani-sm kyoani-sm__{{_themeImg}}"></i>
     {{else}}
-      <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}__{{_data.img}}"></i>
+      {{#if diff}}
+        <span class="card-attr-power {{#if diffNeg}}card-attr-negative{{/if}} {{#if diffPos}}card-attr-positive{{/if}}">
+          <span>{{power}}</span>
+        </span>
+      {{/if}}
+      {{#if _data.skinFaction}}
+        <i class="card-md-{{_data.skinFaction}} card-md-{{_data.skinFaction}}__{{_data.img}}"></i>
+      {{else}}
+        <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}__{{_data.img}}"></i>
+      {{/if}}
     {{/if}}
   </div>
 {{/each}}

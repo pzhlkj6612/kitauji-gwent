@@ -96,6 +96,8 @@ var Card = (function(){
     this.diff = this.power - this.getRawPower();
     if(this.diff > 0) this.diffPos = true;
     else this.diffPos = false;
+    if (this.diff < 0) this.diffNeg = true;
+    else this.diffNeg = false;
     return this.power;
   }
   r.getRawPower = function(){

@@ -143,9 +143,50 @@ function abilitySpritesGenerationTask(done) {
   .pipe(gulp.dest("./public/build/"));
 }
 
+/**
+ * Resize for kyoani theme.
+ * Only small size is required.
+ */
+function kyoaniThemeResizeTask(done) {
+  if(fs.existsSync(__dirname + "/assets/texture/sm/kyoani/oumae_kumiko.png")) {
+    console.log("skip image resizing");
+    return done();
+  }
+  return gulp.src('./assets/texture/kyoani/*.png')
+  .pipe(jimp(image => image.resize(-1, 93))) // The value "-1" is equal to the constant "Jimp.AUTO".
+  .pipe(gulp.dest('./assets/texture/kyoani/sm/'))
+}
 
-var sassTaskDelegate = gulp.series(abilitySpritesGenerationTask, sassTask);
-var cardSpritesGenerationTaskDelegate = gulp.series(resizeTask, cardSpritesGenerationTask);
+/**
+ * generate card sprite for kyoani theme.
+ */
+function kyoaniThemeSpriteTask(done) {
+  if(fs.existsSync(__dirname + "/public/build/_kyoani.scss")) {
+    console.log("skip ability sprites generation");
+    return done();
+  }
+
+  return getSpriteStreamFromPngFiles(
+    "./assets/texture/kyoani/sm/",
+    "_kyoani.scss",
+    "kyoani",
+    "kyoani",
+    "png",
+    false
+  )
+  .pipe(gulp.dest("./public/build/"));
+}
+
+var sassTaskDelegate = gulp.series(
+  abilitySpritesGenerationTask,
+  kyoaniThemeResizeTask,
+  kyoaniThemeSpriteTask,
+  sassTask,
+);
+var cardSpritesGenerationTaskDelegate = gulp.series(
+  resizeTask,
+  cardSpritesGenerationTask,
+);
 
 exports.browserify = browserifyTask;
 exports.watch = watchTask;

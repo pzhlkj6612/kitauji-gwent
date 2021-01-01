@@ -1,11 +1,20 @@
 <div class="card-wrap">
-  <div class="card{{#if _disabled}} disabled{{/if}}" data-key="{{_key}}" data-id="{{_id}}"
+  <div class="card card-shadow{{#if _disabled}} disabled{{/if}}" data-key="{{_key}}" data-id="{{_id}}"
     data-type="{{_data.type}}" data-ability="{{_data.ability}}">
     <div class="card-animation"></div>
-    {{#if _data.skinFaction}}
-      <i class="card-md-{{_data.skinFaction}} card-md-{{_data.skinFaction}}__{{_data.img}}"></i>
+    {{#if _theme}}
+      <i class="kyoani-sm kyoani-sm__{{_themeImg}}"></i>
+      {{#if _mainAbility}}
+        <span class="card-attr-ability {{_mainAbility}}-card">
+          <span></span>
+        </span>
+      {{/if}}
     {{else}}
-      <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}__{{_data.img}}"></i>
+      {{#if _data.skinFaction}}
+        <i class="card-md-{{_data.skinFaction}} card-md-{{_data.skinFaction}}__{{_data.img}}"></i>
+      {{else}}
+        <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}__{{_data.img}}"></i>
+      {{/if}}
     {{/if}}
     <div class="shadow"></div>
     <div class="overlay-card"></div>

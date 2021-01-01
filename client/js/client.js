@@ -17,6 +17,7 @@ let Notification = require("./view/notification");
 let I18n = require("./i18n");
 const Config = require("../../public/Config");
 const util = require("./util");
+const Const = require("./const");
 
 window.$ = $;
 window.i18n = new I18n("zh");
@@ -243,6 +244,7 @@ let User = Backbone.Model.extend({
     scenario: null,
     locale: "zh",
     region: "aliyun",
+    theme: "",
     serverStatus: {},
     serverOffline: true
   },
@@ -399,6 +401,7 @@ let User = Backbone.Model.extend({
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
     this.set("region", localStorage["region"] || "aliyun");
+    this.set("theme", localStorage["theme"] || Const.THEME_KYOANI);
     i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(data){
