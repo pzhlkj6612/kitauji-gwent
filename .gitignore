@@ -6,6 +6,7 @@ test/spec
 assets/cards/*
 assets/bgm/*
 assets/original_cards/sunfes/*
+assets/texture/kyoani/sm/*
 client/scss/_cards.scss
 
 /site/.idea
