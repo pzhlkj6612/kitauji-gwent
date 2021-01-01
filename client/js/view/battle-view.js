@@ -39,6 +39,7 @@ let BattleView = Backbone.View.extend({
     this.listenTo(user, "change:chooseHeal", this.render);
     this.listenTo(user, "change:isReDrawing", this.render);
     this.listenTo(user, "change:chooseSide", this.render);
+    this.listenTo(user, "change:theme", this.render);
 
     if (user.get("scenario") && (
       user.get("questProgress")[user.get("scenario")] === 4

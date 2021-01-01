@@ -25,5 +25,6 @@ module.exports = {
   COMP_STATE_ENDED: "comp_ended",
 
   // themes
+  THEME_DEFAULT: "theme-default",
   THEME_KYOANI: "theme-kyoani",
 };

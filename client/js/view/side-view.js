@@ -162,6 +162,10 @@ let SideView = Backbone.View.extend({
           c._mainAbility = Util.getMainAbility(c._data.ability);
         }
       })
+    } else {
+      cards.forEach(c => {
+        c._theme = false;
+      })
     }
   },
   renderRangeField: function(){

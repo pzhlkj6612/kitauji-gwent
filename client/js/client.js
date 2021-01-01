@@ -65,6 +65,7 @@ let App = Backbone.Router.extend({
   },
   initialize: function(){
     this.reinitialize();
+    $('#settings').on('click', this.openSettings.bind(this));
   },
   reinitialize: function() {
     if (this.getCurrentView()) {
@@ -214,6 +215,10 @@ let App = Backbone.Router.extend({
   },
   defaultRoute: function(path){
     this.navigate("lobby", {trigger: true});
+  },
+  openSettings: function(e) {
+    let modal = new SettingsModal({model: this.user});
+    this.getCurrentView().$el.prepend(modal.render().el);
   },
   parseEvent: function(event){
     let regex = /(\w+):?(\w*)\|?/g;
@@ -401,7 +406,7 @@ let User = Backbone.Model.extend({
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
     this.set("region", localStorage["region"] || "aliyun");
-    this.set("theme", localStorage["theme"] || Const.THEME_KYOANI);
+    this.set("theme", localStorage["theme"] || Const.THEME_DEFAULT);
     i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(data){
@@ -487,6 +492,24 @@ let User = Backbone.Model.extend({
     localStorage.removeItem("connectionId");
     location.reload();
   },
+});
+
+let SettingsModal = Modal.extend({
+  template: require("../templates/modal.settings.handlebars"),
+  events: {
+    "click #btnSave": "saveSettings",
+  },
+  initialize: function() {
+    setTimeout(() => {
+      this.$el.find("#theme").val(this.model.get("theme"));
+    }, 0);
+  },
+  saveSettings: function() {
+    let theme = this.$el.find("#theme").val();
+    if (!theme || !theme.length) return;
+    this.model.set("theme", theme);
+    localStorage["theme"] = theme;
+  }
 });
 
 module.exports = App;
