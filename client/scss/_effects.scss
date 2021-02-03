@@ -225,13 +225,14 @@
 
 .card-wrap:hover, .activeCard {
   z-index: 20;
-  transform: translate(0, -10px);
+  // transform: translate(0, -10px);
 }
 
 /** SHAME **/
 
 .card-cell:hover .card-animation,
 .card-wrap:hover .card-animation,
+.field-card:hover .card-animaton,
 .activeCard .card-animation,
 .grave:hover .card-animation,
 .leader-card:hover .card-animation {
@@ -266,6 +267,7 @@
 
 .card-cell:hover .shadow,
 .card-wrap:hover .shadow,
+.field-card:hover .shadow,
 .grave:hover .shadow,
 .activeCard .shadow,
 .leader-card:hover .shadow {
@@ -276,6 +278,7 @@
 
 .card-cell:hover .card-animation,
 .card-wrap:hover .card-animation,
+.field-card:hover .card-animaton,
 .activeCard .card-animation,
 .grave:hover .card-animation,
 .leader-card:hover .card-animation {
@@ -328,6 +331,7 @@
 
 .card-cell:hover .overlay-card,
 .card-wrap:hover .overlay-card,
+.field-card:hover .overlay-card,
 .activeCard .overlay-card,
 .grave:hover .overlay-card,
 .leader-card:hover .overlay-card {
@@ -353,6 +357,26 @@
   0% { background-position: 51% 0% }
   50% { background-position: 50% 100% }
   100% { background-position: 51% 0% }
+}
+
+.jumpCard {
+  animation: CardJumpAnimation 0.5s ease infinite;
+}
+
+.jumpCard::after {
+  animation: CardJumpShadowAnimation 0.5s ease infinite;
+}
+
+@keyframes CardJumpAnimation {
+  0% { transform: translate(0, 0) }
+  50% { transform: translate(0, -6px) }
+  100% { transform: translate(0, 0) }
+}
+
+@keyframes CardJumpShadowAnimation {
+  0% { transform: translate(-50%, 0) scale(1.0) }
+  50% { transform: translate(-50%, 6px) scale(0.9) }
+  100% { transform: translate(-50%, 0) scale(1.0) }
 }
 
 /** SUB HAND **/

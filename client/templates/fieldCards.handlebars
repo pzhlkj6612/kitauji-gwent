@@ -1,17 +1,16 @@
 {{#each this}}
-  <div class="card card-shadow{{#if _disabled}} disabled{{/if}} {{#if _highlight}} active-field{{/if}}" 
+  <div class="card field-card card-shadow{{#if _disabled}} disabled{{/if}} {{#if _highlight}} active-field{{/if}}" 
     data-key="{{_key}}" data-id="{{_id}}"  data-ability="{{_data.ability}}" 
     data-bondtype="{{_data.bondType}}" data-mustertype="{{_data.musterType}}"
     data-diff="{{diffPos}}">
+    <div class="card-animation"></div>
     {{#if _theme}}
-      {{#if power}}
+      {{#if _data.flag}}
         <span class="card-attr-power {{#if _isHero}}card-attr-hero{{/if}} {{#if diffNeg}}card-attr-negative{{/if}} {{#if diffPos}}card-attr-positive{{/if}}">
           <span>{{power}}</span>
         </span>
-        {{#if _data.flag}}
-          <span class="card-grade-flag card-grade-flag-{{_data.flag}}">
-          </span>
-        {{/if}}
+        <span class="card-grade-flag card-grade-flag-{{_data.flag}}">
+        </span>
       {{/if}}
       {{#if _mainAbility}}
         <span class="card-attr-ability {{_mainAbility}}-card">
@@ -31,5 +30,7 @@
         <i class="card-md-{{_data.faction}} card-md-{{_data.faction}}__{{_data.img}}"></i>
       {{/if}}
     {{/if}}
+    <div class="shadow"></div>
+    <div class="overlay-card"></div>
   </div>
 {{/each}}

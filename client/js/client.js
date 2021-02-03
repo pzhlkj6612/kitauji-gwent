@@ -350,26 +350,12 @@ let User = Backbone.Model.extend({
       app.trigger("reDrawFinished");
     })
 
+    app.receive("update:allInfo", function(data) {
+      app.trigger("update:allInfo", data);
+    })
+
     app.receive("update:info", function(data){
-      let info = {
-        _roomSide: data._roomSide,
-        info: data.info,
-        leader: data.leader,
-      };
-      app.trigger("update:info", info);
-      let hand = {
-        _roomSide: data._roomSide,
-        cards: data.cards,
-      };
-      app.trigger("update:hand", hand);
-      let fields = {
-        _roomSide: data._roomSide,
-        close: data.close,
-        ranged: data.ranged,
-        siege: data.siege,
-        weather: data.weather
-      };
-      app.trigger("update:fields", fields);
+      app.trigger("update:allInfo", [data]);
     })
 
     app.receive("new:round", function() {

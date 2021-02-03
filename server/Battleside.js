@@ -101,6 +101,7 @@ Battleside = (function() {
 
       try {
         ability.onActivate.apply(self, [leaderCard]);
+        self._placedCard = leaderCard;
       } catch (e) {
         console.warn(e);
         self.update();
@@ -317,6 +318,18 @@ Battleside = (function() {
     this.field[Card.TYPE.WEATHER] = p2.field[Card.TYPE.WEATHER] = Field(this);
   }
 
+  r.findHandCardIncludeLeader = function(key) {
+    let card = this.hand.find("key", key)[0];
+    if (card != null) {
+      return card;
+    }
+    let leader = this.getLeader();
+    if (leader.getProperty("key") === key) {
+      return leader;
+    }
+    return null;
+  }
+
   r.findCardOnFieldByID = function(id) {
     for(var key in this.field) {
       var field = this.field[key];
@@ -333,10 +346,21 @@ Battleside = (function() {
 
   r.getRandomCardOnField = function() {
     var allCards = this.getFieldCards();
+    if (this.battle.isDramaMode()) {
+      let key = this.battle.nextEvent("choose")["card"];
+      return allCards.filter(c => c.getProperty("key") === key)[0];
+    }
     var rnd = (Math.random() * allCards.length) | 0;
 
 
     return allCards[rnd];
+  }
+
+  r.getDiscardByName = function(key) {
+    for (let card of this._discard) {
+      if(card.getProperty("key") === key) return card;
+    }
+    return null;
   }
 
   r.getCardFromDiscard = function(id) {
@@ -391,8 +415,17 @@ Battleside = (function() {
 
   r.draw = function(times, animate) {
     if (times <= 0) return;
+    let cards;
+    if (this.battle.isDramaMode()) {
+      cards = this.battle.nextEvent("draw")["cards"];
+    }
     while(times--) {
-      var card = this.deck.draw();
+      let card;
+      if (cards) {
+        card = this.deck.drawByName(cards[times]);
+      } else {
+        card = this.deck.draw();
+      }
       if (!card) return;
       this.hand.add(card);
       if (animate) {
@@ -1063,6 +1096,10 @@ Battleside = (function() {
     this._reDrawPromise = Promise.Deferred();
 
     this._isReDrawing = true;
+    if (this.battle.isDramaMode()) {
+      this.finishReDraw();
+      return;
+    }
     this.send("redraw:cards", null, true);
 
     this.receive("redraw:reDrawCard", function(data) {

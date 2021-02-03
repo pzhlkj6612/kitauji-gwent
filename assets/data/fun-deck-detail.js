@@ -1,7 +1,7 @@
 module.exports = {
   "minami": {
     name: "南中处刑曲",
-    faction: "kumiko1S2",
+    faction: "funDeck",
     data: [
       "kasaki_nozomi",
       "kasaki_nozomi_shiki",
@@ -38,7 +38,7 @@ module.exports = {
   },
   "kitauji_artillery": {
     name: "北宇治炮兵营",
-    faction: "kumiko1",
+    faction: "funDeck",
     data: [
       // "hitomi_lala_1",
       "iwata_keina_1",
@@ -82,7 +82,7 @@ module.exports = {
   },
   "liz_to_aoi_tori": {
     name: "利兹与青鸟",
-    faction: "kitauji",
+    faction: "funDeck",
     data: [
       "kenzaki_ririka_skin",
       "kabutodani_eru_skin",
@@ -124,7 +124,7 @@ module.exports = {
   },
   "red_army": {
     name: "红衣军团",
-    faction: "kumiko1S2",
+    faction: "funDeck",
     data: [
       // "maki_chikai",
       // "kamaya_tsubame",
@@ -177,7 +177,7 @@ module.exports = {
   },
   "blue_army": {
     name: "蓝衣军团",
-    faction: "kumiko1S2",
+    faction: "funDeck",
     data: [
       "yoroizuka_mizore",
       "kishibe_miru",
@@ -222,7 +222,7 @@ module.exports = {
   },
   "green_army": {
     name: "绿衣军团",
-    faction: "kumiko1",
+    faction: "funDeck",
     data: [
       "kenzaki_ririka",
       "kabutodani_eru",
@@ -281,4 +281,55 @@ module.exports = {
       "taibu"
     ]
   },
+  "drama_kyoani": {
+    name: "拜年祭剧本",
+    asymmetric: true,
+    p1: "drama_1",
+    p2: "drama_2",
+  },
+  "drama_1": {
+    name: "剧本1",
+    faction: "kumiko1S2",
+    data: [
+      "kasaki_nozomi_shiki",
+      "tanaka_asuka_2",
+      "nakaseko_kaori_2",
+      "kousaka_reina_2",
+      "tsukamoto_shuichi_2",
+      "tanabe_narai_2",
+      "hitomi_lala_2",
+      "inoue_junna_2",
+      "sakai_masako_2",
+      "niiyama",
+      "hashimoto",
+      "ogasawara_haruka_2",
+      "iwata_keina_2",
+      "takahisa_chieri_2",
+      "kase_maina_2",
+      "takigawa_chikao_2",
+    ]
+  },
+  "drama_2": {
+    name: "剧本2",
+    faction: "kitauji",
+    data: [
+      "taki_noboru",
+      "kasaki_nozomi",
+      "yoroizuka_mizore",
+      "shima_rie",
+      "inoue_shirabe",
+      "ono_miyoko",
+      "hisaishi_kanade",
+      "oda_meiko",
+      "takahashi_sari",
+      "nakano_tsubomi",
+      "takigawa_chikao",
+      "tubakun",
+      "taibu",
+      "oumae_kumiko",
+      "kabe_tomoe",
+      "kawashima_sapphire",
+      "maki_chikai",
+    ]
+  }
 };

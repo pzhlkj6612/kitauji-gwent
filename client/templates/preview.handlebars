@@ -3,8 +3,10 @@
 {{else}}
   <i class="card-{{this.size}}-{{card.faction}} card-{{this.size}}-{{card.faction}}__{{card.img}}"></i>
 {{/if}}
+{{#if hideDesc}}
+{{else}}
 <div class="preview-description {{#if previewB}}preview-b{{/if}}">
-  <p>{{card.name}}</p>
+  <p><b>{{card.name}}</b></p>
   {{#each abilities as |val key|}}
     <p>{{val}}</p>
   {{/each}}
@@ -26,3 +28,4 @@
   </p>
   {{/if}}
 </div>
+{{/if}}

@@ -132,7 +132,7 @@ var Deck = (function(){
     this._faction = deck.faction;
     if (FunDeckData[deckKey]) {
       this._funDeck = deckKey;
-      this._faction = Deck.FACTION.FUN_DECK;
+      // this._faction = Deck.FACTION.FUN_DECK;
     }
 
     this._loadCards();
@@ -173,6 +173,17 @@ var Deck = (function(){
       cards.push(card);
     }
     return cards;
+  }
+
+  r.drawByName = function(key) {
+    var cards = this.find("key", key);
+    let card;
+    if(cards.length) {
+      card = this.removeFromDeck(cards[0]);
+    } else {
+      card = this.side.createCard(key);
+    }
+    return card;
   }
 
   r._loadCards = function(){

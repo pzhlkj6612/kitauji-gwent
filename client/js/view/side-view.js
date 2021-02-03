@@ -1,4 +1,5 @@
 let Backbone = require("backbone");
+let Preview = require("./preview");
 const Util = require("../util");
 const funDeck = require("../../../assets/data/fun-deck");
 const Const = require("../const");
@@ -17,12 +18,15 @@ let SideView = Backbone.View.extend({
     this.infoData = this.infoData || {};
     this.leader = this.leader || {};
     this.field = this.field || {};
+    this.animatedCards = {};
+    this.animatedCardsForTheme = {};
+    this.animatedGetCards = {};
     this.countDownTimer = null;
     this.timeLeft = 30; // 30 seconds by default
     /**
      * Can be changed when switch player during replay.
      */
-    this.isPlayerSide = (this.side === ".player");
+    this.isNearSide = (this.side === ".player");
 
     this.app.on("timer:start", function() {
       if (self.side === ".foe") return;
@@ -46,6 +50,11 @@ let SideView = Backbone.View.extend({
       self.countDownTimer = null;
     });
   },
+  onNewRound: function() {
+    this.animatedCards = {};
+    this.animatedCardsForTheme = {};
+    this.animatedGetCards = {};
+  },
   render: function(){
     this.renderInfo();
     this.renderCloseField();
@@ -54,6 +63,7 @@ let SideView = Backbone.View.extend({
     this.renderWeatherField();
     this.renderPlayCardAnimation();
     this.renderGetCardAnimation();
+    this.renderOtherAnimation();
 
     return this;
   },
@@ -69,9 +79,9 @@ let SideView = Backbone.View.extend({
       data: d,
       leader: l,
       passBtn: this.side === ".player" &&
-        (this.isPlayerSide && !this.app.user.get("waiting") ||
-        !this.isPlayerSide && this.app.user.get("waiting")),
-      switchBtn: this.battleView.readOnly && this.side !== ".player",
+        (this.isNearSide && !this.app.user.get("waiting") ||
+        !this.isNearSide && this.app.user.get("waiting")),
+      switchBtn: this.battleView.canSwitchPlayer() && this.side !== ".player",
       hideTimer: this.app.user.get("withBot"),
       timeLeft: this.timeLeft,
       danger: this.timeLeft < 10,
@@ -91,10 +101,10 @@ let SideView = Backbone.View.extend({
 
 
     $infoInner.addClass("active-field");
-    if(this.app.user.get("waiting") && this.isPlayerSide){
+    if(this.app.user.get("waiting") && this.isNearSide){
       $infoInner.removeClass("active-field");
     }
-    if(!this.app.user.get("waiting") && !this.isPlayerSide){
+    if(!this.app.user.get("waiting") && !this.isNearSide){
       $infoInner.removeClass("active-field");
     }
   },
@@ -240,6 +250,50 @@ let SideView = Backbone.View.extend({
     //calculateCardMargin($field.find(".card"), 351, 70, cards.length);
     this.calculateCardMargin($field.find(".field-siege"), 5);
   },
+  renderOtherAnimation: function() {
+    let scorched = this.infoData.scorched || [];
+    let attacked = this.infoData.attacked || [];
+    let healed = this.infoData.healed || [];
+    if (!scorched.length && !attacked.length && !healed.length) {
+      return;
+    }
+    this.infoData.scorched = [];
+    this.infoData.attacked = [];
+    this.infoData.healed = [];
+    this.battleView.waitForAnimation = true;
+    let scorchedCards = scorched.map(c=>{
+      let card = $(`.card[data-id='${c._id}']`);
+      card.addClass("scorch-anim-card");
+      return card;
+    }).filter(c => c.length);
+    let attackedCards = attacked.map(c=>{
+      let card = $(`.card[data-id='${c._id}']`);
+      card.addClass("attack-anim-card");
+      return card;
+    }).filter(c => c.length);
+    let healedCards = healed.map(c=>{
+      let card = $(`.card[data-id='${c._id}']`);
+      card.addClass("heal-anim-card");
+      return card;
+    }).filter(c => c.length);
+    if (scorchedCards.length) {
+      playSound("fire");
+    }
+    if (attackedCards.length) {
+      playSound("hit");
+    }
+    if (healedCards.length) {
+      playSound("heal1");
+    }
+    setTimeout(() => {
+      scorchedCards.forEach(c=>c.removeClass("scorch-anim-card"));
+      scorchedCards.forEach(c=>c.remove());
+      attackedCards.forEach(c=>c.removeClass("attack-anim-card"));
+      healedCards.forEach(c=>c.removeClass("heal-anim-card"));
+      this.battleView.waitForAnimation = false;
+      this.battleView.render();
+    }, 500);
+  },
   renderGetCardAnimation: function() {
     let getCard = this.infoData.getCard;
     if (!getCard) return;
@@ -248,11 +302,11 @@ let SideView = Backbone.View.extend({
     if (!$card || $card.length === 0) {
       return;
     }
-    if (this.battleView.animatedGetCards[id]) {
+    if (this.animatedGetCards[id]) {
       console.info("already animated");
       return;
     }
-    this.battleView.animatedGetCards[id] = true;
+    this.animatedGetCards[id] = true;
     let $getCard = $(".get-card-animation");
     $getCard.html($card.html());
     $getCard.addClass("move-to-hand");
@@ -269,16 +323,17 @@ let SideView = Backbone.View.extend({
     if (!placedCard) {
       return;
     }
+    this.renderPlayCardAnimForTheme(placedCard);
     let id = placedCard._id;
     let card = $(`.battleside .card[data-id='${id}'],.field-weather .card[data-id='${id}']`);
     if (!card || card.length === 0) {
       return;
     }
-    if (this.battleView.animatedCards[id]) {
+    if (this.animatedCards[id]) {
       console.info("already animated");
       return;
     }
-    this.battleView.animatedCards[id] = true;
+    this.animatedCards[id] = true;
     let ability = card.data("ability");
     let sub, subAnimClass;
     let animClass = null;
@@ -317,7 +372,7 @@ let SideView = Backbone.View.extend({
     } else if (ability.includes("tunning")) {
       playSound("heal");
       animClass = "tunning-card";
-      sub = $(`${this.side} .card`);
+      sub = $(`.battleside${this.side} .card`);
       subAnimClass = "heal-anim-card";
     } else if (ability.includes("lips")) {
       animClass = "lips-card";
@@ -366,6 +421,25 @@ let SideView = Backbone.View.extend({
     this.battleView.calculateMargin($weatherField, 0);
     return this;
   },
+  renderPlayCardAnimForTheme: function(card) {
+    if (this.app.user.get("theme") !== Const.THEME_KYOANI) {
+      return;
+    }
+    if (this.animatedCardsForTheme[card._id]) {
+      console.info("already animated");
+      return;
+    }
+    this.animatedCardsForTheme[card._id] = true;
+    let preview = new Preview({key: card._data.key, hideDesc: true});
+    let el = preview.render().el;
+    if (this.side === ".foe") {
+      $(el).addClass("foe");
+    }
+    $(".play-card-animation-2").append(el);
+    setTimeout(() => {
+      el.remove();
+    }, 2000);
+  },
   calculateCardMargin: function($container) {
     if (this.app.user.get("theme") !== Const.THEME_KYOANI) {
       this.battleView.calculateMargin($container, 9);
@@ -389,8 +463,8 @@ let SideView = Backbone.View.extend({
       let card = cards[i];
       let offset = $(card).offset().top + $(card).outerHeight(true) - containerTop;
       let margin = Math.round(100 * Math.pow(Math.abs(offset - w / 2) / w * 2, 2)) - 10;
-      margin = this.isPlayerSide ? margin: -margin;
-      $(card).css({"transform": `translate(${margin}px,0)`});
+      margin = this.side === ".player" ? margin: -margin;
+      $(card).css({"left": `${margin}px`});
     }
   }
 });

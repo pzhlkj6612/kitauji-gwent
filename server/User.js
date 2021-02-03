@@ -141,8 +141,14 @@ var User = (function(){
   r.getDeck = function() {
     if (this._roomKey) {
       let room = matchmaking.getRoomById(this._roomKey);
-      if (room && room.mode === Const.FUN_MODE && room.deck) {
-        return room.deck;
+      if (room && room.mode === Const.FUN_MODE) {
+        // user may not have same deck in fun mode
+        if (room.players && room.decks) {
+          return room.decks[room.players.indexOf(this.getUserModel().username)];
+        }
+        if (room.deck) {
+          return room.deck;
+        }
       }
     }
     return this._deck;

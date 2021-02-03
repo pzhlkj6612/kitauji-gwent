@@ -77,7 +77,8 @@
       }
     }
     .passing {
-      transform: translate(-270px, 20px);
+      transform: translate(-420px, 230px);
+      // transform: translate(-270px, 20px);
     }
     .info-others {
       flex-direction: row-reverse;
@@ -98,7 +99,8 @@
       transform: translate(570px, 255px);
     }
     .passing {
-      transform: translate(380px, 20px);
+      transform: translate(530px, 230px);
+      // transform: translate(380px, 20px);
     }
     .info-others {
       transform: translate(205px, 15px);
@@ -310,9 +312,15 @@
       transform: translate(-525px, 700px);
     }
 
-    // .card-preview {
-    //   transform: translateX(580px);
-    // }
+    .card-preview>div i {
+      visibility: hidden;
+      // border-bottom-left-radius: 20px;
+      // border-bottom-right-radius: 20px;
+    }
+
+    .preview-description {
+      border-radius: 15px;
+    }
 
     .chat-window {
       width: 250px;

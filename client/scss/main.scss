@@ -453,6 +453,49 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
   z-index: 10;
 }
 
+.get-card-animation {
+  visibility: hidden;
+}
+
+.play-card-animation-2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  pointer-events: none;
+  div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  i {
+    display: block;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    position: absolute;
+    top: 20%;
+    animation: PlayCardAnim 2s ease-in-out;
+  }
+  .foe i {
+    right: 0;
+    animation: PlayCardAnimFoe 2s ease-in-out;
+  }
+}
+
+@keyframes PlayCardAnim {
+  0% { transform: translate(0, 0); opacity: 0; }
+  50% {transform: translate(7.5%, 0); opacity: 1; }
+  100% { transform: translate(15%, 0); opacity: 0; }
+}
+
+@keyframes PlayCardAnimFoe {
+  0% { transform: translate(0, 0); opacity: 0; }
+  50% {transform: translate(-7.5%, 0); opacity: 1; }
+  100% { transform: translate(-15%, 0); opacity: 0; }
+}
+
 .sunray-animation {
   display: none;
   position: fixed;
@@ -482,7 +525,7 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 .move-to-hand {
   transition: 0.3s;
   visibility: visible;
-  transform: translate(800px,630px);
+  transform: translate(800px,660px);
 }
 
 .move-card {
