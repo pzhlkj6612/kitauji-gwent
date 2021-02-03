@@ -4,12 +4,10 @@ let Modal = require("./modal");
 let SideView = require("./side-view");
 let LuckyDraw = require("./lucky-draw");
 let Notification = require("./notification");
+let Preview = require("./preview");
 let ContestResultModal = require("./contest-result");
 
 const util = require("../util");
-let cardData = require("../../../assets/data/cards");
-let deckData = require("../../../assets/data/deck");
-let abilityData = require("../../../assets/data/abilities");
 
 Handlebars.registerPartial("messages", require("../../templates/message.handlebars"));
 
@@ -23,8 +21,6 @@ let BattleView = Backbone.View.extend({
     this.isRecording = options.isRecording || !this.isReplay;
     this.gameRecords = options.gameRecords || [];
     this.waitForAnimation = false;
-    this.animatedCards = {};
-    this.animatedGetCards = {};
     this.messages = [];
 
     $(this.el).prependTo('.gwent-battle');
@@ -39,6 +35,7 @@ let BattleView = Backbone.View.extend({
     this.listenTo(user, "change:chooseHeal", this.render);
     this.listenTo(user, "change:isReDrawing", this.render);
     this.listenTo(user, "change:chooseSide", this.render);
+    this.listenTo(user, "change:theme", this.render);
 
     if (user.get("scenario") && (
       user.get("questProgress")[user.get("scenario")] === 4
@@ -66,8 +63,8 @@ let BattleView = Backbone.View.extend({
     }
   },
   events: {
-    "mouseover .card": "onMouseover",
-    "mouseleave .card": "onMouseleave",
+    "mouseover .card>i": "onMouseover",
+    "mouseleave .card>i": "onMouseleave",
     "click .field-hand": "onClick",
     "click .battleside.player": "onClickFieldCard",
     "click .battleside.foe": "onClickFoeFieldCard",
@@ -85,8 +82,11 @@ let BattleView = Backbone.View.extend({
     this.user.get("app").send("set:passing");
     this.user.get("app").trigger("timer:cancel");
   },
+  canSwitchPlayer: function() {
+    return this.readOnly || util.isDramaMode();
+  },
   onSwitchPlayer: function() {
-    if (!this.readOnly) return;
+    if (!this.canSwitchPlayer()) return;
     // switch side name
     let roomSide = this.user.get("roomSide");
     let roomFoeSide = this.user.get("roomFoeSide");
@@ -99,12 +99,14 @@ let BattleView = Backbone.View.extend({
     this.yourSide.infoData = this.otherSide.infoData;
     this.yourSide.leader = this.otherSide.leader;
     this.yourSide.field = this.otherSide.field;
-    this.yourSide.isPlayerSide = !this.yourSide.isPlayerSide;
+    this.yourSide.isNearSide = !this.yourSide.isNearSide;
     this.otherSide.infoData = infoData;
     this.otherSide.leader = leader;
     this.otherSide.field = field;
-    this.otherSide.isPlayerSide = !this.otherSide.isPlayerSide;
+    this.otherSide.isNearSide = !this.otherSide.isNearSide;
+    let temp = this.handCards;
     this.handCards = this.otherHandCards || this.handCards;
+    this.otherHandCards = temp;
     this.render();
   },
   onQuit: function() {
@@ -169,28 +171,42 @@ let BattleView = Backbone.View.extend({
     //   }, 0);
     // }
     let playCard = $(".play-card-animation");
+    let initialPos = this.getElementCenter($('.right-side'));
+    playCard.css({
+      'transform': `translate(${initialPos.x}px, ${initialPos.y}px)`,
+    });
     playCard.html($card.html());
     let type = $card.data("type");
     let isSpy = $card.data("ability").includes("spy");
-    let animationClass;
+    let target;
     switch (type) {
       case 0:
-        animationClass = isSpy ? "move-to-foe-close" : "move-to-player-close";
+        target = isSpy ? '.foe .field-close' : '.player .field-close';
         break;
       case 1:
-        animationClass = isSpy ? "move-to-foe-range" : "move-to-player-range";
+        target = isSpy ? '.foe .field-range' : '.player .field-range';
         break;
       case 2:
-        animationClass = isSpy ? "move-to-foe-siege" : "move-to-player-siege";
+        target = isSpy ? '.foe .field-siege' : '.player .field-siege';
         break;
       case 5:
-        animationClass = "move-to-weather";
+        target = '.field-weather';
         break;
     }
-    playCard.addClass(animationClass);
-    setTimeout(() => {
-      playCard.removeClass(animationClass);
-    }, 200);
+    if (target) {
+      let {x, y} = this.getElementCenter($(target));
+      playCard.addClass("move-card");
+      playCard.css({
+        'transform': `translate(${x}px, ${y}px)`
+      });
+      setTimeout(() => {
+        let {x, y} = this.getElementCenter($('.right-side'));
+        playCard.removeClass("move-card")
+        playCard.css({
+          'transform': `translate(${x}px, ${y}px)`,
+        });
+      }, 200);
+    }
 
 
     if(key === "decoy" || key === "tubakun"){
@@ -259,7 +275,7 @@ let BattleView = Backbone.View.extend({
       if (!$field.length) return;
 
       //console.log($field);
-      let target = $field.hasClass("field-close") ? 0 : ($field.hasClass("field-range") ? 1 : 2);
+      let target = $field.hasClass("field-horn-close") ? 0 : ($field.hasClass("field-horn-range") ? 1 : 2);
       this.app.send("horn:field", {
         field: target
       });
@@ -268,11 +284,20 @@ let BattleView = Backbone.View.extend({
   },
   onMouseover: function(e){
     let target = $(e.target).closest(".card");
+    // apply jump animation to non-hand card
+    if (target.closest(".battleside").length || target.closest(".field-leader").length) {
+      target.addClass("jumpCard");
+    }
     var hasPreviewB = target.parent().hasClass("preview-b");
 
     this.user.set("showPreview", new Preview({key: target.data().key, previewB: hasPreviewB}));
   },
   onMouseleave: function(e){
+    let target = $(e.target).closest(".card");
+    // remove jump animation from card
+    if (target && target.length) {
+      target.removeClass("jumpCard");
+    }
     this.user.get("showPreview").remove();
     this.user.set("showPreview", null);
   },
@@ -280,7 +305,7 @@ let BattleView = Backbone.View.extend({
     let $discard = $(e.target).closest(".field-discard");
     //console.log("opened discard");
     let side;
-    if($discard.parent().parent().hasClass("player")){
+    if($discard.parent().hasClass("player")){
       side = this.yourSide;
     }
     else {
@@ -307,7 +332,8 @@ let BattleView = Backbone.View.extend({
       isWaiting: self.user.get("waiting"),
       playerRemained: self.yourSide ? self.yourSide.infoData.deck : 0,
       foeRemained: self.otherSide ? self.otherSide.infoData.deck : 0,
-      messages: self.messages
+      messages: self.messages,
+      theme: self.user.get("theme")
     }));
     if(!(this.otherSide && this.yourSide)) return;
     this.otherSide.render();
@@ -382,117 +408,110 @@ let BattleView = Backbone.View.extend({
     this.app.send("activate:leader")
     this.user.get("app").trigger("timer:cancel");
   },
+  updateHand: function(data) {
+    let self = this;
+    data.cards.forEach(c=>util.uncompress(c));
+    data.cards.sort((a, b) => {
+      let powerA = a._data.power + (String(a._data.ability).includes("hero") ? 100 : 0);
+      let powerB = b._data.power + (String(b._data.ability).includes("hero") ? 100 : 0);
+      if (powerA > powerB) return 1;
+      else if (powerA < powerB) return -1;
+      if (a._data.type > b._data.type) return 1;
+      else if (a._data.type < b._data.type) return -1;
+      return 0;
+    });
+    if(this.user.get("roomSide") == data._roomSide){
+      self.handCards = data.cards;
+    } else {
+      // just for replay
+      self.otherHandCards = data.cards;
+    }
+  },
+  updateField: function(data) {
+    let self = this;
+
+    data.close && data.close.cards.forEach(c=>util.uncompress(c));
+    data.ranged && data.ranged.cards.forEach(c=>util.uncompress(c));
+    data.siege && data.siege.cards.forEach(c=>util.uncompress(c));
+    data.weather && data.weather.cards.forEach(c=>util.uncompress(c));
+
+    let _side = data._roomSide;
+
+    let side = self.yourSide;
+    if(this.user.get("roomSide") != _side){
+      side = self.otherSide;
+    }
+    side.field.close = data.close;
+    side.field.ranged = data.ranged;
+    side.field.siege = data.siege;
+    side.field.weather = data.weather;
+  },
+  updateInfo: function(data) {
+    let self = this;
+
+    data.info.discard && data.info.discard.forEach(c=>util.uncompress(c));
+
+    let _side = data._roomSide;
+    let infoData = data.info;
+    let leader = data.leader;
+
+    let side = self.yourSide;
+    if(this.user.get("roomSide") != _side){
+      side = self.otherSide;
+    }
+    side.infoData = infoData;
+    side.leader = leader;
+  },
   setUpBattleEvents: function(){
     let self = this;
     let user = this.user;
     let app = user.get("app");
 
-    app.on("update:hand", function(data){
-      self.recordGameEvent("update:hand", data);
-      data.cards.forEach(c=>util.uncompress(c));
-      data.cards.sort((a, b) => {
-        let powerA = a._data.power + (String(a._data.ability).includes("hero") ? 100 : 0);
-        let powerB = b._data.power + (String(b._data.ability).includes("hero") ? 100 : 0);
-        if (powerA > powerB) return 1;
-        else if (powerA < powerB) return -1;
-        if (a._data.type > b._data.type) return 1;
-        else if (a._data.type < b._data.type) return -1;
-        return 0;
-      });
-      if(user.get("roomSide") == data._roomSide){
-        self.handCards = data.cards;
-        self.render();
-      } else {
-        // just for replay
-        self.otherHandCards = data.cards;
-      }
-    })
     app.on("new:round", function() {
       self.recordGameEvent("new:round");
       playSound("smash");
-      self.animatedCards = {};
-      self.animatedGetCards = {};
+      self.yourSide.onNewRound();
+      self.otherSide.onNewRound();
     })
+    app.on("update:allInfo", function(allInfo){
+      self.recordGameEvent("update:allInfo", allInfo);
+      for (let data of allInfo) {
+        let info = {
+          _roomSide: data._roomSide,
+          info: data.info,
+          leader: data.leader,
+        };
+        self.updateInfo(info);
+      }
+      self.render();
+      for (let data of allInfo) {
+        let hand = {
+          _roomSide: data._roomSide,
+          cards: data.cards,
+        };
+        self.updateHand(hand);
+        let fields = {
+          _roomSide: data._roomSide,
+          close: data.close,
+          ranged: data.ranged,
+          siege: data.siege,
+          weather: data.weather
+        };
+        self.updateField(fields);
+      }
+      self.render();
+    })
+
+    app.on("update:hand", function(data){
+      self.updateHand(data);
+    })
+
     app.on("update:info", function(data){
-      self.recordGameEvent("update:info", data);
-
-      data.info.discard && data.info.discard.forEach(c=>util.uncompress(c));
-
-      let _side = data._roomSide;
-      let infoData = data.info;
-      let leader = data.leader;
-
-      let side = self.yourSide;
-      if(user.get("roomSide") != _side){
-        side = self.otherSide;
-      }
-      side.infoData = infoData;
-      side.leader = leader;
-
-      side.infoData.discard = side.infoData.discard;
-      let scorched = side.infoData.scorched || [];
-      let attacked = side.infoData.attacked || [];
-      let healed = side.infoData.healed || [];
-      if (!scorched.length && !attacked.length && !healed.length) {
-        self.render();
-        return;
-      }
-      self.waitForAnimation = true;
-      let scorchedCards = scorched.map(c=>{
-        let card = $(`.card[data-id='${c._id}']`);
-        card.addClass("scorch-card");
-        return card;
-      });
-      let attackedCards = attacked.map(c=>{
-        let card = $(`.card[data-id='${c._id}']`);
-        card.addClass("attack-card");
-        return card;
-      });
-      let healedCards = healed.map(c=>{
-        let card = $(`.card[data-id='${c._id}']`);
-        card.addClass("heal-card");
-        return card;
-      });
-      if (scorchedCards.length) {
-        playSound("fire");
-      }
-      if (attackedCards.length) {
-        playSound("hit");
-      }
-      if (healedCards.length) {
-        playSound("heal1");
-      }
-      setTimeout(() => {
-        scorchedCards.forEach(c=>c.removeClass("scorch-card"));
-        attackedCards.forEach(c=>c.removeClass("attack-card"));
-        healedCards.forEach(c=>c.removeClass("heal-card"));
-        self.waitForAnimation = false;
-        self.render();
-      }, 500);
-
+      self.updateInfo(data);
     })
 
     app.on("update:fields", function(data){
-      self.recordGameEvent("update:fields", data);
-
-      data.close && data.close.cards.forEach(c=>util.uncompress(c));
-      data.ranged && data.ranged.cards.forEach(c=>util.uncompress(c));
-      data.siege && data.siege.cards.forEach(c=>util.uncompress(c));
-      data.weather && data.weather.cards.forEach(c=>util.uncompress(c));
-
-      let _side = data._roomSide;
-
-      let side = self.yourSide;
-      if(user.get("roomSide") != _side){
-        side = self.otherSide;
-      }
-      side.field.close = data.close;
-      side.field.ranged = data.ranged;
-      side.field.siege = data.siege;
-      side.field.weather = data.weather;
-      if (!self.waitForAnimation) {
-        side.render();
-      }
+      self.updateField(data);
     })
 
     app.on("reDrawFinished", function() {
@@ -598,7 +617,7 @@ let BattleView = Backbone.View.extend({
   },
   toGameRecordJson: function(gameRecords) {
     let result = {
-      version: "1.0.0",
+      version: "1.1.0",
       gameRecords: gameRecords,
       side: this.user.get("roomSide"),
       foeSide: this.user.get("roomFoeSide"),
@@ -638,6 +657,15 @@ let BattleView = Backbone.View.extend({
     }
 
     $container.find(Class).not(Class+":first-child").css("margin-left", -res);
+  },
+  getElementCenter: function($el) {
+    let offset = $el.offset();
+    let width = $el.outerWidth();
+    let height = $el.outerHeight();
+    return {
+      x: offset.left + width / 2,
+      y: offset.top + height / 2
+    };
   }
 });
 
@@ -757,64 +785,6 @@ let WinnerModal = Modal.extend({
   },
   beforeCancel: function() {
     return false;
-  }
-});
-
-let Preview = Backbone.View.extend({
-  template: require("../../templates/preview.handlebars"),
-  initialize: function(opt){
-    this.card = cardData[opt.key];
-    this.size = opt.size || "lg";
-    this.previewB = opt.previewB || false;
-
-    this.$el.addClass(this.previewB ? "preview-b" : "");
-
-    if(!this.card || !this.card.ability) return;
-
-    if(Array.isArray(this.card.ability)){
-      this.abilities = this.card.ability.slice();
-    }
-    else {
-      this.abilities = [];
-      this.abilities.push(this.card.ability);
-    }
-
-    let relatedCards = [];
-    this.abilities = this.abilities.map((ability) =>{
-      if (abilityData[ability].getRelatedCards) {
-        relatedCards = relatedCards.concat(
-          abilityData[ability].getRelatedCards(opt.key, cardData, deckData[this.card.faction]));
-      }
-      return i18n.getText(abilityData[ability].description);
-    })
-    this.relatedCards = relatedCards.map(c => {
-      return {
-        owned: true,
-        name: cardData[c].name,
-      }
-    });
-    // name is zh by default.
-    if (i18n.hasText(opt.key)) {
-      this.card.name = i18n.getText(opt.key);
-    }
-    this.attackPower = this.card.attackPower || 0;
-    this.grade = this.card.grade || 0;
-  },
-  render: function(){
-    let html = this.template({
-      card: this.card,
-      abilities: this.abilities,
-      relatedCards: this.relatedCards,
-      hasRelatedCards: this.relatedCards && this.relatedCards.length,
-      attackPower: this.attackPower,
-      hasAttackPower: this.attackPower > 0,
-      grade: this.grade,
-      hasGrade: this.grade > 0,
-      size: this.size,
-      previewB: this.previewB
-    })
-    this.$el.html(html);
-    return this;
   }
 });
 

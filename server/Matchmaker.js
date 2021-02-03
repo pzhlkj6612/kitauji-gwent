@@ -2,6 +2,7 @@ var shortid = require("shortid");
 var HandWrittenBot = require("./HandWrittenBot");
 var Const = require("./Const");
 const CompetitionService = require("./service/competitionService");
+const FunDeckDetail = require("../assets/data/fun-deck-detail");
 
 /**
  * Special logic for these room:
@@ -240,7 +241,11 @@ var Matchmaker = (function(){
       let model = user.getUserModel();
       return `${model.bandName}(${model.username})`;
     }).join(", ");
-
+    // assign deck to users
+    let deckDetail = FunDeckDetail[room.deck];
+    if (deckDetail && deckDetail.asymmetric) {
+      room.decks = [deckDetail.p1, deckDetail.p2];
+    }
   }
 
   r._evictOldestRoom = function() {

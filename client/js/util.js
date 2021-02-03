@@ -105,6 +105,80 @@ function toPriceClassName(price) {
   return PRICE_CLASSNAME[price];
 }
 
+function getMainAbility(abilities) {
+  if (!abilities || abilities.length === 0) return null;
+  if(!Array.isArray(abilities)){
+    abilities = [abilities];
+  }
+  for (let ability of abilities) {
+    if (ability !== 'hero') return ability;
+  }
+  return null;
+}
+
+let EXIST = [
+  "hashimoto",
+  "hisaishi_kanade",
+  "hitomi_lala",
+  "inoue_junna",
+  "inoue_shirabe",
+  "iwata_keina",
+  "kabe_tomoe",
+  "kabutodani_eru",
+  "kahashi_hiro",
+  "kasaki_nozomi",
+  "kase_maina",
+  "kawashima_sapphire",
+  "kenzaki_ririka",
+  "kohinata_yume",
+  "kousaka_reina",
+  "maki_chikai",
+  "nakagawa_natsuki",
+  "nakano_tsubomi",
+  "nakaseko_kaori",
+  "niiyama",
+  "noguchi_hideri",
+  "oda_meiko",
+  "ogasawara_haruka",
+  "oka_mikino",
+  "okamoto_raimu",
+  "ono_miyoko",
+  "oumae_kumiko",
+  "saitou_aoi",
+  "sakai_masako",
+  "sawada_juri",
+  "shima_rie",
+  "taibu",
+  "takahashi_sari",
+  "takahisa_chieri",
+  "taki_noboru",
+  "takigawa_chikao",
+  "tanabe_narai",
+  "tanaka_asuka",
+  "taura_mei",
+  "tsukamoto_shuichi",
+  "tubakun",
+  "yoroizuka_mizore",
+];
+let PATTERN_KEY = /([_a-z]*)_(\d|shiki)/;
+function getThemeImgName(card) {
+  if (card && card._data) {
+    let key = card._data.img;
+    let matches = key.match(PATTERN_KEY);
+    if (matches && matches[1]) {
+      key = matches[1];
+    }
+    if (EXIST.includes(key)) {
+      return key;
+    }
+  }
+  return "oumae_kumiko";
+}
+
+function isDramaMode() {
+  return false;
+}
+
 module.exports = {
   toFactionText,
   toRarityText,
@@ -117,4 +191,7 @@ module.exports = {
   toModeStr,
   toPriceLabel,
   toPriceClassName,
+  getMainAbility,
+  getThemeImgName,
+  isDramaMode,
 };

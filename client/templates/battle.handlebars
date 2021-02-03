@@ -5,62 +5,61 @@
     </div>
   </div>
 {{/if}} --}}
-<div class="gwent-battle-background">
+<div class="gwent-battle-background {{theme}}">
   <div class="gwent-battle-inner">
     <button class="btn btn-danger button-quit">Quit</button>
     <div class="left-side">
       <div class="col-xs-12 game-info game-info-foe foe">
       </div>
       <div class="col-xs-12 field field-weather">
-        field
       </div>
       <div class="col-xs-12 game-info game-info-player player" data-step="3" data-intro="左边的指挥牌也可以发动技能。点击放弃出牌按钮后，本轮将不能再出牌">
       </div>
     </div>
     <div class="middle-side">
       <div class="board">
-        <div class="col-xs-12 battleside battleside-foe foe">
+        <div class="battleside battleside-foe foe">
           <div class="field">
             <div class="large-field-counter">0</div>
             <div class="field-horn field-horn-siege"></div>
-            <div class="col-xs-12 field-siege"></div>
+            <div class="field-siege"></div>
           </div>
           <div class="field">
             <div class="large-field-counter">0</div>
             <div class="field-horn field-horn-range"></div>
-            <div class="col-xs-12 field-range"></div>
+            <div class="field-range"></div>
           </div>
           <div class="field">
             <div class="large-field-counter">0</div>
             <div class="field-horn field-horn-close"></div>
-            <div class="col-xs-12 field-close"></div>
+            <div class="field-close"></div>
           </div>
         </div>
-        <div class="col-xs-12 mid-line"></div>
-        <div class="col-xs-12 battleside battleside-player player" data-step="2" data-intro="双方阵地分为木管，铜管，打击乐三排。卡牌打出后会被放在对应的位置上。">
+        <div class="mid-line"></div>
+        <div class="battleside battleside-player player" data-step="2" data-intro="双方阵地分为木管，铜管，打击乐三排。卡牌打出后会被放在对应的位置上。">
           <div class="field">
             <div class="large-field-counter">0</div>
-            <div class="field-horn field-horn-close">
+            <div class="field-horn field-horn-close{{#if active.close}} active-field{{/if}}">
             </div>
-            <div class="col-xs-12 field-close{{#if active.close}} active-field{{/if}}"></div>
+            <div class="field-close"></div>
           </div>
           <div class="field">
             <div class="large-field-counter">0</div>
-            <div class="field-horn field-horn-range"></div>
-            <div class="col-xs-12 field-range{{#if active.range}} active-field{{/if}}"></div>
+            <div class="field-horn field-horn-range{{#if active.range}} active-field{{/if}}"></div>
+            <div class="field-range"></div>
           </div>
           <div class="field">
             <div class="large-field-counter">0</div>
-            <div class="field-horn field-horn-siege"></div>
-            <div class="col-xs-12 field-siege{{#if active.siege}} active-field{{/if}}"></div>
+            <div class="field-horn field-horn-siege{{#if active.siege}} active-field{{/if}}"></div>
+            <div class="field-siege"></div>
           </div>
         </div>
-        <div class="col-xs-12 field field-hand {{#if isWaiting}}{{else}}active{{/if}}">
-          <div class="handcard-wrap" data-step="1" data-intro="这些是你的手牌">
-            {{#each cards as |val key|}}
-              {{>card val}}
-            {{/each}}
-          </div>
+      </div>
+      <div class="field field-hand {{#if isWaiting}}{{else}}active{{/if}}">
+        <div class="handcard-wrap" data-step="1" data-intro="这些是你的手牌">
+          {{#each cards as |val key|}}
+            {{>card val}}
+          {{/each}}
         </div>
       </div>
     </div>
@@ -71,25 +70,21 @@
         {{>messages messages}}
       </div>
       <div class="col-xs-12 right-side-inner right-side-foe foe">
-        <div>
-          <div class="col-xs-4 field-discard field-single">
-            <i class="discard-skull"></i>
-          </div>
-          <div class="col-xs-4 field-deck field-single">
-            <i class="icon-deck"></i>
-            <span class="deck-remained">{{foeRemained}}</span>
-          </div>
+        <div class="col-xs-4 field-discard field-single">
+          <i class="discard-skull"></i>
+        </div>
+        <div class="col-xs-4 field-deck field-single">
+          <i class="icon-deck"></i>
+          <span class="deck-remained">{{foeRemained}}</span>
         </div>
       </div>
       <div class="col-xs-12 right-side-inner right-side-player player" data-step="4" data-intro="每轮结束后，场上卡牌会被放入弃牌堆">
-        <div>
-          <div class="col-xs-4 field-discard field-single">
-            <i class="discard-skull"></i>
-          </div>
-          <div class="col-xs-4 field-deck field-single">
-            <i class="icon-deck"></i>
-            <span class="deck-remained">{{playerRemained}}</span>
-          </div>
+        <div class="col-xs-4 field-discard field-single">
+          <i class="discard-skull"></i>
+        </div>
+        <div class="col-xs-4 field-deck field-single">
+          <i class="icon-deck"></i>
+          <span class="deck-remained">{{playerRemained}}</span>
         </div>
       </div>
     </div>

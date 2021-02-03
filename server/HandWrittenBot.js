@@ -86,6 +86,10 @@ var HandWrittenBot = (function(){
             self.socket.trigger("redraw:close_client");
           }, 0);
           break;
+        case "update:allInfo":
+          this.updateInfo(data[0]);
+          this.updateInfo(data[1]);
+          break;
         case "update:info":
           this.updateInfo(data);
           break;
@@ -186,8 +190,19 @@ var HandWrittenBot = (function(){
       if (this.disconnected) return;
       let commands = [];
       try {
-        let card = this.strategy.selectCard();
-        commands = this.strategy.generateCommands(card);
+        if (this.battleSide && this.battleSide.battle.isDramaMode()) {
+          let step = this.battleSide.battle.nextBotStep();
+          let key = step["card"];
+          let card = key === null ? null : this.battleSide.findHandCardIncludeLeader(key);
+          commands = this.strategy.generateCommands(card);
+          if (step["medicChooseCard"]) {
+            let chooseCard = this.battleSide.getDiscardByName(step["medicChooseCard"][0]);
+            commands = [commands[0]].concat(this.medicChooseCardCommand(chooseCard));
+          }
+        } else {
+          let card = this.strategy.selectCard();
+          commands = this.strategy.generateCommands(card);
+        }
       } catch (e) {
         // catch error from strategy instead of crashing the server!
         console.warn(e);
@@ -451,6 +466,7 @@ var HandWrittenBot = (function(){
     }
   
     r.setBattleSide = function(battleSide) {
+      this.battleSide = battleSide;
     }
 
     r.endGame = function() {

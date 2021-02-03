@@ -5,6 +5,7 @@ var shortid = require("shortid");
 var Promise = require("jquery-deferred");
 var CardManager = require("./CardManager");
 const Util = require("./CardUtil");
+const dramaScript = require("../assets/data/drama-script");
 
 
 var Battle = (function(){
@@ -60,6 +61,36 @@ var Battle = (function(){
     this.sendNotification("msg_enter_room", [this._user1.getDisplayName()], {chat: true});
     this.sendNotification("msg_enter_room", [this._user2.getDisplayName()], {chat: true});
     this.start();
+  }
+
+  /**
+   * In drama mode, all random events are fixed
+   */
+  r.isDramaMode = function() {
+    return false;
+  }
+
+  r.nextEvent = function(type) {
+    this.step = this.step || 0;
+    let action = dramaScript["steps"][this.step];
+    if (action["event"] !== type) {
+      throw new Error(`event type does not match: ${type} ${this.step} ${JSON.stringify(action)}`);
+    }
+    this.step++;
+    return action;
+  }
+
+  r.nextBotStep = function() {
+    this.botStep = this.botStep || 0;
+    let action = dramaScript["botSteps"][this.botStep++];
+    return action;
+  }
+
+  r.getBeginSide = function() {
+    if (this.isDramaMode()) {
+      return this[this.nextEvent("beginSide")["side"]];
+    }
+    return Math.random() > 0.5 ? this.p1 : this.p2;
   }
 
   r.isStarted = function() {
@@ -123,7 +154,7 @@ var Battle = (function(){
     Promise.when(this.p1.reDraw(2), this.p2.reDraw(2))
     .then(function(){
       this.on("NextTurn", this.switchTurn);
-      var side = Math.random() > 0.5 ? this.p1 : this.p2;
+      var side = this.getBeginSide();
       this.sendNotification("msg_begin", [side.getName()]);
       this.switchTurn(side);
     }.bind(this));
@@ -207,6 +238,10 @@ var Battle = (function(){
     }
     else {
       this.sendNotification("msg_begin", [winner.getName()]);
+      if (this.isDramaMode()) {
+        this.switchTurn(this.getBeginSide());
+        return;
+      }
       this.switchTurn(winner);
     }
   }
@@ -279,17 +314,20 @@ var Battle = (function(){
 
   r.update = function(){
     //console.("update called");
-    this._update(this.p1);
-    this._update(this.p2);
+    let info = [
+      this._getSideInfo(this.p1),
+      this._getSideInfo(this.p2)
+    ];
+    this.p1.send("update:allInfo", info);
   }
 
   r.updateSelf = function(side){
     this._update(side, true);
   }
 
-  r._update = function(p, isPrivate, opt_target){
-    isPrivate = isPrivate || false;
-    let data = {
+  r._getSideInfo = function(p) {
+    return {
+      _roomSide: p.n,
       // update:info
       info: p.getInfo(),
       leader: p.field[Card.TYPE.LEADER].get()[0],
@@ -301,6 +339,11 @@ var Battle = (function(){
       siege: p.field[Card.TYPE.SIEGE].getInfo(),
       weather: p.field[Card.TYPE.WEATHER].getInfo()
     };
+  }
+
+  r._update = function(p, isPrivate, opt_target){
+    isPrivate = isPrivate || false;
+    let data = this._getSideInfo(p);
     if (opt_target) {
       data._roomSide = p.getID();
       opt_target.send("update:info", data);

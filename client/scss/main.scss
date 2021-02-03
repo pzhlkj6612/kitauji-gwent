@@ -11,9 +11,11 @@
 @import "competition";
 @import "login";
 @import "modalDialog";
+@import "theme";
 
 // Run the gulp task "generate ability sprites" to generate this file.
 @import "../../public/build/ability";
+@import "../../public/build/kyoani";
 
 $height: 600px;
 $game-height: 800px;
@@ -71,14 +73,11 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 }
 
 .board {
-  height: $game-height;
   padding-top: 2px;
   //border: 1px solid black;
 }
 
 .battleside {
-  width: 100%;
-  height: $height/2;
   padding-left: 0;
   padding-right: 0;
   //border: 1px solid black;
@@ -108,10 +107,6 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
   height: 100px;
   padding-top: 3px;
   // border-bottom: 1px solid black;
-
-  .card:first-child {
-    margin-left: 0 !important;
-  }
 }
 
 .active-field {
@@ -283,6 +278,7 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 .right-side {
   height: 768px;
   max-width: 300px;
+  z-index: 11;
 }
 
 .board {
@@ -300,7 +296,7 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
   float: right;
   width: 40px;
   font-weight: bold;
-  transform: translate(50px, 0);
+  transform: translate(120px, 0);
   background: url("/assets/texture/player_power_indicator.png") center no-repeat;
   background-size: contain;
   padding-left: 5px;
@@ -336,6 +332,15 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 .info-deck {
   margin-top: 0;
   color: #666;
+}
+
+.info-others {
+  display: flex;
+  padding: 15px;
+  .hand-card-wrapper {
+    display: flex;
+    padding: 0;
+  }
 }
 
 .button-pass-wrap {
@@ -417,12 +422,14 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
     border-bottom: 1px solid black;
   }
   height: 50%;
+  padding-top: 60px;
+  padding-bottom: 50px;
   padding-left: 30px;
 }
 
 .right-side-player {
   display: flex;
-  flex-direction: column-reverse;
+  align-items: flex-end;
 }
 
 .play-card-animation,.get-card-animation {
@@ -444,6 +451,49 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
   left: 3px;
   transform: scale(0.43) translate(-68%, -67%);
   z-index: 10;
+}
+
+.get-card-animation {
+  visibility: hidden;
+}
+
+.play-card-animation-2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  pointer-events: none;
+  div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  i {
+    display: block;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    position: absolute;
+    top: 20%;
+    animation: PlayCardAnim 2s ease-in-out;
+  }
+  .foe i {
+    right: 0;
+    animation: PlayCardAnimFoe 2s ease-in-out;
+  }
+}
+
+@keyframes PlayCardAnim {
+  0% { transform: translate(0, 0); opacity: 0; }
+  50% {transform: translate(7.5%, 0); opacity: 1; }
+  100% { transform: translate(15%, 0); opacity: 0; }
+}
+
+@keyframes PlayCardAnimFoe {
+  0% { transform: translate(0, 0); opacity: 0; }
+  50% {transform: translate(-7.5%, 0); opacity: 1; }
+  100% { transform: translate(-15%, 0); opacity: 0; }
 }
 
 .sunray-animation {
@@ -475,82 +525,22 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 .move-to-hand {
   transition: 0.3s;
   visibility: visible;
-  transform: translate(800px,630px);
+  transform: translate(800px,660px);
 }
 
-.move-to-weather {
+.move-card {
   transition: 0.3s;
   visibility: visible;
-  transform: translate(100px,350px);
-}
-
-.move-to-player-siege {
-  transition: 0.3s;
-  visibility: visible;
-  transform: translate(800px,520px);
-}
-
-.move-to-player-range {
-  transition: 0.3s;
-  visibility: visible;
-  transform: translate(800px,420px);
-}
-
-.move-to-player-close {
-  transition: 0.3s;
-  visibility: visible;
-  transform: translate(800px,320px);
-}
-
-.move-to-foe-siege {
-  transition: 0.3s;
-  visibility: visible;
-  transform: translate(800px,5px);
-}
-
-.move-to-foe-range {
-  transition: 0.3s;
-  visibility: visible;
-  transform: translate(800px,105px);
-}
-
-.move-to-foe-close {
-  transition: 0.3s;
-  visibility: visible;
-  transform: translate(800px,205px);
 }
 
 .card {
-  /*border: 2px solid black;
-  float: left;
-  margin: 3px;
-  overflow: hidden;*//*
-  height: 90px;
-  overflow: hidden;*//*
-  border: none !important;
-  margin: 0 !important;
-  border-radius: 0 !important;
-  overflow: visible !important;
-  height: 93px !important;
-*/
 
-  i {/*
-    display: block;*/
-    //transform: scale(1);
-  }
-
-  /*.card-attr-power {
-    margin-top: 0px;
-    margin-left: 0px;
-    height: 25px;
-    width: 25px;
-    text-align: center;
-    line-height: 25px;
-    font-size: 20px;
-    color: black;
-  }*/
   .card-attr-positive span {
     color: #00b000 !important;
+  }
+
+  .card-attr-negative span {
+    color: #ff2d00;
   }
 
   .card-attr-power {
@@ -558,6 +548,7 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
     margin-top: 2px;
     margin-left: 2px;
     //margin-top: 2px;
+    pointer-events: none;
     cursor: default;
     //padding-top: 3px;
     //padding-left: -4px;
@@ -565,21 +556,77 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
     width: 20px;
     background: url("../../assets/texture/card_strength_border.png") no-repeat;
     background-size: contain;
-    z-index: 11;
+    z-index: 12;
     transition: all .2s ease-in-out 0s;
 
+    &.card-attr-hero {
+      background: url("../../assets/texture/card_hero.png") no-repeat;
+      color: white;
+      background-size: contain;
+      width: 40px;
+      padding-top: 2px;
+    }
+
     span {
-      color: #ff2d00;
       text-shadow: 1px 1px 1px #10101029;
       text-align: center;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 12px;
       width: 20px;
       display: block;
-      margin-left: -1px;
-      margin-top: -1px;
       line-height: 20px;
+      letter-spacing: -1px;
     }
+  }
+
+  .card-attr-ability {
+    position: absolute;
+    margin-left: 2px;
+    pointer-events: none;
+    cursor: default;
+    height: 70px;
+    width: 18px;
+    bottom: 0;
+    background: url("../../assets/texture/card_effect.png") no-repeat;
+    background-size: contain;
+    z-index: 12;
+    transition: all .2s ease-in-out 0s;
+    &::before {
+      position: absolute;
+      content: '';
+      transform: scale(0.15) translate(-265px, -270px);
+      filter: invert(1);
+    }
+  }
+
+  .card-grade-flag {
+    position: absolute;
+    margin-left: 2px;
+    pointer-events: none;
+    cursor: default;
+    height: 100px;
+    width: 40px;
+    bottom: -10px;
+    z-index: 11;
+    transition: all .2s ease-in-out 0s;
+  }
+
+  .card-grade-flag-3 {
+    background: url(../../assets/texture/card_faction_banner_northern_realms.png) no-repeat;
+    background-size: contain;
+    background-position-y: -35px;
+  }
+
+  .card-grade-flag-2 {
+    background: url(../../assets/texture/card_faction_banner_scoiatael.png) no-repeat;
+    background-size: contain;
+    background-position-y: -35px;
+  }
+
+  .card-grade-flag-1 {
+    background: url(../../assets/texture/card_faction_banner_no_mans_land.png) no-repeat;
+    background-size: contain;
+    background-position-y: -35px;
   }
 
   &.disabled {
@@ -600,7 +647,6 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
   width: 65px;
   height: 90px;
   cursor: pointer;
-  margin: 60px 0 40px 0;
   transition: all .2s ease-in-out 0s;
 
   &:hover {
@@ -615,7 +661,7 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 }
 
 .field-deck {
-  margin: 60px 20px 40px 60px;
+  margin-left: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -637,6 +683,7 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 }
 
 .card-preview {
+  pointer-events: none;
   z-index: 300;
   > div {
     position: fixed;
@@ -655,7 +702,8 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
       color: #ffffff;
 
       p {
-        padding: 10px;
+        padding: 10px 10px 0 10px;
+        margin: 0;
       }
     }
   }
@@ -676,7 +724,7 @@ $scrollbar-emphasis-color: rgba(255, 255, 255, 0.8);
 }
 
 .gwent-lives {
-  padding: 0;
+  padding: 0 10px;
 
   i {
     display: block;

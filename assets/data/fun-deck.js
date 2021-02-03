@@ -23,4 +23,8 @@ module.exports = {
     name: "蓝衣军团",
     description: "由蓝校服学生组成的吹奏阵容",
   },
+  "drama_kyoani": {
+    name: "拜年祭剧本",
+    description: "京阿尼语料拜年祭剧本使用的牌组",
+  },
 };

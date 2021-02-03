@@ -23,4 +23,8 @@ module.exports = {
   COMP_STATE_ENROLL_ENDED: "comp_enroll_ended",
   COMP_STATE_STARTED: "comp_started",
   COMP_STATE_ENDED: "comp_ended",
+
+  // themes
+  THEME_DEFAULT: "theme-default",
+  THEME_KYOANI: "theme-kyoani",
 };

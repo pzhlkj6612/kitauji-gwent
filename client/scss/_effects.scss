@@ -77,7 +77,7 @@
 
 }
 
-.scorch-card:before {
+.scorch-anim-card:before {
   background: url(/assets/texture/explode.gif) center;
   opacity: .8;
   position: absolute;
@@ -93,7 +93,7 @@
   @extend .ability-md;
 }
 
-.morale-card:before {
+.morale_boost-card:before {
   @extend .ability-md__morale;
   @extend .ability-md;
 }
@@ -108,12 +108,12 @@
   @extend .ability-md;
 }
 
-.bond-card:before {
+.tight_bond-card:before {
   @extend .ability-md__bond;
   @extend .ability-md;
 }
 
-.horn-card:before {
+.commanders_horn-card:before,.commanders_horn_card-card:before {
   @extend .ability-md__horn;
   @extend .ability-md;
 }
@@ -138,6 +138,26 @@
   @extend .ability-md;
 }
 
+.attack-card:before,.guard-card:before {
+  @extend .ability-md__guard;
+  @extend .ability-md;
+}
+
+.monaka-card:before {
+  @extend .ability-md__monaka;
+  @extend .ability-md;
+}
+
+.taibu-card:before {
+  @extend .ability-md__scorch;
+  @extend .ability-md;
+}
+
+.scorch-card:before {
+  @extend .ability-md__umbrella;
+  @extend .ability-md;
+}
+
 .normal-card {
   -webkit-animation: WoobWoobGrey linear 0.5s;
   -o-animation: WoobWoobGrey linear 0.5s;
@@ -152,14 +172,14 @@
   animation: WoobWoob linear 0.5s;
 }
 
-.attack-card {
+.attack-anim-card {
   -webkit-animation: WoobWoobRed linear 0.5s;
   -o-animation: WoobWoobRed linear 0.5s;
   -ms-animation: WoobWoobRed linear 0.5s;
   animation: WoobWoobRed linear 0.5s;
 }
 
-.heal-card {
+.heal-anim-card {
   -webkit-animation: WoobWoobGreen linear 0.5s;
   -o-animation: WoobWoobGreen linear 0.5s;
   -ms-animation: WoobWoobGreen linear 0.5s;
@@ -172,7 +192,10 @@
   // background-size: contain;
   position: absolute;
   content: '';
-  z-index: 11;
+  z-index: 20;
+  height: 93px;
+  width: 69px;
+  bottom: 0;
   pointer-events: none;
   // box-shadow: 0 0 15px 14px #fff;
   -webkit-animation: Ability 0.5s cubic-bezier(.57,.15,1,-0.55);
@@ -202,13 +225,14 @@
 
 .card-wrap:hover, .activeCard {
   z-index: 20;
-  transform: translate(0, -10px);
+  // transform: translate(0, -10px);
 }
 
 /** SHAME **/
 
 .card-cell:hover .card-animation,
 .card-wrap:hover .card-animation,
+.field-card:hover .card-animaton,
 .activeCard .card-animation,
 .grave:hover .card-animation,
 .leader-card:hover .card-animation {
@@ -243,6 +267,7 @@
 
 .card-cell:hover .shadow,
 .card-wrap:hover .shadow,
+.field-card:hover .shadow,
 .grave:hover .shadow,
 .activeCard .shadow,
 .leader-card:hover .shadow {
@@ -253,6 +278,7 @@
 
 .card-cell:hover .card-animation,
 .card-wrap:hover .card-animation,
+.field-card:hover .card-animaton,
 .activeCard .card-animation,
 .grave:hover .card-animation,
 .leader-card:hover .card-animation {
@@ -300,10 +326,12 @@
   border-radius: 12px;
   opacity: 0;
   cursor: pointer;
+  pointer-events: none;
 }
 
 .card-cell:hover .overlay-card,
 .card-wrap:hover .overlay-card,
+.field-card:hover .overlay-card,
 .activeCard .overlay-card,
 .grave:hover .overlay-card,
 .leader-card:hover .overlay-card {
@@ -329,6 +357,26 @@
   0% { background-position: 51% 0% }
   50% { background-position: 50% 100% }
   100% { background-position: 51% 0% }
+}
+
+.jumpCard {
+  animation: CardJumpAnimation 0.5s ease infinite;
+}
+
+.jumpCard::after {
+  animation: CardJumpShadowAnimation 0.5s ease infinite;
+}
+
+@keyframes CardJumpAnimation {
+  0% { transform: translate(0, 0) }
+  50% { transform: translate(0, -6px) }
+  100% { transform: translate(0, 0) }
+}
+
+@keyframes CardJumpShadowAnimation {
+  0% { transform: translate(-50%, 0) scale(1.0) }
+  50% { transform: translate(-50%, 6px) scale(0.9) }
+  100% { transform: translate(-50%, 0) scale(1.0) }
 }
 
 /** SUB HAND **/
