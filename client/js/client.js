@@ -392,7 +392,7 @@ let User = Backbone.Model.extend({
     this.setDeck(localStorage["userDeck"] || "random");
     this.set("locale", localStorage["locale"] || "zh");
     this.set("region", localStorage["region"] || "aliyun");
-    this.set("theme", localStorage["theme"] || Const.THEME_DEFAULT);
+    this.set("theme", localStorage["theme"] || Const.THEME_KYOANI);
     i18n.loadDict(this.get("locale"));
   },
   startMatchmakingWithBot: function(data){

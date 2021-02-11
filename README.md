@@ -20,7 +20,7 @@ Kitauji Gwent is a Gwent card game adaptation which features a new set of cards 
 Do the following steps or see the ci build [script](/.travis.yml).
 
 ## - Requirements
-- [node.js](https://nodejs.org/) installed (v7.5.0 is recommended, other versions might fail to build)
+- [node.js](https://nodejs.org/) installed
 - [GraphicsMagick](http://www.graphicsmagick.org) installed (for generating sprites)
 
 ## - Build

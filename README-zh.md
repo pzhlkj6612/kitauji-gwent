@@ -22,7 +22,7 @@
 执行以下步骤或参考[ci脚本](/.travis.yml).
 
 ## - 安装依赖
-- [node.js](https://nodejs.org/) (推荐v7.5.0，其他版本可能构建失败)
+- [node.js](https://nodejs.org/)
 - [GraphicsMagick](http://www.graphicsmagick.org) (用于生成sprite)
 
 ## - 构建
